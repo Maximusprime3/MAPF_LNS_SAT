@@ -7,7 +7,7 @@ This project implements a Multi-value Decision Diagram (MDD) constructor in C++.
 To build the project, use the following command:
 
 ```
-g++ -std=c++17 -O2 -o main MDDConstructor.cpp MDD.cpp MDDNode.cpp
+g++ -std=c++17 -O2 -o main mdd/MDDConstructor.cpp mdd/MDD.cpp mdd/MDDNode.cpp
 ```
 
 Replace `main` with your desired output executable name, and ensure all required source files are listed.

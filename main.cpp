@@ -3,10 +3,9 @@
 #include <memory>
 #include <random>
 #include <algorithm>
-#include "MDDConstructor.h"
-#include "MDD.h"
-#include "MDDNode.h"
-
+#include "mdd/MDDConstructor.h"
+#include "mdd/MDD.h"
+#include "mdd/MDDNode.h"
 int main() {
     // Seed for random number generation
     std::random_device rd;
