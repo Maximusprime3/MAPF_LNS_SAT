@@ -1,0 +1,321 @@
+#include "CNFConstructor.h"
+#include <algorithm>
+#include <iostream>
+
+CNFConstructor::CNFConstructor(const std::unordered_map<int, std::shared_ptr<MDD>>& mdds, 
+                               bool lazy_encoding,
+                               const CNF& existing_cnf,
+                               const std::unordered_map<std::tuple<int, MDDNode::Position, int>, int>& existing_variable_map,
+                               int start_variable_id)
+    : mdds(mdds), cnf(), variable_map(existing_variable_map), next_variable_id(start_variable_id), lazy_encoding(lazy_encoding) {
+    
+    // Copy existing CNF clauses
+    for (const auto& clause : existing_cnf.get_clauses()) {
+        cnf.add_clause(clause);
+    }
+}
+
+int CNFConstructor::add_variable(int agent_id, const MDDNode::Position& position, int timestep) {
+    auto key = std::make_tuple(agent_id, position, timestep);
+    
+    if (variable_map.find(key) == variable_map.end()) {
+        variable_map[key] = next_variable_id;
+        next_variable_id++;
+    }
+    
+    return variable_map[key];
+}
+
+void CNFConstructor::create_agent_path_clauses(int agent_id, const std::shared_ptr<MDD>& mdd) {
+    // For each level in the MDD, create clauses to ensure valid paths
+    for (const auto& level_pair : mdd->levels) {
+        int timestep = level_pair.first;
+        const auto& nodes = level_pair.second;
+        
+        // Ensure the agent is at one of the possible nodes at this timestep
+        std::vector<int> valid_nodes_clause;
+        for (const auto& node : nodes) {
+            valid_nodes_clause.push_back(add_variable(agent_id, node->position, timestep));
+        }
+        cnf.add_clause(valid_nodes_clause);
+    }
+}
+
+void CNFConstructor::add_single_occupancy_clauses() {
+    // Add clauses to ensure each agent occupies only one position at each timestep
+    for (const auto& agent_mdd_pair : mdds) {
+        int agent_id = agent_mdd_pair.first;
+        const auto& mdd = agent_mdd_pair.second;
+        
+        for (int timestep = 0; timestep <= get_max_timesteps(); ++timestep) {
+            auto nodes_at_timestep = mdd->get_nodes_at_level(timestep);
+            
+            if (nodes_at_timestep.size() > 1) {
+                // Create clauses that ensure only one of these nodes can be true at a time
+                for (size_t i = 0; i < nodes_at_timestep.size(); ++i) {
+                    for (size_t j = i + 1; j < nodes_at_timestep.size(); ++j) {
+                        std::vector<int> clause = {
+                            -add_variable(agent_id, nodes_at_timestep[i]->position, timestep),
+                            -add_variable(agent_id, nodes_at_timestep[j]->position, timestep)
+                        };
+                        cnf.add_clause(clause);
+                    }
+                }
+            }
+        }
+    }
+}
+
+void CNFConstructor::create_no_conflict_clauses() {
+    // Ensure no two agents are at the same node at the same timestep
+    std::vector<int> all_agent_ids;
+    for (const auto& agent_mdd_pair : mdds) {
+        all_agent_ids.push_back(agent_mdd_pair.first);
+    }
+    
+    for (int timestep = 0; timestep <= get_max_timesteps(); ++timestep) {
+        // Generate all pairs of agents
+        for (size_t i = 0; i < all_agent_ids.size(); ++i) {
+            for (size_t j = i + 1; j < all_agent_ids.size(); ++j) {
+                int agent1_id = all_agent_ids[i];
+                int agent2_id = all_agent_ids[j];
+                
+                // Check which nodes they can be at in this timestep
+                auto agent1_nodes = mdds.at(agent1_id)->get_nodes_at_level(timestep);
+                auto agent2_nodes = mdds.at(agent2_id)->get_nodes_at_level(timestep);
+                
+                // Add clauses to ensure they don't occupy the same node
+                for (const auto& node1 : agent1_nodes) {
+                    for (const auto& node2 : agent2_nodes) {
+                        if (node1->position == node2->position) {
+                            // The negation ensures they don't both occupy the same node
+                            std::vector<int> conflict_clause = {
+                                -add_variable(agent1_id, node1->position, timestep),
+                                -add_variable(agent2_id, node2->position, timestep)
+                            };
+                            cnf.add_clause(conflict_clause);
+                        }
+                    }
+                }
+            }
+        }
+    }
+}
+
+std::vector<int> CNFConstructor::add_single_collision_clause(int agent1_id, int agent2_id, 
+                                                            const MDDNode::Position& position, 
+                                                            int timestep, bool add_to_cnf) {
+    int variable1 = add_variable(agent1_id, position, timestep);
+    int variable2 = add_variable(agent2_id, position, timestep);
+    
+    // Negate the variables to ensure only one can occupy this position at this time
+    std::vector<int> clause = {-variable1, -variable2};
+    
+    if (add_to_cnf) {
+        cnf.add_clause(clause);
+    }
+    
+    return clause;
+}
+
+void CNFConstructor::add_transition_clauses() {
+    // For every agent and every timestep (except the last), enforce that if the agent is at a given node u at time t,
+    // then at time t+1 it must be at one of the children of u as defined in the MDD.
+    for (const auto& agent_mdd_pair : mdds) {
+        int agent_id = agent_mdd_pair.first;
+        const auto& mdd = agent_mdd_pair.second;
+        
+        // For each timestep that has a subsequent timestep:
+        for (const auto& level_pair : mdd->levels) {
+            int t = level_pair.first;
+            if (mdd->levels.find(t + 1) == mdd->levels.end()) {
+                continue; // No next timestep
+            }
+            
+            // For every node at time t:
+            for (const auto& node : level_pair.second) {
+                if (!node->children.empty()) { // Only add if there is at least one valid move
+                    // Build a clause: ¬x(agent, u, t) ∨ (x(agent, child1, t+1) ∨ ... ∨ x(agent, child_k, t+1))
+                    std::vector<int> clause = {-add_variable(agent_id, node->position, t)};
+                    for (const auto& child : node->children) {
+                        clause.push_back(add_variable(agent_id, child->position, t + 1));
+                    }
+                    cnf.add_clause(clause);
+                }
+                // If no children exist, the MDD would be incomplete—typically waiting is allowed.
+            }
+        }
+    }
+}
+
+CNF CNFConstructor::construct_cnf(const std::vector<std::tuple<int, int, MDDNode::Position, int>>& collisions) {
+    // Construct CNF from the given MDDs
+    for (const auto& agent_mdd_pair : mdds) {
+        create_agent_path_clauses(agent_mdd_pair.first, agent_mdd_pair.second);
+    }
+    
+    add_single_occupancy_clauses();
+    
+    if (!lazy_encoding) {
+        create_no_conflict_clauses();
+    }
+    
+    add_transition_clauses();
+    
+    // Add specific collision clauses if provided
+    for (const auto& collision : collisions) {
+        int agent1_id, agent2_id, timestep;
+        MDDNode::Position position;
+        std::tie(agent1_id, agent2_id, position, timestep) = collision;
+        add_single_collision_clause(agent1_id, agent2_id, position, timestep);
+    }
+    
+    return cnf;
+}
+
+void CNFConstructor::add_collision_clauses_to_cnf(CNF& existing_cnf, const std::vector<std::tuple<int, int, MDDNode::Position, int>>& collisions) {
+    // Add specific collision clauses to the existing CNF
+    for (const auto& collision : collisions) {
+        int agent1_id, agent2_id, timestep;
+        MDDNode::Position position;
+        std::tie(agent1_id, agent2_id, position, timestep) = collision;
+        
+        // Create the collision clause
+        std::vector<int> clause = add_single_collision_clause(agent1_id, agent2_id, position, timestep, false);
+        
+        // Add it to the existing CNF
+        existing_cnf.add_clause(clause);
+    }
+}
+
+std::vector<int> CNFConstructor::path_to_cnf_assignment(int agent_id, const std::vector<MDDNode::Position>& path) {
+    std::vector<int> assignment;
+    
+    // For each timestep, set the variable for the agent's position to true
+    for (size_t timestep = 0; timestep < path.size(); ++timestep) {
+        int variable_id = get_variable_id(agent_id, path[timestep], timestep);
+        if (variable_id > 0) {
+            assignment.push_back(variable_id);
+        }
+    }
+    
+    return assignment;
+}
+
+std::unordered_map<int, std::vector<MDDNode::Position>> CNFConstructor::cnf_assignment_to_paths(const std::vector<int>& assignment) {
+    std::unordered_map<int, std::vector<MDDNode::Position>> agent_paths;
+    
+    // Group positive assignments by agent
+    std::unordered_map<int, std::vector<std::pair<int, MDDNode::Position>>> agent_positions;
+    
+    for (int var_id : assignment) {
+        if (var_id > 0) { // Only positive assignments
+            // Find the (agent, position, timestep) for this variable
+            for (const auto& var_pair : variable_map) {
+                if (var_pair.second == var_id) {
+                    int agent_id = std::get<0>(var_pair.first);
+                    MDDNode::Position position = std::get<1>(var_pair.first);
+                    int timestep = std::get<2>(var_pair.first);
+                    agent_positions[agent_id].push_back({timestep, position});
+                    break;
+                }
+            }
+        }
+    }
+    
+    // Convert to paths for each agent
+    for (const auto& agent_pos_pair : agent_positions) {
+        int agent_id = agent_pos_pair.first;
+        const auto& positions = agent_pos_pair.second;
+        
+        // Sort by timestep
+        std::vector<std::pair<int, MDDNode::Position>> sorted_positions = positions;
+        std::sort(sorted_positions.begin(), sorted_positions.end());
+        
+        // Extract path
+        std::vector<MDDNode::Position> path;
+        for (const auto& pos_pair : sorted_positions) {
+            path.push_back(pos_pair.second);
+        }
+        
+        agent_paths[agent_id] = path;
+    }
+    
+    return agent_paths;
+}
+
+bool CNFConstructor::validate_path(int agent_id, const std::vector<MDDNode::Position>& path) {
+    if (path.empty()) return false;
+    
+    // Check if agent exists
+    if (mdds.find(agent_id) == mdds.end()) return false;
+    
+    const auto& mdd = mdds.at(agent_id);
+    
+    // Check each position is valid at its timestep
+    for (size_t timestep = 0; timestep < path.size(); ++timestep) {
+        auto nodes_at_timestep = mdd->get_nodes_at_level(timestep);
+        bool position_valid = false;
+        
+        for (const auto& node : nodes_at_timestep) {
+            if (node->position == path[timestep]) {
+                position_valid = true;
+                break;
+            }
+        }
+        
+        if (!position_valid) {
+            return false;
+        }
+    }
+    
+    // Check transitions are valid (optional - could be more strict)
+    for (size_t timestep = 0; timestep < path.size() - 1; ++timestep) {
+        // Find the node at current timestep
+        auto nodes_at_timestep = mdd->get_nodes_at_level(timestep);
+        std::shared_ptr<MDDNode> current_node = nullptr;
+        
+        for (const auto& node : nodes_at_timestep) {
+            if (node->position == path[timestep]) {
+                current_node = node;
+                break;
+            }
+        }
+        
+        if (current_node) {
+            // Check if next position is a valid child
+            bool valid_transition = false;
+            for (const auto& child : current_node->children) {
+                if (child->position == path[timestep + 1]) {
+                    valid_transition = true;
+                    break;
+                }
+            }
+            
+            if (!valid_transition) {
+                return false;
+            }
+        }
+    }
+    
+    return true;
+}
+
+int CNFConstructor::get_variable_id(int agent_id, const MDDNode::Position& position, int timestep) const {
+    auto key = std::make_tuple(agent_id, position, timestep);
+    auto it = variable_map.find(key);
+    if (it != variable_map.end()) {
+        return it->second;
+    }
+    return -1; // Variable not found
+}
+
+int CNFConstructor::get_max_timesteps() const {
+    int max_timesteps = 0;
+    for (const auto& agent_mdd_pair : mdds) {
+        for (const auto& level_pair : agent_mdd_pair.second->levels) {
+            max_timesteps = std::max(max_timesteps, level_pair.first);
+        }
+    }
+    return max_timesteps;
+} 
