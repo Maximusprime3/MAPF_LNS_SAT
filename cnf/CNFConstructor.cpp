@@ -118,6 +118,22 @@ std::vector<int> CNFConstructor::add_single_collision_clause(int agent1_id, int 
     return clause;
 }
 
+std::vector<int> CNFConstructor::add_single_collision_clause_unchecked(int agent1_id, int agent2_id, 
+                                                                      const MDDNode::Position& position, 
+                                                                      int timestep, bool add_to_cnf) {
+    int variable1 = add_variable(agent1_id, position, timestep);
+    int variable2 = add_variable(agent2_id, position, timestep);
+    
+    // Negate the variables to ensure only one can occupy this position at this time
+    std::vector<int> clause = {-variable1, -variable2};
+    
+    if (add_to_cnf) {
+        cnf.add_clause(clause);
+    }
+    
+    return clause;
+}
+
 void CNFConstructor::add_transition_clauses() {
     // For every agent and every timestep (except the last), enforce that if the agent is at a given node u at time t,
     // then at time t+1 it must be at one of the children of u as defined in the MDD.
@@ -158,6 +174,8 @@ CNF CNFConstructor::construct_cnf(const std::vector<std::tuple<int, int, MDDNode
     
     if (!lazy_encoding) {
         create_no_conflict_clauses();
+        // Add edge collision clauses to prevent position swapping (eager encoding only)
+        add_edge_collision_clauses();
     }
     
     add_transition_clauses();
@@ -186,6 +204,145 @@ void CNFConstructor::add_collision_clauses_to_cnf(CNF& existing_cnf, const std::
         // Add it to the existing CNF
         existing_cnf.add_clause(clause);
     }
+}
+
+std::vector<int> CNFConstructor::add_single_edge_collision_clause(int agent1_id, int agent2_id, 
+                                                                const MDDNode::Position& pos1, 
+                                                                const MDDNode::Position& pos2, 
+                                                                int timestep, bool add_to_cnf) {
+    int var1 = get_variable_id(agent1_id, pos1, timestep);
+    int var2 = get_variable_id(agent1_id, pos2, timestep + 1);
+    int var3 = get_variable_id(agent2_id, pos2, timestep);
+    int var4 = get_variable_id(agent2_id, pos1, timestep + 1);
+    if (var1 > 0 && var2 > 0 && var3 > 0 && var4 > 0) {
+        std::vector<int> clause = {-var1, -var2, -var3, -var4};
+        if (add_to_cnf) {
+            cnf.add_clause(clause);
+        }
+        return clause;
+    }
+    throw std::runtime_error("Invalid edge collision clause: agent1=" + std::to_string(agent1_id) + ", agent2=" + std::to_string(agent2_id) + ", pos1=(" + std::to_string(pos1.first) + "," + std::to_string(pos1.second) + "), pos2=(" + std::to_string(pos2.first) + "," + std::to_string(pos2.second) + "), timestep=" + std::to_string(timestep));
+}
+
+std::vector<int> CNFConstructor::add_single_edge_collision_clause_to_cnf(CNF& existing_cnf, int agent1_id, int agent2_id, 
+                                                                       const MDDNode::Position& pos1, 
+                                                                       const MDDNode::Position& pos2, 
+                                                                       int timestep) {
+    int var1 = get_variable_id(agent1_id, pos1, timestep);
+    int var2 = get_variable_id(agent1_id, pos2, timestep + 1);
+    int var3 = get_variable_id(agent2_id, pos2, timestep);
+    int var4 = get_variable_id(agent2_id, pos1, timestep + 1);
+    if (var1 > 0 && var2 > 0 && var3 > 0 && var4 > 0) {
+        std::vector<int> clause = {-var1, -var2, -var3, -var4};
+        existing_cnf.add_clause(clause);
+        return clause;
+    }
+    throw std::runtime_error("Invalid edge collision clause: agent1=" + std::to_string(agent1_id) + ", agent2=" + std::to_string(agent2_id) + ", pos1=(" + std::to_string(pos1.first) + "," + std::to_string(pos1.second) + "), pos2=(" + std::to_string(pos2.first) + "," + std::to_string(pos2.second) + "), timestep=" + std::to_string(timestep));
+}
+
+std::vector<int> CNFConstructor::add_single_edge_collision_clause_to_cnf_unchecked(CNF& existing_cnf, int agent1_id, int agent2_id, 
+                                                                                 const MDDNode::Position& pos1, 
+                                                                                 const MDDNode::Position& pos2, 
+                                                                                 int timestep) {
+    int var1 = add_variable(agent1_id, pos1, timestep);
+    int var2 = add_variable(agent1_id, pos2, timestep + 1);
+    int var3 = add_variable(agent2_id, pos2, timestep);
+    int var4 = add_variable(agent2_id, pos1, timestep + 1);
+    
+    std::vector<int> clause = {-var1, -var2, -var3, -var4};
+    existing_cnf.add_clause(clause);
+    return clause;
+}
+
+std::vector<int> CNFConstructor::add_single_edge_collision_clause_unchecked(int agent1_id, int agent2_id, 
+    const MDDNode::Position& pos1, const MDDNode::Position& pos2, int timestep, bool add_to_cnf) {
+    if (add_to_cnf) {
+        return add_single_edge_collision_clause_to_cnf_unchecked(cnf, agent1_id, agent2_id, pos1, pos2, timestep);
+    } else {
+        // Just return the clause without adding to CNF
+        int var1 = add_variable(agent1_id, pos1, timestep);
+        int var2 = add_variable(agent1_id, pos2, timestep + 1);
+        int var3 = add_variable(agent2_id, pos2, timestep);
+        int var4 = add_variable(agent2_id, pos1, timestep + 1);
+        std::vector<int> clause = {-var1, -var2, -var3, -var4};
+        return clause;
+    }
+}
+
+void CNFConstructor::add_edge_collision_clauses() {
+    // Prevent agents from swapping positions by traversing the same edge in opposite directions
+    std::vector<int> all_agent_ids;
+    for (const auto& agent_mdd_pair : mdds) {
+        all_agent_ids.push_back(agent_mdd_pair.first);
+    }
+    
+    for (int timestep = 0; timestep < get_max_timesteps(); ++timestep) {
+        // Generate all pairs of agents
+        for (size_t i = 0; i < all_agent_ids.size(); ++i) {
+            for (size_t j = i + 1; j < all_agent_ids.size(); ++j) {
+                int agent1_id = all_agent_ids[i];
+                int agent2_id = all_agent_ids[j];
+                
+                // Get nodes at current and next timestep for both agents
+                auto agent1_nodes_t = mdds.at(agent1_id)->get_nodes_at_level(timestep);
+                auto agent1_nodes_t1 = mdds.at(agent1_id)->get_nodes_at_level(timestep + 1);
+                auto agent2_nodes_t = mdds.at(agent2_id)->get_nodes_at_level(timestep);
+                auto agent2_nodes_t1 = mdds.at(agent2_id)->get_nodes_at_level(timestep + 1);
+                
+                // Check for edge conflicts: agent1 goes from pos1 to pos2 while agent2 goes from pos2 to pos1
+                for (const auto& node1_t : agent1_nodes_t) {
+                    for (const auto& node1_t1 : agent1_nodes_t1) {
+                        // Check if this is a valid transition for agent1
+                        bool valid_transition1 = false;
+                        for (const auto& child : node1_t->children) {
+                            if (child->position == node1_t1->position) {
+                                valid_transition1 = true;
+                                break;
+                            }
+                        }
+                        if (!valid_transition1) continue;
+                        
+                        for (const auto& node2_t : agent2_nodes_t) {
+                            for (const auto& node2_t1 : agent2_nodes_t1) {
+                                // Check if this is a valid transition for agent2
+                                bool valid_transition2 = false;
+                                for (const auto& child : node2_t->children) {
+                                    if (child->position == node2_t1->position) {
+                                        valid_transition2 = true;
+                                        break;
+                                    }
+                                }
+                                if (!valid_transition2) continue;
+                                
+                                // Check for edge collision: agent1 goes from pos1 to pos2, agent2 goes from pos2 to pos1
+                                if (node1_t->position == node2_t1->position && node1_t1->position == node2_t->position) {
+                                    add_single_edge_collision_clause(agent1_id, agent2_id, 
+                                                                  node1_t->position, node1_t1->position, timestep);
+                                }
+                            }
+                        }
+                    }
+                }
+            }
+        }
+    }
+}
+
+void CNFConstructor::add_edge_collision_clauses_to_cnf(CNF& existing_cnf) {
+    // Temporarily store the original CNF
+    CNF original_cnf = cnf;
+    
+    // Clear internal CNF and add edge collision clauses to it
+    cnf.clear();
+    add_edge_collision_clauses();
+    
+    // Copy the edge collision clauses to the existing CNF
+    for (const auto& clause : cnf.get_clauses()) {
+        existing_cnf.add_clause(clause);
+    }
+    
+    // Restore the original internal CNF
+    cnf = original_cnf;
 }
 
 std::vector<int> CNFConstructor::path_to_cnf_assignment(int agent_id, const std::vector<MDDNode::Position>& path) {

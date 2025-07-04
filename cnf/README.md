@@ -29,9 +29,11 @@ The CNF module consists of two main classes:
 - **Agent Path Constraints**: Ensures agents follow valid paths in their MDDs
 - **Single Occupancy Constraints**: Each agent occupies only one position per timestep
 - **Collision Avoidance**: Prevents agents from occupying the same position simultaneously
+- **Edge Collision Prevention**: Prevents agents from swapping positions by traversing the same edge in opposite directions
 - **Transition Constraints**: Ensures valid moves between consecutive timesteps
 - **Lazy Encoding**: Option to defer conflict clauses for efficiency
 - **Custom Collision Clauses**: Add specific collision constraints
+- **Custom Edge Collision Clauses**: Add specific edge collision constraints
 - **Path-CNF Translation**: Convert between agent paths and CNF variable assignments
 - **Path Validation**: Verify paths are consistent with MDD constraints
 
@@ -61,9 +63,19 @@ std::cout << cnf.to_dimacs();
 
 ```cpp
 // Use lazy encoding for better performance with large problems
+// Lazy encoding excludes collision and edge conflict clauses from initial construction
 CNFConstructor lazy_constructor(mdds, true);
 CNF lazy_cnf = lazy_constructor.construct_cnf();
+
+// Eager encoding (default) includes all collision and edge conflict clauses
+CNFConstructor eager_constructor(mdds, false);
+CNF eager_cnf = eager_constructor.construct_cnf();
 ```
+
+**Lazy vs Eager Encoding:**
+- **Eager Encoding**: Includes all possible collision and edge conflict clauses upfront
+- **Lazy Encoding**: Excludes collision and edge conflict clauses, allowing incremental addition of specific constraints
+- **Use Case**: Lazy encoding is beneficial for large problems where most conflicts are unlikely to occur
 
 ### Adding Custom Collisions
 
@@ -75,6 +87,38 @@ std::vector<std::tuple<int, int, MDDNode::Position, int>> collisions = {
 
 CNF cnf = cnf_constructor.construct_cnf(collisions);
 ```
+
+### Edge Collision Clauses
+
+```cpp
+// Add edge collision clauses to prevent position swapping
+CNF cnf_with_edge_collisions = cnf;
+cnf_constructor.add_edge_collision_clauses_to_cnf(cnf_with_edge_collisions);
+
+// Add a specific edge collision clause (for lazy encoding)
+std::vector<int> edge_clause = cnf_constructor.add_single_edge_collision_clause_to_cnf(
+    cnf, 0, 1, {1, 0}, {2, 0}, 2); // Agents 0 and 1 swapping at timestep 2
+
+// Add a specific edge collision clause (UNCHECKED - no safety validation, faster)
+std::vector<int> edge_clause_fast = cnf_constructor.add_single_edge_collision_clause_to_cnf_unchecked(
+    cnf, 0, 1, {1, 0}, {2, 0}, 2); // Use when you're sure the positions exist in MDDs
+```
+
+### Performance Optimizations
+
+For high-performance scenarios where you're confident about the validity of your constraints:
+
+```cpp
+// Unchecked collision clause (faster, no validation)
+std::vector<int> collision_clause = cnf_constructor.add_single_collision_clause_unchecked(
+    0, 1, {1, 0}, 2, false); // Returns clause without adding to CNF
+
+// Unchecked edge collision clause (faster, no validation)
+std::vector<int> edge_clause = cnf_constructor.add_single_edge_collision_clause_to_cnf_unchecked(
+    cnf, 0, 1, {1, 0}, {2, 0}, 2); // Use when positions are guaranteed to exist
+```
+
+**Note:** Unchecked methods skip validation and will create new variables if they don't exist. Use only when you're certain about the validity of your constraints.
 
 ### Path-CNF Translation
 
