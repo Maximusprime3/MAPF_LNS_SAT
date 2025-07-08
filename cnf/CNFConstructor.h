@@ -62,11 +62,6 @@ public:
                                                 const MDDNode::Position& position, 
                                                 int timestep, bool add_to_cnf = true);
 
-    // Add a single collision clause for two agents at a specific position and time (UNCHECKED - no safety validation)
-    std::vector<int> add_single_collision_clause_unchecked(int agent1_id, int agent2_id, 
-                                                          const MDDNode::Position& position, 
-                                                          int timestep, bool add_to_cnf = true);
-
     // Adds transition clauses ensuring valid moves between timesteps
     void add_transition_clauses();
 
@@ -76,21 +71,6 @@ public:
     // Add collision clauses to an existing CNF without reconstructing
     void add_collision_clauses_to_cnf(CNF& existing_cnf, const std::vector<std::tuple<int, int, MDDNode::Position, int>>& collisions);
     
-    // Add edge collision clauses to an existing CNF without reconstructing
-    void add_edge_collision_clauses_to_cnf(CNF& existing_cnf);
-    
-    // Add a single edge collision clause to an existing CNF
-    std::vector<int> add_single_edge_collision_clause_to_cnf(CNF& existing_cnf, int agent1_id, int agent2_id, 
-                                                           const MDDNode::Position& pos1, 
-                                                           const MDDNode::Position& pos2, 
-                                                           int timestep);
-    
-    // Add a single edge collision clause to an existing CNF (UNCHECKED - no safety validation)
-    std::vector<int> add_single_edge_collision_clause_to_cnf_unchecked(CNF& existing_cnf, int agent1_id, int agent2_id, 
-                                                                     const MDDNode::Position& pos1, 
-                                                                     const MDDNode::Position& pos2, 
-                                                                     int timestep);
-    
     // Add edge collision clauses to prevent agents from swapping positions
     void add_edge_collision_clauses();
     
@@ -99,12 +79,6 @@ public:
                                                     const MDDNode::Position& pos1, 
                                                     const MDDNode::Position& pos2, 
                                                     int timestep, bool add_to_cnf = true);
-
-    // Add a single edge collision clause for two agents swapping positions (internal use, UNCHECKED - no safety validation)
-    std::vector<int> add_single_edge_collision_clause_unchecked(int agent1_id, int agent2_id, 
-                                                              const MDDNode::Position& pos1, 
-                                                              const MDDNode::Position& pos2, 
-                                                              int timestep, bool add_to_cnf = true);
 
     // Translate a path to CNF variable assignments
     std::vector<int> path_to_cnf_assignment(int agent_id, const std::vector<MDDNode::Position>& path);

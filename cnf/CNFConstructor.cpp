@@ -66,6 +66,7 @@ void CNFConstructor::add_single_occupancy_clauses() {
     }
 }
 
+// for eager encoding create all no conflict clauses
 void CNFConstructor::create_no_conflict_clauses() {
     // Ensure no two agents are at the same node at the same timestep
     std::vector<int> all_agent_ids;
@@ -118,21 +119,6 @@ std::vector<int> CNFConstructor::add_single_collision_clause(int agent1_id, int 
     return clause;
 }
 
-std::vector<int> CNFConstructor::add_single_collision_clause_unchecked(int agent1_id, int agent2_id, 
-                                                                      const MDDNode::Position& position, 
-                                                                      int timestep, bool add_to_cnf) {
-    int variable1 = add_variable(agent1_id, position, timestep);
-    int variable2 = add_variable(agent2_id, position, timestep);
-    
-    // Negate the variables to ensure only one can occupy this position at this time
-    std::vector<int> clause = {-variable1, -variable2};
-    
-    if (add_to_cnf) {
-        cnf.add_clause(clause);
-    }
-    
-    return clause;
-}
 
 void CNFConstructor::add_transition_clauses() {
     // For every agent and every timestep (except the last), enforce that if the agent is at a given node u at time t,
@@ -224,51 +210,9 @@ std::vector<int> CNFConstructor::add_single_edge_collision_clause(int agent1_id,
     throw std::runtime_error("Invalid edge collision clause: agent1=" + std::to_string(agent1_id) + ", agent2=" + std::to_string(agent2_id) + ", pos1=(" + std::to_string(pos1.first) + "," + std::to_string(pos1.second) + "), pos2=(" + std::to_string(pos2.first) + "," + std::to_string(pos2.second) + "), timestep=" + std::to_string(timestep));
 }
 
-std::vector<int> CNFConstructor::add_single_edge_collision_clause_to_cnf(CNF& existing_cnf, int agent1_id, int agent2_id, 
-                                                                       const MDDNode::Position& pos1, 
-                                                                       const MDDNode::Position& pos2, 
-                                                                       int timestep) {
-    int var1 = get_variable_id(agent1_id, pos1, timestep);
-    int var2 = get_variable_id(agent1_id, pos2, timestep + 1);
-    int var3 = get_variable_id(agent2_id, pos2, timestep);
-    int var4 = get_variable_id(agent2_id, pos1, timestep + 1);
-    if (var1 > 0 && var2 > 0 && var3 > 0 && var4 > 0) {
-        std::vector<int> clause = {-var1, -var2, -var3, -var4};
-        existing_cnf.add_clause(clause);
-        return clause;
-    }
-    throw std::runtime_error("Invalid edge collision clause: agent1=" + std::to_string(agent1_id) + ", agent2=" + std::to_string(agent2_id) + ", pos1=(" + std::to_string(pos1.first) + "," + std::to_string(pos1.second) + "), pos2=(" + std::to_string(pos2.first) + "," + std::to_string(pos2.second) + "), timestep=" + std::to_string(timestep));
-}
 
-std::vector<int> CNFConstructor::add_single_edge_collision_clause_to_cnf_unchecked(CNF& existing_cnf, int agent1_id, int agent2_id, 
-                                                                                 const MDDNode::Position& pos1, 
-                                                                                 const MDDNode::Position& pos2, 
-                                                                                 int timestep) {
-    int var1 = add_variable(agent1_id, pos1, timestep);
-    int var2 = add_variable(agent1_id, pos2, timestep + 1);
-    int var3 = add_variable(agent2_id, pos2, timestep);
-    int var4 = add_variable(agent2_id, pos1, timestep + 1);
-    
-    std::vector<int> clause = {-var1, -var2, -var3, -var4};
-    existing_cnf.add_clause(clause);
-    return clause;
-}
 
-std::vector<int> CNFConstructor::add_single_edge_collision_clause_unchecked(int agent1_id, int agent2_id, 
-    const MDDNode::Position& pos1, const MDDNode::Position& pos2, int timestep, bool add_to_cnf) {
-    if (add_to_cnf) {
-        return add_single_edge_collision_clause_to_cnf_unchecked(cnf, agent1_id, agent2_id, pos1, pos2, timestep);
-    } else {
-        // Just return the clause without adding to CNF
-        int var1 = add_variable(agent1_id, pos1, timestep);
-        int var2 = add_variable(agent1_id, pos2, timestep + 1);
-        int var3 = add_variable(agent2_id, pos2, timestep);
-        int var4 = add_variable(agent2_id, pos1, timestep + 1);
-        std::vector<int> clause = {-var1, -var2, -var3, -var4};
-        return clause;
-    }
-}
-
+// for eager encoding create all edge collision clauses
 void CNFConstructor::add_edge_collision_clauses() {
     // Prevent agents from swapping positions by traversing the same edge in opposite directions
     std::vector<int> all_agent_ids;
@@ -328,22 +272,7 @@ void CNFConstructor::add_edge_collision_clauses() {
     }
 }
 
-void CNFConstructor::add_edge_collision_clauses_to_cnf(CNF& existing_cnf) {
-    // Temporarily store the original CNF
-    CNF original_cnf = cnf;
-    
-    // Clear internal CNF and add edge collision clauses to it
-    cnf.clear();
-    add_edge_collision_clauses();
-    
-    // Copy the edge collision clauses to the existing CNF
-    for (const auto& clause : cnf.get_clauses()) {
-        existing_cnf.add_clause(clause);
-    }
-    
-    // Restore the original internal CNF
-    cnf = original_cnf;
-}
+
 
 std::vector<int> CNFConstructor::path_to_cnf_assignment(int agent_id, const std::vector<MDDNode::Position>& path) {
     std::vector<int> assignment;
