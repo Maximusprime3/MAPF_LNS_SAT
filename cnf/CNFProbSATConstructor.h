@@ -30,8 +30,7 @@ public:
     int get_probsat_num_clauses() const;
     int get_probsat_num_variables() const;
 
-private:
-    // Build the clause pointers array for ProbSAT
+    // Build the clause pointers array for ProbSAT (public so we can rebuild after adding clauses)
     void build_clause_pointers();
 };
 

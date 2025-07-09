@@ -13,6 +13,8 @@
 #include <chrono>
 #include <iomanip>
 #include <sstream>
+#include <algorithm>
+#include <cstring>
 
 SATSolverManager::SATSolverManager(const std::string& map_path,
                                    const std::string& scenario_path,
@@ -238,8 +240,8 @@ SATSolverManager::create_mdds(const std::vector<std::vector<char>>& map,
 {
     std::vector<std::shared_ptr<MDD>> mdds;
     for (size_t i = 0; i < starts.size(); ++i) {
-        // Convert std::map to std::unordered_map for MDDConstructor
-        std::unordered_map<MDDNode::Position, int, pair_hash> dist_umap;
+        // Convert std::map to PositionDistanceMap for MDDConstructor
+        PositionDistanceMap dist_umap;
         for (const auto& kv : distance_matrices[i]) {
             dist_umap[kv.first] = kv.second;
         }
@@ -289,15 +291,16 @@ std::string SATSolverManager::get_unique_filename(const std::string& base_filena
 std::pair<std::shared_ptr<CNF>, std::string>
 SATSolverManager::create_and_save_cnf(const std::vector<std::shared_ptr<MDD>>& mdds,
                                       bool save_to_file,
-                                      const std::string& filename)
+                                      const std::string& filename,
+                                      bool lazy_encoding)
 {
     // Build a map from agent_id to MDD for CNFConstructor
-    std::unordered_map<int, std::shared_ptr<MDD>> mdd_map;
+    AgentMDDMap mdd_map;
     for (size_t i = 0; i < mdds.size(); ++i) {
         mdd_map[static_cast<int>(i)] = mdds[i];
     }
     // Construct the CNF using CNFConstructor
-    CNFConstructor cnf_constructor(mdd_map);
+    CNFConstructor cnf_constructor(mdd_map, lazy_encoding);
     CNF cnf = cnf_constructor.construct_cnf();
     std::shared_ptr<CNF> cnf_ptr = std::make_shared<CNF>(cnf);
 
@@ -331,4 +334,633 @@ SATSolverManager::create_and_save_cnf(const std::vector<std::shared_ptr<MDD>>& m
     }
     // Return the CNF and the filename (empty if not saved)
     return {cnf_ptr, out_filename};
-} 
+}
+
+/**
+ * Creates a CNFProbSATConstructor for direct ProbSAT integration.
+ * @param mdds Vector of shared_ptr<MDD> for each agent.
+ * @param lazy_encoding If true, use lazy encoding (exclude conflict clauses initially).
+ * @return Shared pointer to CNFProbSATConstructor.
+ */
+std::shared_ptr<CNFProbSATConstructor>
+SATSolverManager::create_cnf_probsat_constructor(const std::vector<std::shared_ptr<MDD>>& mdds,
+                                                bool lazy_encoding) {
+    // Build a map from agent_id to MDD for CNFProbSATConstructor
+    AgentMDDMap mdd_map;
+    for (size_t i = 0; i < mdds.size(); ++i) {
+        mdd_map[static_cast<int>(i)] = mdds[i];
+    }
+    
+    // Create and return CNFProbSATConstructor
+    auto constructor = std::make_shared<CNFProbSATConstructor>(mdd_map, lazy_encoding);
+    constructor->construct_probsat_cnf();
+    return constructor;
+}
+
+/**
+ * Solves a CNF formula using ProbSAT's in-memory API.
+ * @param cnf The CNF formula to solve.
+ * @param seed Random seed for ProbSAT.
+ * @param max_runs Maximum number of runs.
+ * @param max_flips Maximum number of flips per run.
+ * @param initial_assignment Optional initial assignment (nullptr for random).
+ * @return ProbSATSolution containing the results.
+ */
+ProbSATSolution SATSolverManager::solve_cnf_with_probsat(const CNF& cnf,
+                                                        long long seed,
+                                                        long long max_runs,
+                                                        long long max_flips,
+                                                        const std::vector<int>* initial_assignment) {
+    ProbSATSolution result;
+    result.satisfiable = false;
+    result.num_flips = 0;
+    result.solve_time = 0.0;
+    result.error_message = "";
+    
+    try {
+        // Convert CNF to ProbSAT format
+        std::vector<int*> clause_pointers;
+        std::vector<std::vector<int>> clause_storage;
+        cnf_to_probsat_format(cnf, clause_pointers, clause_storage);
+        
+        if (clause_pointers.size() <= 1) {
+            result.error_message = "No valid clauses found for ProbSAT";
+            return result;
+        }
+        
+        // Prepare ProbSAT result struct
+        ProbSatResult probsat_result;
+        memset(&probsat_result, 0, sizeof(probsat_result));
+        
+        // Prepare initial assignment if provided
+        std::vector<int> initial_assignment_vec;
+        int* initial_assignment_ptr = nullptr;
+        if (initial_assignment != nullptr) {
+            // ProbSAT expects 1-based indexing, so we need to adjust
+            initial_assignment_vec.resize(cnf.count_variables() + 1, 0);
+            for (size_t i = 0; i < initial_assignment->size(); ++i) {
+                if (i + 1 < initial_assignment_vec.size()) {
+                    initial_assignment_vec[i + 1] = (*initial_assignment)[i];
+                }
+            }
+            initial_assignment_ptr = initial_assignment_vec.data();
+        }
+        
+        // Solve with ProbSAT
+        auto start_time = std::chrono::high_resolution_clock::now();
+        
+        int sat = probsat_solve_in_memory(
+            cnf.count_variables(),
+            cnf.count_clauses(),
+            const_cast<int**>(clause_pointers.data()),
+            seed,
+            max_runs,
+            max_flips,
+            &probsat_result,
+            initial_assignment_ptr
+        );
+        
+        auto end_time = std::chrono::high_resolution_clock::now();
+        auto duration = std::chrono::duration_cast<std::chrono::milliseconds>(end_time - start_time);
+        
+        // Process results
+        result.satisfiable = (sat == 10 || probsat_result.sat == 10);
+        result.solve_time = probsat_result.solve_time;
+        result.num_flips = probsat_result.num_flips;
+        
+        if (result.satisfiable && probsat_result.assignment != nullptr) {
+            // Copy assignment directly (ProbSAT uses 0-based indexing)
+            result.assignment.resize(cnf.count_variables());
+            
+            // Debug: Print raw ProbSAT assignment
+            std::cerr << "[DEBUG] Raw ProbSAT assignment (first 10 elements): ";
+            for (int i = 0; i < std::min(10, cnf.count_variables()); ++i) {
+                std::cerr << probsat_result.assignment[i] << " ";
+            }
+            std::cerr << std::endl;
+            
+            // Copy directly without indexing conversion
+            for (int i = 0; i < cnf.count_variables(); ++i) {
+                result.assignment[i] = probsat_result.assignment[i];
+            }
+            
+            // Debug: Print processed assignment
+            std::cerr << "[DEBUG] Processed assignment: ";
+            for (int i = 0; i < std::min(10, (int)result.assignment.size()); ++i) {
+                std::cerr << result.assignment[i] << " ";
+            }
+            std::cerr << std::endl;
+        }
+        
+        // Cleanup
+        if (probsat_result.assignment) {
+            free(probsat_result.assignment);
+        }
+        
+    } catch (const std::exception& e) {
+        result.error_message = std::string("Exception during ProbSAT solving: ") + e.what();
+    }
+    
+    return result;
+}
+
+/**
+ * Solves a CNF formula using ProbSAT's in-memory API via CNFProbSATConstructor.
+ * @param cnf_constructor The CNFProbSATConstructor to use.
+ * @param seed Random seed for ProbSAT.
+ * @param max_runs Maximum number of runs.
+ * @param max_flips Maximum number of flips per run.
+ * @param initial_assignment Optional initial assignment (nullptr for random).
+ * @return ProbSATSolution containing the results.
+ */
+ProbSATSolution SATSolverManager::solve_cnf_with_probsat(const std::shared_ptr<CNFProbSATConstructor>& cnf_constructor,
+                                                        long long seed,
+                                                        long long max_runs,
+                                                        long long max_flips,
+                                                        const std::vector<int>* initial_assignment) {
+    ProbSATSolution result;
+    result.satisfiable = false;
+    result.num_flips = 0;
+    result.solve_time = 0.0;
+    result.error_message = "";
+    
+    try {
+        // Get ProbSAT data from CNFProbSATConstructor
+        int** clause_pointers = cnf_constructor->get_probsat_clause_pointers();
+        int num_vars = cnf_constructor->get_probsat_num_variables();
+        int num_clauses = cnf_constructor->get_probsat_num_clauses();
+        
+        if (clause_pointers == nullptr || num_clauses == 0) {
+            result.error_message = "No valid clauses found for ProbSAT";
+            return result;
+        }
+        
+        // Prepare ProbSAT result struct
+        ProbSatResult probsat_result;
+        memset(&probsat_result, 0, sizeof(probsat_result));
+        
+        // Prepare initial assignment if provided
+        std::vector<int> initial_assignment_vec;
+        int* initial_assignment_ptr = nullptr;
+        if (initial_assignment != nullptr) {
+            // CNFProbSATConstructor uses 0-based indexing
+            initial_assignment_vec = *initial_assignment;
+            initial_assignment_ptr = initial_assignment_vec.data();
+        }
+        
+        // Solve with ProbSAT
+        auto start_time = std::chrono::high_resolution_clock::now();
+        
+        int sat = probsat_solve_in_memory(
+            num_vars,
+            num_clauses,
+            clause_pointers,
+            seed,
+            max_runs,
+            max_flips,
+            &probsat_result,
+            initial_assignment_ptr
+        );
+        
+        auto end_time = std::chrono::high_resolution_clock::now();
+        auto duration = std::chrono::duration_cast<std::chrono::milliseconds>(end_time - start_time);
+        
+        // Process results
+        result.satisfiable = (sat == 10 || probsat_result.sat == 10);
+        result.solve_time = probsat_result.solve_time;
+        result.num_flips = probsat_result.num_flips;
+        
+        if (result.satisfiable && probsat_result.assignment != nullptr) {
+            // Copy assignment (CNFProbSATConstructor uses 0-based indexing)
+            result.assignment.resize(num_vars);
+            for (int i = 0; i < num_vars; ++i) {
+                result.assignment[i] = probsat_result.assignment[i];
+            }
+        }
+        
+        // Cleanup
+        if (probsat_result.assignment) {
+            free(probsat_result.assignment);
+        }
+        
+    } catch (const std::exception& e) {
+        result.error_message = std::string("Exception during ProbSAT solving: ") + e.what();
+    }
+    
+    return result;
+}
+
+/**
+ * Converts CNF to ProbSAT format for in-memory solving.
+ * @param cnf The CNF formula to convert.
+ * @param clause_pointers Output array of pointers to clauses.
+ * @param clause_storage Output storage for clause data.
+ */
+void SATSolverManager::cnf_to_probsat_format(const CNF& cnf, 
+                                            std::vector<int*>& clause_pointers, 
+                                            std::vector<std::vector<int>>& clause_storage) {
+    int num_vars = cnf.count_variables();
+    int clause_idx = 1;
+    const auto& all_clauses = cnf.get_clauses();
+    int total_clauses = all_clauses.size();
+    clause_storage.reserve(total_clauses);
+    
+    // First, build all clause vectors
+    for (const auto& clause : all_clauses) {
+        bool is_zero_clause = clause.empty() ||
+                              (clause.size() == 1 && clause[0] == 0) ||
+                              std::all_of(clause.begin(), clause.end(), [](int lit){ return lit == 0; });
+        if (is_zero_clause) {
+            std::cerr << "[CNF->ProbSAT] Skipping zero/empty clause at index " << clause_idx << std::endl;
+            clause_idx++;
+            continue;
+        }
+        bool valid = true;
+        for (int lit : clause) {
+            if (lit == 0 || std::abs(lit) > num_vars) {
+                std::cerr << "[CNF->ProbSAT] Invalid literal " << lit << " in clause " << clause_idx << ", skipping this clause!" << std::endl;
+                valid = false;
+                break;
+            }
+        }
+        if (!valid) { 
+            clause_idx++; 
+            continue; 
+        }
+        std::vector<int> clause_copy = clause;
+        clause_copy.push_back(0); // null terminator
+        clause_storage.push_back(clause_copy);
+        clause_idx++;
+    }
+    
+    // Now, build the pointer array
+    clause_pointers.clear();
+    clause_pointers.push_back(nullptr); // dummy for 1-based indexing
+    for (auto& clause_vec : clause_storage) {
+        clause_pointers.push_back(clause_vec.data());
+    }
+    std::cerr << "[CNF->ProbSAT] Total clause pointers: " << clause_pointers.size()-1 << ", total clauses: " << total_clauses << std::endl;
+}
+
+/**
+ * Extracts agent paths from a ProbSAT solution using CNFConstructor.
+ * @param cnf_constructor The CNFConstructor used to create the CNF.
+ * @param assignment The variable assignment from ProbSAT.
+ * @return Map from agent_id to path (vector of positions).
+ */
+AgentPaths 
+SATSolverManager::extract_agent_paths_from_solution(CNFConstructor& cnf_constructor,
+                                                   const std::vector<int>& assignment) {
+    return cnf_constructor.cnf_assignment_to_paths(assignment);
+}
+
+/**
+ * Validates agent paths against their MDDs.
+ * @param cnf_constructor The CNFConstructor used to create the CNF.
+ * @param agent_paths Map from agent_id to path.
+ * @return True if all paths are valid, false otherwise.
+ */
+bool SATSolverManager::validate_agent_paths(CNFConstructor& cnf_constructor,
+                                          const AgentPaths& agent_paths) {
+    for (const auto& [agent_id, path] : agent_paths) {
+        if (!cnf_constructor.validate_path(agent_id, path)) {
+            return false;
+        }
+    }
+    return true;
+}
+
+/**
+ * Prints agent paths in a readable format.
+ * @param agent_paths Map from agent_id to path.
+ */
+void SATSolverManager::print_agent_paths(const AgentPaths& agent_paths) {
+    std::cout << "\n=== Agent Paths ===" << std::endl;
+    for (const auto& [agent_id, path] : agent_paths) {
+        std::cout << "Agent " << agent_id << " path:" << std::endl;
+        for (size_t t = 0; t < path.size(); ++t) {
+            std::cout << "  Time " << t << ": (" << path[t].first << ", " << path[t].second << ")" << std::endl;
+        }
+        std::cout << std::endl;
+    }
+}
+
+/**
+ * Calculates max flips and tries based on CNF size (heuristic).
+ * @param cnf The CNF formula.
+ * @param base_max_flips Base number of max flips.
+ * @param base_max_tries Base number of max tries.
+ * @return Pair of (max_flips, max_tries).
+ */
+std::pair<long long, long long> SATSolverManager::calculate_max_flips_and_tries(const CNF& cnf,
+                                                                               long long base_max_flips,
+                                                                               long long base_max_tries) {
+    int num_vars = cnf.count_variables();
+    int num_clauses = cnf.count_clauses();
+    
+    long long max_flips = base_max_flips * (num_vars / 100);
+    long long max_tries = base_max_tries * (num_clauses / 50);
+    
+    // Ensure minimum values
+    max_flips = std::max(max_flips, 1000LL);
+    max_tries = std::max(max_tries, 10LL); // we'll probably always do just 1 try
+    
+    return {max_flips, max_tries};
+}
+
+/**
+ * Detects vertex collisions (two agents at same position at same time).
+ * @param agent_paths Map from agent_id to path (vector of positions).
+ * @return Vector of collision tuples (agent1_id, agent2_id, position, timestep).
+ */
+std::vector<std::tuple<int, int, std::pair<int, int>, int>> 
+SATSolverManager::find_vertex_collisions(const AgentPaths& agent_paths) {
+    std::vector<std::tuple<int, int, std::pair<int, int>, int>> collisions;
+    
+    // Find max timesteps from the longest path
+    int max_timesteps = 0;
+    for (const auto& [agent_id, path] : agent_paths) {
+        max_timesteps = std::max(max_timesteps, (int)path.size());
+    }
+    
+    // For each timestep, check for collisions
+    for (int timestep = 0; timestep < max_timesteps; ++timestep) {
+        // Map from position to list of agents at that position
+        PositionAgentMap position_agents;
+        
+        // Collect all agents at each position for this timestep
+        for (const auto& [agent_id, path] : agent_paths) {
+            if (timestep < (int)path.size()) {
+                auto position = path[timestep];
+                position_agents[position].push_back(agent_id);
+            }
+        }
+        
+        // Check for collisions (more than one agent at same position)
+        for (const auto& [position, agents] : position_agents) {
+            if (agents.size() > 1) {
+                // Add collision for each pair of agents
+                for (size_t i = 0; i < agents.size(); ++i) {
+                    for (size_t j = i + 1; j < agents.size(); ++j) {
+                        collisions.emplace_back(agents[i], agents[j], position, timestep);
+                    }
+                }
+            }
+        }
+    }
+    
+    return collisions;
+}
+
+/**
+ * Detects edge collisions (agents swapping positions between consecutive timesteps).
+ * @param agent_paths Map from agent_id to path (vector of positions).
+ * @return Vector of edge collision tuples (agent1_id, agent2_id, pos1, pos2, timestep).
+ */
+std::vector<std::tuple<int, int, std::pair<int, int>, std::pair<int, int>, int>> 
+SATSolverManager::find_edge_collisions(const AgentPaths& agent_paths) {
+    std::vector<std::tuple<int, int, std::pair<int, int>, std::pair<int, int>, int>> edge_collisions;
+    
+    // Find max timesteps from the longest path
+    int max_timesteps = 0;
+    for (const auto& [agent_id, path] : agent_paths) {
+        max_timesteps = std::max(max_timesteps, (int)path.size());
+    }
+    
+    // For each timestep (except the last), check for edge collisions
+    for (int timestep = 0; timestep < max_timesteps - 1; ++timestep) {
+        // Map from edge (pos1, pos2) to list of agents traversing that edge
+        EdgeAgentMap edge_agents;
+        
+        // Collect all agents traversing each edge for this timestep
+        for (const auto& [agent_id, path] : agent_paths) {
+            if (timestep + 1 < (int)path.size()) {
+                auto pos1 = path[timestep];
+                auto pos2 = path[timestep + 1];
+                
+                // Only consider edges where agents actually move
+                if (pos1 != pos2) {
+                    // Normalize edge direction (smaller position first)
+                    auto edge = (pos1 < pos2) ? std::make_pair(pos1, pos2) : std::make_pair(pos2, pos1);
+                    edge_agents[edge].push_back(agent_id);
+                }
+            }
+        }
+        
+        // Check for edge collisions (more than one agent traversing same edge)
+        for (const auto& [edge, agents] : edge_agents) {
+            if (agents.size() > 1) {
+                // Add edge collision for each pair of agents
+                for (size_t i = 0; i < agents.size(); ++i) {
+                    for (size_t j = i + 1; j < agents.size(); ++j) {
+                        edge_collisions.emplace_back(agents[i], agents[j], edge.first, edge.second, timestep);
+                    }
+                }
+            }
+        }
+    }
+    
+    return edge_collisions;
+}
+
+/**
+ * Detects all collisions (both vertex and edge collisions).
+ * @param agent_paths Map from agent_id to path (vector of positions).
+ * @return Pair of (vertex_collisions, edge_collisions).
+ */
+std::pair<std::vector<std::tuple<int, int, std::pair<int, int>, int>>,
+           std::vector<std::tuple<int, int, std::pair<int, int>, std::pair<int, int>, int>>> 
+SATSolverManager::find_all_collisions(const AgentPaths& agent_paths) {
+    auto vertex_collisions = find_vertex_collisions(agent_paths);
+    auto edge_collisions = find_edge_collisions(agent_paths);
+    return {vertex_collisions, edge_collisions};
+}
+
+/**
+ * Prints collision information in a readable format.
+ * @param vertex_collisions Vector of vertex collision tuples.
+ * @param edge_collisions Vector of edge collision tuples.
+ */
+void SATSolverManager::print_collisions(const std::vector<std::tuple<int, int, std::pair<int, int>, int>>& vertex_collisions,
+                                       const std::vector<std::tuple<int, int, std::pair<int, int>, std::pair<int, int>, int>>& edge_collisions) {
+    std::cout << "\n=== Collision Detection Results ===" << std::endl;
+    
+    if (vertex_collisions.empty() && edge_collisions.empty()) {
+        std::cout << "No collisions detected!" << std::endl;
+        return;
+    }
+    
+    if (!vertex_collisions.empty()) {
+        std::cout << "Vertex Collisions (" << vertex_collisions.size() << "):" << std::endl;
+        for (const auto& collision : vertex_collisions) {
+            int agent1, agent2, timestep;
+            std::pair<int, int> position;
+            std::tie(agent1, agent2, position, timestep) = collision;
+            std::cout << "  Agents " << agent1 << " and " << agent2 
+                      << " at position (" << position.first << ", " << position.second 
+                      << ") at timestep " << timestep << std::endl;
+        }
+    }
+    
+    if (!edge_collisions.empty()) {
+        std::cout << "Edge Collisions (" << edge_collisions.size() << "):" << std::endl;
+        for (const auto& collision : edge_collisions) {
+            int agent1, agent2, timestep;
+            std::pair<int, int> pos1, pos2;
+            std::tie(agent1, agent2, pos1, pos2, timestep) = collision;
+            std::cout << "  Agents " << agent1 << " and " << agent2 
+                      << " swapping positions (" << pos1.first << ", " << pos1.second 
+                      << ") <-> (" << pos2.first << ", " << pos2.second 
+                      << ") at timestep " << timestep << std::endl;
+        }
+    }
+}
+
+/**
+ * Generates clauses to prevent edge collisions and adds them to the CNF.
+ * @param cnf_constructor The CNFProbSATConstructor to add clauses to.
+ * @param edge_collisions Vector of edge collision tuples.
+ * @return Number of clauses added.
+ */
+int SATSolverManager::add_edge_collision_prevention_clauses(std::shared_ptr<CNFProbSATConstructor>& cnf_constructor,
+                                                           const std::vector<std::tuple<int, int, std::pair<int, int>, std::pair<int, int>, int>>& edge_collisions) {
+    int clauses_added = 0;
+    
+    for (const auto& collision : edge_collisions) {
+        int agent1, agent2, timestep;
+        std::pair<int, int> pos1, pos2;
+        std::tie(agent1, agent2, pos1, pos2, timestep) = collision;
+        
+        // Get the variable IDs for the conflicting assignments
+        // For edge collision: agents are moving in opposite directions on the same edge
+        // The collision detection normalizes edge direction, so we need to find the actual
+        // positions that agents are at during the collision timestep
+        
+        // First, let's find what positions the agents are actually at during this timestep
+        // by looking at the variable map to see what variables exist
+        const auto& var_map = cnf_constructor->get_variable_map();
+        
+        std::cout << "[DEBUG] Variable map contains:" << std::endl;
+        for (const auto& [key, var_id] : var_map) {
+            int agent_id = std::get<0>(key);
+            auto pos = std::get<1>(key);
+            int t = std::get<2>(key);
+            std::cout << "  Var " << var_id << ": agent " << agent_id << ", pos (" << pos.first << "," << pos.second << "), t=" << t << std::endl;
+        }
+        
+        // Find all variables for the collision timestep and timestep+1
+        std::vector<std::tuple<int, int, std::pair<int, int>, int>> timestep_vars; // agent_id, var_id, pos, timestep
+        for (const auto& [key, var_id] : var_map) {
+            int agent_id = std::get<0>(key);
+            auto pos = std::get<1>(key);
+            int t = std::get<2>(key);
+            if (t == timestep || t == timestep + 1) {
+                timestep_vars.emplace_back(agent_id, var_id, pos, t);
+            }
+        }
+        
+        std::cout << "[DEBUG] Variables at timesteps " << timestep << " and " << (timestep + 1) << ":" << std::endl;
+        for (const auto& [agent_id, var_id, pos, t] : timestep_vars) {
+            std::cout << "  Agent " << agent_id << " at (" << pos.first << "," << pos.second << ") at t=" << t << " (var " << var_id << ")" << std::endl;
+        }
+        
+        // The collision detection reports the movement (from -> to), but we need
+        // to find the actual positions that agents are at during the collision
+        // For edge collision, agents are moving in opposite directions on the same edge
+        
+        // Find the actual positions by looking at the variable map
+        // We need to find variables for both agents at both timesteps
+        std::vector<int> collision_vars;
+        
+        // Look for variables for agent1 and agent2 at timestep and timestep+1
+        for (const auto& [key, var_id] : var_map) {
+            int agent_id = std::get<0>(key);
+            auto pos = std::get<1>(key);
+            int t = std::get<2>(key);
+            
+            if ((agent_id == agent1 || agent_id == agent2) && (t == timestep || t == timestep + 1)) {
+                collision_vars.push_back(var_id);
+                std::cout << "[DEBUG] Found collision variable: " << var_id << " for agent " << agent_id 
+                          << " at (" << pos.first << "," << pos.second << ") at t=" << t << std::endl;
+            }
+        }
+        
+        if (collision_vars.size() >= 4) {
+            std::cout << "[DEBUG] Found " << collision_vars.size() << " collision variables" << std::endl;
+            
+            // Create a clause that prevents this edge collision
+            // The clause says: NOT (all collision variables are true)
+            // This is equivalent to: (NOT var1) OR (NOT var2) OR (NOT var3) OR (NOT var4) OR ...
+            std::vector<int> clause;
+            for (int var : collision_vars) {
+                clause.push_back(-var);
+            }
+            
+            // Add the clause to the CNF
+            cnf_constructor->add_clause(clause);
+            clauses_added++;
+            
+            std::cout << "Added edge collision prevention clause: ";
+            for (int lit : clause) std::cout << lit << " ";
+            std::cout << "0" << std::endl;
+        } else {
+            std::cout << "[DEBUG] Could not find enough collision variables. Found: " << collision_vars.size() << std::endl;
+        }
+        
+
+    }
+    
+    return clauses_added;
+}
+
+/**
+ * Generates clauses to prevent vertex collisions and adds them to the CNF.
+ * @param cnf_constructor The CNFProbSATConstructor to add clauses to.
+ * @param vertex_collisions Vector of vertex collision tuples.
+ * @return Number of clauses added.
+ */
+int SATSolverManager::add_vertex_collision_prevention_clauses(std::shared_ptr<CNFProbSATConstructor>& cnf_constructor,
+                                                             const std::vector<std::tuple<int, int, std::pair<int, int>, int>>& vertex_collisions) {
+    int clauses_added = 0;
+    
+    for (const auto& collision : vertex_collisions) {
+        int agent1, agent2, timestep;
+        std::pair<int, int> position;
+        std::tie(agent1, agent2, position, timestep) = collision;
+        
+        // Get the variable IDs for the conflicting assignments
+        // Agent1 at position at timestep
+        auto var1_key = std::make_tuple(agent1, position, timestep);
+        // Agent2 at position at timestep
+        auto var2_key = std::make_tuple(agent2, position, timestep);
+        
+        // Get variable IDs from the constructor's variable map
+        const auto& var_map = cnf_constructor->get_variable_map();
+        
+        auto it1 = var_map.find(var1_key);
+        auto it2 = var_map.find(var2_key);
+        
+        if (it1 != var_map.end() && it2 != var_map.end()) {
+            
+            int var1 = it1->second;
+            int var2 = it2->second;
+            
+            // Create a clause that prevents this specific vertex collision
+            // The clause says: NOT (agent1 at position at t AND agent2 at position at t)
+            // This is equivalent to: (NOT var1) OR (NOT var2)
+            std::vector<int> clause = {-var1, -var2};
+            
+            // Add the clause to the CNF
+            cnf_constructor->add_clause(clause);
+            clauses_added++;
+            
+            std::cout << "Added vertex collision prevention clause: ";
+            for (int lit : clause) std::cout << lit << " ";
+            std::cout << "0" << std::endl;
+        }
+    }
+    
+    return clauses_added;
+}
+
+ 
