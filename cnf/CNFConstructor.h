@@ -30,7 +30,7 @@ namespace std {
 // CNFConstructor converts Multi-value Decision Diagrams (MDDs) to CNF formulas
 // It handles agent path constraints, collision avoidance, and transition constraints
 class CNFConstructor {
-private:
+protected:
     std::unordered_map<int, std::shared_ptr<MDD>> mdds; // Map agent_id to MDD
     CNF cnf; // The CNF formula being constructed
     std::unordered_map<std::tuple<int, MDDNode::Position, int>, int> variable_map; // Maps (agent_id, position, timestep) to variable_id
@@ -47,6 +47,9 @@ public:
 
     // Adds a variable for the (agent_id, position, timestep) tuple
     int add_variable(int agent_id, const MDDNode::Position& position, int timestep);
+
+    // Adds a clause to the CNF (virtual for inheritance)
+    virtual void add_clause(const std::vector<int>& clause);
 
     // Creates clauses ensuring agents follow valid paths in their MDDs
     void create_agent_path_clauses(int agent_id, const std::shared_ptr<MDD>& mdd);
@@ -97,7 +100,7 @@ public:
     const std::unordered_map<std::tuple<int, MDDNode::Position, int>, int>& get_variable_map() const { return variable_map; }
     int get_next_variable_id() const { return next_variable_id; }
 
-private:
+protected:
     // Helper method to get the maximum number of timesteps across all MDDs
     int get_max_timesteps() const;
 };

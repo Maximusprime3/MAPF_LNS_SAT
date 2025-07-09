@@ -81,6 +81,8 @@ long ticks_per_second;
 int bestNumFalse;
 int cm_spec = 0, cb_spec = 0, fct_spec = 0, caching_spec = 0;
 
+int* initialAssignmentPtr = NULL;
+
 inline int abs(int a) {
     return (a < 0) ? -a : a;
 }
@@ -137,7 +139,7 @@ void printSolverParameters() {
 }
 
 void printSolution() {
-    register int i;
+    int i;
     printf("v ");
     for (i = 1; i <= numVars; i++) {
         if (i % 21 == 0)
@@ -198,7 +200,7 @@ static inline void allocateMemory() {
 
 // Parses a DIMACS CNF file and sets up the clause/occurrence structures
 static inline void parseFile() {
-    register int i, j;
+    int i, j;
     int lit, r;
     int clauseSize;
     int tatom;
@@ -285,23 +287,38 @@ static inline void parseFile() {
 
 // Initializes the assignment and clause state for each try
 static inline void init() {
+    printf("[init] Entering init()\n"); fflush(stdout);
     ticks_per_second = sysconf(_SC_CLK_TCK);
-    register int i, j;
+    int i, j;
     int critLit = 0, lit;
     numFalse = 0;
+    printf("[init] numClauses=%d, numVars=%d\n", numClauses, numVars); fflush(stdout);
     for (i = 1; i <= numClauses; i++) {
         numTrueLit[i] = 0;
         whereFalse[i] = -1;
     }
-    if(initAssignmentsFile == NULL){
+    printf("[init] Finished zeroing numTrueLit and whereFalse\n"); fflush(stdout);
+    // In init(), always initialize breaks[i] = 0 for all i
+    for (i = 1; i <= numVars; i++) {
+        breaks[i] = 0;
+    }
+    if(initAssignmentsFile == NULL && initialAssignmentPtr == NULL){
         for (i = 1; i <= numVars; i++) {
             atom[i] = rand() % 2;
-            breaks[i] = 0;
         }
+    } else {
+        printf("[init] Preserving provided initial assignment: ");
+        for (int vi = 1; vi <= numVars; ++vi) printf("%d ", atom[vi]);
+        printf("\n");
     }
+    printf("[init] Finished initializing atom and breaks\n"); fflush(stdout);
     for (i = 1; i <= numClauses; i++) {
         j = 0;
+        if (clause[i] == NULL) {
+            printf("[init] clause[%d] is NULL!\n", i); fflush(stdout); continue; }
         while ((lit = clause[i][j])) {
+            //if (abs(lit) < 1 || abs(lit) > numVars) {
+                //printf("[init] lit=%d at clause[%d][%d] out of bounds!\n", lit, i, j); fflush(stdout); break; }
             if (atom[abs(lit)] == (lit > 0)) {
                 numTrueLit[i]++;
                 critLit = lit;
@@ -317,11 +334,12 @@ static inline void init() {
             numFalse++;
         }
     }
+    printf("[init] Exiting init()\n"); fflush(stdout);
 }
 
 // Checks if the current assignment satisfies all clauses
 static inline int checkAssignment() {
-    register int i, j;
+    int i, j;
     int sat, lit;
     for (i = 1; i <= numClauses; i++) {
         sat = 0;
@@ -339,7 +357,9 @@ static inline int checkAssignment() {
 
 // Non-caching version of the variable flip logic
 static inline void pickAndFlipNC() {
-    register int i, j;
+    extern int numVars;
+    extern char* atom;
+    int i, j;
     int bestVar;
     int rClause, tClause;
     rClause = falseClause[flip % numFalse];
@@ -397,11 +417,14 @@ static inline void pickAndFlipNC() {
 
 // Caching version of the variable flip logic
 static inline void pickAndFlip() {
+    extern int numVars;
+    extern char* atom;
     int var;
+    int bestVar;
     int rClause = falseClause[flip % numFalse];
     double sumProb = 0.0;
     double randPosition;
-    register int i, j;
+    int i, j;
     int tClause;
     int xMakesSat;
     i = 0;
@@ -665,7 +688,7 @@ void parseParameters(int argc, char *argv[]) {
 }
 
 // Update the signal handler to have the correct signature for C/C++
-void handle_interrupt(int signum) {
+void handle_interrupt(int /*signum*/) {
     printf("\nc caught signal... exiting\n ");
     tryTime = elapsed_seconds();
     solverTime = elapsed_seconds_solver_time();
@@ -781,6 +804,7 @@ int probsat_run() {
 
     for (run = 0; run < maxRuns; run++) {
         init();
+        
         bestNumFalse = numClauses;
         for (flip = 0; flip < maxFlips; flip++) {
             if (numFalse == 0)
@@ -834,6 +858,12 @@ int probsat_solve_in_memory(
 ) {
     printf("Entered probsat_solve_in_memory: numVars=%d, numClauses=%d\n", numVars_, numClauses_);
     fflush(stdout);
+    
+    // Validate input parameters
+    if (numVars_ <= 0 || numClauses_ <= 0 || clauses_ == NULL || result == NULL) {
+        printf("ERROR: Invalid input parameters\n");
+        return 0;
+    }
     // Set up global variables as if parseFile() had run
     numVars = numVars_;
     numClauses = numClauses_;
@@ -843,6 +873,8 @@ int probsat_solve_in_memory(
     printSol = 0; // don't print solution to stdout
 
     // Allocate memory as parseFile() would
+    printf("Allocating memory...\n");
+    fflush(stdout);
     numLiterals = numVars * 2;
     atom = (char*) malloc(sizeof(char) * (numVars + 1));
     clause = (int**) malloc(sizeof(int*) * (numClauses + 1));
@@ -852,33 +884,98 @@ int probsat_solve_in_memory(
     falseClause = (int*) malloc(sizeof(int) * (numClauses + 1));
     whereFalse = (int*) malloc(sizeof(int) * (numClauses + 1));
     numTrueLit = (unsigned short*) malloc(sizeof(unsigned short) * (numClauses + 1));
+    
+    // Check if all allocations succeeded
+    if (!atom || !clause || !numOccurrence || !occurrence || !critVar || !falseClause || !whereFalse || !numTrueLit) {
+        printf("ERROR: Memory allocation failed\n");
+        return 0;
+    }
+    printf("Memory allocation successful\n");
+    fflush(stdout);
 
     // --- Set maxClauseSize and minClauseSize ---
+    printf("Printing first 5 clauses after receiving CNF in probsat_solve_in_memory:\n");
+    for (int i = 1; i <= numClauses && i <= 5; ++i) {
+        printf("Clause %d: ", i);
+        int k = 0;
+        while (clauses_[i][k] != 0 && k < 20) { // print up to 20 literals
+            printf("%d ", clauses_[i][k]);
+            ++k;
+        }
+        printf("0\n");
+    }
+    for (int i = 1; i <= 5 && i <= numClauses; ++i) {
+        printf("[C] clauses_[%d] = %p\n", i, (void*)clauses_[i]);
+    }
+    fflush(stdout);
+    printf("Calculating clause sizes...\n");
+    fflush(stdout);
     maxClauseSize = 0;
     minClauseSize = MAXCLAUSELENGTH;
     for (int i = 1; i <= numClauses; ++i) {
+        if (clauses_[i] == NULL) {
+            printf("ERROR: Clause %d is NULL\n", i);
+            return 0;
+        }
+        if (clauses_[i][0] == 0) {
+            printf("ERROR: Clause %d is empty (just null terminator)!\n", i);
+            return 0;
+        }
         int len = 0;
         while (clauses_[i][len] != 0) ++len;
         if (len > maxClauseSize) maxClauseSize = len;
         if (len < minClauseSize) minClauseSize = len;
     }
+    printf("Max clause size: %d, Min clause size: %d\n", maxClauseSize, minClauseSize);
+    fflush(stdout);
+
+    // Print first and last clause pointers and contents
+    printf("First clause pointer: %p\n", (void*)clauses_[1]);
+    printf("First clause literals: ");
+    for (int k = 0; k < 10 && clauses_[1][k] != 0; ++k) printf("%d ", clauses_[1][k]);
+    printf("0\n");
+    printf("Last clause pointer: %p\n", (void*)clauses_[numClauses]);
+    printf("Last clause literals: ");
+    for (int k = 0; k < 10 && clauses_[numClauses][k] != 0; ++k) printf("%d ", clauses_[numClauses][k]);
+    printf("0\n");
+    fflush(stdout);
 
     // --- Fill clause pointers ---
+    printf("Filling clause pointers...\n");
+    fflush(stdout);
     for (int i = 1; i <= numClauses; ++i) {
         clause[i] = clauses_[i];
     }
+    printf("Clause pointers filled\n");
+    fflush(stdout);
 
     // --- Fill numOccurrence and occurrence arrays ---
+    printf("Processing occurrence arrays...\n");
+    fflush(stdout);
     int *numOccurrenceT = (int*) malloc(sizeof(int) * (numLiterals + 1));
+    if (!numOccurrenceT) {
+        printf("ERROR: Failed to allocate numOccurrenceT\n");
+        return 0;
+    }
     for (int i = 0; i < numLiterals + 1; i++) { numOccurrence[i] = 0; numOccurrenceT[i] = 0; }
     for (int i = 1; i <= numClauses; i++) {
         int j = 0;
         int lit;
         while ((lit = clause[i][j])) {
-            numOccurrenceT[numVars + lit]++;
+            int idx = numVars + lit;
+            /*
+            if (idx < 0 || idx > numLiterals) {
+                printf("[occurrence arrays] Out of bounds: i=%d, j=%d, lit=%d, idx=%d (numVars=%d, numLiterals=%d)\n", i, j, lit, idx, numVars, numLiterals);
+                fflush(stdout);
+                break;
+            }
+            */
+            numOccurrenceT[idx]++;
             j++;
         }
     }
+    printf("Occurrence arrays first pass done\n");
+    fflush(stdout);
     maxNumOccurences = 0;
     for (int i = 0; i < numLiterals + 1; i++) {
         occurrence[i] = (int*) malloc(sizeof(int) * (numOccurrenceT[i] + 1));
@@ -899,14 +996,20 @@ int probsat_solve_in_memory(
     // --- Allocate probs and breaks arrays ---
     probs = (double*) malloc(sizeof(double) * (numVars + 1));
     breaks = (int*) malloc(sizeof(int) * (numVars + 1));
+    probsBreak = (double*) malloc(sizeof(double) * (maxClauseSize + 1));
 
     // --- Use in-memory initial assignment if provided ---
     if (initialAssignment != NULL) {
+        initialAssignmentPtr = initialAssignment;
+        printf("[ProbSAT DEBUG] Using provided initial assignment: ");
         for (int i = 1; i <= numVars; ++i) {
             atom[i] = initialAssignment[i];
+            printf("%d ", atom[i]);
         }
+        printf("\n");
         initAssignmentsFile = NULL; // Ensure file-based init is not used
     } else {
+        initialAssignmentPtr = NULL;
         // fallback: file-based or random assignment (handled in solver)
     }
 
@@ -934,11 +1037,17 @@ int probsat_solve_in_memory(
     free(atom);
     free(clause);
     free(numOccurrence);
+    for (int i = 0; i < numLiterals + 1; i++) {
+        free(occurrence[i]);
+    }
     free(occurrence);
     free(critVar);
     free(falseClause);
     free(whereFalse);
     free(numTrueLit);
+    free(probs);
+    free(breaks);
+    free(probsBreak);
 
     return sat; // 1 for SAT, 0 for UNSAT, etc.
 }

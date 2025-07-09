@@ -39,4 +39,8 @@ public:
     void clear();
 };
 
+// Utility function to convert CNF to ProbSAT format
+// Converts CNF clauses to ProbSAT's expected format with null terminators and pointer arrays
+void cnf_to_probsat_format(const CNF& cnf, std::vector<int*>& clause_pointers, std::vector<std::vector<int>>& clause_storage);
+
 #endif // CNF_H 

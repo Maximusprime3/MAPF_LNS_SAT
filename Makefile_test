@@ -1,0 +1,67 @@
+# Makefile for MAPF LNS SAT Orchestration Test
+CXX = g++
+CXXFLAGS = -std=c++17 -O2 -Wall -Wextra -g
+INCLUDES = -I.
+
+# Source files for the test
+TEST_SRC = test_orchestration.cpp
+TEST_OBJ = test_orchestration.o
+
+# Source files for the ProbSAT direct test
+TEST_PROBSAT_SRC = test_orchestration_probSAT.cpp
+TEST_PROBSAT_OBJ = test_orchestration_probSAT.o
+
+# ProbSAT source
+PROBSAT_SRC = probSAT-master/probSAT_inmem.c
+
+# MDD object files (Multi-Valued Decision Diagrams)
+MDD_OBJ = mdd/MDD.o mdd/MDDConstructor.o mdd/MDDNode.o
+
+# CNF object files (Conjunctive Normal Form)
+CNF_OBJ = cnf/CNF.o cnf/CNFConstructor.o cnf/CNFProbSATConstructor.o
+
+# Target executables
+TEST_EXEC = test_orchestration
+TEST_PROBSAT_EXEC = test_orchestration_probSAT
+
+# Default target
+all: $(TEST_EXEC) $(TEST_PROBSAT_EXEC)
+
+# Compile the test with all required object files
+$(TEST_EXEC): $(TEST_OBJ) $(PROBSAT_SRC) $(MDD_OBJ) $(CNF_OBJ)
+	$(CXX) $(CXXFLAGS) $(INCLUDES) -o $@ $(TEST_OBJ) $(MDD_OBJ) $(CNF_OBJ) $(PROBSAT_SRC) -lm
+
+# Compile the ProbSAT direct test
+$(TEST_PROBSAT_EXEC): $(TEST_PROBSAT_OBJ) $(PROBSAT_SRC) $(MDD_OBJ) $(CNF_OBJ)
+	$(CXX) $(CXXFLAGS) $(INCLUDES) -o $@ $(TEST_PROBSAT_OBJ) $(MDD_OBJ) $(CNF_OBJ) $(PROBSAT_SRC) -lm
+
+# Compile test object file
+$(TEST_OBJ): $(TEST_SRC)
+	$(CXX) $(CXXFLAGS) $(INCLUDES) -c $< -o $@
+
+# Compile ProbSAT test object file
+$(TEST_PROBSAT_OBJ): $(TEST_PROBSAT_SRC)
+	$(CXX) $(CXXFLAGS) $(INCLUDES) -c $< -o $@
+
+# Compile MDD object files
+mdd/%.o: mdd/%.cpp
+	$(CXX) $(CXXFLAGS) $(INCLUDES) -c $< -o $@
+
+# Compile CNF object files
+cnf/%.o: cnf/%.cpp
+	$(CXX) $(CXXFLAGS) $(INCLUDES) -c $< -o $@
+
+# Clean build artifacts
+clean:
+	rm -f $(TEST_OBJ) $(TEST_PROBSAT_OBJ) $(TEST_EXEC) $(TEST_PROBSAT_EXEC) $(MDD_OBJ) $(CNF_OBJ)
+
+# Run the original test
+run: $(TEST_EXEC)
+	./$(TEST_EXEC)
+
+# Run the ProbSAT direct test
+run_probSAT: $(TEST_PROBSAT_EXEC)
+	./$(TEST_PROBSAT_EXEC)
+
+# Phony targets
+.PHONY: all clean run run_probSAT 

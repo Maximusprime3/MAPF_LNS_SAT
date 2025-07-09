@@ -2,7 +2,7 @@
 #include "MDDNode.h"
 #include <algorithm>
 #include <sstream>
-#include <unordered_set>
+#include <set>
 #include <iostream>
 
 // Constructor: initializes an empty MDD

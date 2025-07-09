@@ -1,7 +1,7 @@
 #ifndef MDD_H
 #define MDD_H
 
-#include <unordered_map>
+#include <map>
 #include <vector>
 #include <memory>
 #include <random>
@@ -12,7 +12,7 @@
 class MDD {
 public:
     // Maps time step to a list of nodes at that time
-    std::unordered_map<int, std::vector<std::shared_ptr<MDDNode>>> levels;
+    std::map<int, std::vector<std::shared_ptr<MDDNode>>> levels;
 
     // Constructor: initializes an empty MDD
     MDD();
