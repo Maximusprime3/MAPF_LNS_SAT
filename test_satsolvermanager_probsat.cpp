@@ -7,6 +7,7 @@
 #include <iomanip>
 #include <fstream>
 #include <sstream>
+#include <filesystem> // For directory creation
 
 // Include our MAPF components
 #include "mdd/MDDConstructor.h"
@@ -92,6 +93,16 @@ load_scenario_agents(const std::string& scenario_path, int num_agents) {
 }
 
 int main() {
+    // Ensure the data directory exists for logging, before any other code
+    try {
+        if (!std::filesystem::create_directories("data") && !std::filesystem::exists("data")) {
+            std::cerr << "ERROR: Could not create or access 'data' directory for logging." << std::endl;
+            return 1;
+        }
+    } catch (const std::exception& e) {
+        std::cerr << "ERROR: Exception while creating 'data' directory: " << e.what() << std::endl;
+        return 1;
+    }
     try {
         std::cout << "=== MAPF LNS SAT with SATSolverManager - Iterative Loop Test ===" << std::endl;
         
@@ -143,8 +154,24 @@ int main() {
         int current_max_timesteps = std::max(computed_max_timesteps, initial_max_timesteps);
         std::cout << "Initial computed max timesteps: " << computed_max_timesteps << ", starting with: " << current_max_timesteps << std::endl;
         
+        // Variables to accumulate for logging
+        std::vector<double> solver_times_per_iter;
+        std::vector<int> flips_per_iter;
+        std::vector<int> tries_per_iter;
+        std::vector<int> collisions_per_iter;
+        double total_solver_time = 0.0;
+        double total_cnf_build_time = 0.0;
+        int cnf_vars_start = 0, cnf_clauses_start = 0;
+        int cnf_vars_end = 0, cnf_clauses_end = 0;
+        std::string solver_used = "probSAT";
+        std::string status = "UNKNOWN";
+        int num_agents_logged = num_agents;
+        std::string map_name_logged = map_path;
+        
+
         // Main iterative loop
         for (int timestep_increase = 0; timestep_increase <= max_timestep_increase; ++timestep_increase) {
+            auto timestep_start = std::chrono::high_resolution_clock::now();
             std::cout << "\n" << std::string(60, '=') << std::endl;
             std::cout << "=== ITERATION " << (timestep_increase + 1) << " (Timesteps: " << current_max_timesteps << ") ===" << std::endl;
             std::cout << std::string(60, '=') << std::endl;
@@ -163,8 +190,15 @@ int main() {
             }
             
             // Step 2: Create lazy CNF
-            std::cout << "\n=== Creating Lazy CNFProbSATConstructor ===" << std::endl;
+            auto cnf_build_start = std::chrono::high_resolution_clock::now();
             auto cnf_constructor = SATSolverManager::create_cnf_probsat_constructor(mdds, true); // true = lazy encoding
+            auto cnf_build_end = std::chrono::high_resolution_clock::now();
+            double cnf_build_time = std::chrono::duration<double>(cnf_build_end - cnf_build_start).count();
+            total_cnf_build_time += cnf_build_time;
+            if (timestep_increase == 0) {
+                cnf_vars_start = cnf_constructor->get_probsat_num_variables();
+                cnf_clauses_start = cnf_constructor->get_probsat_num_clauses();
+            }
             
             std::cout << "CNFProbSATConstructor created successfully" << std::endl;
             std::cout << "Number of variables: " << cnf_constructor->get_probsat_num_variables() << std::endl;
@@ -173,32 +207,57 @@ int main() {
             // Inner loop: solve and add collision clauses until UNSAT or solution found
             int iteration_count = 0;
             const int max_inner_iterations = 50; // Prevent infinite loops
+            double timestep_solver_time = 0.0;
+            int timestep_collisions = 0;
             
             while (iteration_count < max_inner_iterations) {
+                auto solver_start = std::chrono::high_resolution_clock::now();
                 std::cout << "\n--- Inner Iteration " << (iteration_count + 1) << " ---" << std::endl;
                 
                 // Step 3: Solve with ProbSAT
                 std::cout << "=== Solving with ProbSAT ===" << std::endl;
                 
-                auto start_time = std::chrono::high_resolution_clock::now();
-                
-                ProbSATSolution result = SATSolverManager::solve_cnf_with_probsat(
+                auto result = SATSolverManager::solve_cnf_with_probsat(
                     cnf_constructor,
                     seed,
                     max_runs,
                     max_flips
                 );
                 
-                auto end_time = std::chrono::high_resolution_clock::now();
-                auto duration = std::chrono::duration_cast<std::chrono::milliseconds>(end_time - start_time);
+                auto solver_end = std::chrono::high_resolution_clock::now();
+                double solver_time = std::chrono::duration<double>(solver_end - solver_start).count();
+                solver_times_per_iter.push_back(solver_time);
+                flips_per_iter.push_back(result.num_flips);
+                tries_per_iter.push_back(1); // Only one try per call in this test
+                total_solver_time += solver_time;
+                timestep_solver_time += solver_time;
+                
+                // Log this collision iteration
+                SATSolverManager::log_collision_iteration(
+                    "data/solver_log_collisions.csv",
+                    map_name_logged,
+                    num_agents_logged,
+                    solver_used,
+                    current_max_timesteps,
+                    iteration_count,
+                    cnf_constructor->get_probsat_num_variables(),
+                    cnf_constructor->get_probsat_num_clauses(),
+                    solver_time,
+                    result.num_flips,
+                    1, // tries
+                    0, // collisions_added (update if you track this)
+                    result.satisfiable ? "SAT" : "UNSAT",
+                    seed
+                );
                 
                 // Step 4: Process results
                 std::cout << "\n=== Results ===" << std::endl;
                 if (result.satisfiable) {
+                    status = "SAT";
                     std::cout << "SATISFIABLE!" << std::endl;
                     std::cout << "Solve time: " << result.solve_time << "s" << std::endl;
                     std::cout << "Number of flips: " << result.num_flips << std::endl;
-                    std::cout << "Total time (including overhead): " << duration.count() << "ms" << std::endl;
+                    std::cout << "Total time (including overhead): " << solver_time << "s" << std::endl;
                     
                     // Convert assignment to agent paths
                     auto agent_paths = cnf_constructor->cnf_assignment_to_paths(result.assignment);
@@ -313,7 +372,27 @@ int main() {
                 }
                 
                 iteration_count++;
+                timestep_collisions++;
             }
+            cnf_vars_end = cnf_constructor->get_probsat_num_variables();
+            cnf_clauses_end = cnf_constructor->get_probsat_num_clauses();
+            auto timestep_end = std::chrono::high_resolution_clock::now();
+            double timestep_total_time = std::chrono::duration<double>(timestep_end - timestep_start).count();
+            // Log this timestep iteration
+            SATSolverManager::log_timestep_iteration(
+                "data/solver_log_timesteps.csv",
+                map_name_logged,
+                num_agents_logged,
+                solver_used,
+                current_max_timesteps,
+                cnf_vars_end,
+                cnf_clauses_end,
+                cnf_build_time,
+                timestep_solver_time,
+                timestep_collisions,
+                status,
+                seed
+            );
             
             if (iteration_count >= max_inner_iterations) {
                 std::cout << "WARNING: Reached maximum inner iterations (" << max_inner_iterations << ")" << std::endl;
@@ -324,12 +403,39 @@ int main() {
             std::cout << "\n=== Increasing timesteps to " << current_max_timesteps << " ===" << std::endl;
         }
         
+        // At the end, log the run summary
+        // Measure total time from the start of main
+        static auto main_start = std::chrono::high_resolution_clock::now();
+        auto main_end = std::chrono::high_resolution_clock::now();
+        double total_time = std::chrono::duration<double>(main_end - main_start).count();
+        SATSolverManager::log_run_summary(
+            "data/solver_log.csv",
+            map_name_logged,
+            num_agents_logged,
+            solver_used,
+            cnf_vars_start,
+            cnf_clauses_start,
+            cnf_vars_end,
+            cnf_clauses_end,
+            total_time,
+            total_cnf_build_time,
+            total_solver_time,
+            solver_times_per_iter,
+            flips_per_iter,
+            tries_per_iter,
+            collisions_per_iter,
+            status,
+            seed
+        );
+        
         std::cout << "\n" << std::string(60, '=') << std::endl;
+        // Print total time at the end
+        std::cout << "Total time (including overhead): " << total_time << "s" << std::endl;
         std::cout << "=== FAILURE: NO SOLUTION FOUND WITHIN " << (initial_max_timesteps + max_timestep_increase) << " TIMESTEPS ===" << std::endl;
         std::cout << std::string(60, '=') << std::endl;
         
     } catch (const std::exception& e) {
-        std::cerr << "ERROR: " << e.what() << std::endl;
+        std::cerr << "Exception: " << e.what() << std::endl;
         return 1;
     }
     
