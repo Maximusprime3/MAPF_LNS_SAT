@@ -295,6 +295,122 @@ public:
         bool full_assignment = true,
         std::mt19937* rng_ptr = nullptr);
 
+    /**
+     * Logs a summary of the SAT solver run to a CSV file.
+     * Appends a row with all relevant statistics for later analysis.
+     *
+     * @param log_filename Path to the log file (CSV).
+     * @param map_name Name of the map used.
+     * @param num_agents Number of agents.
+     * @param solver_used Name of the SAT solver used (e.g., "probSAT").
+     * @param cnf_vars_start Number of CNF variables at start.
+     * @param cnf_clauses_start Number of CNF clauses at start.
+     * @param cnf_vars_end Number of CNF variables at end.
+     * @param cnf_clauses_end Number of CNF clauses at end.
+     * @param total_time_s Total wall-clock time for the run (seconds).
+     * @param cnf_build_time_s Time to build the CNF (seconds).
+     * @param total_solver_time_s Total time spent in the SAT solver (seconds).
+     * @param solver_times_per_iter Vector of solver times per iteration (seconds).
+     * @param flips_per_iter Vector of number of flips per iteration.
+     * @param tries_per_iter Vector of number of tries per iteration.
+     * @param collisions_per_iter Vector of number of collisions added per iteration.
+     * @param status SAT/UNSAT/ERROR status string.
+     * @param seed Random seed used.
+     * @param params Additional parameters (optional, as a string).
+     */
+    static void log_run_summary(
+        const std::string& log_filename,
+        const std::string& map_name,
+        int num_agents,
+        const std::string& solver_used,
+        int cnf_vars_start,
+        int cnf_clauses_start,
+        int cnf_vars_end,
+        int cnf_clauses_end,
+        double total_time_s,
+        double cnf_build_time_s,
+        double total_solver_time_s,
+        const std::vector<double>& solver_times_per_iter,
+        const std::vector<int>& flips_per_iter,
+        const std::vector<int>& tries_per_iter,
+        const std::vector<int>& collisions_per_iter,
+        const std::string& status,
+        long long seed,
+        const std::string& params = ""
+    );
+
+    /**
+     * Logs a per-timestep (makespan) iteration to a CSV file.
+     * Each row represents one timestep attempt (outer loop).
+     *
+     * @param log_filename Path to the log file (CSV).
+     * @param map_name Name of the map used.
+     * @param num_agents Number of agents.
+     * @param solver_used Name of the SAT solver used.
+     * @param timestep The current makespan/timestep value.
+     * @param cnf_vars Number of CNF variables at this timestep.
+     * @param cnf_clauses Number of CNF clauses at this timestep.
+     * @param cnf_build_time_s Time to build the CNF (seconds).
+     * @param total_solver_time_s Total SAT solver time for this timestep (seconds).
+     * @param num_collision_iterations Number of collision iterations in this timestep.
+     * @param status SAT/UNSAT/ERROR status string for this timestep.
+     * @param seed Random seed used.
+     * @param params Additional parameters (optional, as a string).
+     */
+    static void log_timestep_iteration(
+        const std::string& log_filename,
+        const std::string& map_name,
+        int num_agents,
+        const std::string& solver_used,
+        int timestep,
+        int cnf_vars,
+        int cnf_clauses,
+        double cnf_build_time_s,
+        double total_solver_time_s,
+        int num_collision_iterations,
+        const std::string& status,
+        long long seed,
+        const std::string& params = ""
+    );
+
+    /**
+     * Logs a per-collision-iteration (inner loop) to a CSV file.
+     * Each row represents one collision resolution attempt within a timestep.
+     *
+     * @param log_filename Path to the log file (CSV).
+     * @param map_name Name of the map used.
+     * @param num_agents Number of agents.
+     * @param solver_used Name of the SAT solver used.
+     * @param timestep The current makespan/timestep value.
+     * @param collision_iter The collision iteration number within this timestep.
+     * @param cnf_vars Number of CNF variables at this iteration.
+     * @param cnf_clauses Number of CNF clauses at this iteration.
+     * @param solver_time_s SAT solver time for this collision iteration (seconds).
+     * @param flips Number of flips in this iteration (if available).
+     * @param tries Number of tries in this iteration (if available).
+     * @param collisions_added Number of new collision clauses added in this iteration.
+     * @param status SAT/UNSAT/ERROR status string for this iteration.
+     * @param seed Random seed used.
+     * @param params Additional parameters (optional, as a string).
+     */
+    static void log_collision_iteration(
+        const std::string& log_filename,
+        const std::string& map_name,
+        int num_agents,
+        const std::string& solver_used,
+        int timestep,
+        int collision_iter,
+        int cnf_vars,
+        int cnf_clauses,
+        double solver_time_s,
+        int flips,
+        int tries,
+        int collisions_added,
+        const std::string& status,
+        long long seed,
+        const std::string& params = ""
+    );          
+
     // ... (other public methods will be added later)
 
 protected:

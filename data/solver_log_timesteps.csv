@@ -1,0 +1,9 @@
+map_name,num_agents,solver,timestep,cnf_vars,cnf_clauses,cnf_build_time_s,total_solver_time_s,num_collision_iterations,status,seed,params
+"mapf-map/empty-16-16.map",3,"probSAT",4,39,171,0.0001434,0.124139,50,"SAT",42,""
+"mapf-map/empty-16-16.map",3,"probSAT",5,66,292,9.54e-05,0.0224641,50,"SAT",42,""
+"mapf-map/empty-16-16.map",3,"probSAT",6,120,649,0.000230301,0.132859,50,"SAT",42,""
+"mapf-map/empty-16-16.map",3,"probSAT",7,174,1105,0.0004712,0.0374761,50,"SAT",42,""
+"mapf-map/empty-16-16.map",3,"probSAT",4,39,171,8.28e-05,0.0666494,50,"SAT",42,""
+"mapf-map/empty-16-16.map",3,"probSAT",5,66,292,9.58e-05,0.0210181,50,"SAT",42,""
+"mapf-map/empty-16-16.map",3,"probSAT",6,120,649,0.0002632,0.039688,50,"SAT",42,""
+"mapf-map/empty-16-16.map",3,"probSAT",7,174,1105,0.0004122,0.0426432,50,"SAT",42,""

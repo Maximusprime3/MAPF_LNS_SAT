@@ -1,0 +1,1 @@
+g++ -std=c++17 -O2 -Wall -Wextra -I. -o test_satsolvermanager_probsat test_satsolvermanager_probsat.cpp mdd/MDDConstructor.o mdd/MDD.o mdd/MDDNode.o cnf/CNFConstructor.o cnf/CNF.o cnf/CNFProbSATConstructor.o probSAT-master/probSAT_inmem.o SATSolverManager.o SATSolverManager.h mdd/MDD.h cnf/CNF.h cnf/CNFConstructor.h
