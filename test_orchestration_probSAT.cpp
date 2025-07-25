@@ -10,6 +10,8 @@
 #include <cstring>
 #include <deque>
 #include <algorithm>
+#include <random>
+#include <set>
 
 // Include our MAPF components
 #include "mdd/MDDConstructor.h"
@@ -17,6 +19,7 @@
 #include "mdd/MDDNode.h"
 #include "cnf/CNFConstructor.h"
 #include "cnf/CNFProbSATConstructor.h"
+#include "SATSolverManager.h"
 
 // Include ProbSAT in-memory API
 extern "C" {
@@ -107,8 +110,8 @@ int main() {
         // Configuration
         const std::string map_path = "mapf-map/empty-16-16.map";
         const std::string scenario_path = "mapf-scen-even/scen-even/empty-16-16-even-1.scen";
-        const int num_agents = 2;
-        const int max_timesteps = 3;
+        const int num_agents = 3;
+        const int max_timesteps = 4;
         const long long seed = 42;
         const long long max_runs = 1;
         const long long max_flips = 10000;
@@ -127,6 +130,10 @@ int main() {
             // Agent 1: start = agent 0's goal, goal = agent 0's start
             agents[1].first = agents[0].second;
             agents[1].second = agents[0].first;
+
+            // agent 2 moving at the bottom
+            agents[2].first = {1, 15};
+            agents[2].second = {1, 12};
         }
         std::cout << "Loaded " << agents.size() << " agents" << std::endl;
         
@@ -208,6 +215,98 @@ int main() {
             std::cerr << std::endl;
         }
 
+        // === DETAILED ASSIGNMENT AND COLLISION TESTS (after CNF is constructed) ===
+        std::cout << "\n=== Testing create_initial_assignment_with_collisions (DETAILED) ===" << std::endl;
+        // Sample paths for all agents
+        std::unordered_map<int, std::vector<MDDNode::Position>> sampled_paths;
+        std::mt19937 rng(42); // Fixed seed for reproducibility
+        for (const auto& agent_mdd_pair : mdd_map) {
+            int agent_id = agent_mdd_pair.first;
+            const auto& mdd = agent_mdd_pair.second;
+            sampled_paths[agent_id] = mdd->sample_random_path(rng);
+        }
+        // Print sampled paths
+        std::cout << "Sampled paths:" << std::endl;
+        for (const auto& [agent_id, path] : sampled_paths) {
+            std::cout << "  Agent " << agent_id << ": ";
+            for (const auto& pos : path) std::cout << "(" << pos.first << "," << pos.second << ") ";
+            std::cout << std::endl;
+        }
+        // Detect and print collisions
+        std::set<int> agents_in_collisions;
+        std::cout << "Collisions in sampled paths:" << std::endl;
+        bool any_collision = false;
+        for (size_t i = 0; i < sampled_paths.size(); ++i) {
+            for (size_t j = i + 1; j < sampled_paths.size(); ++j) {
+                const auto& path1 = sampled_paths[i];
+                const auto& path2 = sampled_paths[j];
+                // Vertex collisions
+                for (size_t t = 0; t < std::min(path1.size(), path2.size()); ++t) {
+                    if (path1[t] == path2[t]) {
+                        std::cout << "  Vertex collision: agents " << i << ", " << j << " at (" << path1[t].first << "," << path1[t].second << ") t=" << t << std::endl;
+                        agents_in_collisions.insert(i);
+                        agents_in_collisions.insert(j);
+                        any_collision = true;
+                    }
+                }
+                // Edge collisions
+                for (size_t t = 0; t + 1 < std::min(path1.size(), path2.size()); ++t) {
+                    if (path1[t] == path2[t + 1] && path1[t + 1] == path2[t]) {
+                        std::cout << "  Edge collision: agents " << i << ", " << j << " swap (" << path1[t].first << "," << path1[t].second << ") <-> (" << path1[t + 1].first << "," << path1[t + 1].second << ") t=" << t << std::endl;
+                        agents_in_collisions.insert(i);
+                        agents_in_collisions.insert(j);
+                        any_collision = true;
+                    }
+                }
+            }
+        }
+        if (!any_collision) std::cout << "  None" << std::endl;
+        // --- FULL ASSIGNMENT ---
+        std::cout << "\n--- FULL ASSIGNMENT (SLS/ProbSAT) ---" << std::endl;
+        auto full_assignment = SATSolverManager::create_initial_assignment_with_collisions(mdd_map, cnf_constructor, true, &rng);
+        std::cout << "Full assignment (variable IDs): ";
+        for (size_t i = 0; i < full_assignment.size(); ++i) {
+            std::cout << full_assignment[i];
+            if (i + 1 < full_assignment.size()) std::cout << ", ";
+        }
+        std::cout << std::endl;
+        // Convert back to paths
+        auto full_assignment_paths = cnf_constructor.cnf_assignment_to_paths(full_assignment);
+        std::cout << "Paths from full assignment:" << std::endl;
+        for (const auto& [agent_id, path] : full_assignment_paths) {
+            std::cout << "  Agent " << agent_id << ": ";
+            for (const auto& pos : path) std::cout << "(" << pos.first << "," << pos.second << ") ";
+            std::cout << std::endl;
+        }
+        // --- PARTIAL ASSIGNMENT ---
+        std::cout << "\n--- PARTIAL ASSIGNMENT (CDCL) ---" << std::endl;
+        CNFConstructor cnf_constructor2(mdd_map, true); // fresh CNF for partial assignment
+        cnf_constructor2.construct_cnf();
+        std::mt19937 rng2(42); // Same seed for same sampled paths
+        auto partial_assignment = SATSolverManager::create_initial_assignment_with_collisions(mdd_map, cnf_constructor2, false, &rng2);
+        // Print which agents are NOT involved in any collisions
+        std::set<int> all_agents;
+        for (const auto& [agent_id, _] : sampled_paths) all_agents.insert(agent_id);
+        std::set<int> noncolliding_agents;
+        std::set_difference(all_agents.begin(), all_agents.end(), agents_in_collisions.begin(), agents_in_collisions.end(), std::inserter(noncolliding_agents, noncolliding_agents.begin()));
+        std::cout << "Agents NOT involved in any collisions: ";
+        for (int agent_id : noncolliding_agents) std::cout << agent_id << " ";
+        std::cout << std::endl;
+        std::cout << "Partial assignment (variable IDs): ";
+        for (size_t i = 0; i < partial_assignment.size(); ++i) {
+            std::cout << partial_assignment[i];
+            if (i + 1 < partial_assignment.size()) std::cout << ", ";
+        }
+        std::cout << std::endl;
+        // Convert back to paths
+        auto partial_assignment_paths = cnf_constructor2.cnf_assignment_to_paths(partial_assignment);
+        std::cout << "Paths from partial assignment:" << std::endl;
+        for (const auto& [agent_id, path] : partial_assignment_paths) {
+            std::cout << "  Agent " << agent_id << ": ";
+            for (const auto& pos : path) std::cout << "(" << pos.first << "," << pos.second << ") ";
+            std::cout << std::endl;
+        }
+        
         // Step 3: Solve with ProbSAT
         std::cout << "\n=== Solving with ProbSAT ===" << std::endl;
         

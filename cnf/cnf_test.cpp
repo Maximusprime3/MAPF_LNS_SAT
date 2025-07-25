@@ -30,8 +30,10 @@ int main() {
     
     // Agent 0: (0,0) -> (2,2) (diagonal from upper left to lower right)
     // Agent 1: (2,2) -> (0,0) (diagonal from lower right to upper left)
+    // Agent 2: (1,0) -> (1,2) (vertical path in the middle)
     MDDNode::Position start0 = {0,0}, goal0 = {2,2};
     MDDNode::Position start1 = {2,2}, goal1 = {0,0};
+    MDDNode::Position start2 = {1,0}, goal2 = {1,2};
     
     // Convert map to vector<vector<char>>
     std::vector<std::vector<char>> grid;
@@ -39,15 +41,19 @@ int main() {
     // Compute horizon (shortest path length for each agent)
     int horizon0 = abs(goal0.first - start0.first) + abs(goal0.second - start0.second);
     int horizon1 = abs(goal1.first - start1.first) + abs(goal1.second - start1.second);
+    int horizon2 = abs(goal2.first - start2.first) + abs(goal2.second - start2.second);
     // Build MDDs using MDDConstructor
     MDDConstructor mdd_builder0(grid, start0, goal0, horizon0);
     auto mdd0 = mdd_builder0.construct_mdd();
     MDDConstructor mdd_builder1(grid, start1, goal1, horizon1);
     auto mdd1 = mdd_builder1.construct_mdd();
+    MDDConstructor mdd_builder2(grid, start2, goal2, horizon2);
+    auto mdd2 = mdd_builder2.construct_mdd();
     
     std::unordered_map<int, std::shared_ptr<MDD>> mdds;
     mdds[0] = mdd0;
     mdds[1] = mdd1;
+    mdds[2] = mdd2;
     
     std::cout << "\nAgent 0: (" << start0.first << "," << start0.second << ") -> (" 
               << goal0.first << "," << goal0.second << ")" << std::endl;

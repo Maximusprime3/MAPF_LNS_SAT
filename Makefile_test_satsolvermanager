@@ -16,14 +16,19 @@ CNF_OBJECTS = $(CNF_SOURCES:.cpp=.o)
 PROBSAT_OBJECTS = $(PROBSAT_SOURCES:.c=.o)
 SATSOLVER_OBJECTS = $(SATSOLVER_SOURCES:.cpp=.o)
 
-# Target executable
+# Target executables
 TARGET = test_satsolvermanager_probsat
+TARGET2 = test_orchestration_probSAT
 
 # Default target
-all: $(TARGET)
+all: $(TARGET) $(TARGET2)
 
 # Build the main test executable
 $(TARGET): test_satsolvermanager_probsat.cpp $(MDD_OBJECTS) $(CNF_OBJECTS) $(PROBSAT_OBJECTS) $(SATSOLVER_OBJECTS)
+	$(CXX) $(CXXFLAGS) $(INCLUDES) -o $@ $^
+
+# Build the orchestration test executable
+$(TARGET2): test_orchestration_probSAT.cpp $(MDD_OBJECTS) $(CNF_OBJECTS) $(PROBSAT_OBJECTS) $(SATSOLVER_OBJECTS)
 	$(CXX) $(CXXFLAGS) $(INCLUDES) -o $@ $^
 
 # Build MDD objects
@@ -44,14 +49,17 @@ probSAT-master/%.o: probSAT-master/%.c
 
 # Clean build artifacts
 clean:
-	rm -f $(TARGET) $(MDD_OBJECTS) $(CNF_OBJECTS) $(PROBSAT_OBJECTS) $(SATSOLVER_OBJECTS)
+	rm -f $(TARGET) $(TARGET2) $(MDD_OBJECTS) $(CNF_OBJECTS) $(PROBSAT_OBJECTS) $(SATSOLVER_OBJECTS)
 
-# Run the test
+# Run the tests
 test: $(TARGET)
 	./$(TARGET)
 
+test2: $(TARGET2)
+	./$(TARGET2)
+
 # Phony targets
-.PHONY: all clean test
+.PHONY: all clean test test2
 
 # Dependencies
 mdd/MDDConstructor.o: mdd/MDDConstructor.h mdd/MDDNode.h
@@ -64,4 +72,5 @@ cnf/CNFProbSATConstructor.o: cnf/CNFProbSATConstructor.h cnf/CNF.h mdd/MDD.h mdd
 
 SATSolverManager.o: SATSolverManager.h mdd/MDD.h cnf/CNF.h cnf/CNFConstructor.h probSAT-master/probSAT_inmem.h
 
-test_satsolvermanager_probsat: test_satsolvermanager_probsat.cpp SATSolverManager.h mdd/MDD.h cnf/CNF.h cnf/CNFConstructor.h 
+test_satsolvermanager_probsat: test_satsolvermanager_probsat.cpp SATSolverManager.h mdd/MDD.h cnf/CNF.h cnf/CNFConstructor.h
+test_orchestration_probSAT: test_orchestration_probSAT.cpp SATSolverManager.h mdd/MDD.h cnf/CNF.h cnf/CNFConstructor.h cnf/CNFProbSATConstructor.h 

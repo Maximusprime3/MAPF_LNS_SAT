@@ -459,3 +459,23 @@ int CNFConstructor::get_max_timesteps() const {
     }
     return max_timesteps;
 } 
+
+// Returns a vector of positive literals for the given agent paths (for use as assumptions in a CDCL solver).
+std::vector<int> CNFConstructor::partial_assignment_from_paths(const std::unordered_map<int, std::vector<MDDNode::Position>>& agent_paths) const {
+    std::vector<int> assumptions;
+    // For each agent in the provided map
+    for (const auto& agent_path_pair : agent_paths) {
+        int agent_id = agent_path_pair.first;
+        const auto& path = agent_path_pair.second;
+        // Skip agents with empty paths (e.g., those involved in collisions)
+        if (path.empty()) continue;
+        // For each timestep, add the variable for (agent, position, timestep)
+        for (size_t timestep = 0; timestep < path.size(); ++timestep) {
+            int var_id = get_variable_id(agent_id, path[timestep], timestep);
+            if (var_id > 0) {
+                assumptions.push_back(var_id); // Positive literal: set this variable to true
+            }
+        }
+    }
+    return assumptions;
+} 

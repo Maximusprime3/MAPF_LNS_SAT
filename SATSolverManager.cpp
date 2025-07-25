@@ -15,6 +15,9 @@
 #include <sstream>
 #include <algorithm>
 #include <cstring>
+#include <unordered_map>
+#include <unordered_set>
+#include <random>
 
 SATSolverManager::SATSolverManager(const std::string& map_path,
                                    const std::string& scenario_path,
@@ -961,6 +964,119 @@ int SATSolverManager::add_vertex_collision_prevention_clauses(std::shared_ptr<CN
     }
     
     return clauses_added;
+}
+
+/**
+ * Creates an initial assignment by sampling paths, adding collisions, and returning assignment (full or partial)
+ * If full_assignment is true, returns a full assignment for all agents (for SLS/ProbSAT). If false, returns a partial assignment (for CDCL solvers).
+ * @param mdds Map from agent_id to MDD.
+ * @param cnf_constructor The CNFProbSATConstructor to add clauses to.
+ * @param full_assignment If true, return a full assignment. If false, return a partial assignment.
+ * @param rng_ptr Pointer to a random number generator (optional).
+ * @return Vector of variable assignments (0 for false, 1 for true).
+ */
+std::vector<int> SATSolverManager::create_initial_assignment_with_collisions(
+    const std::unordered_map<int, std::shared_ptr<MDD>>& mdds,
+    CNFConstructor& cnf_constructor,
+    bool full_assignment,
+    std::mt19937* rng_ptr) {
+    
+    // Use provided RNG or create a new one
+    std::mt19937 local_rng;
+    std::mt19937& rng = rng_ptr ? *rng_ptr : local_rng;
+    if (!rng_ptr) {
+        local_rng.seed(std::random_device{}());
+    }
+    
+    // Step 1: Sample random paths for each agent from their MDDs
+    std::unordered_map<int, std::vector<MDDNode::Position>> sampled_paths;
+    for (const auto& agent_mdd_pair : mdds) {
+        int agent_id = agent_mdd_pair.first;
+        const auto& mdd = agent_mdd_pair.second;
+        sampled_paths[agent_id] = mdd->sample_random_path(rng);
+    }
+    
+    // Step 2: Detect vertex and edge collisions
+    std::vector<std::pair<int, int>> colliding_agents;
+    
+    // Check vertex collisions (agents at same position and time)
+    for (int agent1 = 0; agent1 < mdds.size(); ++agent1) {
+        for (int agent2 = agent1 + 1; agent2 < mdds.size(); ++agent2) {
+            const auto& path1 = sampled_paths[agent1];
+            const auto& path2 = sampled_paths[agent2];
+            
+            // Check for vertex collisions
+            for (size_t t = 0; t < std::min(path1.size(), path2.size()); ++t) {
+                if (path1[t] == path2[t]) {
+                    colliding_agents.emplace_back(agent1, agent2);
+                    // Add vertex collision clause
+                    try {
+                        cnf_constructor.add_single_collision_clause(agent1, agent2, path1[t], t, true);
+                    } catch (const std::exception& e) {
+                        // Skip if the clause cannot be added (e.g., position not in MDD)
+                        std::cerr << "Warning: Could not add vertex collision clause: " << e.what() << std::endl;
+                    }
+                }
+            }
+            
+            // Check for edge collisions (agents swap positions)
+            for (size_t t = 0; t < std::min(path1.size() - 1, path2.size() - 1); ++t) {
+                if (path1[t] == path2[t + 1] && path1[t + 1] == path2[t]) {
+                    colliding_agents.emplace_back(agent1, agent2);
+                    // Add edge collision clause
+                    try {
+                        cnf_constructor.add_single_edge_collision_clause(agent1, agent2, path1[t], path1[t + 1], t, true);
+                    } catch (const std::exception& e) {
+                        // Skip if the clause cannot be added (e.g., edge not in MDD)
+                        std::cerr << "Warning: Could not add edge collision clause: " << e.what() << std::endl;
+                    }
+                }
+            }
+        }
+    }
+    
+    // Step 3: Ensure CNF is constructed and variables are available
+    // This is crucial for lazy encoding - we need to construct the CNF to get variables
+    cnf_constructor.construct_cnf();
+    
+    // Step 4: Create assignment based on mode
+    if (full_assignment) {
+        // For SLS/ProbSAT: return full assignment for all agents
+        std::vector<int> full_assignment_vec;
+        for (const auto& agent_path_pair : sampled_paths) {
+            int agent_id = agent_path_pair.first;
+            const auto& path = agent_path_pair.second;
+            
+            // Add variables for this agent's path
+            for (size_t t = 0; t < path.size(); ++t) {
+                int var_id = cnf_constructor.get_variable_id(agent_id, path[t], t);
+                full_assignment_vec.push_back(var_id);
+            }
+        }
+        return full_assignment_vec;
+    } else {
+        // For CDCL solvers: return partial assignment (only non-colliding agents)
+        std::unordered_map<int, std::vector<MDDNode::Position>> partial_paths;
+        
+        // Create a set of agents involved in collisions
+        std::set<int> colliding_agent_set;
+        for (const auto& collision_pair : colliding_agents) {
+            colliding_agent_set.insert(collision_pair.first);
+            colliding_agent_set.insert(collision_pair.second);
+        }
+        
+        // Only include agents that are NOT involved in collisions
+        for (const auto& agent_path_pair : sampled_paths) {
+            int agent_id = agent_path_pair.first;
+            if (colliding_agent_set.find(agent_id) == colliding_agent_set.end()) {
+                partial_paths[agent_id] = agent_path_pair.second;
+            } else {
+                partial_paths[agent_id] = {}; // Empty path for colliding agents
+            }
+        }
+        
+        return cnf_constructor.partial_assignment_from_paths(partial_paths);
+    }
 }
 
  

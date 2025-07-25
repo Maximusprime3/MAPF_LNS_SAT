@@ -4,6 +4,7 @@
 #include <sstream>
 #include <set>
 #include <iostream>
+#include <unordered_map>
 
 // Constructor: initializes an empty MDD
 MDD::MDD() {}

@@ -287,6 +287,14 @@ public:
     static int add_vertex_collision_prevention_clauses(std::shared_ptr<CNFProbSATConstructor>& cnf_constructor,
                                                       const std::vector<std::tuple<int, int, std::pair<int, int>, int>>& vertex_collisions);
 
+    // NEW: Create an initial assignment by sampling paths, adding collisions, and returning assignment (full or partial)
+    // If full_assignment is true, returns a full assignment for all agents (for SLS/ProbSAT). If false, returns a partial assignment (for CDCL solvers).
+    static std::vector<int> create_initial_assignment_with_collisions(
+        const std::unordered_map<int, std::shared_ptr<MDD>>& mdds,
+        CNFConstructor& cnf_constructor,
+        bool full_assignment = true,
+        std::mt19937* rng_ptr = nullptr);
+
     // ... (other public methods will be added later)
 
 protected:
