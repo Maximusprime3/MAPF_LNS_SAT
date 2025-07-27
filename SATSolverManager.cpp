@@ -15,13 +15,10 @@
 #include <sstream>
 #include <algorithm>
 #include <cstring>
-<<<<<<< HEAD
 #include <unordered_map>
 #include <unordered_set>
 #include <random>
-=======
 #include <sys/stat.h> // for checking file existence
->>>>>>> b253c0a37e4a1d0cfebc701f0b699b362bbc90bb
 
 SATSolverManager::SATSolverManager(const std::string& map_path,
                                    const std::string& scenario_path,
@@ -466,6 +463,65 @@ ProbSATSolution SATSolverManager::solve_cnf_with_probsat(const CNF& cnf,
         
     } catch (const std::exception& e) {
         result.error_message = std::string("Exception during ProbSAT solving: ") + e.what();
+    }
+    
+    return result;
+}
+
+/**
+ * Solves a CNF formula using MiniSAT.
+ */
+MiniSatSolution SATSolverManager::solve_cnf_with_minisat(const CNF& cnf,
+                                                        const std::vector<int>* initial_assignment) {
+    MiniSatSolution result;
+    result.satisfiable = false;
+    result.num_decisions = 0;
+    result.solve_time = 0.0;
+    result.error_message = "";
+    
+    try {
+        // Create MiniSAT wrapper
+        MockMiniSatWrapper minisat_wrapper;
+        
+        // Convert CNF to vector format
+        std::vector<std::vector<int>> clauses = cnf.get_clauses();
+        
+        // Solve with MiniSAT
+        result = minisat_wrapper.solve_cnf(clauses, initial_assignment);
+        
+    } catch (const std::exception& e) {
+        result.error_message = std::string("Exception during MiniSAT solving: ") + e.what();
+    }
+    
+    return result;
+}
+
+/**
+ * Solves a CNF formula using MiniSAT via CNFProbSATConstructor.
+ */
+MiniSatSolution SATSolverManager::solve_cnf_with_minisat(const std::shared_ptr<CNFProbSATConstructor>& cnf_constructor,
+                                                        const std::vector<int>* initial_assignment) {
+    MiniSatSolution result;
+    result.satisfiable = false;
+    result.num_decisions = 0;
+    result.solve_time = 0.0;
+    result.error_message = "";
+    
+    try {
+        // Create MiniSAT wrapper
+        MockMiniSatWrapper minisat_wrapper;
+        
+        // Get CNF from constructor
+        const CNF& cnf = cnf_constructor->get_cnf();
+        
+        // Convert CNF to vector format
+        std::vector<std::vector<int>> clauses = cnf.get_clauses();
+        
+        // Solve with MiniSAT
+        result = minisat_wrapper.solve_cnf(clauses, initial_assignment);
+        
+    } catch (const std::exception& e) {
+        result.error_message = std::string("Exception during MiniSAT solving: ") + e.what();
     }
     
     return result;

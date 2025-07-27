@@ -9,7 +9,7 @@ This repository provides code and data for constructing and manipulating Multi-v
 ## Repository Structure
 
 ```
-LNS/
+MAPF_LNS_SAT/
 ├── mdd/                  # C++ and Python source/header files for MDD construction
 │   ├── MDDConstructor.cpp
 │   ├── MDDConstructor.h
@@ -18,21 +18,26 @@ LNS/
 │   ├── MDDNode.cpp
 │   ├── MDDNode.h
 │   └── MDD.py
-├── main.cpp              # Example usage and tests for the MDD classes
+├── cnf/                  # CNF construction and related files
+├── minisat/              # MiniSAT integration (see minisat/README.md)
 ├── probSAT-master/       # probSAT SAT solver (CLI and C/C++ API)
 ├── mapf-map/             # Grid map files for experiments
 ├── mapf-scen-even/       # Scenario files for experiments
-├── cnf/                  # CNF construction and related files
+├── main.cpp              # Example usage and tests for the MDD classes
+├── SATSolverManager.h    # SAT solver management and integration
+├── SATSolverManager.cpp  # SAT solver management implementation
 ├── .gitignore            # Standard ignore rules for C++ projects
 ├── LICENSE               # MIT License
-├── README.md             # Project documentation and build instructions
+└── README.md             # Project documentation and build instructions
 ```
 
 - **mdd/**: Core C++/Python code for MDD construction and manipulation.
-- **main.cpp**: Example and test code for MDD usage.
+- **cnf/**: CNF construction and related utilities.
+- **minisat/**: MiniSAT integration with wrappers, tests, and documentation (see `minisat/README.md`).
 - **probSAT-master/**: Third-party SAT solver (see its README for details).
 - **mapf-map/**, **mapf-scen-even/**: Datasets (maps and scenarios) for experiments.
-- **cnf/**: CNF construction and related utilities.
+- **SATSolverManager.h/cpp**: SAT solver management and integration for both ProbSAT and MiniSAT.
+- **main.cpp**: Example usage and tests for the MDD classes.
 
 ## Building the Project
 
@@ -72,6 +77,16 @@ This project is licensed under the MIT License. See the LICENSE file for details
 ## Author / Contact
 **TODO: Add author name(s) and contact information here.**
 
+## SAT Solvers
+
+This project supports multiple SAT solvers:
+
+- **ProbSAT**: Stochastic local search solver (in `probSAT-master/`)
+- **MiniSAT**: CDCL solver (in `minisat/`)
+
+See `minisat/README.md` for MiniSAT integration details and usage examples.
+
 ## Acknowledgements
 - The probSAT SAT solver is included under its own license in `probSAT-master/`.
+- The MiniSAT solver is included under its own license in `minisat/minisat-master/`.
 - This project was developed for research purposes. If you use this code or data, please cite the associated paper (see above). 

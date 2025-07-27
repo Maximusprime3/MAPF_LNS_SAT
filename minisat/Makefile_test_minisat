@@ -1,0 +1,46 @@
+CXX = g++
+CXXFLAGS = -std=c++17 -O2 -Wall -Wextra -I. -I..
+LDFLAGS = 
+
+# Our source files
+SOURCES = ../mdd/MDDConstructor.cpp \
+          ../mdd/MDD.cpp \
+          ../mdd/MDDNode.cpp \
+          ../cnf/CNF.cpp \
+          ../cnf/CNFConstructor.cpp \
+          ../cnf/CNFProbSATConstructor.cpp \
+          ../SATSolverManager.cpp \
+          mock-minisat-wrapper.cpp \
+          test_minisat_integration.cpp
+
+# ProbSAT object file
+PROBSAT_OBJ = ../probSAT-master/probSAT_inmem.o
+
+# Object files
+OBJECTS = $(SOURCES:.cpp=.o) $(PROBSAT_OBJ)
+
+# Target executable
+TARGET = test_minisat_integration
+
+# Default target
+all: $(TARGET)
+
+# Link the executable
+$(TARGET): $(OBJECTS)
+	$(CXX) $(OBJECTS) -o $(TARGET) $(LDFLAGS)
+
+# Compile our source files
+%.o: %.cpp
+	$(CXX) $(CXXFLAGS) -c $< -o $@
+
+
+
+# Clean
+clean:
+	rm -f $(OBJECTS) $(TARGET)
+
+# Run the test
+test: $(TARGET)
+	./$(TARGET)
+
+.PHONY: all clean test 
