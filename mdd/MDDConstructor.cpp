@@ -3,12 +3,35 @@
 #include <set>
 #include <algorithm>
 #include <iostream>
+#include <stdexcept>
 
 // Constructor: initializes the grid, start, goal, and optionally max_timesteps and distances
 MDDConstructor::MDDConstructor(const std::vector<std::vector<char>>& grid_, MDDNode::Position start_, MDDNode::Position goal_, int max_timesteps_, const std::unordered_map<MDDNode::Position, int, pair_hash>& distances_)
     : grid(grid_), start(start_), goal(goal_), max_timesteps(max_timesteps_), distances(distances_) {
     rows = grid.size();
     cols = grid.empty() ? 0 : grid[0].size();
+    
+    // Validate grid dimensions
+    if (rows == 0) {
+        throw std::invalid_argument("Grid cannot be empty");
+    }
+    
+    // Validate start position
+    if (start.first < 0 || start.first >= rows || start.second < 0 || start.second >= cols) {
+        throw std::invalid_argument("Start position is out of bounds");
+    }
+    if (grid[start.first][start.second] != '.' && grid[start.first][start.second] != 'G') {
+        throw std::invalid_argument("Start position is not on a free cell");
+    }
+    
+    // Validate goal position
+    if (goal.first < 0 || goal.first >= rows || goal.second < 0 || goal.second >= cols) {
+        throw std::invalid_argument("Goal position is out of bounds");
+    }
+    if (grid[goal.first][goal.second] != '.' && grid[goal.first][goal.second] != 'G') {
+        throw std::invalid_argument("Goal position is not on a free cell");
+    }
+    
     mdd = std::make_shared<MDD>();
 }
 
@@ -55,12 +78,12 @@ std::shared_ptr<MDD> MDDConstructor::construct_mdd() {
     if (distances.empty()) {
         distances = compute_all_distances();
     }
-    // If max_timesteps is not set, use the shortest path length to goal
+    // If max_timesteps is not set, use the shortest path length from start to goal
     if (max_timesteps < 0) {
-        auto it = distances.find(goal);
+        auto it = distances.find(start);
         max_timesteps = (it != distances.end()) ? it->second : 0;
         // Print the value when it is set automatically
-        std::cout << "[MDDConstructor] max_timesteps set to shortest path length: " << max_timesteps << std::endl;
+        std::cout << "[MDDConstructor] max_timesteps set to shortest path length from start to goal: " << max_timesteps << std::endl;
     }
     // Queue for BFS: (position, time_step)
     std::queue<std::pair<MDDNode::Position, int>> queue;

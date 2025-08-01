@@ -140,10 +140,30 @@ class MDDConstructor:
         self.start = start
         self.goal = goal
         self.rows = len(grid)
-        self.cols = len(grid[0])
+        self.cols = len(grid[0]) if grid else 0
         self.max_timesteps = max_timesteps
         self.mdd = MDD()
         self.distances = distances if distances else {}
+
+        # Validate grid dimensions
+        if self.rows == 0:
+            raise ValueError("Grid cannot be empty")
+        
+        # Validate start position
+        if (start[0] < 0 or start[0] >= self.rows or 
+            start[1] < 0 or start[1] >= self.cols):
+            raise ValueError("Start position is out of bounds")
+        if (self.grid[start[0]][start[1]] != '.' and 
+            self.grid[start[0]][start[1]] != 'G'):
+            raise ValueError("Start position is not on a free cell")
+        
+        # Validate goal position
+        if (goal[0] < 0 or goal[0] >= self.rows or 
+            goal[1] < 0 or goal[1] >= self.cols):
+            raise ValueError("Goal position is out of bounds")
+        if (self.grid[goal[0]][goal[1]] != '.' and 
+            self.grid[goal[0]][goal[1]] != 'G'):
+            raise ValueError("Goal position is not on a free cell")
 
         # Dictionary to store nodes based on (position, time_step) keys
         self.nodes = defaultdict(dict)
@@ -180,7 +200,7 @@ class MDDConstructor:
 
         # Handle scenario where max_timesteps is not defined
         if self.max_timesteps is None:
-            self.max_timesteps = self.distances.get(self.goal, 0)
+            self.max_timesteps = self.distances.get(self.start, 0)
 
         # Initialize the starting node and store it
         start_node = MDDNode(self.start, 0)
@@ -224,7 +244,7 @@ class MDDConstructor:
 
         # Handle scenario where max_timesteps is not defined
         if self.max_timesteps is None:
-            self.max_timesteps = self.distances.get(self.goal, 0)
+            self.max_timesteps = self.distances.get(self.start, 0)
 
         while queue:
             position, current_time_step = queue.pop(0)
