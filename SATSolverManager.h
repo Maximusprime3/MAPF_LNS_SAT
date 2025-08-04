@@ -26,8 +26,8 @@ extern "C" {
     #include "probSAT-master/probSAT_inmem.h"
 }
 
-// Include MiniSAT wrapper (using mock for now)
-#include "minisat/mock-minisat-wrapper.h"
+// Include MiniSAT wrapper (using real wrapper)
+#include "minisat/minisat-wrapper.h"
 
 // Forward declarations
 class MDD;
@@ -164,6 +164,16 @@ public:
     static std::shared_ptr<class CNFProbSATConstructor>
     create_cnf_probsat_constructor(const std::vector<std::shared_ptr<class MDD>>& mdds,
                                   bool lazy_encoding = false);
+
+    /**
+     * Creates a CNFConstructor for regular CNF operations.
+     * @param mdds Vector of shared_ptr<MDD> for each agent.
+     * @param lazy_encoding If true, use lazy encoding (exclude conflict clauses initially).
+     * @return CNFConstructor object.
+     */
+    static CNFConstructor
+    create_cnf_constructor(const std::vector<std::shared_ptr<class MDD>>& mdds,
+                          bool lazy_encoding = false);
 
     /**
      * Generates a unique filename by appending a number if the file already exists.
@@ -316,6 +326,8 @@ public:
      */
     static int add_vertex_collision_prevention_clauses(std::shared_ptr<CNFProbSATConstructor>& cnf_constructor,
                                                       const std::vector<std::tuple<int, int, std::pair<int, int>, int>>& vertex_collisions);
+
+
 
     // NEW: Create an initial assignment by sampling paths, adding collisions, and returning assignment (full or partial)
     // If full_assignment is true, returns a full assignment for all agents (for SLS/ProbSAT). If false, returns a partial assignment (for CDCL solvers).

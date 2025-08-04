@@ -48,8 +48,16 @@ MiniSatSolution MockMiniSatWrapper::solve_cnf(const std::vector<std::vector<int>
         result.num_decisions = 42; // Mock value
         
         if (satisfiable) {
-            // Generate a mock assignment
-            result.assignment = extract_assignment(10); // Mock 10 variables
+            // Generate a mock assignment based on the actual number of variables
+            int num_vars = 0;
+            for (const auto& clause : clauses) {
+                for (int literal : clause) {
+                    if (literal != 0) {
+                        num_vars = std::max(num_vars, abs(literal));
+                    }
+                }
+            }
+            result.assignment = extract_assignment(num_vars);
         }
         
     } catch (const std::exception& e) {
@@ -104,9 +112,16 @@ bool MockMiniSatWrapper::add_clause_to_solver(const std::vector<int>& clause) {
 std::vector<int> MockMiniSatWrapper::extract_assignment(int num_vars) {
     std::vector<int> assignment(num_vars);
     
-    // Generate a mock assignment (alternating 0s and 1s)
+    // Generate a more realistic mock assignment
+    // Use a pattern that's more likely to produce valid paths
     for (int i = 0; i < num_vars; ++i) {
-        assignment[i] = i % 2;
+        // Use a pattern that favors some variables being true
+        // This should help create more realistic path assignments
+        if (i % 3 == 0 || i % 5 == 0) {
+            assignment[i] = 1;  // Make some variables true
+        } else {
+            assignment[i] = 0;  // Make others false
+        }
     }
     
     return assignment;

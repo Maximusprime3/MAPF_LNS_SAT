@@ -1,0 +1,96 @@
+=== MAPF LNS SAT with SATSolverManager - MiniSAT Iterative Loop Test ===
+Loading map from: mapf-map/empty-16-16.map
+Map loaded: 16x16
+Loading scenario from: mapf-scen-even/scen-even/empty-16-16-even-1.scen
+Loaded 3 agents
+Agent 0: Start(1,1) -> Goal(1,3)
+Agent 1: Start(1,3) -> Goal(1,1)
+Agent 2: Start(1,4) -> Goal(1,0)
+Initial computed max timesteps: 4, starting with: 4
+
+============================================================
+=== ITERATION 1 (Timesteps: 4) ===
+============================================================
+
+=== Creating MDDs with 4 timesteps ===
+Agent 0 MDD has 5 timesteps
+Agent 1 MDD has 5 timesteps
+Agent 2 MDD has 5 timesteps
+CNFProbSATConstructor created successfully
+Number of variables: 39
+Number of clauses: 111
+
+--- Inner Iteration 1 ---
+=== Solving with MiniSAT ===
+
+=== Results ===
+SATISFIABLE!
+Solve time: 0s
+Number of decisions: 1
+Total time (including overhead): 6.748e-05s
+
+=== DEBUG: cnf_assignment_to_paths ===
+Input assignment: 
+Variable map contents:
+  Var 39: agent 0, pos (1,3), t=4
+  Var 37: agent 0, pos (1,4), t=3
+  Var 13: agent 1, pos (0,2), t=2
+  Var 12: agent 1, pos (1,3), t=2
+  Var 17: agent 1, pos (1,2), t=3
+  Var 11: agent 1, pos (1,3), t=1
+  Var 21: agent 1, pos (1,1), t=3
+  Var 10: agent 1, pos (1,4), t=1
+  Var 22: agent 1, pos (1,1), t=4
+  Var 7: agent 1, pos (0,3), t=1
+  Var 18: agent 1, pos (0,1), t=3
+  Var 9: agent 1, pos (1,2), t=1
+  Var 6: agent 1, pos (1,3), t=0
+  Var 15: agent 1, pos (1,1), t=2
+  Var 20: agent 1, pos (1,0), t=3
+  Var 8: agent 1, pos (2,3), t=1
+  Var 19: agent 1, pos (2,1), t=3
+  Var 35: agent 0, pos (0,3), t=3
+  Var 30: agent 0, pos (0,2), t=2
+  Var 3: agent 2, pos (1,2), t=2
+  Var 24: agent 0, pos (0,1), t=1
+  Var 4: agent 2, pos (1,1), t=3
+  Var 2: agent 2, pos (1,3), t=1
+  Var 5: agent 2, pos (1,0), t=4
+  Var 1: agent 2, pos (1,4), t=0
+  Var 14: agent 1, pos (2,2), t=2
+  Var 16: agent 1, pos (1,2), t=2
+  Var 34: agent 0, pos (1,2), t=3
+  Var 32: agent 0, pos (1,3), t=2
+  Var 23: agent 0, pos (1,1), t=0
+  Var 26: agent 0, pos (1,0), t=1
+  Var 36: agent 0, pos (2,3), t=3
+  Var 31: agent 0, pos (2,2), t=2
+  Var 25: agent 0, pos (2,1), t=1
+  Var 27: agent 0, pos (1,2), t=1
+  Var 29: agent 0, pos (1,1), t=2
+  Var 38: agent 0, pos (1,3), t=3
+  Var 33: agent 0, pos (1,2), t=2
+  Var 28: agent 0, pos (1,1), t=1
+=== END DEBUG ===
+
+=== Agent Paths ===
+
+=== Path Validation ===
+
+=== Collision Detection ===
+No vertex collisions detected
+No edge collisions detected
+
+============================================================
+=== SUCCESS: COLLISION-FREE SOLUTION FOUND! ===
+=== Final Solution with 4 timesteps ===
+============================================================
+
+=== Agent Paths ===
+
+=== Final Statistics ===
+Total timesteps used: 4
+Total iterations: 1
+Final CNF size: 39 variables, 111 clauses
+
+=== Test completed successfully ===

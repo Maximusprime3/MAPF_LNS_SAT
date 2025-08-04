@@ -104,7 +104,7 @@ int main() {
         return 1;
     }
     try {
-        std::cout << "=== MAPF LNS SAT with SATSolverManager - Iterative Loop Test ===" << std::endl;
+        std::cout << "=== MAPF LNS SAT with SATSolverManager - MiniSAT Iterative Loop Test ===" << std::endl;
         
         // Configuration
         const std::string map_path = "mapf-map/empty-16-16.map";
@@ -113,8 +113,6 @@ int main() {
         const int initial_max_timesteps = 2;  // Start with 2 timesteps
         const int max_timestep_increase = 10;  // Maximum additional timesteps
         const long long seed = 42;
-        const long long max_runs = 1;
-        const long long max_flips = 50000;  // Doubled from 10000
         
         std::cout << "Loading map from: " << map_path << std::endl;
         auto grid = load_map(map_path);
@@ -156,14 +154,14 @@ int main() {
         
         // Variables to accumulate for logging
         std::vector<double> solver_times_per_iter;
-        std::vector<int> flips_per_iter;
+        std::vector<int> decisions_per_iter;
         std::vector<int> tries_per_iter;
         std::vector<int> collisions_per_iter;
         double total_solver_time = 0.0;
         double total_cnf_build_time = 0.0;
         int cnf_vars_start = 0, cnf_clauses_start = 0;
         int cnf_vars_end = 0, cnf_clauses_end = 0;
-        std::string solver_used = "probSAT";
+        std::string solver_used = "MiniSAT";
         std::string status = "UNKNOWN";
         int num_agents_logged = num_agents;
         std::string map_name_logged = map_path;
@@ -189,73 +187,44 @@ int main() {
                 std::cout << "Agent " << i << " MDD has " << mdds[i]->levels.size() << " timesteps" << std::endl;
             }
             
-            // Step 2: Create lazy CNF
+            // Step 2: Create lazy CNF for MiniSAT (use regular CNFConstructor)
             auto cnf_build_start = std::chrono::high_resolution_clock::now();
-            auto cnf_constructor = SATSolverManager::create_cnf_probsat_constructor(mdds, true); // true = lazy encoding
+            auto cnf_constructor = SATSolverManager::create_cnf_constructor(mdds, true); // true = lazy encoding
+            
+            // Build the CNF
+            CNF cnf = cnf_constructor.construct_cnf();
+            
             auto cnf_build_end = std::chrono::high_resolution_clock::now();
             double cnf_build_time = std::chrono::duration<double>(cnf_build_end - cnf_build_start).count();
             total_cnf_build_time += cnf_build_time;
             if (timestep_increase == 0) {
-                cnf_vars_start = cnf_constructor->get_probsat_num_variables();
-                cnf_clauses_start = cnf_constructor->get_probsat_num_clauses();
+                cnf_vars_start = cnf.count_variables();
+                cnf_clauses_start = cnf.count_clauses();
             }
             
-            std::cout << "CNFProbSATConstructor created successfully" << std::endl;
-            std::cout << "Number of variables: " << cnf_constructor->get_probsat_num_variables() << std::endl;
-            std::cout << "Number of clauses: " << cnf_constructor->get_probsat_num_clauses() << std::endl;
+            std::cout << "CNFConstructor created successfully" << std::endl;
+            std::cout << "Number of variables: " << cnf.count_variables() << std::endl;
+            std::cout << "Number of clauses: " << cnf.count_clauses() << std::endl;
             
             // Inner loop: solve and add collision clauses until UNSAT or solution found
             int iteration_count = 0;
-            const int max_inner_iterations = 500; // Prevent infinite loops
+            const int max_inner_iterations = 50; // Prevent infinite loops
             double timestep_solver_time = 0.0;
             int timestep_collisions = 0;
-            
-            // Create initial assignment for first iteration (sampled paths with collision clauses)
-            std::mt19937 rng(seed);
-            
-            // Convert vector of MDDs to unordered_map for the function
-            std::unordered_map<int, std::shared_ptr<MDD>> mdds_map;
-            for (size_t i = 0; i < mdds.size(); ++i) {
-                mdds_map[static_cast<int>(i)] = mdds[i];
-            }
-            
-
-            
-            auto initial_assignment = SATSolverManager::create_initial_assignment_with_collisions(
-                mdds_map, *cnf_constructor, true, &rng);
-            
-            // Store the previous solution for warm start in subsequent iterations
-            std::vector<int> previous_solution;
             
             while (iteration_count < max_inner_iterations) {
                 auto solver_start = std::chrono::high_resolution_clock::now();
                 std::cout << "\n--- Inner Iteration " << (iteration_count + 1) << " ---" << std::endl;
                 
-                // Step 3: Solve with ProbSAT
-                std::cout << "=== Solving with ProbSAT ===" << std::endl;
+                // Step 3: Solve with MiniSAT
+                std::cout << "=== Solving with MiniSAT ===" << std::endl;
                 
-                // Choose initial assignment: sampled paths for first iteration, previous solution for others
-                const std::vector<int>* current_initial_assignment = nullptr;
-                if (iteration_count == 0) {
-                    current_initial_assignment = &initial_assignment;
-                    std::cout << "Using sampled paths as initial assignment" << std::endl;
-                } else if (!previous_solution.empty()) {
-                    current_initial_assignment = &previous_solution;
-                    std::cout << "Using previous solution as initial assignment" << std::endl;
-                }
-                
-                auto result = SATSolverManager::solve_cnf_with_probsat(
-                    cnf_constructor,
-                    seed,
-                    max_runs,
-                    max_flips,
-                    current_initial_assignment
-                );
+                auto result = SATSolverManager::solve_cnf_with_minisat(cnf);
                 
                 auto solver_end = std::chrono::high_resolution_clock::now();
                 double solver_time = std::chrono::duration<double>(solver_end - solver_start).count();
                 solver_times_per_iter.push_back(solver_time);
-                flips_per_iter.push_back(result.num_flips);
+                decisions_per_iter.push_back(result.num_decisions);
                 tries_per_iter.push_back(1); // Only one try per call in this test
                 total_solver_time += solver_time;
                 timestep_solver_time += solver_time;
@@ -268,10 +237,10 @@ int main() {
                     solver_used,
                     current_max_timesteps,
                     iteration_count,
-                    cnf_constructor->get_probsat_num_variables(),
-                    cnf_constructor->get_probsat_num_clauses(),
+                    cnf_constructor.get_cnf().count_variables(),
+                    cnf_constructor.get_cnf().count_clauses(),
                     solver_time,
-                    result.num_flips,
+                    result.num_decisions, // Use decisions instead of flips for MiniSAT
                     1, // tries
                     0, // collisions_added (update if you track this)
                     result.satisfiable ? "SAT" : "UNSAT",
@@ -284,14 +253,20 @@ int main() {
                     status = "SAT";
                     std::cout << "SATISFIABLE!" << std::endl;
                     std::cout << "Solve time: " << result.solve_time << "s" << std::endl;
-                    std::cout << "Number of flips: " << result.num_flips << std::endl;
+                    std::cout << "Number of decisions: " << result.num_decisions << std::endl;
                     std::cout << "Total time (including overhead): " << solver_time << "s" << std::endl;
                     
-                    // Store the current solution for next iteration's warm start
-                    previous_solution = result.assignment;
-                    
                     // Convert assignment to agent paths
-                    auto agent_paths = cnf_constructor->cnf_assignment_to_paths(result.assignment);
+                    auto agent_paths = cnf_constructor.cnf_assignment_to_paths(result.assignment);
+                    
+                    // Debug: Print the actual extracted paths
+                    std::cout << "\n=== DEBUG: Actual Extracted Paths ===" << std::endl;
+                    for (const auto& [agent_id, path] : agent_paths) {
+                        std::cout << "Agent " << agent_id << " extracted path:" << std::endl;
+                        for (size_t t = 0; t < path.size(); ++t) {
+                            std::cout << "  t=" << t << ": (" << path[t].first << "," << path[t].second << ")" << std::endl;
+                        }
+                    }
                     
                     // Print and visualize the paths
                     SATSolverManager::print_agent_paths(agent_paths);
@@ -300,7 +275,7 @@ int main() {
                     std::cout << "\n=== Path Validation ===" << std::endl;
                     bool all_paths_valid = true;
                     for (const auto& [agent_id, path] : agent_paths) {
-                        bool valid = cnf_constructor->validate_path(agent_id, path);
+                        bool valid = cnf_constructor.validate_path(agent_id, path);
                         std::cout << "Agent " << agent_id << " path is " 
                                   << (valid ? "VALID" : "INVALID") << std::endl;
                         if (!valid) all_paths_valid = false;
@@ -364,8 +339,8 @@ int main() {
                         std::cout << "\n=== Final Statistics ===" << std::endl;
                         std::cout << "Total timesteps used: " << current_max_timesteps << std::endl;
                         std::cout << "Total iterations: " << (timestep_increase + 1) << std::endl;
-                        std::cout << "Final CNF size: " << cnf_constructor->get_probsat_num_variables() 
-                                  << " variables, " << cnf_constructor->get_probsat_num_clauses() << " clauses" << std::endl;
+                                                std::cout << "Final CNF size: " << cnf.count_variables()
+                                  << " variables, " << cnf.count_clauses() << " clauses" << std::endl;
                         
                         std::cout << "\n=== Test completed successfully ===" << std::endl;
                         return 0;
@@ -374,10 +349,54 @@ int main() {
                     // Add collision prevention clauses and continue
                     std::cout << "\n=== Adding Collision Prevention Clauses ===" << std::endl;
                     
-                    int edge_clauses_added = SATSolverManager::add_edge_collision_prevention_clauses(
-                        cnf_constructor, edge_collisions);
-                    int vertex_clauses_added = SATSolverManager::add_vertex_collision_prevention_clauses(
-                        cnf_constructor, vertex_collisions);
+                    // Add collision prevention clauses using CNFConstructor methods
+                    int edge_clauses_added = 0;
+                    int vertex_clauses_added = 0;
+                    
+                    for (const auto& collision : vertex_collisions) {
+                        int agent1, agent2, timestep;
+                        std::pair<int, int> position;
+                        std::tie(agent1, agent2, position, timestep) = collision;
+                        
+                        auto clause = cnf_constructor.add_single_collision_clause(agent1, agent2, position, timestep, true);
+                        if (!clause.empty()) {
+                            vertex_clauses_added++;
+                        }
+                    }
+                    
+                    // Debug: Print all variables in the CNFConstructor
+                    std::cout << "\n=== DEBUG: All variables in CNFConstructor ===" << std::endl;
+                    const auto& var_map = cnf_constructor.get_variable_map();
+                    for (const auto& [key, var_id] : var_map) {
+                        int agent_id = std::get<0>(key);
+                        auto pos = std::get<1>(key);
+                        int t = std::get<2>(key);
+                        std::cout << "  Var " << var_id << ": agent " << agent_id << ", pos (" << pos.first << "," << pos.second << "), t=" << t << std::endl;
+                    }
+                    
+                    for (const auto& collision : edge_collisions) {
+                        int agent1, agent2, timestep;
+                        std::pair<int, int> pos1, pos2;
+                        std::tie(agent1, agent2, pos1, pos2, timestep) = collision;
+                        
+                        std::cout << "\n=== DEBUG: Processing edge collision ===" << std::endl;
+                        std::cout << "  Agent1=" << agent1 << ", Agent2=" << agent2 << std::endl;
+                        std::cout << "  Pos1=(" << pos1.first << "," << pos1.second << "), Pos2=(" << pos2.first << "," << pos2.second << ")" << std::endl;
+                        std::cout << "  Timestep=" << timestep << std::endl;
+                        
+                        // Check what variables should exist
+                        int var1 = cnf_constructor.get_variable_id(agent1, pos1, timestep);
+                        int var2 = cnf_constructor.get_variable_id(agent1, pos2, timestep + 1);
+                        int var3 = cnf_constructor.get_variable_id(agent2, pos2, timestep);
+                        int var4 = cnf_constructor.get_variable_id(agent2, pos1, timestep + 1);
+                        
+                        std::cout << "  Expected variables: var1=" << var1 << ", var2=" << var2 << ", var3=" << var3 << ", var4=" << var4 << std::endl;
+                        
+                        auto clause = cnf_constructor.add_single_edge_collision_clause(agent1, agent2, pos1, pos2, timestep, true);
+                        if (!clause.empty()) {
+                            edge_clauses_added++;
+                        }
+                    }
                     
                     std::cout << "Added " << edge_clauses_added << " edge collision prevention clauses" << std::endl;
                     std::cout << "Added " << vertex_clauses_added << " vertex collision prevention clauses" << std::endl;
@@ -387,11 +406,11 @@ int main() {
                         break;
                     }
                     
-                    // Re-build the clause pointers for ProbSAT after adding new clauses
-                    cnf_constructor->build_clause_pointers();
+                    // Rebuild the CNF with the new clauses
+                    cnf = cnf_constructor.get_cnf();
                     
-                    std::cout << "Updated CNF: " << cnf_constructor->get_probsat_num_variables() 
-                              << " variables, " << cnf_constructor->get_probsat_num_clauses() << " clauses" << std::endl;
+                    std::cout << "Updated CNF: " << cnf.count_variables() 
+                              << " variables, " << cnf.count_clauses() << " clauses" << std::endl;
                     
                 } else {
                     std::cout << "UNSATISFIABLE or UNKNOWN" << std::endl;
@@ -405,8 +424,8 @@ int main() {
                 iteration_count++;
                 timestep_collisions++;
             }
-            cnf_vars_end = cnf_constructor->get_probsat_num_variables();
-            cnf_clauses_end = cnf_constructor->get_probsat_num_clauses();
+            cnf_vars_end = cnf.count_variables();
+            cnf_clauses_end = cnf.count_clauses();
             auto timestep_end = std::chrono::high_resolution_clock::now();
             double timestep_total_time = std::chrono::duration<double>(timestep_end - timestep_start).count();
             // Log this timestep iteration
@@ -452,7 +471,7 @@ int main() {
             total_cnf_build_time,
             total_solver_time,
             solver_times_per_iter,
-            flips_per_iter,
+            decisions_per_iter, // Use decisions instead of flips for MiniSAT
             tries_per_iter,
             collisions_per_iter,
             status,

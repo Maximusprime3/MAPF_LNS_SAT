@@ -361,6 +361,20 @@ SATSolverManager::create_cnf_probsat_constructor(const std::vector<std::shared_p
     return constructor;
 }
 
+CNFConstructor
+SATSolverManager::create_cnf_constructor(const std::vector<std::shared_ptr<MDD>>& mdds,
+                                        bool lazy_encoding) {
+    // Build a map from agent_id to MDD for CNFConstructor
+    AgentMDDMap mdd_map;
+    for (size_t i = 0; i < mdds.size(); ++i) {
+        mdd_map[static_cast<int>(i)] = mdds[i];
+    }
+    
+    // Create and return CNFConstructor
+    CNFConstructor constructor(mdd_map, lazy_encoding);
+    return constructor;
+}
+
 /**
  * Solves a CNF formula using ProbSAT's in-memory API.
  * @param cnf The CNF formula to solve.
@@ -481,10 +495,17 @@ MiniSatSolution SATSolverManager::solve_cnf_with_minisat(const CNF& cnf,
     
     try {
         // Create MiniSAT wrapper
-        MockMiniSatWrapper minisat_wrapper;
+        MiniSatWrapper minisat_wrapper;
         
         // Convert CNF to vector format
         std::vector<std::vector<int>> clauses = cnf.get_clauses();
+        
+        std::cout << "DEBUG: CNF has " << clauses.size() << " clauses" << std::endl;
+        if (!clauses.empty()) {
+            std::cout << "DEBUG: First clause: ";
+            for (int lit : clauses[0]) std::cout << lit << " ";
+            std::cout << std::endl;
+        }
         
         // Solve with MiniSAT
         result = minisat_wrapper.solve_cnf(clauses, initial_assignment);
@@ -509,13 +530,20 @@ MiniSatSolution SATSolverManager::solve_cnf_with_minisat(const std::shared_ptr<C
     
     try {
         // Create MiniSAT wrapper
-        MockMiniSatWrapper minisat_wrapper;
+        MiniSatWrapper minisat_wrapper;
         
         // Get CNF from constructor
         const CNF& cnf = cnf_constructor->get_cnf();
         
         // Convert CNF to vector format
         std::vector<std::vector<int>> clauses = cnf.get_clauses();
+        
+        std::cout << "DEBUG: CNF has " << clauses.size() << " clauses" << std::endl;
+        if (!clauses.empty()) {
+            std::cout << "DEBUG: First clause: ";
+            for (int lit : clauses[0]) std::cout << lit << " ";
+            std::cout << std::endl;
+        }
         
         // Solve with MiniSAT
         result = minisat_wrapper.solve_cnf(clauses, initial_assignment);
@@ -816,7 +844,17 @@ SATSolverManager::find_edge_collisions(const AgentPaths& agent_paths) {
                 // Add edge collision for each pair of agents
                 for (size_t i = 0; i < agents.size(); ++i) {
                     for (size_t j = i + 1; j < agents.size(); ++j) {
-                        edge_collisions.emplace_back(agents[i], agents[j], edge.first, edge.second, timestep);
+                        int agent1 = agents[i];
+                        int agent2 = agents[j];
+                        
+                        // Look up the actual movements from the agent paths
+                        auto pos1_agent1 = agent_paths.at(agent1)[timestep];
+                        auto pos2_agent1 = agent_paths.at(agent1)[timestep + 1];
+                        auto pos1_agent2 = agent_paths.at(agent2)[timestep];
+                        auto pos2_agent2 = agent_paths.at(agent2)[timestep + 1];
+                        
+                        // Report the collision with the actual movement of agent1
+                        edge_collisions.emplace_back(agent1, agent2, pos1_agent1, pos2_agent1, timestep);
                     }
                 }
             }
@@ -1056,44 +1094,20 @@ std::vector<int> SATSolverManager::create_initial_assignment_with_collisions(
         sampled_paths[agent_id] = mdd->sample_random_path(rng);
     }
     
-    // Step 2: Detect vertex and edge collisions
-    std::vector<std::pair<int, int>> colliding_agents;
-    
-    // Check vertex collisions (agents at same position and time)
-    for (int agent1 = 0; agent1 < mdds.size(); ++agent1) {
-        for (int agent2 = agent1 + 1; agent2 < mdds.size(); ++agent2) {
-            const auto& path1 = sampled_paths[agent1];
-            const auto& path2 = sampled_paths[agent2];
-            
-            // Check for vertex collisions
-            for (size_t t = 0; t < std::min(path1.size(), path2.size()); ++t) {
-                if (path1[t] == path2[t]) {
-                    colliding_agents.emplace_back(agent1, agent2);
-                    // Add vertex collision clause
-                    try {
-                        cnf_constructor.add_single_collision_clause(agent1, agent2, path1[t], t, true);
-                    } catch (const std::exception& e) {
-                        // Skip if the clause cannot be added (e.g., position not in MDD)
-                        std::cerr << "Warning: Could not add vertex collision clause: " << e.what() << std::endl;
-                    }
-                }
-            }
-            
-            // Check for edge collisions (agents swap positions)
-            for (size_t t = 0; t < std::min(path1.size() - 1, path2.size() - 1); ++t) {
-                if (path1[t] == path2[t + 1] && path1[t + 1] == path2[t]) {
-                    colliding_agents.emplace_back(agent1, agent2);
-                    // Add edge collision clause
-                    try {
-                        cnf_constructor.add_single_edge_collision_clause(agent1, agent2, path1[t], path1[t + 1], t, true);
-                    } catch (const std::exception& e) {
-                        // Skip if the clause cannot be added (e.g., edge not in MDD)
-                        std::cerr << "Warning: Could not add edge collision clause: " << e.what() << std::endl;
-                    }
-                }
-            }
+    // Step 2: Use existing collision detection functions
+    // Convert sampled_paths to AgentPaths format for collision detection
+    AgentPaths agent_paths;
+    for (const auto& [agent_id, path] : sampled_paths) {
+        std::vector<std::pair<int, int>> path_pairs;
+        for (const auto& pos : path) {
+            path_pairs.push_back(pos);
         }
+        agent_paths[agent_id] = path_pairs;
     }
+    
+    // Detect collisions using existing functions
+    auto vertex_collisions = find_vertex_collisions(agent_paths);
+    auto edge_collisions = find_edge_collisions(agent_paths);
     
     // Step 3: Ensure CNF is constructed and variables are available
     // This is crucial for lazy encoding - we need to construct the CNF to get variables
@@ -1101,28 +1115,39 @@ std::vector<int> SATSolverManager::create_initial_assignment_with_collisions(
     
     // Step 4: Create assignment based on mode
     if (full_assignment) {
-        // For SLS/ProbSAT: return full assignment for all agents
-        std::vector<int> full_assignment_vec;
-        for (const auto& agent_path_pair : sampled_paths) {
-            int agent_id = agent_path_pair.first;
-            const auto& path = agent_path_pair.second;
-            
-            // Add variables for this agent's path
+        // For SLS/ProbSAT: return complete assignment for all variables
+        int num_vars = cnf_constructor.get_next_variable_id() - 1; // 0-based indexing
+        std::vector<int> complete_assignment(num_vars, 0); // Initialize all to false
+        
+        // Set variables corresponding to sampled paths to true
+        for (const auto& [agent_id, path] : sampled_paths) {
             for (size_t t = 0; t < path.size(); ++t) {
                 int var_id = cnf_constructor.get_variable_id(agent_id, path[t], t);
-                full_assignment_vec.push_back(var_id);
+                if (var_id > 0 && var_id <= num_vars) {
+                    // Convert to 0-based indexing for assignment
+                    complete_assignment[var_id - 1] = 1; // Set to true
+                }
             }
         }
-        return full_assignment_vec;
+        
+        return complete_assignment;
     } else {
         // For CDCL solvers: return partial assignment (only non-colliding agents)
         std::unordered_map<int, std::vector<MDDNode::Position>> partial_paths;
         
         // Create a set of agents involved in collisions
         std::set<int> colliding_agent_set;
-        for (const auto& collision_pair : colliding_agents) {
-            colliding_agent_set.insert(collision_pair.first);
-            colliding_agent_set.insert(collision_pair.second);
+        for (const auto& collision : vertex_collisions) {
+            int agent1 = std::get<0>(collision);
+            int agent2 = std::get<1>(collision);
+            colliding_agent_set.insert(agent1);
+            colliding_agent_set.insert(agent2);
+        }
+        for (const auto& collision : edge_collisions) {
+            int agent1 = std::get<0>(collision);
+            int agent2 = std::get<1>(collision);
+            colliding_agent_set.insert(agent1);
+            colliding_agent_set.insert(agent2);
         }
         
         // Only include agents that are NOT involved in collisions
@@ -1293,4 +1318,3 @@ void SATSolverManager::log_collision_iteration(
     log_file.close();
 }
 
- 

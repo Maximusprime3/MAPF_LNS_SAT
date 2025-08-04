@@ -1,0 +1,76 @@
+# Makefile for SATSolverManager MiniSAT Integration Test
+
+CXX = g++
+CXXFLAGS = -std=c++17 -O2 -Wall -Wextra -I. -I.. -Iminisat/minisat-master -fpermissive
+LDFLAGS = -Lminisat/minisat-master/build/release/lib -lminisat
+
+# Source files
+MDD_SOURCES = mdd/MDDConstructor.cpp mdd/MDD.cpp mdd/MDDNode.cpp
+CNF_SOURCES = cnf/CNFConstructor.cpp cnf/CNF.cpp cnf/CNFProbSATConstructor.cpp
+MINISAT_SOURCES = minisat/minisat-wrapper.cpp
+SATSOLVER_SOURCES = SATSolverManager.cpp
+
+# ProbSAT object file (needed for CNFProbSATConstructor)
+PROBSAT_OBJ = probSAT-master/probSAT_inmem.o
+
+# Object files
+MDD_OBJECTS = $(MDD_SOURCES:.cpp=.o)
+CNF_OBJECTS = $(CNF_SOURCES:.cpp=.o)
+MINISAT_OBJECTS = $(MINISAT_SOURCES:.cpp=.o)
+SATSOLVER_OBJECTS = $(SATSOLVER_SOURCES:.cpp=.o)
+
+# Target executable
+TARGET = test_satsolvermanager_minisat
+
+# Default target
+all: $(TARGET)
+
+# Build the main test executable
+$(TARGET): test_satsolvermanager_minisat.cpp $(MDD_OBJECTS) $(CNF_OBJECTS) $(MINISAT_OBJECTS) $(SATSOLVER_OBJECTS) $(PROBSAT_OBJ)
+	$(CXX) $(CXXFLAGS) -o $@ $^ $(LDFLAGS)
+
+# Build MDD objects
+mdd/%.o: mdd/%.cpp
+	$(CXX) $(CXXFLAGS) -c -o $@ $<
+
+# Build CNF objects
+cnf/%.o: cnf/%.cpp
+	$(CXX) $(CXXFLAGS) -c -o $@ $<
+
+# Build MiniSAT wrapper objects
+minisat/%.o: minisat/%.cpp
+	$(CXX) $(CXXFLAGS) -c -o $@ $<
+
+# Build SATSolverManager objects
+%.o: %.cpp
+	$(CXX) $(CXXFLAGS) -c -o $@ $<
+
+# Build ProbSAT objects
+probSAT-master/%.o: probSAT-master/%.c
+	$(CXX) $(CXXFLAGS) -c -o $@ $<
+
+# Clean build artifacts
+clean:
+	rm -f $(TARGET) $(MDD_OBJECTS) $(CNF_OBJECTS) $(MINISAT_OBJECTS) $(SATSOLVER_OBJECTS) $(PROBSAT_OBJ)
+
+# Run the test
+test: $(TARGET)
+	./$(TARGET)
+
+# Phony targets
+.PHONY: all clean test
+
+# Dependencies
+mdd/MDDConstructor.o: mdd/MDDConstructor.h mdd/MDDNode.h
+mdd/MDD.o: mdd/MDD.h mdd/MDDNode.h
+mdd/MDDNode.o: mdd/MDDNode.h
+
+cnf/CNFConstructor.o: cnf/CNFConstructor.h cnf/CNF.h mdd/MDD.h mdd/MDDNode.h
+cnf/CNF.o: cnf/CNF.h
+cnf/CNFProbSATConstructor.o: cnf/CNFProbSATConstructor.h cnf/CNF.h mdd/MDD.h mdd/MDDNode.h
+
+minisat/minisat-wrapper.o: minisat/minisat-wrapper.h minisat/minisat-master/minisat/core/Solver.h
+
+SATSolverManager.o: SATSolverManager.h mdd/MDD.h cnf/CNF.h cnf/CNFConstructor.h minisat/minisat-wrapper.h
+
+test_satsolvermanager_minisat: test_satsolvermanager_minisat.cpp SATSolverManager.h mdd/MDD.h cnf/CNF.h cnf/CNFConstructor.h minisat/minisat-wrapper.h 

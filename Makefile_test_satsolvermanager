@@ -1,19 +1,22 @@
 # Makefile for SATSolverManager ProbSAT Integration Test
 
 CXX = g++
-CXXFLAGS = -std=c++17 -O2 -Wall -Wextra
+CXXFLAGS = -std=c++17 -O2 -Wall -Wextra -Iminisat/minisat-master -fpermissive
 INCLUDES = -I.
+LDFLAGS = -Lminisat/minisat-master/build/release/lib -lminisat
 
 # Source files
 MDD_SOURCES = mdd/MDDConstructor.cpp mdd/MDD.cpp mdd/MDDNode.cpp
 CNF_SOURCES = cnf/CNFConstructor.cpp cnf/CNF.cpp cnf/CNFProbSATConstructor.cpp
 PROBSAT_SOURCES = probSAT-master/probSAT_inmem.c
+MINISAT_SOURCES = minisat/minisat-wrapper.cpp
 SATSOLVER_SOURCES = SATSolverManager.cpp
 
 # Object files
 MDD_OBJECTS = $(MDD_SOURCES:.cpp=.o)
 CNF_OBJECTS = $(CNF_SOURCES:.cpp=.o)
 PROBSAT_OBJECTS = $(PROBSAT_SOURCES:.c=.o)
+MINISAT_OBJECTS = $(MINISAT_SOURCES:.cpp=.o)
 SATSOLVER_OBJECTS = $(SATSOLVER_SOURCES:.cpp=.o)
 
 # Target executables
@@ -24,12 +27,12 @@ TARGET2 = test_orchestration_probSAT
 all: $(TARGET) $(TARGET2)
 
 # Build the main test executable
-$(TARGET): test_satsolvermanager_probsat.cpp $(MDD_OBJECTS) $(CNF_OBJECTS) $(PROBSAT_OBJECTS) $(SATSOLVER_OBJECTS)
-	$(CXX) $(CXXFLAGS) $(INCLUDES) -o $@ $^
+$(TARGET): test_satsolvermanager_probsat.cpp $(MDD_OBJECTS) $(CNF_OBJECTS) $(PROBSAT_OBJECTS) $(MINISAT_OBJECTS) $(SATSOLVER_OBJECTS)
+	$(CXX) $(CXXFLAGS) $(INCLUDES) -o $@ $^ $(LDFLAGS)
 
 # Build the orchestration test executable
-$(TARGET2): test_orchestration_probSAT.cpp $(MDD_OBJECTS) $(CNF_OBJECTS) $(PROBSAT_OBJECTS) $(SATSOLVER_OBJECTS)
-	$(CXX) $(CXXFLAGS) $(INCLUDES) -o $@ $^
+$(TARGET2): test_orchestration_probSAT.cpp $(MDD_OBJECTS) $(CNF_OBJECTS) $(PROBSAT_OBJECTS) $(MINISAT_OBJECTS) $(SATSOLVER_OBJECTS)
+	$(CXX) $(CXXFLAGS) $(INCLUDES) -o $@ $^ $(LDFLAGS)
 
 # Build MDD objects
 mdd/%.o: mdd/%.cpp
@@ -49,7 +52,7 @@ probSAT-master/%.o: probSAT-master/%.c
 
 # Clean build artifacts
 clean:
-	rm -f $(TARGET) $(TARGET2) $(MDD_OBJECTS) $(CNF_OBJECTS) $(PROBSAT_OBJECTS) $(SATSOLVER_OBJECTS)
+	rm -f $(TARGET) $(TARGET2) $(MDD_OBJECTS) $(CNF_OBJECTS) $(PROBSAT_OBJECTS) $(MINISAT_OBJECTS) $(SATSOLVER_OBJECTS)
 
 # Run the tests
 test: $(TARGET)

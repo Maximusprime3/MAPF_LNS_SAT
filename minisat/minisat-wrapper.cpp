@@ -38,12 +38,19 @@ MiniSatSolution MiniSatWrapper::solve_cnf(const std::vector<std::vector<int>>& c
         reset_solver();
         
         // Add clauses to the solver
-        for (const auto& clause : clauses) {
+        std::cout << "DEBUG: Adding " << clauses.size() << " clauses to MiniSAT" << std::endl;
+        for (size_t i = 0; i < clauses.size(); ++i) {
+            const auto& clause = clauses[i];
+            std::cout << "DEBUG: Adding clause " << i << ": ";
+            for (int lit : clause) std::cout << lit << " ";
+            std::cout << std::endl;
+            
             if (!add_clause_to_solver(clause)) {
                 result.error_message = "Failed to add clause to MiniSAT solver";
                 return result;
             }
         }
+        std::cout << "DEBUG: After adding clauses, solver has " << solver->nVars() << " variables" << std::endl;
         
         // Set initial assignment if provided
         if (initial_assignment != nullptr) {
@@ -80,6 +87,13 @@ MiniSatSolution MiniSatWrapper::solve_cnf(const std::vector<std::vector<int>>& c
         if (satisfiable) {
             // Extract the assignment
             result.assignment = extract_assignment(solver->nVars());
+            std::cout << "DEBUG: MiniSAT found " << solver->nVars() << " variables" << std::endl;
+            std::cout << "DEBUG: Assignment size: " << result.assignment.size() << std::endl;
+            std::cout << "DEBUG: First few assignment values: ";
+            for (size_t i = 0; i < std::min(result.assignment.size(), size_t(10)); ++i) {
+                std::cout << result.assignment[i] << " ";
+            }
+            std::cout << std::endl;
         }
         
     } catch (const std::exception& e) {
@@ -140,6 +154,8 @@ bool MiniSatWrapper::add_clause_to_solver(const std::vector<int>& clause) {
 }
 
 std::vector<int> MiniSatWrapper::extract_assignment(int num_vars) {
+    // MiniSAT uses 0-based indexing, return assignment as-is
+    // The CNFConstructor will handle the conversion to 1-based indexing
     std::vector<int> assignment(num_vars);
     
     for (int i = 0; i < num_vars; ++i) {
