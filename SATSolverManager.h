@@ -182,15 +182,7 @@ public:
      */
     static std::string get_unique_filename(const std::string& base_filename);
 
-    /**
-     * Converts CNF to ProbSAT format for in-memory solving.
-     * @param cnf The CNF formula to convert.
-     * @param clause_pointers Output array of pointers to clauses.
-     * @param clause_storage Output storage for clause data.
-     */
-    static void cnf_to_probsat_format(const CNF& cnf, 
-                                     std::vector<int*>& clause_pointers, 
-                                     std::vector<std::vector<int>>& clause_storage);
+
 
     /**
      * Solves a CNF formula using ProbSAT's in-memory API.

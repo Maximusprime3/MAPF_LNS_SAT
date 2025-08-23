@@ -1003,7 +1003,7 @@ int probsat_solve_in_memory(
         initialAssignmentPtr = initialAssignment;
         printf("[ProbSAT DEBUG] Using provided initial assignment: ");
         for (int i = 1; i <= numVars; ++i) {
-            atom[i] = initialAssignment[i];
+            atom[i] = initialAssignment[i-1]; // Fix: use 0-based indexing for input array
             printf("%d ", atom[i]);
         }
         printf("\n");

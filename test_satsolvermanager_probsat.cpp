@@ -361,6 +361,50 @@ int main() {
                         
                         SATSolverManager::print_agent_paths(agent_paths);
                         
+                        // Log the final timestep iteration before exiting
+                        cnf_vars_end = cnf_constructor->get_probsat_num_variables();
+                        cnf_clauses_end = cnf_constructor->get_probsat_num_clauses();
+                        auto timestep_end = std::chrono::high_resolution_clock::now();
+                        double timestep_total_time = std::chrono::duration<double>(timestep_end - timestep_start).count();
+                        SATSolverManager::log_timestep_iteration(
+                            "data/solver_log_timesteps.csv",
+                            map_name_logged,
+                            num_agents_logged,
+                            solver_used,
+                            current_max_timesteps,
+                            cnf_vars_end,
+                            cnf_clauses_end,
+                            cnf_build_time,
+                            timestep_solver_time,
+                            timestep_collisions,
+                            status,
+                            seed
+                        );
+                        
+                        // Log the run summary before exiting
+                        static auto main_start = std::chrono::high_resolution_clock::now();
+                        auto main_end = std::chrono::high_resolution_clock::now();
+                        double total_time = std::chrono::duration<double>(main_end - main_start).count();
+                        SATSolverManager::log_run_summary(
+                            "data/solver_log.csv",
+                            map_name_logged,
+                            num_agents_logged,
+                            solver_used,
+                            cnf_vars_start,
+                            cnf_clauses_start,
+                            cnf_vars_end,
+                            cnf_clauses_end,
+                            total_time,
+                            total_cnf_build_time,
+                            total_solver_time,
+                            solver_times_per_iter,
+                            flips_per_iter,
+                            tries_per_iter,
+                            collisions_per_iter,
+                            status,
+                            seed
+                        );
+                        
                         std::cout << "\n=== Final Statistics ===" << std::endl;
                         std::cout << "Total timesteps used: " << current_max_timesteps << std::endl;
                         std::cout << "Total iterations: " << (timestep_increase + 1) << std::endl;

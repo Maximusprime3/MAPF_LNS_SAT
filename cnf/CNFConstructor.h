@@ -98,6 +98,9 @@ public:
     // NEW: Create a partial assignment (assumptions) from a set of agent paths (skip agents with empty paths)
     std::vector<int> partial_assignment_from_paths(const std::unordered_map<int, std::vector<MDDNode::Position>>& agent_paths) const;
 
+    // NEW: Create a full assignment from a set of agent paths, ensuring all variables have values
+    std::vector<int> full_assignment_from_paths(const std::unordered_map<int, std::vector<MDDNode::Position>>& agent_paths) const;
+
     // Getters for accessing internal state
     const CNF& get_cnf() const { return cnf; }
     const std::unordered_map<std::tuple<int, MDDNode::Position, int>, int>& get_variable_map() const { return variable_map; }

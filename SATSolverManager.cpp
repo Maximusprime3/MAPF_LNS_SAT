@@ -624,6 +624,12 @@ ProbSATSolution SATSolverManager::solve_cnf_with_probsat(const std::shared_ptr<C
         if (result.satisfiable && probsat_result.assignment != nullptr) {
             // Copy assignment (CNFProbSATConstructor uses 0-based indexing)
             result.assignment.resize(num_vars);
+            std::cout << "[DEBUG] ProbSAT returned assignment with " << num_vars << " variables" << std::endl;
+            std::cout << "[DEBUG] First 10 values: ";
+            for (int i = 0; i < std::min(10, num_vars); ++i) {
+                std::cout << probsat_result.assignment[i] << " ";
+            }
+            std::cout << std::endl;
             for (int i = 0; i < num_vars; ++i) {
                 result.assignment[i] = probsat_result.assignment[i];
             }
@@ -641,57 +647,7 @@ ProbSATSolution SATSolverManager::solve_cnf_with_probsat(const std::shared_ptr<C
     return result;
 }
 
-/**
- * Converts CNF to ProbSAT format for in-memory solving.
- * @param cnf The CNF formula to convert.
- * @param clause_pointers Output array of pointers to clauses.
- * @param clause_storage Output storage for clause data.
- */
-void SATSolverManager::cnf_to_probsat_format(const CNF& cnf, 
-                                            std::vector<int*>& clause_pointers, 
-                                            std::vector<std::vector<int>>& clause_storage) {
-    int num_vars = cnf.count_variables();
-    int clause_idx = 1;
-    const auto& all_clauses = cnf.get_clauses();
-    int total_clauses = all_clauses.size();
-    clause_storage.reserve(total_clauses);
-    
-    // First, build all clause vectors
-    for (const auto& clause : all_clauses) {
-        bool is_zero_clause = clause.empty() ||
-                              (clause.size() == 1 && clause[0] == 0) ||
-                              std::all_of(clause.begin(), clause.end(), [](int lit){ return lit == 0; });
-        if (is_zero_clause) {
-            std::cerr << "[CNF->ProbSAT] Skipping zero/empty clause at index " << clause_idx << std::endl;
-            clause_idx++;
-            continue;
-        }
-        bool valid = true;
-        for (int lit : clause) {
-            if (lit == 0 || std::abs(lit) > num_vars) {
-                std::cerr << "[CNF->ProbSAT] Invalid literal " << lit << " in clause " << clause_idx << ", skipping this clause!" << std::endl;
-                valid = false;
-                break;
-            }
-        }
-        if (!valid) { 
-            clause_idx++; 
-            continue; 
-        }
-        std::vector<int> clause_copy = clause;
-        clause_copy.push_back(0); // null terminator
-        clause_storage.push_back(clause_copy);
-        clause_idx++;
-    }
-    
-    // Now, build the pointer array
-    clause_pointers.clear();
-    clause_pointers.push_back(nullptr); // dummy for 1-based indexing
-    for (auto& clause_vec : clause_storage) {
-        clause_pointers.push_back(clause_vec.data());
-    }
-    std::cerr << "[CNF->ProbSAT] Total clause pointers: " << clause_pointers.size()-1 << ", total clauses: " << total_clauses << std::endl;
-}
+
 
 /**
  * Extracts agent paths from a ProbSAT solution using CNFConstructor.
@@ -973,17 +929,41 @@ int SATSolverManager::add_edge_collision_prevention_clauses(std::shared_ptr<CNFP
         // We need to find variables for both agents at both timesteps
         std::vector<int> collision_vars;
         
-        // Look for variables for agent1 and agent2 at timestep and timestep+1
-        for (const auto& [key, var_id] : var_map) {
-            int agent_id = std::get<0>(key);
-            auto pos = std::get<1>(key);
-            int t = std::get<2>(key);
-            
-            if ((agent_id == agent1 || agent_id == agent2) && (t == timestep || t == timestep + 1)) {
-                collision_vars.push_back(var_id);
-                std::cout << "[DEBUG] Found collision variable: " << var_id << " for agent " << agent_id 
-                          << " at (" << pos.first << "," << pos.second << ") at t=" << t << std::endl;
-            }
+        // For edge collision, we need the specific variables for the collision positions
+        // Agent1: pos1 at t -> pos2 at t+1
+        // Agent2: pos2 at t -> pos1 at t+1
+        
+        // Look for the specific collision variables
+        auto agent1_pos1_key = std::make_tuple(agent1, pos1, timestep);
+        auto agent1_pos2_key = std::make_tuple(agent1, pos2, timestep + 1);
+        auto agent2_pos2_key = std::make_tuple(agent2, pos2, timestep);
+        auto agent2_pos1_key = std::make_tuple(agent2, pos1, timestep + 1);
+        
+        // Find these specific variables
+        auto it1 = var_map.find(agent1_pos1_key);
+        auto it2 = var_map.find(agent1_pos2_key);
+        auto it3 = var_map.find(agent2_pos2_key);
+        auto it4 = var_map.find(agent2_pos1_key);
+        
+        if (it1 != var_map.end()) {
+            collision_vars.push_back(it1->second);
+            std::cout << "[DEBUG] Found collision variable: " << it1->second << " for agent " << agent1 
+                      << " at (" << pos1.first << "," << pos1.second << ") at t=" << timestep << std::endl;
+        }
+        if (it2 != var_map.end()) {
+            collision_vars.push_back(it2->second);
+            std::cout << "[DEBUG] Found collision variable: " << it2->second << " for agent " << agent1 
+                      << " at (" << pos2.first << "," << pos2.second << ") at t=" << (timestep + 1) << std::endl;
+        }
+        if (it3 != var_map.end()) {
+            collision_vars.push_back(it3->second);
+            std::cout << "[DEBUG] Found collision variable: " << it3->second << " for agent " << agent2 
+                      << " at (" << pos2.first << "," << pos2.second << ") at t=" << timestep << std::endl;
+        }
+        if (it4 != var_map.end()) {
+            collision_vars.push_back(it4->second);
+            std::cout << "[DEBUG] Found collision variable: " << it4->second << " for agent " << agent2 
+                      << " at (" << pos1.first << "," << pos1.second << ") at t=" << (timestep + 1) << std::endl;
         }
         
         if (collision_vars.size() >= 4) {
@@ -1115,22 +1095,8 @@ std::vector<int> SATSolverManager::create_initial_assignment_with_collisions(
     
     // Step 4: Create assignment based on mode
     if (full_assignment) {
-        // For SLS/ProbSAT: return complete assignment for all variables
-        int num_vars = cnf_constructor.get_next_variable_id() - 1; // 0-based indexing
-        std::vector<int> complete_assignment(num_vars, 0); // Initialize all to false
-        
-        // Set variables corresponding to sampled paths to true
-        for (const auto& [agent_id, path] : sampled_paths) {
-            for (size_t t = 0; t < path.size(); ++t) {
-                int var_id = cnf_constructor.get_variable_id(agent_id, path[t], t);
-                if (var_id > 0 && var_id <= num_vars) {
-                    // Convert to 0-based indexing for assignment
-                    complete_assignment[var_id - 1] = 1; // Set to true
-                }
-            }
-        }
-        
-        return complete_assignment;
+        // For SLS/ProbSAT: use CNFConstructor to create a valid full assignment from paths
+        return cnf_constructor.full_assignment_from_paths(sampled_paths);
     } else {
         // For CDCL solvers: return partial assignment (only non-colliding agents)
         std::unordered_map<int, std::vector<MDDNode::Position>> partial_paths;

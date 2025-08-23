@@ -299,10 +299,12 @@ std::unordered_map<int, std::vector<MDDNode::Position>> CNFConstructor::cnf_assi
     std::unordered_map<int, std::vector<MDDNode::Position>> agent_paths;
     
     std::cout << "\n=== DEBUG: cnf_assignment_to_paths ===" << std::endl;
+    std::cout << "Input assignment size: " << assignment.size() << std::endl;
     std::cout << "Input assignment: ";
     for (int v : assignment) std::cout << v << " ";
     std::cout << std::endl;
     
+    std::cout << "Variable map size: " << variable_map.size() << std::endl;
     std::cout << "Variable map contents:" << std::endl;
     for (const auto& var_pair : variable_map) {
         int agent_id = std::get<0>(var_pair.first);
@@ -319,7 +321,7 @@ std::unordered_map<int, std::vector<MDDNode::Position>> CNFConstructor::cnf_assi
     // The assignment contains truth values (1 for true, 0 for false) for each variable
     // We need to iterate through the assignment by variable index
     for (size_t i = 0; i < assignment.size(); ++i) {
-        int var_id = i + 1; // ProbSAT uses 1-based indexing
+        int var_id = i + 1; // Variable IDs are 1-based, assignment index is 0-based
         int truth_value = assignment[i];
         
         if (truth_value > 0) { // Only positive assignments
@@ -479,3 +481,25 @@ std::vector<int> CNFConstructor::partial_assignment_from_paths(const std::unorde
     }
     return assumptions;
 } 
+
+// Returns a full assignment (0-based indexing) for all variables based on the given agent paths.
+// Variables corresponding to path positions are set to 1, all others to 0.
+std::vector<int> CNFConstructor::full_assignment_from_paths(const std::unordered_map<int, std::vector<MDDNode::Position>>& agent_paths) const {
+    int num_vars = next_variable_id - 1; // 0-based indexing
+    std::vector<int> assignment(num_vars, 0); // Initialize all variables to false
+    
+    // Set variables corresponding to path positions to true
+    for (const auto& [agent_id, path] : agent_paths) {
+        if (path.empty()) continue; // Skip agents with empty paths
+        
+        for (size_t t = 0; t < path.size(); ++t) {
+            int var_id = get_variable_id(agent_id, path[t], t);
+            if (var_id > 0 && var_id <= num_vars) {
+                // Convert to 0-based indexing for assignment
+                assignment[var_id - 1] = 1; // Set to true
+            }
+        }
+    }
+    
+    return assignment;
+}
