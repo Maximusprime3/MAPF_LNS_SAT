@@ -155,6 +155,7 @@ int main() {
         // Variables to accumulate for logging
         std::vector<double> solver_times_per_iter;
         std::vector<int> decisions_per_iter;
+        std::vector<int> propagations_per_iter;
         std::vector<int> tries_per_iter;
         std::vector<int> collisions_per_iter;
         double total_solver_time = 0.0;
@@ -225,13 +226,14 @@ int main() {
                 double solver_time = std::chrono::duration<double>(solver_end - solver_start).count();
                 solver_times_per_iter.push_back(solver_time);
                 decisions_per_iter.push_back(result.num_decisions);
+                propagations_per_iter.push_back(result.num_propagations);
                 tries_per_iter.push_back(1); // Only one try per call in this test
                 total_solver_time += solver_time;
                 timestep_solver_time += solver_time;
                 
                 // Log this collision iteration
-                SATSolverManager::log_collision_iteration(
-                    "data/solver_log_collisions.csv",
+                SATSolverManager::log_collision_iteration_minisat(
+                    "data/solver_log_collisions_minisat.csv",
                     map_name_logged,
                     num_agents_logged,
                     solver_used,
@@ -240,8 +242,8 @@ int main() {
                     cnf_constructor.get_cnf().count_variables(),
                     cnf_constructor.get_cnf().count_clauses(),
                     solver_time,
-                    result.num_decisions, // Use decisions instead of flips for MiniSAT
-                    1, // tries
+                    result.num_decisions, // Use decisions for MiniSAT
+                    result.num_propagations, // Use propagations for MiniSAT
                     0, // collisions_added (update if you track this)
                     result.satisfiable ? "SAT" : "UNSAT",
                     seed
@@ -254,6 +256,7 @@ int main() {
                     std::cout << "SATISFIABLE!" << std::endl;
                     std::cout << "Solve time: " << result.solve_time << "s" << std::endl;
                     std::cout << "Number of decisions: " << result.num_decisions << std::endl;
+                    std::cout << "Number of propagations: " << result.num_propagations << std::endl;
                     std::cout << "Total time (including overhead): " << solver_time << "s" << std::endl;
                     
                     // Convert assignment to agent paths
@@ -335,6 +338,60 @@ int main() {
                         std::cout << std::string(60, '=') << std::endl;
                         
                         SATSolverManager::print_agent_paths(agent_paths);
+                        
+                        // Log the final timestep iteration before exiting
+                        cnf_vars_end = cnf.count_variables();
+                        cnf_clauses_end = cnf.count_clauses();
+                        auto timestep_end = std::chrono::high_resolution_clock::now();
+                        double timestep_total_time = std::chrono::duration<double>(timestep_end - timestep_start).count();
+                        
+                        // Calculate total decisions and propagations for this timestep
+                        int total_decisions = 0, total_propagations = 0;
+                        for (size_t i = 0; i < decisions_per_iter.size(); ++i) {
+                            total_decisions += decisions_per_iter[i];
+                            total_propagations += propagations_per_iter[i];
+                        }
+                        
+                        SATSolverManager::log_timestep_iteration_minisat(
+                            "data/solver_log_timesteps_minisat.csv",
+                            map_name_logged,
+                            num_agents_logged,
+                            solver_used,
+                            current_max_timesteps,
+                            cnf_vars_end,
+                            cnf_clauses_end,
+                            cnf_build_time,
+                            timestep_solver_time,
+                            timestep_collisions,
+                            total_decisions,
+                            total_propagations,
+                            status,
+                            seed
+                        );
+                        
+                        // Log the run summary before exiting
+                        static auto main_start = std::chrono::high_resolution_clock::now();
+                        auto main_end = std::chrono::high_resolution_clock::now();
+                        double total_time = std::chrono::duration<double>(main_end - main_start).count();
+                        SATSolverManager::log_run_summary_minisat(
+                            "data/solver_log_minisat.csv",
+                            map_name_logged,
+                            num_agents_logged,
+                            solver_used,
+                            cnf_vars_start,
+                            cnf_clauses_start,
+                            cnf_vars_end,
+                            cnf_clauses_end,
+                            total_time,
+                            total_cnf_build_time,
+                            total_solver_time,
+                            solver_times_per_iter,
+                            decisions_per_iter, // Use decisions for MiniSAT
+                            propagations_per_iter, // Use propagations for MiniSAT
+                            collisions_per_iter,
+                            status,
+                            seed
+                        );
                         
                         std::cout << "\n=== Final Statistics ===" << std::endl;
                         std::cout << "Total timesteps used: " << current_max_timesteps << std::endl;
@@ -428,9 +485,17 @@ int main() {
             cnf_clauses_end = cnf.count_clauses();
             auto timestep_end = std::chrono::high_resolution_clock::now();
             double timestep_total_time = std::chrono::duration<double>(timestep_end - timestep_start).count();
+            
+            // Calculate total decisions and propagations for this timestep
+            int total_decisions = 0, total_propagations = 0;
+            for (size_t i = 0; i < decisions_per_iter.size(); ++i) {
+                total_decisions += decisions_per_iter[i];
+                total_propagations += propagations_per_iter[i];
+            }
+            
             // Log this timestep iteration
-            SATSolverManager::log_timestep_iteration(
-                "data/solver_log_timesteps.csv",
+            SATSolverManager::log_timestep_iteration_minisat(
+                "data/solver_log_timesteps_minisat.csv",
                 map_name_logged,
                 num_agents_logged,
                 solver_used,
@@ -440,6 +505,8 @@ int main() {
                 cnf_build_time,
                 timestep_solver_time,
                 timestep_collisions,
+                total_decisions,
+                total_propagations,
                 status,
                 seed
             );
@@ -458,8 +525,8 @@ int main() {
         static auto main_start = std::chrono::high_resolution_clock::now();
         auto main_end = std::chrono::high_resolution_clock::now();
         double total_time = std::chrono::duration<double>(main_end - main_start).count();
-        SATSolverManager::log_run_summary(
-            "data/solver_log.csv",
+        SATSolverManager::log_run_summary_minisat(
+            "data/solver_log_minisat.csv",
             map_name_logged,
             num_agents_logged,
             solver_used,
@@ -471,8 +538,8 @@ int main() {
             total_cnf_build_time,
             total_solver_time,
             solver_times_per_iter,
-            decisions_per_iter, // Use decisions instead of flips for MiniSAT
-            tries_per_iter,
+            decisions_per_iter, // Use decisions for MiniSAT
+            propagations_per_iter, // Use propagations for MiniSAT
             collisions_per_iter,
             status,
             seed

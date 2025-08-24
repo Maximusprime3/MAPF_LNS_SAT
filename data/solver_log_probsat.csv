@@ -1,2 +1,2 @@
 map_name,num_agents,solver,cnf_vars_start,cnf_clauses_start,cnf_vars_end,cnf_clauses_end,total_time_s,cnf_build_time_s,total_solver_time_s,solver_times_per_iter,flips_per_iter,tries_per_iter,collisions_per_iter,status,seed,params
-"mapf-map/empty-16-16.map",3,"probSAT",39,111,39,232,5.9e-08,5.955e-05,0.00099054,"0.000180935;0.000202974;0.000152485;0.000368653;8.5493e-05","0;196;20;4256;2","1;1;1;1;1","","SAT",42,""
+"mapf-map/empty-16-16.map",3,"probSAT",39,111,39,232,1.53e-07,0.000108565,0.00248997,"0.000301163;0.000394865;0.000357598;0.0011142;0.000322149","0;196;20;4256;2","1;1;1;1;1","","SAT",42,""

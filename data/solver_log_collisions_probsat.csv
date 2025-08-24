@@ -1,0 +1,6 @@
+map_name,num_agents,solver,timestep,collision_iter,cnf_vars,cnf_clauses,solver_time_s,flips,tries,collisions_added,status,seed,params
+"mapf-map/empty-16-16.map",3,"probSAT",4,0,39,111,0.000301163,0,1,0,"SAT",42,""
+"mapf-map/empty-16-16.map",3,"probSAT",4,1,39,225,0.000394865,196,1,0,"SAT",42,""
+"mapf-map/empty-16-16.map",3,"probSAT",4,2,39,228,0.000357598,20,1,0,"SAT",42,""
+"mapf-map/empty-16-16.map",3,"probSAT",4,3,39,231,0.0011142,4256,1,0,"SAT",42,""
+"mapf-map/empty-16-16.map",3,"probSAT",4,4,39,232,0.000322149,2,1,0,"SAT",42,""

@@ -61,6 +61,7 @@ struct MiniSatSolution {
     bool satisfiable;                    // Whether the problem is satisfiable
     std::vector<int> assignment;        // Variable assignments (1-based indexing)
     int num_decisions;                  // Number of decisions made
+    int num_propagations;               // Number of propagations performed
     double solve_time;                  // Time taken to solve (seconds)
     std::string error_message;          // Error message if solving failed
 };
@@ -374,6 +375,96 @@ public:
     );
 
     /**
+     * Logs a run summary to a CSV file for MiniSAT.
+     * Each row represents one complete run with multiple timesteps.
+     * Tracks decisions and propagations instead of flips.
+     *
+     * @param log_filename Path to the log file (CSV).
+     * @param map_name Name of the map used.
+     * @param num_agents Number of agents.
+     * @param solver_used Name of the SAT solver used.
+     * @param cnf_vars_start Number of CNF variables at the start.
+     * @param cnf_clauses_start Number of CNF clauses at the start.
+     * @param cnf_vars_end Number of CNF variables at the end.
+     * @param cnf_clauses_end Number of CNF clauses at the end.
+     * @param total_time_s Total time for the entire run (seconds).
+     * @param cnf_build_time_s Total time spent building CNF (seconds).
+     * @param total_solver_time_s Total time spent in SAT solver (seconds).
+     * @param solver_times_per_iter Vector of solver times for each iteration.
+     * @param decisions_per_iter Vector of decisions for each iteration.
+     * @param propagations_per_iter Vector of propagations for each iteration.
+     * @param collisions_per_iter Vector of collisions added in each iteration.
+     * @param status Final status of the run (SAT/UNSAT/ERROR).
+     * @param seed Random seed used.
+     * @param params Additional parameters (optional, as a string).
+     */
+    static void log_run_summary_minisat(
+        const std::string& log_filename,
+        const std::string& map_name,
+        int num_agents,
+        const std::string& solver_used,
+        int cnf_vars_start,
+        int cnf_clauses_start,
+        int cnf_vars_end,
+        int cnf_clauses_end,
+        double total_time_s,
+        double cnf_build_time_s,
+        double total_solver_time_s,
+        const std::vector<double>& solver_times_per_iter,
+        const std::vector<int>& decisions_per_iter,
+        const std::vector<int>& propagations_per_iter,
+        const std::vector<int>& collisions_per_iter,
+        const std::string& status,
+        long long seed,
+        const std::string& params = ""
+    );
+
+    /**
+     * Logs a run summary to a CSV file for ProbSAT.
+     * Each row represents one complete run with multiple timesteps.
+     * Tracks flips and tries instead of decisions and propagations.
+     *
+     * @param log_filename Path to the log file (CSV).
+     * @param map_name Name of the map used.
+     * @param num_agents Number of agents.
+     * @param solver_used Name of the SAT solver used.
+     * @param cnf_vars_start Number of CNF variables at the start.
+     * @param cnf_clauses_start Number of CNF clauses at the start.
+     * @param cnf_vars_end Number of CNF variables at the end.
+     * @param cnf_clauses_end Number of CNF clauses at the end.
+     * @param total_time_s Total time for the entire run (seconds).
+     * @param cnf_build_time_s Total time spent building CNF (seconds).
+     * @param total_solver_time_s Total time spent in SAT solver (seconds).
+     * @param solver_times_per_iter Vector of solver times for each iteration.
+     * @param flips_per_iter Vector of flips for each iteration.
+     * @param tries_per_iter Vector of tries for each iteration.
+     * @param collisions_per_iter Vector of collisions added in each iteration.
+     * @param status Final status of the run (SAT/UNSAT/ERROR).
+     * @param seed Random seed used.
+     * @param params Additional parameters (optional, as a string).
+     */
+    static void log_run_summary_probsat(
+        const std::string& log_filename,
+        const std::string& map_name,
+        int num_agents,
+        const std::string& solver_used,
+        int cnf_vars_start,
+        int cnf_clauses_start,
+        int cnf_vars_end,
+        int cnf_clauses_end,
+        double total_time_s,
+        double cnf_build_time_s,
+        double total_solver_time_s,
+        const std::vector<double>& solver_times_per_iter,
+        const std::vector<int>& flips_per_iter,
+        const std::vector<int>& tries_per_iter,
+        const std::vector<int>& collisions_per_iter,
+        const std::string& status,
+        long long seed,
+        const std::string& params = ""
+    );
+
+    /**
      * Logs a per-timestep (makespan) iteration to a CSV file.
      * Each row represents one timestep attempt (outer loop).
      *
@@ -440,6 +531,162 @@ public:
         int flips,
         int tries,
         int collisions_added,
+        const std::string& status,
+        long long seed,
+        const std::string& params = ""
+    );
+
+    /**
+     * Logs a per-collision-iteration (inner loop) to a CSV file for MiniSAT.
+     * Each row represents one collision resolution attempt within a timestep.
+     * Tracks decisions and propagations instead of flips.
+     *
+     * @param log_filename Path to the log file (CSV).
+     * @param map_name Name of the map used.
+     * @param num_agents Number of agents.
+     * @param solver_used Name of the SAT solver used.
+     * @param timestep The current makespan/timestep value.
+     * @param collision_iter The collision iteration number within this timestep.
+     * @param cnf_vars Number of CNF variables at this iteration.
+     * @param cnf_clauses Number of CNF clauses at this iteration.
+     * @param solver_time_s SAT solver time for this collision iteration (seconds).
+     * @param decisions Number of decisions in this iteration.
+     * @param propagations Number of propagations in this iteration.
+     * @param collisions_added Number of new collision clauses added in this iteration.
+     * @param status SAT/UNSAT/ERROR status string for this iteration.
+     * @param seed Random seed used.
+     * @param params Additional parameters (optional, as a string).
+     */
+    static void log_collision_iteration_minisat(
+        const std::string& log_filename,
+        const std::string& map_name,
+        int num_agents,
+        const std::string& solver_used,
+        int timestep,
+        int collision_iter,
+        int cnf_vars,
+        int cnf_clauses,
+        double solver_time_s,
+        int decisions,
+        int propagations,
+        int collisions_added,
+        const std::string& status,
+        long long seed,
+        const std::string& params = ""
+    );
+
+    /**
+     * Logs a per-collision-iteration (inner loop) to a CSV file for ProbSAT.
+     * Each row represents one collision resolution attempt within a timestep.
+     * Tracks flips and tries instead of decisions and propagations.
+     *
+     * @param log_filename Path to the log file (CSV).
+     * @param map_name Name of the map used.
+     * @param num_agents Number of agents.
+     * @param solver_used Name of the SAT solver used.
+     * @param timestep The current makespan/timestep value.
+     * @param collision_iter The collision iteration number within this timestep.
+     * @param cnf_vars Number of CNF variables at this iteration.
+     * @param cnf_clauses Number of CNF clauses at this iteration.
+     * @param solver_time_s SAT solver time for this collision iteration (seconds).
+     * @param flips Number of flips in this iteration.
+     * @param tries Number of tries in this iteration.
+     * @param collisions_added Number of new collision clauses added in this iteration.
+     * @param status SAT/UNSAT/ERROR status string for this iteration.
+     * @param seed Random seed used.
+     * @param params Additional parameters (optional, as a string).
+     */
+    static void log_collision_iteration_probsat(
+        const std::string& log_filename,
+        const std::string& map_name,
+        int num_agents,
+        const std::string& solver_used,
+        int timestep,
+        int collision_iter,
+        int cnf_vars,
+        int cnf_clauses,
+        double solver_time_s,
+        int flips,
+        int tries,
+        int collisions_added,
+        const std::string& status,
+        long long seed,
+        const std::string& params = ""
+    );
+
+    /**
+     * Logs a per-timestep-iteration (outer loop) to a CSV file for MiniSAT.
+     * Each row represents one timestep/makespan attempt.
+     * Tracks decisions and propagations instead of flips.
+     *
+     * @param log_filename Path to the log file (CSV).
+     * @param map_name Name of the map used.
+     * @param num_agents Number of agents.
+     * @param solver_used Name of the SAT solver used.
+     * @param timestep The current makespan/timestep value.
+     * @param cnf_vars Number of CNF variables at this timestep.
+     * @param cnf_clauses Number of CNF clauses at this timestep.
+     * @param cnf_build_time_s Time to build CNF (seconds).
+     * @param total_solver_time_s Total SAT solver time for this timestep (seconds).
+     * @param num_collision_iterations Number of collision iterations in this timestep.
+     * @param decisions Total number of decisions across all collision iterations.
+     * @param propagations Total number of propagations across all collision iterations.
+     * @param status SAT/UNSAT/ERROR status string for this timestep.
+     * @param seed Random seed used.
+     * @param params Additional parameters (optional, as a string).
+     */
+    static void log_timestep_iteration_minisat(
+        const std::string& log_filename,
+        const std::string& map_name,
+        int num_agents,
+        const std::string& solver_used,
+        int timestep,
+        int cnf_vars,
+        int cnf_clauses,
+        double cnf_build_time_s,
+        double total_solver_time_s,
+        int num_collision_iterations,
+        int decisions,
+        int propagations,
+        const std::string& status,
+        long long seed,
+        const std::string& params = ""
+    );
+
+    /**
+     * Logs a per-timestep-iteration (outer loop) to a CSV file for ProbSAT.
+     * Each row represents one timestep/makespan attempt.
+     * Tracks flips and tries instead of decisions and propagations.
+     *
+     * @param log_filename Path to the log file (CSV).
+     * @param map_name Name of the map used.
+     * @param num_agents Number of agents.
+     * @param solver_used Name of the SAT solver used.
+     * @param timestep The current makespan/timestep value.
+     * @param cnf_vars Number of CNF variables at this timestep.
+     * @param cnf_clauses Number of CNF clauses at this timestep.
+     * @param cnf_build_time_s Time to build CNF (seconds).
+     * @param total_solver_time_s Total SAT solver time for this timestep (seconds).
+     * @param num_collision_iterations Number of collision iterations in this timestep.
+     * @param flips Total number of flips across all collision iterations.
+     * @param tries Total number of tries across all collision iterations.
+     * @param status SAT/UNSAT/ERROR status string for this timestep.
+     * @param seed Random seed used.
+     * @param params Additional parameters (optional, as a string).
+     */
+    static void log_timestep_iteration_probsat(
+        const std::string& log_filename,
+        const std::string& map_name,
+        int num_agents,
+        const std::string& solver_used,
+        int timestep,
+        int cnf_vars,
+        int cnf_clauses,
+        double cnf_build_time_s,
+        double total_solver_time_s,
+        int num_collision_iterations,
+        int flips,
+        int tries,
         const std::string& status,
         long long seed,
         const std::string& params = ""

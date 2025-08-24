@@ -31,6 +31,7 @@ MiniSatSolution MiniSatWrapper::solve_cnf(const std::vector<std::vector<int>>& c
     MiniSatSolution result;
     result.satisfiable = false;
     result.num_decisions = 0;
+    result.num_propagations = 0;
     result.solve_time = 0.0;
     result.error_message = "";
     
@@ -83,6 +84,7 @@ MiniSatSolution MiniSatWrapper::solve_cnf(const std::vector<std::vector<int>>& c
         result.satisfiable = satisfiable;
         result.solve_time = duration.count() / 1000.0; // Convert to seconds
         result.num_decisions = solver->decisions;
+        result.num_propagations = solver->propagations;
         
         if (satisfiable) {
             // Extract the assignment

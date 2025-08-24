@@ -1,0 +1,2 @@
+map_name,num_agents,solver,cnf_vars_start,cnf_clauses_start,cnf_vars_end,cnf_clauses_end,total_time_s,cnf_build_time_s,total_solver_time_s,solver_times_per_iter,decisions_per_iter,propagations_per_iter,collisions_per_iter,status,seed,params
+"mapf-map/empty-16-16.map",3,"MiniSAT",39,111,39,114,1.99e-07,0.000149142,0.00216591,"0.000894269;0.000638369;0.000633275","25;14;13","39;39;39","","SAT",42,""

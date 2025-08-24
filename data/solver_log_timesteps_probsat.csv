@@ -1,0 +1,2 @@
+map_name,num_agents,solver,timestep,cnf_vars,cnf_clauses,cnf_build_time_s,total_solver_time_s,num_collision_iterations,flips,tries,status,seed,params
+"mapf-map/empty-16-16.map",3,"probSAT",4,39,232,0.000108565,0.00248997,4,4474,5,"SAT",42,""

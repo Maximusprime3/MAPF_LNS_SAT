@@ -1284,3 +1284,315 @@ void SATSolverManager::log_collision_iteration(
     log_file.close();
 }
 
+void SATSolverManager::log_collision_iteration_minisat(
+    const std::string& log_filename,
+    const std::string& map_name,
+    int num_agents,
+    const std::string& solver_used,
+    int timestep,
+    int collision_iter,
+    int cnf_vars,
+    int cnf_clauses,
+    double solver_time_s,
+    int decisions,
+    int propagations,
+    int collisions_added,
+    const std::string& status,
+    long long seed,
+    const std::string& params
+) {
+    auto file_exists = [](const std::string& name) -> bool {
+        struct stat buffer;
+        return (stat(name.c_str(), &buffer) == 0);
+    };
+    bool write_header = !file_exists(log_filename);
+    std::ofstream log_file(log_filename, std::ios::app);
+    if (!log_file.is_open()) {
+        std::cerr << "[LOG] Could not open collision log file: " << log_filename << std::endl;
+        return;
+    }
+    if (write_header) {
+        log_file << "map_name,num_agents,solver,timestep,collision_iter,cnf_vars,cnf_clauses,solver_time_s,decisions,propagations,collisions_added,status,seed,params\n";
+    }
+    log_file << '"' << map_name << '"' << ','
+             << num_agents << ','
+             << '"' << solver_used << '"' << ','
+             << timestep << ','
+             << collision_iter << ','
+             << cnf_vars << ','
+             << cnf_clauses << ','
+             << solver_time_s << ','
+             << decisions << ','
+             << propagations << ','
+             << collisions_added << ','
+             << '"' << status << '"' << ','
+             << seed << ','
+             << '"' << params << '"' << '\n';
+    log_file.close();
+}
+
+void SATSolverManager::log_run_summary_minisat(
+    const std::string& log_filename,
+    const std::string& map_name,
+    int num_agents,
+    const std::string& solver_used,
+    int cnf_vars_start,
+    int cnf_clauses_start,
+    int cnf_vars_end,
+    int cnf_clauses_end,
+    double total_time_s,
+    double cnf_build_time_s,
+    double total_solver_time_s,
+    const std::vector<double>& solver_times_per_iter,
+    const std::vector<int>& decisions_per_iter,
+    const std::vector<int>& propagations_per_iter,
+    const std::vector<int>& collisions_per_iter,
+    const std::string& status,
+    long long seed,
+    const std::string& params
+) {
+    auto file_exists = [](const std::string& name) -> bool {
+        struct stat buffer;
+        return (stat(name.c_str(), &buffer) == 0);
+    };
+    bool write_header = !file_exists(log_filename);
+    std::ofstream log_file(log_filename, std::ios::app);
+    if (!log_file.is_open()) {
+        std::cerr << "[LOG] Could not open run summary log file: " << log_filename << std::endl;
+        return;
+    }
+    if (write_header) {
+        log_file << "map_name,num_agents,solver,cnf_vars_start,cnf_clauses_start,cnf_vars_end,cnf_clauses_end,total_time_s,cnf_build_time_s,total_solver_time_s,solver_times_per_iter,decisions_per_iter,propagations_per_iter,collisions_per_iter,status,seed,params\n";
+    }
+    // Helper to join vector as semicolon-separated string
+    auto join_vec = [](const auto& vec) -> std::string {
+        std::ostringstream oss;
+        for (size_t i = 0; i < vec.size(); ++i) {
+            oss << vec[i];
+            if (i + 1 < vec.size()) oss << ";";
+        }
+        return oss.str();
+    };
+    log_file << '"' << map_name << '"' << ','
+             << num_agents << ','
+             << '"' << solver_used << '"' << ','
+             << cnf_vars_start << ','
+             << cnf_clauses_start << ','
+             << cnf_vars_end << ','
+             << cnf_clauses_end << ','
+             << total_time_s << ','
+             << cnf_build_time_s << ','
+             << total_solver_time_s << ','
+             << '"' << join_vec(solver_times_per_iter) << '"' << ','
+             << '"' << join_vec(decisions_per_iter) << '"' << ','
+             << '"' << join_vec(propagations_per_iter) << '"' << ','
+             << '"' << join_vec(collisions_per_iter) << '"' << ','
+             << '"' << status << '"' << ','
+             << seed << ','
+             << '"' << params << '"' << '\n';
+    log_file.close();
+}
+
+void SATSolverManager::log_collision_iteration_probsat(
+    const std::string& log_filename,
+    const std::string& map_name,
+    int num_agents,
+    const std::string& solver_used,
+    int timestep,
+    int collision_iter,
+    int cnf_vars,
+    int cnf_clauses,
+    double solver_time_s,
+    int flips,
+    int tries,
+    int collisions_added,
+    const std::string& status,
+    long long seed,
+    const std::string& params
+) {
+    auto file_exists = [](const std::string& name) -> bool {
+        struct stat buffer;
+        return (stat(name.c_str(), &buffer) == 0);
+    };
+    bool write_header = !file_exists(log_filename);
+    std::ofstream log_file(log_filename, std::ios::app);
+    if (!log_file.is_open()) {
+        std::cerr << "[LOG] Could not open collision log file: " << log_filename << std::endl;
+        return;
+    }
+    if (write_header) {
+        log_file << "map_name,num_agents,solver,timestep,collision_iter,cnf_vars,cnf_clauses,solver_time_s,flips,tries,collisions_added,status,seed,params\n";
+    }
+    log_file << '"' << map_name << '"' << ','
+             << num_agents << ','
+             << '"' << solver_used << '"' << ','
+             << timestep << ','
+             << collision_iter << ','
+             << cnf_vars << ','
+             << cnf_clauses << ','
+             << solver_time_s << ','
+             << flips << ','
+             << tries << ','
+             << collisions_added << ','
+             << '"' << status << '"' << ','
+             << seed << ','
+             << '"' << params << '"' << '\n';
+    log_file.close();
+}
+
+void SATSolverManager::log_run_summary_probsat(
+    const std::string& log_filename,
+    const std::string& map_name,
+    int num_agents,
+    const std::string& solver_used,
+    int cnf_vars_start,
+    int cnf_clauses_start,
+    int cnf_vars_end,
+    int cnf_clauses_end,
+    double total_time_s,
+    double cnf_build_time_s,
+    double total_solver_time_s,
+    const std::vector<double>& solver_times_per_iter,
+    const std::vector<int>& flips_per_iter,
+    const std::vector<int>& tries_per_iter,
+    const std::vector<int>& collisions_per_iter,
+    const std::string& status,
+    long long seed,
+    const std::string& params
+) {
+    auto file_exists = [](const std::string& name) -> bool {
+        struct stat buffer;
+        return (stat(name.c_str(), &buffer) == 0);
+    };
+    bool write_header = !file_exists(log_filename);
+    std::ofstream log_file(log_filename, std::ios::app);
+    if (!log_file.is_open()) {
+        std::cerr << "[LOG] Could not open run summary log file: " << log_filename << std::endl;
+        return;
+    }
+    if (write_header) {
+        log_file << "map_name,num_agents,solver,cnf_vars_start,cnf_clauses_start,cnf_vars_end,cnf_clauses_end,total_time_s,cnf_build_time_s,total_solver_time_s,solver_times_per_iter,flips_per_iter,tries_per_iter,collisions_per_iter,status,seed,params\n";
+    }
+    // Helper to join vector as semicolon-separated string
+    auto join_vec = [](const auto& vec) -> std::string {
+        std::ostringstream oss;
+        for (size_t i = 0; i < vec.size(); ++i) {
+            oss << vec[i];
+            if (i + 1 < vec.size()) oss << ";";
+        }
+        return oss.str();
+    };
+    log_file << '"' << map_name << '"' << ','
+             << num_agents << ','
+             << '"' << solver_used << '"' << ','
+             << cnf_vars_start << ','
+             << cnf_clauses_start << ','
+             << cnf_vars_end << ','
+             << cnf_clauses_end << ','
+             << total_time_s << ','
+             << cnf_build_time_s << ','
+             << total_solver_time_s << ','
+             << '"' << join_vec(solver_times_per_iter) << '"' << ','
+             << '"' << join_vec(flips_per_iter) << '"' << ','
+             << '"' << join_vec(tries_per_iter) << '"' << ','
+             << '"' << join_vec(collisions_per_iter) << '"' << ','
+             << '"' << status << '"' << ','
+             << seed << ','
+             << '"' << params << '"' << '\n';
+    log_file.close();
+}
+
+void SATSolverManager::log_timestep_iteration_minisat(
+    const std::string& log_filename,
+    const std::string& map_name,
+    int num_agents,
+    const std::string& solver_used,
+    int timestep,
+    int cnf_vars,
+    int cnf_clauses,
+    double cnf_build_time_s,
+    double total_solver_time_s,
+    int num_collision_iterations,
+    int decisions,
+    int propagations,
+    const std::string& status,
+    long long seed,
+    const std::string& params
+) {
+    auto file_exists = [](const std::string& name) -> bool {
+        struct stat buffer;
+        return (stat(name.c_str(), &buffer) == 0);
+    };
+    bool write_header = !file_exists(log_filename);
+    std::ofstream log_file(log_filename, std::ios::app);
+    if (!log_file.is_open()) {
+        std::cerr << "[LOG] Could not open timestep log file: " << log_filename << std::endl;
+        return;
+    }
+    if (write_header) {
+        log_file << "map_name,num_agents,solver,timestep,cnf_vars,cnf_clauses,cnf_build_time_s,total_solver_time_s,num_collision_iterations,decisions,propagations,status,seed,params\n";
+    }
+    log_file << '"' << map_name << '"' << ','
+             << num_agents << ','
+             << '"' << solver_used << '"' << ','
+             << timestep << ','
+             << cnf_vars << ','
+             << cnf_clauses << ','
+             << cnf_build_time_s << ','
+             << total_solver_time_s << ','
+             << num_collision_iterations << ','
+             << decisions << ','
+             << propagations << ','
+             << '"' << status << '"' << ','
+             << seed << ','
+             << '"' << params << '"' << '\n';
+    log_file.close();
+}
+
+void SATSolverManager::log_timestep_iteration_probsat(
+    const std::string& log_filename,
+    const std::string& map_name,
+    int num_agents,
+    const std::string& solver_used,
+    int timestep,
+    int cnf_vars,
+    int cnf_clauses,
+    double cnf_build_time_s,
+    double total_solver_time_s,
+    int num_collision_iterations,
+    int flips,
+    int tries,
+    const std::string& status,
+    long long seed,
+    const std::string& params
+) {
+    auto file_exists = [](const std::string& name) -> bool {
+        struct stat buffer;
+        return (stat(name.c_str(), &buffer) == 0);
+    };
+    bool write_header = !file_exists(log_filename);
+    std::ofstream log_file(log_filename, std::ios::app);
+    if (!log_file.is_open()) {
+        std::cerr << "[LOG] Could not open timestep log file: " << log_filename << std::endl;
+        return;
+    }
+    if (write_header) {
+        log_file << "map_name,num_agents,solver,timestep,cnf_vars,cnf_clauses,cnf_build_time_s,total_solver_time_s,num_collision_iterations,flips,tries,status,seed,params\n";
+    }
+    log_file << '"' << map_name << '"' << ','
+             << num_agents << ','
+             << '"' << solver_used << '"' << ','
+             << timestep << ','
+             << cnf_vars << ','
+             << cnf_clauses << ','
+             << cnf_build_time_s << ','
+             << total_solver_time_s << ','
+             << num_collision_iterations << ','
+             << flips << ','
+             << tries << ','
+             << '"' << status << '"' << ','
+             << seed << ','
+             << '"' << params << '"' << '\n';
+    log_file.close();
+}
+

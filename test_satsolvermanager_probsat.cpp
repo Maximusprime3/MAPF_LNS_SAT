@@ -261,8 +261,8 @@ int main() {
                 timestep_solver_time += solver_time;
                 
                 // Log this collision iteration
-                SATSolverManager::log_collision_iteration(
-                    "data/solver_log_collisions.csv",
+                SATSolverManager::log_collision_iteration_probsat(
+                    "data/solver_log_collisions_probsat.csv",
                     map_name_logged,
                     num_agents_logged,
                     solver_used,
@@ -366,8 +366,16 @@ int main() {
                         cnf_clauses_end = cnf_constructor->get_probsat_num_clauses();
                         auto timestep_end = std::chrono::high_resolution_clock::now();
                         double timestep_total_time = std::chrono::duration<double>(timestep_end - timestep_start).count();
-                        SATSolverManager::log_timestep_iteration(
-                            "data/solver_log_timesteps.csv",
+                        
+                        // Calculate total flips and tries for this timestep
+                        int total_flips = 0, total_tries = 0;
+                        for (size_t i = 0; i < flips_per_iter.size(); ++i) {
+                            total_flips += flips_per_iter[i];
+                            total_tries += tries_per_iter[i];
+                        }
+                        
+                        SATSolverManager::log_timestep_iteration_probsat(
+                            "data/solver_log_timesteps_probsat.csv",
                             map_name_logged,
                             num_agents_logged,
                             solver_used,
@@ -377,6 +385,8 @@ int main() {
                             cnf_build_time,
                             timestep_solver_time,
                             timestep_collisions,
+                            total_flips,
+                            total_tries,
                             status,
                             seed
                         );
@@ -385,8 +395,8 @@ int main() {
                         static auto main_start = std::chrono::high_resolution_clock::now();
                         auto main_end = std::chrono::high_resolution_clock::now();
                         double total_time = std::chrono::duration<double>(main_end - main_start).count();
-                        SATSolverManager::log_run_summary(
-                            "data/solver_log.csv",
+                        SATSolverManager::log_run_summary_probsat(
+                            "data/solver_log_probsat.csv",
                             map_name_logged,
                             num_agents_logged,
                             solver_used,
@@ -453,9 +463,17 @@ int main() {
             cnf_clauses_end = cnf_constructor->get_probsat_num_clauses();
             auto timestep_end = std::chrono::high_resolution_clock::now();
             double timestep_total_time = std::chrono::duration<double>(timestep_end - timestep_start).count();
+            
+            // Calculate total flips and tries for this timestep
+            int total_flips = 0, total_tries = 0;
+            for (size_t i = 0; i < flips_per_iter.size(); ++i) {
+                total_flips += flips_per_iter[i];
+                total_tries += tries_per_iter[i];
+            }
+            
             // Log this timestep iteration
-            SATSolverManager::log_timestep_iteration(
-                "data/solver_log_timesteps.csv",
+            SATSolverManager::log_timestep_iteration_probsat(
+                "data/solver_log_timesteps_probsat.csv",
                 map_name_logged,
                 num_agents_logged,
                 solver_used,
@@ -465,6 +483,8 @@ int main() {
                 cnf_build_time,
                 timestep_solver_time,
                 timestep_collisions,
+                total_flips,
+                total_tries,
                 status,
                 seed
             );
@@ -483,8 +503,8 @@ int main() {
         static auto main_start = std::chrono::high_resolution_clock::now();
         auto main_end = std::chrono::high_resolution_clock::now();
         double total_time = std::chrono::duration<double>(main_end - main_start).count();
-        SATSolverManager::log_run_summary(
-            "data/solver_log.csv",
+        SATSolverManager::log_run_summary_probsat(
+            "data/solver_log_probsat.csv",
             map_name_logged,
             num_agents_logged,
             solver_used,
