@@ -21,13 +21,18 @@ SATSOLVER_OBJECTS = $(SATSOLVER_SOURCES:.cpp=.o)
 
 # Target executable
 TARGET = test_satsolvermanager_minisat
+TARGET_OUTER = run_sliced_scenarios
 
 # Default target
-all: $(TARGET)
+all: $(TARGET) $(TARGET_OUTER)
 
 # Build the main test executable
 $(TARGET): test_satsolvermanager_minisat.cpp $(MDD_OBJECTS) $(CNF_OBJECTS) $(MINISAT_OBJECTS) $(SATSOLVER_OBJECTS) $(PROBSAT_OBJ)
 	$(CXX) $(CXXFLAGS) -o $@ $^ $(LDFLAGS)
+
+# Build outer loop driver
+$(TARGET_OUTER): run_sliced_scenarios.cpp
+	$(CXX) $(CXXFLAGS) -o $@ $<
 
 # Build MDD objects
 mdd/%.o: mdd/%.cpp
@@ -51,7 +56,7 @@ probSAT-master/%.o: probSAT-master/%.c
 
 # Clean build artifacts
 clean:
-	rm -f $(TARGET) $(MDD_OBJECTS) $(CNF_OBJECTS) $(MINISAT_OBJECTS) $(SATSOLVER_OBJECTS) $(PROBSAT_OBJ)
+	rm -f $(TARGET) $(TARGET_OUTER) $(MDD_OBJECTS) $(CNF_OBJECTS) $(MINISAT_OBJECTS) $(SATSOLVER_OBJECTS) $(PROBSAT_OBJ)
 
 # Run the test
 test: $(TARGET)

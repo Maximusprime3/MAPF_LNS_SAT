@@ -214,6 +214,32 @@ std::vector<int> CNFConstructor::add_single_edge_collision_clause(int agent1_id,
         }
         return clause;
     }
+    // Debug: print variable-map entries for any agent whose expected variable is missing
+    auto print_agent_vars = [&](int agent) {
+        std::cout << "[DEBUG] Variable map for agent " << agent << ":" << std::endl;
+        for (const auto& kv : variable_map) {
+            int a = std::get<0>(kv.first);
+            if (a != agent) continue;
+            const auto& p = std::get<1>(kv.first);
+            int t = std::get<2>(kv.first);
+            int v = kv.second;
+            std::cout << "  Var " << v << ": agent " << a << ", pos (" << p.first << "," << p.second << "), t=" << t << std::endl;
+        }
+    };
+    if (var1 <= 0 || var2 <= 0) {
+        std::cout << "[DEBUG] Missing variable(s) for agent " << agent1_id
+                  << " expecting pos1=(" << pos1.first << "," << pos1.second << ")@t=" << timestep
+                  << ", pos2=(" << pos2.first << "," << pos2.second << ")@t=" << (timestep + 1)
+                  << ". var1=" << var1 << ", var2=" << var2 << std::endl;
+        print_agent_vars(agent1_id);
+    }
+    if (var3 <= 0 || var4 <= 0) {
+        std::cout << "[DEBUG] Missing variable(s) for agent " << agent2_id
+                  << " expecting pos2=(" << pos2.first << "," << pos2.second << ")@t=" << timestep
+                  << ", pos1=(" << pos1.first << "," << pos1.second << ")@t=" << (timestep + 1)
+                  << ". var3=" << var3 << ", var4=" << var4 << std::endl;
+        print_agent_vars(agent2_id);
+    }
     throw std::runtime_error("Invalid edge collision clause: agent1=" + std::to_string(agent1_id) + ", agent2=" + std::to_string(agent2_id) + ", pos1=(" + std::to_string(pos1.first) + "," + std::to_string(pos1.second) + "), pos2=(" + std::to_string(pos2.first) + "," + std::to_string(pos2.second) + "), timestep=" + std::to_string(timestep));
 }
 
@@ -304,16 +330,7 @@ std::unordered_map<int, std::vector<MDDNode::Position>> CNFConstructor::cnf_assi
     for (int v : assignment) std::cout << v << " ";
     std::cout << std::endl;
     
-    std::cout << "Variable map size: " << variable_map.size() << std::endl;
-    std::cout << "Variable map contents:" << std::endl;
-    for (const auto& var_pair : variable_map) {
-        int agent_id = std::get<0>(var_pair.first);
-        auto pos = std::get<1>(var_pair.first);
-        int timestep = std::get<2>(var_pair.first);
-        int var_id = var_pair.second;
-        std::cout << "  Var " << var_id << ": agent " << agent_id 
-                  << ", pos (" << pos.first << "," << pos.second << "), t=" << timestep << std::endl;
-    }
+    // Removed verbose listing of all variables in the variable map to declutter output
     
     // Group positive assignments by agent
     std::unordered_map<int, std::vector<std::pair<int, MDDNode::Position>>> agent_positions;
@@ -325,7 +342,7 @@ std::unordered_map<int, std::vector<MDDNode::Position>> CNFConstructor::cnf_assi
         int truth_value = assignment[i];
         
         if (truth_value > 0) { // Only positive assignments
-            std::cout << "Processing variable " << var_id << " (truth value: " << truth_value << ")" << std::endl;
+            // Removed verbose per-variable processing print
             
             // Find the (agent, position, timestep) for this variable
             for (const auto& var_pair : variable_map) {
@@ -334,9 +351,7 @@ std::unordered_map<int, std::vector<MDDNode::Position>> CNFConstructor::cnf_assi
                     MDDNode::Position position = std::get<1>(var_pair.first);
                     int timestep = std::get<2>(var_pair.first);
                     
-                    std::cout << "  Found: agent " << agent_id 
-                              << ", pos (" << position.first << "," << position.second 
-                              << "), t=" << timestep << std::endl;
+                    // Removed verbose per-variable mapping print
                     
                     agent_positions[agent_id].push_back({timestep, position});
                     break;
@@ -350,21 +365,9 @@ std::unordered_map<int, std::vector<MDDNode::Position>> CNFConstructor::cnf_assi
         int agent_id = agent_pos_pair.first;
         const auto& positions = agent_pos_pair.second;
         
-        std::cout << "\nAgent " << agent_id << " positions before sorting:" << std::endl;
-        for (const auto& pos_pair : positions) {
-            std::cout << "  t=" << pos_pair.first << ": (" << pos_pair.second.first 
-                      << "," << pos_pair.second.second << ")" << std::endl;
-        }
-        
         // Sort by timestep
         std::vector<std::pair<int, MDDNode::Position>> sorted_positions = positions;
         std::sort(sorted_positions.begin(), sorted_positions.end());
-        
-        std::cout << "Agent " << agent_id << " positions after sorting:" << std::endl;
-        for (const auto& pos_pair : sorted_positions) {
-            std::cout << "  t=" << pos_pair.first << ": (" << pos_pair.second.first 
-                      << "," << pos_pair.second.second << ")" << std::endl;
-        }
         
         // Extract path
         std::vector<MDDNode::Position> path;
@@ -372,11 +375,7 @@ std::unordered_map<int, std::vector<MDDNode::Position>> CNFConstructor::cnf_assi
             path.push_back(pos_pair.second);
         }
         
-        std::cout << "Final path: ";
-        for (const auto& pos : path) {
-            std::cout << "(" << pos.first << "," << pos.second << ") ";
-        }
-        std::cout << std::endl;
+        
         
         agent_paths[agent_id] = path;
     }

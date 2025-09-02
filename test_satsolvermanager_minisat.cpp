@@ -8,6 +8,7 @@
 #include <fstream>
 #include <sstream>
 #include <filesystem> // For directory creation
+#include <cstdlib>
 
 // Include our MAPF components
 #include "mdd/MDDConstructor.h"
@@ -92,7 +93,33 @@ load_scenario_agents(const std::string& scenario_path, int num_agents) {
     return agents;
 }
 
-int main() {
+// Simple CLI parser for named args: --key value
+static std::unordered_map<std::string, std::string> parse_args(int argc, char** argv) {
+    std::unordered_map<std::string, std::string> args;
+    for (int i = 1; i < argc; ++i) {
+        std::string key = argv[i];
+        if (key.rfind("--", 0) == 0 && i + 1 < argc) {
+            args[key.substr(2)] = argv[++i];
+        }
+    }
+    return args;
+}
+
+static std::string iso8601_utc_now() {
+    auto now = std::chrono::system_clock::now();
+    std::time_t now_c = std::chrono::system_clock::to_time_t(now);
+    std::tm tm{};
+#if defined(_WIN32)
+    gmtime_s(&tm, &now_c);
+#else
+    gmtime_r(&now_c, &tm);
+#endif
+    std::ostringstream oss;
+    oss << std::put_time(&tm, "%Y-%m-%dT%H:%M:%SZ");
+    return oss.str();
+}
+
+int main(int argc, char** argv) {
     // Ensure the data directory exists for logging, before any other code
     try {
         if (!std::filesystem::create_directories("data") && !std::filesystem::exists("data")) {
@@ -105,32 +132,34 @@ int main() {
     }
     try {
         std::cout << "=== MAPF LNS SAT with SATSolverManager - MiniSAT Iterative Loop Test ===" << std::endl;
+        auto args = parse_args(argc, argv);
         
-        // Configuration
-        const std::string map_path = "mapf-map/empty-16-16.map";
-        const std::string scenario_path = "mapf-scen-even/scen-even/empty-16-16-even-1.scen";
-        const int num_agents = 3;  // Increased to 3 agents
-        const int initial_max_timesteps = 2;  // Start with 2 timesteps
-        const int max_timestep_increase = 10;  // Maximum additional timesteps
-        const long long seed = 42;
+        // Configuration (overridable by CLI)
+        const std::string map_path = args.count("map") ? args["map"] : std::string("mapf-map/empty-16-16.map");
+        const std::string scenario_path = args.count("scenario") ? args["scenario"] : std::string("mapf-scen-even/scen-even/empty-16-16-even-1.scen");
+        const int num_agents = args.count("num_agents") ? std::stoi(args["num_agents"]) : 3;
+        const int initial_max_timesteps = args.count("initial_timesteps") ? std::stoi(args["initial_timesteps"]) : 2;
+        const int max_timestep_increase = args.count("max_increase") ? std::stoi(args["max_increase"]) : 10;
+        const long long seed = args.count("seed") ? std::stoll(args["seed"]) : 42LL;
+        const int scenario_offset = args.count("scenario_offset") ? std::stoi(args["scenario_offset"]) : 0;
+        const int run_id = args.count("run_id") ? std::stoi(args["run_id"]) : -1;
+        const std::string run_start_iso = iso8601_utc_now();
         
         std::cout << "Loading map from: " << map_path << std::endl;
         auto grid = load_map(map_path);
         std::cout << "Map loaded: " << grid.size() << "x" << grid[0].size() << std::endl;
         
         std::cout << "Loading scenario from: " << scenario_path << std::endl;
-        auto agents = load_scenario_agents(scenario_path, num_agents);
-        // Manually override the goals for testing - 3 agents with complex interactions
-        if (agents.size() >= 3) {
-            // Agent 0: start and goal closer together
-            agents[0].first = {1, 1};
-            agents[0].second = {1, 3};  // Reduced from (1,4) to (1,3)
-            // Agent 1: start and goal closer together, crossing paths
-            agents[1].first = {1, 3};   // Start at agent 0's goal
-            agents[1].second = {1, 1};  // Goal at agent 0's start
-            // Agent 2: new agent with start (1,4) and goal (1,0)
-            agents[2].first = {1, 4};   // Start at (1,4)
-            agents[2].second = {1, 0};  // Goal at (1,0) - crosses through the middle
+        // Load full scenario then slice by offset
+        auto all_agents = load_scenario_agents(scenario_path, std::numeric_limits<int>::max());
+        if (scenario_offset < 0 || scenario_offset + num_agents > (int)all_agents.size()) {
+            std::cerr << "ERROR: Scenario offset and num_agents exceed available entries. Available=" << all_agents.size() << std::endl;
+            return 1;
+        }
+        std::vector<std::pair<MDDNode::Position, MDDNode::Position>> agents;
+        agents.reserve(num_agents);
+        for (int i = 0; i < num_agents; ++i) {
+            agents.push_back(all_agents[scenario_offset + i]);
         }
         std::cout << "Loaded " << agents.size() << " agents" << std::endl;
         
@@ -166,6 +195,9 @@ int main() {
         std::string status = "UNKNOWN";
         int num_agents_logged = num_agents;
         std::string map_name_logged = map_path;
+        std::ostringstream params_common_oss;
+        params_common_oss << "run_id=" << run_id << ";offset=" << scenario_offset << ";run_start_iso=" << run_start_iso;
+        const std::string params_common = params_common_oss.str();
         
 
         // Main iterative loop
@@ -246,7 +278,8 @@ int main() {
                     result.num_propagations, // Use propagations for MiniSAT
                     0, // collisions_added (update if you track this)
                     result.satisfiable ? "SAT" : "UNSAT",
-                    seed
+                    seed,
+                    params_common
                 );
                 
                 // Step 4: Process results
@@ -262,14 +295,7 @@ int main() {
                     // Convert assignment to agent paths
                     auto agent_paths = cnf_constructor.cnf_assignment_to_paths(result.assignment);
                     
-                    // Debug: Print the actual extracted paths
-                    std::cout << "\n=== DEBUG: Actual Extracted Paths ===" << std::endl;
-                    for (const auto& [agent_id, path] : agent_paths) {
-                        std::cout << "Agent " << agent_id << " extracted path:" << std::endl;
-                        for (size_t t = 0; t < path.size(); ++t) {
-                            std::cout << "  t=" << t << ": (" << path[t].first << "," << path[t].second << ")" << std::endl;
-                        }
-                    }
+                    // Optional debug of extracted paths (disabled to reduce verbosity)
                     
                     // Print and visualize the paths
                     SATSolverManager::print_agent_paths(agent_paths);
@@ -366,7 +392,8 @@ int main() {
                             total_decisions,
                             total_propagations,
                             status,
-                            seed
+                            seed,
+                            params_common
                         );
                         
                         // Log the run summary before exiting
@@ -390,7 +417,8 @@ int main() {
                             propagations_per_iter, // Use propagations for MiniSAT
                             collisions_per_iter,
                             status,
-                            seed
+                            seed,
+                            params_common
                         );
                         
                         std::cout << "\n=== Final Statistics ===" << std::endl;
@@ -422,14 +450,7 @@ int main() {
                     }
                     
                     // Debug: Print all variables in the CNFConstructor
-                    std::cout << "\n=== DEBUG: All variables in CNFConstructor ===" << std::endl;
-                    const auto& var_map = cnf_constructor.get_variable_map();
-                    for (const auto& [key, var_id] : var_map) {
-                        int agent_id = std::get<0>(key);
-                        auto pos = std::get<1>(key);
-                        int t = std::get<2>(key);
-                        std::cout << "  Var " << var_id << ": agent " << agent_id << ", pos (" << pos.first << "," << pos.second << "), t=" << t << std::endl;
-                    }
+                    // Commented out to avoid spamming the output
                     
                     for (const auto& collision : edge_collisions) {
                         int agent1, agent2, timestep;
@@ -508,7 +529,8 @@ int main() {
                 total_decisions,
                 total_propagations,
                 status,
-                seed
+                seed,
+                params_common
             );
             
             if (iteration_count >= max_inner_iterations) {
@@ -542,7 +564,8 @@ int main() {
             propagations_per_iter, // Use propagations for MiniSAT
             collisions_per_iter,
             status,
-            seed
+            seed,
+            params_common
         );
         
         std::cout << "\n" << std::string(60, '=') << std::endl;

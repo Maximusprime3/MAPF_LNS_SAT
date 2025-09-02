@@ -767,56 +767,42 @@ SATSolverManager::find_vertex_collisions(const AgentPaths& agent_paths) {
 std::vector<std::tuple<int, int, std::pair<int, int>, std::pair<int, int>, int>> 
 SATSolverManager::find_edge_collisions(const AgentPaths& agent_paths) {
     std::vector<std::tuple<int, int, std::pair<int, int>, std::pair<int, int>, int>> edge_collisions;
-    
+
     // Find max timesteps from the longest path
     int max_timesteps = 0;
     for (const auto& [agent_id, path] : agent_paths) {
         max_timesteps = std::max(max_timesteps, (int)path.size());
     }
-    
-    // For each timestep (except the last), check for edge collisions
+
+    // For each timestep (except the last), detect true swaps (opposite edges)
     for (int timestep = 0; timestep < max_timesteps - 1; ++timestep) {
-        // Map from edge (pos1, pos2) to list of agents traversing that edge
-        EdgeAgentMap edge_agents;
-        
-        // Collect all agents traversing each edge for this timestep
+        // Collect all actual moves (from != to) at this timestep
+        std::vector<std::tuple<int, std::pair<int,int>, std::pair<int,int>>> moves; // agent, from, to
+        moves.reserve(agent_paths.size());
         for (const auto& [agent_id, path] : agent_paths) {
             if (timestep + 1 < (int)path.size()) {
-                auto pos1 = path[timestep];
-                auto pos2 = path[timestep + 1];
-                
-                // Only consider edges where agents actually move
-                if (pos1 != pos2) {
-                    // Normalize edge direction (smaller position first)
-                    auto edge = (pos1 < pos2) ? std::make_pair(pos1, pos2) : std::make_pair(pos2, pos1);
-                    edge_agents[edge].push_back(agent_id);
+                auto from = path[timestep];
+                auto to = path[timestep + 1];
+                if (from != to) {
+                    moves.emplace_back(agent_id, from, to);
                 }
             }
         }
-        
-        // Check for edge collisions (more than one agent traversing same edge)
-        for (const auto& [edge, agents] : edge_agents) {
-            if (agents.size() > 1) {
-                // Add edge collision for each pair of agents
-                for (size_t i = 0; i < agents.size(); ++i) {
-                    for (size_t j = i + 1; j < agents.size(); ++j) {
-                        int agent1 = agents[i];
-                        int agent2 = agents[j];
-                        
-                        // Look up the actual movements from the agent paths
-                        auto pos1_agent1 = agent_paths.at(agent1)[timestep];
-                        auto pos2_agent1 = agent_paths.at(agent1)[timestep + 1];
-                        auto pos1_agent2 = agent_paths.at(agent2)[timestep];
-                        auto pos2_agent2 = agent_paths.at(agent2)[timestep + 1];
-                        
-                        // Report the collision with the actual movement of agent1
-                        edge_collisions.emplace_back(agent1, agent2, pos1_agent1, pos2_agent1, timestep);
-                    }
+
+        // Check pairs for exact reverse movement over the same edge
+        for (size_t i = 0; i < moves.size(); ++i) {
+            int a1; std::pair<int,int> a1_from, a1_to;
+            std::tie(a1, a1_from, a1_to) = moves[i];
+            for (size_t j = i + 1; j < moves.size(); ++j) {
+                int a2; std::pair<int,int> a2_from, a2_to;
+                std::tie(a2, a2_from, a2_to) = moves[j];
+                if (a1_from == a2_to && a1_to == a2_from) {
+                    edge_collisions.emplace_back(a1, a2, a1_from, a1_to, timestep);
                 }
             }
         }
     }
-    
+
     return edge_collisions;
 }
 
@@ -897,13 +883,7 @@ int SATSolverManager::add_edge_collision_prevention_clauses(std::shared_ptr<CNFP
         // by looking at the variable map to see what variables exist
         const auto& var_map = cnf_constructor->get_variable_map();
         
-        std::cout << "[DEBUG] Variable map contains:" << std::endl;
-        for (const auto& [key, var_id] : var_map) {
-            int agent_id = std::get<0>(key);
-            auto pos = std::get<1>(key);
-            int t = std::get<2>(key);
-            std::cout << "  Var " << var_id << ": agent " << agent_id << ", pos (" << pos.first << "," << pos.second << "), t=" << t << std::endl;
-        }
+        // Removed verbose variable map dump to declutter output
         
         // Find all variables for the collision timestep and timestep+1
         std::vector<std::tuple<int, int, std::pair<int, int>, int>> timestep_vars; // agent_id, var_id, pos, timestep
@@ -916,10 +896,7 @@ int SATSolverManager::add_edge_collision_prevention_clauses(std::shared_ptr<CNFP
             }
         }
         
-        std::cout << "[DEBUG] Variables at timesteps " << timestep << " and " << (timestep + 1) << ":" << std::endl;
-        for (const auto& [agent_id, var_id, pos, t] : timestep_vars) {
-            std::cout << "  Agent " << agent_id << " at (" << pos.first << "," << pos.second << ") at t=" << t << " (var " << var_id << ")" << std::endl;
-        }
+        // Removed verbose per-timestep variable listing to declutter output
         
         // The collision detection reports the movement (from -> to), but we need
         // to find the actual positions that agents are at during the collision
@@ -1091,7 +1068,10 @@ std::vector<int> SATSolverManager::create_initial_assignment_with_collisions(
     
     // Step 3: Ensure CNF is constructed and variables are available
     // This is crucial for lazy encoding - we need to construct the CNF to get variables
-    cnf_constructor.construct_cnf();
+    // Avoid duplicating clauses for ProbSAT constructors (they already built their storage).
+    if (dynamic_cast<CNFProbSATConstructor*>(&cnf_constructor) == nullptr) {
+        cnf_constructor.construct_cnf();
+    }
     
     // Step 4: Create assignment based on mode
     if (full_assignment) {

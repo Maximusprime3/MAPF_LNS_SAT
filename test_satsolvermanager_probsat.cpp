@@ -8,6 +8,7 @@
 #include <fstream>
 #include <sstream>
 #include <filesystem> // For directory creation
+#include <cstdlib>
 
 // Include our MAPF components
 #include "mdd/MDDConstructor.h"
@@ -92,7 +93,7 @@ load_scenario_agents(const std::string& scenario_path, int num_agents) {
     return agents;
 }
 
-int main() {
+int main(int argc, char** argv) {
     // Ensure the data directory exists for logging, before any other code
     try {
         if (!std::filesystem::create_directories("data") && !std::filesystem::exists("data")) {
@@ -106,33 +107,45 @@ int main() {
     try {
         std::cout << "=== MAPF LNS SAT with SATSolverManager - Iterative Loop Test ===" << std::endl;
         
-        // Configuration
-        const std::string map_path = "mapf-map/empty-16-16.map";
-        const std::string scenario_path = "mapf-scen-even/scen-even/empty-16-16-even-1.scen";
-        const int num_agents = 3;  // Increased to 3 agents
-        const int initial_max_timesteps = 2;  // Start with 2 timesteps
-        const int max_timestep_increase = 10;  // Maximum additional timesteps
-        const long long seed = 42;
-        const long long max_runs = 1;
-        const long long max_flips = 50000;  // Doubled from 10000
+        // Configuration (basic CLI)
+        auto arg = [&](const char* key, const char* def) -> std::string {
+            for (int i = 1; i + 1 < argc; ++i) if (std::string(argv[i]) == std::string("--") + key) return argv[i+1];
+            return def;
+        };
+        auto has_flag = [&](const char* key) -> bool {
+            for (int i = 1; i < argc; ++i) if (std::string(argv[i]) == std::string("--") + key) return true;
+            return false;
+        };
+        const std::string map_path = arg("map", "mapf-map/empty-16-16.map");
+        const std::string scenario_path = arg("scenario", "mapf-scen-even/scen-even/empty-16-16-even-1.scen");
+        const int num_agents = std::stoi(arg("num_agents", "3"));
+        const int initial_max_timesteps = std::stoi(arg("initial_timesteps", "2"));
+        const int max_timestep_increase = std::stoi(arg("max_increase", "10"));
+        const long long seed = std::stoll(arg("seed", "42"));
+        const long long max_runs = std::stoll(arg("max_runs", "1"));
+        const long long max_flips = std::stoll(arg("max_flips", "50000"));
+        const int scenario_offset = std::stoi(arg("scenario_offset", "0"));
+        const bool three_agent_test = has_flag("three_agent_test");
         
         std::cout << "Loading map from: " << map_path << std::endl;
         auto grid = load_map(map_path);
         std::cout << "Map loaded: " << grid.size() << "x" << grid[0].size() << std::endl;
         
         std::cout << "Loading scenario from: " << scenario_path << std::endl;
-        auto agents = load_scenario_agents(scenario_path, num_agents);
-        // Manually override the goals for testing - 3 agents with complex interactions
-        if (agents.size() >= 3) {
-            // Agent 0: start and goal closer together
-            agents[0].first = {1, 1};
-            agents[0].second = {1, 3};  // Reduced from (1,4) to (1,3)
-            // Agent 1: start and goal closer together, crossing paths
-            agents[1].first = {1, 3};   // Start at agent 0's goal
-            agents[1].second = {1, 1};  // Goal at agent 0's start
-            // Agent 2: new agent with start (1,4) and goal (1,0)
-            agents[2].first = {1, 4};   // Start at (1,4)
-            agents[2].second = {1, 0};  // Goal at (1,0) - crosses through the middle
+        // Load full scenario then slice by offset
+        auto all_agents = load_scenario_agents(scenario_path, std::numeric_limits<int>::max());
+        if (scenario_offset < 0 || scenario_offset + num_agents > (int)all_agents.size()) {
+            std::cerr << "ERROR: Scenario offset and num_agents exceed available entries. Available=" << all_agents.size() << std::endl;
+            return 1;
+        }
+        std::vector<std::pair<MDDNode::Position, MDDNode::Position>> agents;
+        agents.reserve(num_agents);
+        for (int i = 0; i < num_agents; ++i) agents.push_back(all_agents[scenario_offset + i]);
+        if (three_agent_test && (int)agents.size() >= 3) {
+            agents[0].first = {1, 1}; agents[0].second = {1, 3};
+            agents[1].first = {1, 3}; agents[1].second = {1, 1};
+            agents[2].first = {1, 4}; agents[2].second = {1, 0};
+            agents.resize(3);
         }
         std::cout << "Loaded " << agents.size() << " agents" << std::endl;
         
@@ -167,6 +180,16 @@ int main() {
         std::string status = "UNKNOWN";
         int num_agents_logged = num_agents;
         std::string map_name_logged = map_path;
+        // Minimal params string for CSV logs (seed + run metadata from env)
+        const char* env_run_id = std::getenv("RUN_ID");
+        const char* env_run_start = std::getenv("RUN_START_ISO");
+        const char* env_offset = std::getenv("SCENARIO_OFFSET");
+        std::ostringstream params_oss;
+        params_oss << "seed=" << seed
+                   << ";run_id=" << (env_run_id ? env_run_id : "-1")
+                   << ";run_start_iso=" << (env_run_start ? env_run_start : "")
+                   << ";offset=" << (env_offset ? env_offset : "");
+        const std::string params_common = params_oss.str();
         
 
         // Main iterative loop
@@ -260,28 +283,31 @@ int main() {
                 total_solver_time += solver_time;
                 timestep_solver_time += solver_time;
                 
-                // Log this collision iteration
-                SATSolverManager::log_collision_iteration_probsat(
-                    "data/solver_log_collisions_probsat.csv",
-                    map_name_logged,
-                    num_agents_logged,
-                    solver_used,
-                    current_max_timesteps,
-                    iteration_count,
-                    cnf_constructor->get_probsat_num_variables(),
-                    cnf_constructor->get_probsat_num_clauses(),
-                    solver_time,
-                    result.num_flips,
-                    1, // tries
-                    0, // collisions_added (update if you track this)
-                    result.satisfiable ? "SAT" : "UNSAT",
-                    seed
-                );
+                // Defer collision-iteration logging until we know if clauses were added
                 
                 // Step 4: Process results
                 std::cout << "\n=== Results ===" << std::endl;
                 if (result.satisfiable) {
                     status = "SAT";
+                    // Log a collision-iteration row for SAT case (no clauses added)
+                    collisions_per_iter.push_back(0);
+                    SATSolverManager::log_collision_iteration_probsat(
+                        "data/solver_log_collisions_probsat.csv",
+                        map_name_logged,
+                        num_agents_logged,
+                        solver_used,
+                        current_max_timesteps,
+                        iteration_count,
+                        cnf_constructor->get_probsat_num_variables(),
+                        cnf_constructor->get_probsat_num_clauses(),
+                        solver_time,
+                        result.num_flips,
+                        1,
+                        0,
+                        "SAT",
+                        seed,
+                        params_common
+                    );
                     std::cout << "SATISFIABLE!" << std::endl;
                     std::cout << "Solve time: " << result.solve_time << "s" << std::endl;
                     std::cout << "Number of flips: " << result.num_flips << std::endl;
@@ -388,7 +414,8 @@ int main() {
                             total_flips,
                             total_tries,
                             status,
-                            seed
+                            seed,
+                            params_common
                         );
                         
                         // Log the run summary before exiting
@@ -412,7 +439,8 @@ int main() {
                             tries_per_iter,
                             collisions_per_iter,
                             status,
-                            seed
+                            seed,
+                            params_common
                         );
                         
                         std::cout << "\n=== Final Statistics ===" << std::endl;
@@ -446,6 +474,27 @@ int main() {
                     
                     std::cout << "Updated CNF: " << cnf_constructor->get_probsat_num_variables() 
                               << " variables, " << cnf_constructor->get_probsat_num_clauses() << " clauses" << std::endl;
+
+                    // Log iteration with number of collision-prevention clauses added
+                    int total_added_clauses = edge_clauses_added + vertex_clauses_added;
+                    collisions_per_iter.push_back(total_added_clauses);
+                    SATSolverManager::log_collision_iteration_probsat(
+                        "data/solver_log_collisions_probsat.csv",
+                        map_name_logged,
+                        num_agents_logged,
+                        solver_used,
+                        current_max_timesteps,
+                        iteration_count,
+                        cnf_constructor->get_probsat_num_variables(),
+                        cnf_constructor->get_probsat_num_clauses(),
+                        solver_time,
+                        result.num_flips,
+                        1,
+                        total_added_clauses,
+                        "UNSAT",
+                        seed,
+                        params_common
+                    );
                     
                 } else {
                     std::cout << "UNSATISFIABLE or UNKNOWN" << std::endl;
@@ -486,7 +535,8 @@ int main() {
                 total_flips,
                 total_tries,
                 status,
-                seed
+                seed,
+                params_common
             );
             
             if (iteration_count >= max_inner_iterations) {
@@ -520,7 +570,8 @@ int main() {
             tries_per_iter,
             collisions_per_iter,
             status,
-            seed
+            seed,
+            params_common
         );
         
         std::cout << "\n" << std::string(60, '=') << std::endl;

@@ -1,2 +1,6 @@
 map_name,num_agents,solver,cnf_vars_start,cnf_clauses_start,cnf_vars_end,cnf_clauses_end,total_time_s,cnf_build_time_s,total_solver_time_s,solver_times_per_iter,flips_per_iter,tries_per_iter,collisions_per_iter,status,seed,params
-"mapf-map/empty-16-16.map",3,"probSAT",39,111,39,232,1.53e-07,0.000108565,0.00248997,"0.000301163;0.000394865;0.000357598;0.0011142;0.000322149","0;196;20;4256;2","1;1;1;1;1","","SAT",42,""
+"mapf-map/empty-16-16.map",6,"probSAT",39,111,39,117,6.8e-08,5.7548e-05,0.00026207,"0.00013992;5.6496e-05;6.5654e-05","0;34;24","1;1;1","0;3;0;3;0","SAT",42,"seed=42;run_id=-1;run_start_iso=;offset="
+"mapf-map/empty-16-16.map",6,"probSAT",39,111,39,117,1.23e-07,9.1503e-05,0.000337278,"0.000133353;0.000107156;9.6769e-05","0;34;24","1;1;1","0;3;0;3;0","SAT",42,"seed=42;run_id=-1;run_start_iso=;offset="
+"mapf-map/empty-16-16.map",6,"probSAT",6425,308021,6425,308022,7.2e-08,0.38408,0.023266,"0.0118901;0.0113759","0;690","1;1","0;1;0","SAT",42,"seed=42;run_id=-1;run_start_iso=;offset="
+"mapf-map/empty-16-16.map",3,"probSAT",622,7105,622,7106,1.02e-07,0.00328104,0.000822134,"0.0004629;0.000359234","0;2","1;1","0;1;0","SAT",42,"seed=42;run_id=0;run_start_iso=2025-08-28T12:55:30Z;offset=6"
+"mapf-map/empty-8-8.map",15,"probSAT",937,6540,937,6578,2.02e-07,0.00403936,0.00336992,"0.000737117;0.000481284;0.000455198;0.000433828;0.000416513;0.000448224;0.000397759","0;176;82;38;10;6;2","1;1;1;1;1;1;1","0;24;0;6;0;3;0;2;0;2;0;1;0","SAT",42,"seed=42;run_id=0;run_start_iso=2025-08-28T12:59:21Z;offset=0"

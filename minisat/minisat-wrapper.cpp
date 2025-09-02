@@ -5,6 +5,10 @@
 #include "minisat-master/minisat/core/Solver.h"
 #include "minisat-master/minisat/core/SolverTypes.h"
 #include "minisat-master/minisat/mtl/Vec.h"
+#include <unordered_set>
+#include <set>
+#include <algorithm>
+#include <sstream>
 
 using namespace Minisat;
 
@@ -38,21 +42,75 @@ MiniSatSolution MiniSatWrapper::solve_cnf(const std::vector<std::vector<int>>& c
     try {
         reset_solver();
         
-        // Add clauses to the solver
+        // Add clauses to the solver with diagnostics
         std::cout << "DEBUG: Adding " << clauses.size() << " clauses to MiniSAT" << std::endl;
+
+        auto normalize_clause = [](const std::vector<int>& raw,
+                                   bool& tautology,
+                                   size_t& simplified_lits) -> std::vector<int> {
+            tautology = false;
+            std::set<int> litset;
+            for (int lit : raw) {
+                if (lit == 0) continue;
+                if (litset.count(-lit)) { tautology = true; return {}; }
+                litset.insert(lit);
+            }
+            std::vector<int> norm(litset.begin(), litset.end());
+            simplified_lits += (raw.size() > norm.size() ? raw.size() - norm.size() : 0);
+            return norm;
+        };
+
+        std::unordered_set<std::string> seen;
+        size_t num_added = 0;
+        size_t num_tautologies = 0;
+        size_t num_duplicates = 0;
+        size_t num_units = 0;
+        size_t num_empties = 0;
+        size_t num_simplified_literals = 0;
+        size_t num_added_but_no_db_increase = 0; // clauses accepted but didn't increase nClauses()
+
         for (size_t i = 0; i < clauses.size(); ++i) {
             const auto& clause = clauses[i];
-            std::cout << "DEBUG: Adding clause " << i << ": ";
-            for (int lit : clause) std::cout << lit << " ";
-            std::cout << std::endl;
-            
-            if (!add_clause_to_solver(clause)) {
+
+            bool is_tauto = false;
+            auto norm = normalize_clause(clause, is_tauto, num_simplified_literals);
+            if (is_tauto) { num_tautologies++; continue; }
+
+            // Create a stable string key for duplicate detection
+            std::ostringstream oss;
+            for (size_t k = 0; k < norm.size(); ++k) {
+                if (k) oss << ',';
+                oss << norm[k];
+            }
+            std::string key = oss.str();
+            if (!seen.insert(key).second) { num_duplicates++; continue; }
+
+            if (norm.empty()) { num_empties++; }
+            if (norm.size() == 1) { num_units++; }
+
+            int before_clauses = solver->nClauses();
+            if (!add_clause_to_solver(norm)) {
                 result.error_message = "Failed to add clause to MiniSAT solver";
                 return result;
             }
+            int after_clauses = solver->nClauses();
+            if (norm.size() > 1 && after_clauses == before_clauses) {
+                // Clause was accepted but database size did not grow (likely satisfied/subsumed by propagation)
+                num_added_but_no_db_increase++;
+            }
+            num_added++;
         }
-        std::cout << "DEBUG: After adding clauses, solver has " << solver->nVars() << " variables" << std::endl;
-        
+        std::cout << "DEBUG: Clause load summary: input=" << clauses.size()
+                  << ", added=" << num_added
+                  << ", tautologies_skipped=" << num_tautologies
+                  << ", duplicates_skipped=" << num_duplicates
+                  << ", unit_clauses=" << num_units
+                  << ", empties=" << num_empties
+                  << ", intra_clause_literals_removed=" << num_simplified_literals
+                  << ", added_but_db_unchanged=" << num_added_but_no_db_increase
+                  << std::endl;
+        std::cout << "DEBUG: After adding clauses, solver has " << solver->nClauses() << " clauses and " << solver->nVars() << " variables" << std::endl;
+
         // Set initial assignment if provided
         if (initial_assignment != nullptr) {
             // MiniSAT uses 0-based indexing, so we need to convert
