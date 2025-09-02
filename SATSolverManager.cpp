@@ -111,6 +111,40 @@ std::vector<std::vector<char>> SATSolverManager::load_map(const std::string& map
     return map;
 }
 
+std::vector<std::vector<char>> SATSolverManager::crop_map_window(
+    const std::vector<std::vector<char>>& map,
+    const std::pair<int,int>& center,
+    int offset) {
+    std::vector<std::vector<char>> window;
+    if (map.empty() || map[0].empty() || offset < 0) return window;
+
+    const int rows = static_cast<int>(map.size());
+    const int cols = static_cast<int>(map[0].size());
+
+    // Clamp center to map bounds in case the provided center is out of range
+    const int c_r = std::max(0, std::min(center.first, rows - 1));
+    const int c_c = std::max(0, std::min(center.second, cols - 1));
+
+    // Compute clamped window bounds (inclusive)
+    const int r0 = std::max(0, c_r - offset);
+    const int c0 = std::max(0, c_c - offset);
+    const int r1 = std::min(rows - 1, c_r + offset);
+    const int c1 = std::min(cols - 1, c_c + offset);
+
+    // Reserve and copy
+    window.reserve(static_cast<size_t>(r1 - r0 + 1));
+    for (int r = r0; r <= r1; ++r) {
+        std::vector<char> row;
+        row.reserve(static_cast<size_t>(c1 - c0 + 1));
+        for (int c = c0; c <= c1; ++c) {
+            row.push_back(map[r][c]);
+        }
+        window.push_back(std::move(row));
+    }
+
+    return window;
+}
+
 // Reads a scenario file and returns a vector of ScenarioEntry structs, one per line (excluding header)
 std::vector<ScenarioEntry> SATSolverManager::create_dataframe_from_file(const std::string& file_path) {
     std::ifstream infile(file_path);

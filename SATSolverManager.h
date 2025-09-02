@@ -109,6 +109,23 @@ public:
     // Loads a map from a file, skipping the first 4 header lines, and returns a 2D grid of chars
     static std::vector<std::vector<char>> load_map(const std::string& map_path);
 
+    /**
+     * Returns a cropped window of the given map around a center position with the provided offset.
+     * The window is clamped to map boundaries, so if the window would extend past an edge, it is
+     * truncated accordingly.
+     *
+     * Coordinates are interpreted as (row, col), i.e., map[row][col].
+     *
+     * @param map The full map grid.
+     * @param center The center position (row, col) of the window.
+     * @param offset Number of cells to extend in each direction from the center.
+     * @return A new 2D grid representing the cropped window.
+     */
+    static std::vector<std::vector<char>> crop_map_window(
+        const std::vector<std::vector<char>>& map,
+        const std::pair<int,int>& center,
+        int offset);
+
     // Reads a scenario file and returns a vector of ScenarioEntry structs, one per line (excluding header)
     static std::vector<ScenarioEntry> create_dataframe_from_file(const std::string& file_path);
 
