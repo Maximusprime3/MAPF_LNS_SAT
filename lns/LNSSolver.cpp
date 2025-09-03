@@ -122,6 +122,20 @@ int run_crude_lns(const std::string& map_path,
                   << " agents at makespan " << current_max_timesteps << std::endl;
 
         // Sample one random path per agent to get a (likely faulty) full solution
+        // TO DO: sample with weighted random selection based on MDD density for overlapping nodes
+            // avoiding overcrowded areas
+            // each node has between one and five exit points with equal probability (so far)
+            // for every possible collision on a certain node make it less likely to be chosen 
+            // (maybe also reduce probablity of all prior nodes in this path?)
+        // TO DO: do not sample waiting actions in random path sampling
+            // every agent gets afap to the goal and if there is more time, they wait at the goal
+            // Every agent that arrives early has contingent of waiting time at the goal
+            // every agent with waiting time contingent can use waiting time during conflict resolution
+                // if a conflict is solved by waiting time 
+                    // we need to update the waiting time contingent
+                    // we need to update the path that goes out of the conflict zone (every position one timestep later)
+                    // during conflict resolution we can first try solving by waiting time
+                    // then by expanding the conflict zone, if it is expanded, waiting time should be reset at first and only used if necessary
         AgentPaths sampled_paths;
         for (size_t agent_id = 0; agent_id < mdds.size(); ++agent_id) {
             const auto& mdd = mdds[agent_id];
@@ -143,10 +157,13 @@ int run_crude_lns(const std::string& map_path,
 
 
         // - Define conflict zones/windows for each detected conflict
+        //zones should have minimum size (by the offset)
+        //dont ahve rectangle zones but only push boundaries as needed?? (expand along path of conflicting agents or all agents paths)
             // - For each zone, create masked map and local agent subsets
             // - Construct local MDDs and CNF for each conflict subproblem
             // - Solve each conflict subproblem with SAT/ProbSAT first if fails then CDCL; 
                 // - solve in parallel (whatabout kasskades) vs serial (safe and easy)
+                    //  - rank conflict zones based on how many conflicts and how many agents are involved
                 // - expand window on failure
                     // - either expand window rectancle or diamond(more alligned with timesteps)
                     // - or expand window along the path of conlficting agents (minimum)
@@ -157,21 +174,7 @@ int run_crude_lns(const std::string& map_path,
         // - Re-check for remaining conflicts and iterate until none (solved) or limit
         // Define conflict zones (buckets) using offset
 
-        //meeting notes
-        // - Define conflict zones/windows for each detected conflict
-        //zones should have minimum size (by the offset)
-        //dont ahve rectangle zones but only push boundaries as needed??
-            // - For each zone, create masked map and local agent subsets
-            // - rank conflict zones based on how many conflicts and how many agents are involved
-            // - Construct local MDDs and CNF for each conflict subproblem
-            // - Solve each conflict subproblem with SAT/ProbSAT; expand window on failure
-                // - keep track of all conflicts and their prevention clauses
-                // - use these prevention clauses to prevent collisions in the global solution paths
-                // - if unsolvable, increase window size
-        // - Integrate local solutions into the global solution paths
-        // - Re-check for remaining conflicts and iterate until none (solved) or limit
-        // Define conflict zones (buckets) using offset
-
+      
         const int offset = 3; // half the standard conflict zone size
         std::vector<std::pair<int,int>> conflict_points;
         conflict_points.reserve(vertex_collisions.size() + edge_collisions.size() * 2);
@@ -189,7 +192,8 @@ int run_crude_lns(const std::string& map_path,
         struct Bucket { int min_row, min_col, max_row, max_col; std::vector<int> indices; std::vector<std::vector<char>> masked_map; };
         std::vector<Bucket> buckets;
 
-        //rectangle buckets
+        // Rectangular buckets: offset creates square windows around each conflict
+        // Each conflict gets a (2*offset+1) x (2*offset+1) square window
         for (size_t i = 0; i < conflict_points.size(); ++i) {
             if (used[i]) continue;
             auto [center_row, center_col] = conflict_points[i];
@@ -228,26 +232,116 @@ int run_crude_lns(const std::string& map_path,
             buckets.push_back(std::move(b));
         }
 
-        //diamond buckets offset is not used to create rectangle windows, 
-        // but is used to create shaped diamond windows 
-        // aka all reachable positions from the center with in the number of timesteps specified by offset
+        // Diamond buckets: offset creates diamond-shaped windows around each conflict
+        // A position (r,c) is inside the diamond if it is reachable |r - center_row| + |c - center_col| <= offset
+        std::vector<Bucket> diamond_buckets;
+        std::vector<char> diamond_used(conflict_points.size(), 0);
+        
         for (size_t i = 0; i < conflict_points.size(); ++i) {
-            if (used[i]) continue;
+            if (diamond_used[i]) continue;
             auto [center_row, center_col] = conflict_points[i];
-            int min_row = std::max(0, center_row - offset);
-            int min_col = std::max(0, center_col - offset);
-            int max_row = std::min(rows - 1, center_row + offset);
-            int max_col = std::min(cols - 1, center_col + offset);
-            //the bucket is a diamond window with the center at the conflict point and a radius of the offset
-            //the bucket extends in all four directions from the center to the offset resulting in a cross shape
             
-
+            // Create diamond bucket with radius = offset
+            // Use Manhattan distance formula: |r - center_row| + |c - center_col| <= offset
+            // this grows each diamond shape individually
+            // maybe we can create diamond shapes in one go for each conflict point?
+                // as in write all conflicts on the map and then create diamond shapes on the map
+                // then look for overlaps and merge them
+                // solve biggest first, let its solution cascade or solve at all at the same time
+                // if one diamond consumes another we need to disregard the solution that the smaller found individually i think
+            std::set<std::pair<int, int>> diamond_positions;
+            
+            // Add all positions within the diamond
+            for (int r = std::max(0, center_row - offset); r <= std::min(rows - 1, center_row + offset); ++r) {
+                for (int c = std::max(0, center_col - offset); c <= std::min(cols - 1, center_col + offset); ++c) {
+                    // Check if position is inside diamond using Manhattan distance
+                    if (std::abs(r - center_row) + std::abs(c - center_col) <= offset) {
+                        diamond_positions.insert({r, c});
+                    }
+                }
+            }
+            
+            // Find bounds of the diamond
+            int min_row = rows, min_col = cols, max_row = -1, max_col = -1;
+            for (const auto& [r, c] : diamond_positions) {
+                min_row = std::min(min_row, r);
+                min_col = std::min(min_col, c);
+                max_row = std::max(max_row, r);
+                max_col = std::max(max_col, c);
+            }
+            
+            // Create bucket and find conflicts within diamond
+            Bucket diamond_b{min_row, min_col, max_row, max_col, {}, {}};
+            bool diamond_changed = true;
+            
+            while (diamond_changed) {
+                diamond_changed = false;
+                for (size_t j = 0; j < conflict_points.size(); ++j) {
+                    if (diamond_used[j]) continue;
+                    auto [conf_r, conf_c] = conflict_points[j];
+                    
+                    // Check if conflict is within diamond bounds first (optimization)
+                    if (conf_r >= diamond_b.min_row && conf_r <= diamond_b.max_row && 
+                        conf_c >= diamond_b.min_col && conf_c <= diamond_b.max_col) {
+                        
+                        // Check if conflict is actually inside the diamond using Manhattan distance
+                        if (std::abs(conf_r - center_row) + std::abs(conf_c - center_col) <= offset) {
+                            // Add conflict to diamond bucket
+                            diamond_b.indices.push_back((int)j);
+                            diamond_used[j] = 1;
+                            
+                            // Expand diamond around this new conflict
+                            auto [new_center_r, new_center_c] = conflict_points[j];
+                            
+                            // Add new diamond positions around the new conflict
+                            for (int r = std::max(0, new_center_r - offset); r <= std::min(rows - 1, new_center_r + offset); ++r) {
+                                for (int c = std::max(0, new_center_c - offset); c <= std::min(cols - 1, new_center_c + offset); ++c) {
+                                    if (std::abs(r - new_center_r) + std::abs(c - new_center_c) <= offset) {
+                                        diamond_positions.insert({r, c});
+                                    }
+                                }
+                            }
+                            
+                            // Recalculate bounds
+                            int old_min_row = diamond_b.min_row, old_min_col = diamond_b.min_col;
+                            int old_max_row = diamond_b.max_row, old_max_col = diamond_b.max_col;
+                            
+                            diamond_b.min_row = std::min(diamond_b.min_row, new_center_r - offset);
+                            diamond_b.min_col = std::min(diamond_b.min_col, new_center_c - offset);
+                            diamond_b.max_row = std::max(diamond_b.max_row, new_center_r + offset);
+                            diamond_b.max_col = std::max(diamond_b.max_col, new_center_c + offset);
+                            
+                            // Ensure bounds don't exceed map limits
+                            diamond_b.min_row = std::max(0, diamond_b.min_row);
+                            diamond_b.min_col = std::max(0, diamond_b.min_col);
+                            diamond_b.max_row = std::min(rows - 1, diamond_b.max_row);
+                            diamond_b.max_col = std::min(cols - 1, diamond_b.max_col);
+                            
+                            if (diamond_b.min_row != old_min_row || diamond_b.min_col != old_min_col || 
+                                diamond_b.max_row != old_max_row || diamond_b.max_col != old_max_col) {
+                                diamond_changed = true; // bounds expanded; recheck others
+                            }
+                        }
+                    }
+                }
+            }
+            
+            // Create masked map for this diamond bucket
+            diamond_b.masked_map = mask_map_outside_bounds(problem.grid, diamond_b.min_row, diamond_b.min_col, diamond_b.max_row, diamond_b.max_col);
+            diamond_buckets.push_back(std::move(diamond_b));
         }
 
-        std::cout << "[LNS] Formed " << buckets.size() << " conflict bucket(s)." << std::endl;
+        std::cout << "[LNS] Formed " << buckets.size() << " rectangular conflict bucket(s)." << std::endl;
         for (size_t bi = 0; bi < buckets.size(); ++bi) {
             const auto& b = buckets[bi];
-            std::cout << "  Bucket " << bi << ": window [" << b.min_row << "," << b.min_col << "]..[" << b.max_row << "," << b.max_col
+            std::cout << "  Rectangular Bucket " << bi << ": window [" << b.min_row << "," << b.min_col << "]..[" << b.max_row << "," << b.max_col
+                      << "], conflicts=" << b.indices.size() << std::endl;
+        }
+        
+        std::cout << "[LNS] Formed " << diamond_buckets.size() << " diamond-shaped conflict bucket(s)." << std::endl;
+        for (size_t bi = 0; bi < diamond_buckets.size(); ++bi) {
+            const auto& b = diamond_buckets[bi];
+            std::cout << "  Diamond Bucket " << bi << ": window [" << b.min_row << "," << b.min_col << "]..[" << b.max_row << "," << b.max_col
                       << "], conflicts=" << b.indices.size() << std::endl;
         }
 

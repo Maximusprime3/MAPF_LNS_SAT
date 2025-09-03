@@ -29,3 +29,4 @@ int main(int argc, char** argv) {
 
     return run_crude_lns(map_path, scenario_path, num_agents, scenario_index, use_minisat, seed);
 }
+
