@@ -145,9 +145,14 @@ int run_crude_lns(const std::string& map_path,
         // - Define conflict zones/windows for each detected conflict
             // - For each zone, create masked map and local agent subsets
             // - Construct local MDDs and CNF for each conflict subproblem
-            // - Solve each conflict subproblem with SAT/ProbSAT; expand window on failure
-                // - keep track of all conflicts and their prevention clauses
-                // - use these prevention clauses to prevent collisions in the global solution paths
+            // - Solve each conflict subproblem with SAT/ProbSAT first if fails then CDCL; 
+                // - solve in parallel (whatabout kasskades) vs serial (safe and easy)
+                // - expand window on failure
+                    // - either expand window rectancle or diamond(more alligned with timesteps)
+                    // - or expand window along the path of conlficting agents (minimum)
+                    // - if a window touches another window, and then one of them needs to be expanded, merge them
+                // - keep track of all conflicts and their prevention clauses 
+                    // - use these prevention clauses to prevent collisions in the global solution paths (in case no solution found)
         // - Integrate local solutions into the global solution paths
         // - Re-check for remaining conflicts and iterate until none (solved) or limit
         // Define conflict zones (buckets) using offset
@@ -168,6 +173,7 @@ int run_crude_lns(const std::string& map_path,
         struct Bucket { int min_row, min_col, max_row, max_col; std::vector<int> indices; std::vector<std::vector<char>> masked_map; };
         std::vector<Bucket> buckets;
 
+        //rectangle buckets
         for (size_t i = 0; i < conflict_points.size(); ++i) {
             if (used[i]) continue;
             auto [center_row, center_col] = conflict_points[i];
@@ -204,6 +210,22 @@ int run_crude_lns(const std::string& map_path,
             // Create masked map for this bucket window
             b.masked_map = mask_map_outside_bounds(problem.grid, b.min_row, b.min_col, b.max_row, b.max_col);
             buckets.push_back(std::move(b));
+        }
+
+        //diamond buckets offset is not used to create rectangle windows, 
+        // but is used to create shaped diamond windows 
+        // aka all reachable positions from the center with in the number of timesteps specified by offset
+        for (size_t i = 0; i < conflict_points.size(); ++i) {
+            if (used[i]) continue;
+            auto [center_row, center_col] = conflict_points[i];
+            int min_row = std::max(0, center_row - offset);
+            int min_col = std::max(0, center_col - offset);
+            int max_row = std::min(rows - 1, center_row + offset);
+            int max_col = std::min(cols - 1, center_col + offset);
+            //the bucket is a diamond window with the center at the conflict point and a radius of the offset
+            //the bucket extends in all four directions from the center to the offset resulting in a cross shape
+            
+
         }
 
         std::cout << "[LNS] Formed " << buckets.size() << " conflict bucket(s)." << std::endl;
