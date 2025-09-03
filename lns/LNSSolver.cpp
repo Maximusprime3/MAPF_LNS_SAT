@@ -156,6 +156,22 @@ int run_crude_lns(const std::string& map_path,
         // - Integrate local solutions into the global solution paths
         // - Re-check for remaining conflicts and iterate until none (solved) or limit
         // Define conflict zones (buckets) using offset
+
+        //meeting notes
+        // - Define conflict zones/windows for each detected conflict
+        //zones should have minimum size (by the offset)
+        //dont ahve rectangle zones but only push boundaries as needed??
+            // - For each zone, create masked map and local agent subsets
+            // - rank conflict zones based on how many conflicts and how many agents are involved
+            // - Construct local MDDs and CNF for each conflict subproblem
+            // - Solve each conflict subproblem with SAT/ProbSAT; expand window on failure
+                // - keep track of all conflicts and their prevention clauses
+                // - use these prevention clauses to prevent collisions in the global solution paths
+                // - if unsolvable, increase window size
+        // - Integrate local solutions into the global solution paths
+        // - Re-check for remaining conflicts and iterate until none (solved) or limit
+        // Define conflict zones (buckets) using offset
+
         const int offset = 3; // half the standard conflict zone size
         std::vector<std::pair<int,int>> conflict_points;
         conflict_points.reserve(vertex_collisions.size() + edge_collisions.size() * 2);
