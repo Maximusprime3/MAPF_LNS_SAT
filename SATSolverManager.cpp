@@ -111,6 +111,7 @@ std::vector<std::vector<char>> SATSolverManager::load_map(const std::string& map
     return map;
 }
 
+//just the window
 std::vector<std::vector<char>> SATSolverManager::crop_map_window(
     const std::vector<std::vector<char>>& map,
     const std::pair<int,int>& center,
@@ -144,7 +145,7 @@ std::vector<std::vector<char>> SATSolverManager::crop_map_window(
 
     return window;
 }
-
+//the whole map but everything but the window is unwalkable (constant coordinates for the window)
 std::vector<std::vector<char>> SATSolverManager::mask_map_outside_window(
     const std::vector<std::vector<char>>& map,
     const std::pair<int,int>& center,
