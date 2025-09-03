@@ -126,6 +126,24 @@ public:
         const std::pair<int,int>& center,
         int offset);
 
+    /**
+     * Returns a full-size copy of the map where all cells outside the clamped
+     * window centered at `center` with `offset` are set to unwalkable terrain.
+     * This preserves original coordinates while effectively masking the map
+     * to a window. Cells inside the window retain their original values.
+     *
+     * Coordinates are interpreted as (row, col), i.e., map[row][col].
+     *
+     * @param map The full map grid.
+     * @param center The center position (row, col) of the window.
+     * @param offset Number of cells to extend in each direction from the center.
+     * @return A new 2D grid of the same size as `map`, masked outside the window.
+     */
+    static std::vector<std::vector<char>> mask_map_outside_window(
+        const std::vector<std::vector<char>>& map,
+        const std::pair<int,int>& center,
+        int offset);
+
     // Reads a scenario file and returns a vector of ScenarioEntry structs, one per line (excluding header)
     static std::vector<ScenarioEntry> create_dataframe_from_file(const std::string& file_path);
 

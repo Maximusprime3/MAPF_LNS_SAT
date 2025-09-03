@@ -145,6 +145,38 @@ std::vector<std::vector<char>> SATSolverManager::crop_map_window(
     return window;
 }
 
+std::vector<std::vector<char>> SATSolverManager::mask_map_outside_window(
+    const std::vector<std::vector<char>>& map,
+    const std::pair<int,int>& center,
+    int offset) {
+    if (map.empty() || map[0].empty() || offset < 0) return {};
+
+    const int rows = static_cast<int>(map.size());
+    const int cols = static_cast<int>(map[0].size());
+
+    // Clamp center to map bounds
+    const int c_r = std::max(0, std::min(center.first, rows - 1));
+    const int c_c = std::max(0, std::min(center.second, cols - 1));
+
+    // Compute clamped window bounds (inclusive)
+    const int r0 = std::max(0, c_r - offset);
+    const int c0 = std::max(0, c_c - offset);
+    const int r1 = std::min(rows - 1, c_r + offset);
+    const int c1 = std::min(cols - 1, c_c + offset);
+
+    // Create full-size map filled with unwalkable '@' and then override window
+    std::vector<std::vector<char>> masked(rows, std::vector<char>(cols, '@'));
+
+    // Copy only the window region from the original map
+    for (int r = r0; r <= r1; ++r) {
+        for (int c = c0; c <= c1; ++c) {
+            masked[r][c] = map[r][c];
+        }
+    }
+
+    return masked;
+}
+
 // Reads a scenario file and returns a vector of ScenarioEntry structs, one per line (excluding header)
 std::vector<ScenarioEntry> SATSolverManager::create_dataframe_from_file(const std::string& file_path) {
     std::ifstream infile(file_path);
