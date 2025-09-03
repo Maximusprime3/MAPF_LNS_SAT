@@ -688,7 +688,8 @@ void parseParameters(int argc, char *argv[]) {
 }
 
 // Update the signal handler to have the correct signature for C/C++
-void handle_interrupt(int /*signum*/) {
+void handle_interrupt(int signum) {
+    (void)signum;
     printf("\nc caught signal... exiting\n ");
     tryTime = elapsed_seconds();
     solverTime = elapsed_seconds_solver_time();
