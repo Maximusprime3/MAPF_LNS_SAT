@@ -178,6 +178,7 @@ std::vector<std::vector<char>> SATSolverManager::mask_map_outside_window(
     return masked;
 }
 
+
 // Reads a scenario file and returns a vector of ScenarioEntry structs, one per line (excluding header)
 std::vector<ScenarioEntry> SATSolverManager::create_dataframe_from_file(const std::string& file_path) {
     std::ifstream infile(file_path);

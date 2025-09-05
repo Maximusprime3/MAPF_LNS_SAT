@@ -241,7 +241,7 @@ int main(int argc, char** argv) {
             
             // Inner loop: solve and add collision clauses until UNSAT or solution found
             int iteration_count = 0;
-            const int max_inner_iterations = 50; // Prevent infinite loops
+            const int max_inner_iterations = 50000; // Prevent infinite loops
             double timestep_solver_time = 0.0;
             int timestep_collisions = 0;
             
