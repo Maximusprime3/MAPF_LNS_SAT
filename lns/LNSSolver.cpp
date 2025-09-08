@@ -8,6 +8,9 @@
 #include <algorithm>
 #include <climits>
 
+//TO DO:
+// in the case of 100% coverage, the solver should get all known conflict clauses to add them to the cnf
+
 struct LNSProblem {
     std::vector<std::vector<char>> grid;
     std::vector<std::pair<int,int>> starts;

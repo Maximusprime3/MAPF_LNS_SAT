@@ -34,6 +34,8 @@ protected:
     std::unordered_map<int, std::shared_ptr<MDD>> mdds; // Map agent_id to MDD
     CNF cnf; // The CNF formula being constructed
     std::unordered_map<std::tuple<int, MDDNode::Position, int>, int> variable_map; // Maps (agent_id, position, timestep) to variable_id
+    // Reverse mapping from variable_id to (agent_id, position, timestep) for efficient decoding of assignments
+    std::unordered_map<int, std::tuple<int, MDDNode::Position, int>> reverse_variable_map;
     int next_variable_id; // Next available variable ID
     bool lazy_encoding; // Whether to use lazy encoding for conflicts
 
@@ -104,6 +106,7 @@ public:
     // Getters for accessing internal state
     const CNF& get_cnf() const { return cnf; }
     const std::unordered_map<std::tuple<int, MDDNode::Position, int>, int>& get_variable_map() const { return variable_map; }
+    const std::unordered_map<int, std::tuple<int, MDDNode::Position, int>>& get_reverse_variable_map() const { return reverse_variable_map; }
     int get_next_variable_id() const { return next_variable_id; }
 
 protected:

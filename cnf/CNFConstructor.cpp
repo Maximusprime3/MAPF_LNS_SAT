@@ -12,12 +12,19 @@ CNFConstructor::CNFConstructor(const std::unordered_map<int, std::shared_ptr<MDD
     for (const auto& clause : existing_cnf.get_clauses()) {
         cnf.add_clause(clause);
     }
+    // Populate reverse map from any provided existing_variable_map
+    for (const auto& kv : variable_map) {
+        const auto& key = kv.first;
+        int var_id = kv.second;
+        reverse_variable_map[var_id] = key;
+    }
 }
 
 int CNFConstructor::add_variable(int agent_id, const MDDNode::Position& position, int timestep) {
     auto key = std::make_tuple(agent_id, position, timestep);
     if (variable_map.find(key) == variable_map.end()) {
         variable_map[key] = next_variable_id;
+        reverse_variable_map[next_variable_id] = key;
         next_variable_id++;
     }
     return variable_map[key];
@@ -332,32 +339,21 @@ std::unordered_map<int, std::vector<MDDNode::Position>> CNFConstructor::cnf_assi
     
     // Removed verbose listing of all variables in the variable map to declutter output
     
-    // Group positive assignments by agent
+    // Group positive assignments by agent using O(1) reverse lookup
     std::unordered_map<int, std::vector<std::pair<int, MDDNode::Position>>> agent_positions;
-    
-    // The assignment contains truth values (1 for true, 0 for false) for each variable
-    // We need to iterate through the assignment by variable index
+    // The assignment vector is 0-based over variables 1..N
     for (size_t i = 0; i < assignment.size(); ++i) {
-        int var_id = i + 1; // Variable IDs are 1-based, assignment index is 0-based
-        int truth_value = assignment[i];
-        
-        if (truth_value > 0) { // Only positive assignments
-            // Removed verbose per-variable processing print
-            
-            // Find the (agent, position, timestep) for this variable
-            for (const auto& var_pair : variable_map) {
-                if (var_pair.second == var_id) {
-                    int agent_id = std::get<0>(var_pair.first);
-                    MDDNode::Position position = std::get<1>(var_pair.first);
-                    int timestep = std::get<2>(var_pair.first);
-                    
-                    // Removed verbose per-variable mapping print
-                    
-                    agent_positions[agent_id].push_back({timestep, position});
-                    break;
-                }
-            }
+        if (assignment[i] <= 0) continue;
+        int var_id = static_cast<int>(i) + 1;
+        auto it = reverse_variable_map.find(var_id);
+        if (it == reverse_variable_map.end()) {
+            throw std::runtime_error("[CNF Constructor] Assignment references unknown variable id: " + std::to_string(var_id));
         }
+        const auto& key = it->second;
+        int agent_id = std::get<0>(key);
+        const MDDNode::Position& position = std::get<1>(key);
+        int timestep = std::get<2>(key);
+        agent_positions[agent_id].push_back({timestep, position});
     }
     
     // Convert to paths for each agent
