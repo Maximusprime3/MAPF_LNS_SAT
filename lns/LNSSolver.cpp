@@ -820,18 +820,17 @@ lazy_solve_conflict_zone(CNF& local_cnf,
         std::cout << "[LNS] Lazy solving iteration " << iteration << "..." << std::endl;
         
         // Solve the current CNF with MiniSAT
-        SATSolverManager sat_manager;
-        auto [is_satisfiable, solution] = sat_manager.solve_with_minisat(local_cnf);
+        auto minisat_result = SATSolverManager::solve_cnf_with_minisat(local_cnf);
         
-        if (!is_satisfiable) {
+        if (!minisat_result.satisfiable) {
             std::cout << "[LNS] Local problem is unsatisfiable after " << iteration << " iterations" << std::endl;
             break;
         }
         
-        std::cout << "[LNS] Found solution with " << solution.size() << " variable assignments" << std::endl;
+        std::cout << "[LNS] Found solution with " << minisat_result.assignment.size() << " variable assignments" << std::endl;
         
         // Translate solution to paths using helper function
-        auto local_paths = cnf_constructor.cnf_assignment_to_paths(solution);
+        auto local_paths = cnf_constructor.cnf_assignment_to_paths(minisat_result.assignment);
         std::cout << "[LNS] Extracted paths for " << local_paths.size() << " agents" << std::endl;
         
         // Check paths for collisions using SATSolverManager approach
@@ -1024,13 +1023,13 @@ int run_crude_lns(const std::string& map_path,
     const int max_timestep_increase = 10; // crude limit for now
     std::mt19937 rng(static_cast<unsigned int>(seed));
     
-    // Global collision tracking across all buckets and makespan attempts
-    std::vector<std::tuple<int, int, std::pair<int,int>, int>> global_discovered_vertex_collisions;
-    std::vector<std::tuple<int, int, std::pair<int,int>, std::pair<int,int>, int>> global_discovered_edge_collisions;
-    
     for (int inc = 0; inc <= max_timestep_increase; ++inc) {
         int current_max_timesteps = base_makespan + inc;
         std::cout << "\n[LNS] === Attempt with max_timesteps=" << current_max_timesteps << " ===" << std::endl;
+
+        // Collision tracking scoped to a single makespan attempt
+        std::vector<std::tuple<int, int, std::pair<int,int>, int>> global_discovered_vertex_collisions;
+        std::vector<std::tuple<int, int, std::pair<int,int>, std::pair<int,int>, int>> global_discovered_edge_collisions;
 
         // Build MDDs with shortest paths + waiting time structure
         auto mdds = create_mdds_with_waiting_time(
@@ -1150,8 +1149,6 @@ bucket_build_start:
             conflict_meta.push_back(ConflictMeta{a1, a2, t, true, pos1, pos2});
         }
 
-        int rows = (int)problem.grid.size();
-        int cols = (int)problem.grid[0].size();
         struct DiamondBucket { 
             std::set<std::pair<int,int>> positions; 
             std::vector<int> indices; 
