@@ -7,6 +7,7 @@
 #include <set>
 #include <algorithm>
 #include <climits>
+#include <cmath>
 
 //TO DO:
 // in the case of 100% coverage, the solver should get all known conflict clauses to add them to the cnf
@@ -73,23 +74,36 @@ struct CurrentSolution {
     
     // Find agents that pass through any position in the conflict zone at any time
     //AHAHH only need agents that pass through the zone at conflict time +- offset
-    std::set<int> get_agents_in_zone(const std::set<std::pair<int,int>>& zone_positions) const {
-        std::set<int> agents_in_zone;
-        for (const auto& [r, c] : zone_positions) {
-            if (r < 0 || r >= rows || c < 0 || c >= cols) continue;
+   // Find agents that pass through any position in the conflict zone
+    // Optionally restrict the search to a specific timestep window
+    std::set<int> get_agents_in_zone(const std::set<std::pair<int,int>>& zone_positions,
+                                    std::optional<int> start_t = std::nullopt,
+                                    std::optional<int> end_t   = std::nullopt) const {
+            std::set<int> agents_in_zone;
+
+            // Determine the effective time window to scan
+            int begin = start_t.value_or(0);
+            int finish = end_t.value_or(max_timestep);
+            begin = std::max(0, begin);
+            finish = std::min(max_timestep, finish);
+
+            for (const auto& [r, c] : zone_positions) {
+                if (r < 0 || r >= rows || c < 0 || c >= cols) continue;
+                        for (const auto& [r, c] : zone_positions) {
+                if (r < 0 || r >= rows || c < 0 || c >= cols) continue;
             
-            auto row_it = path_map_3d.find(r);
-            if (row_it != path_map_3d.end()) {
-                auto col_it = row_it->second.find(c);
-                if (col_it != row_it->second.end()) {
-                    for (int t = 0; t <= max_timestep; ++t) {
-                        auto time_it = col_it->second.find(t);
-                        if (time_it != col_it->second.end()) {
-                            agents_in_zone.insert(time_it->second.begin(), time_it->second.end());
+                auto row_it = path_map_3d.find(r);
+                if (row_it != path_map_3d.end()) {
+                    auto col_it = row_it->second.find(c);
+                    if (col_it != row_it->second.end()) {
+                        for (int t = begin; t <= finish; ++t) {
+                            auto time_it = col_it->second.find(t);
+                            if (time_it != col_it->second.end()) {
+                                agents_in_zone.insert(time_it->second.begin(), time_it->second.end());
+                            }
                         }
                     }
                 }
-            }
         }
         return agents_in_zone;
     }
