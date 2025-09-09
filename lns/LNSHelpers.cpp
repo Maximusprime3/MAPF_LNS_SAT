@@ -1,4 +1,5 @@
 #include "LNSHelpers.h"
+#include "LNSGeometry.h"
 #include <iostream>
 #include <algorithm>
 #include <random>
@@ -35,8 +36,11 @@ void CollisionTracker::print_summary(const std::string& prefix) const {
 // CONFLICT BUCKET MANAGER IMPLEMENTATION
 // ============================================================================
 
-ConflictBucketManager::ConflictBucketManager(int rows, int cols, int offset) 
-    : rows_(rows), cols_(cols), offset_(offset) {}
+ConflictBucketManager::ConflictBucketManager(int rows, int cols,
+    const std::vector<std::vector<char>>& grid,
+    int offset)
+: grid_(grid), rows_(rows), cols_(cols), offset_(offset) {}
+
 
 std::vector<DiamondBucket> ConflictBucketManager::create_diamond_buckets(
     const std::vector<std::pair<int,int>>& conflict_points,

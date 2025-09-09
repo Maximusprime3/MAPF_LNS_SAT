@@ -1,4 +1,6 @@
 #include "../SATSolverManager.h"
+#include "LNSGeometry.h"
+#include "LNSProblemIO.h"
 #include <vector>
 #include <string>
 #include <iostream>
@@ -13,11 +15,7 @@
 //TO DO:
 // in the case of 100% coverage, the solver should get all known conflict clauses to add them to the cnf
 
-struct LNSProblem {
-    std::vector<std::vector<char>> grid;
-    std::vector<std::pair<int,int>> starts;
-    std::vector<std::pair<int,int>> goals;
-};
+
 
 ///INSPECT ALL OTHER GREEN
 struct CurrentSolution {
@@ -268,54 +266,6 @@ static std::vector<std::vector<char>> mask_map_outside_diamond(
     return masked;
 }
 
-// Helper: create a masked map keeping only positions in the given shape walkable
-// Takes a set of positions that define the shape to preserve
-static std::vector<std::vector<char>> mask_map_outside_shape(
-    const std::vector<std::vector<char>>& map,
-    const std::set<std::pair<int,int>>& shape_positions) {
-    if (map.empty() || map[0].empty()) return {};
-    int rows = (int)map.size();
-    int cols = (int)map[0].size();
-
-    // Create full-size map filled with unwalkable '@' and then override shape region
-    std::vector<std::vector<char>> masked(rows, std::vector<char>(cols, '@'));
-    
-    // Only preserve positions that are in the shape and within map bounds
-    for (const auto& pos : shape_positions) {
-        int r = pos.first;
-        int c = pos.second;
-        if (r >= 0 && r < rows && c >= 0 && c < cols) {
-            masked[r][c] = map[r][c];
-        }
-    }
-    
-    return masked;
-}
-
-// Helper: create a shape from conflict points by expanding around each point
-// This is useful for creating irregular shapes from multiple conflict locations
-static std::set<std::pair<int,int>> create_shape_from_conflicts(
-    const std::vector<std::pair<int,int>>& conflict_points,
-    int expansion_radius) {
-    std::set<std::pair<int,int>> shape_positions;
-    
-    for (const auto& conflict_point : conflict_points) {
-        int center_row = conflict_point.first;
-        int center_col = conflict_point.second;
-        
-        // Add all positions within expansion_radius of this conflict point
-        for (int r = center_row - expansion_radius; r <= center_row + expansion_radius; ++r) {
-            for (int c = center_col - expansion_radius; c <= center_col + expansion_radius; ++c) {
-                // Use Manhattan distance for diamond-like expansion
-                if (std::abs(r - center_row) + std::abs(c - center_col) <= expansion_radius) {
-                    shape_positions.insert({r, c});
-                }
-            }
-        }
-    }
-    
-    return shape_positions;
-}
 
 // Helper: create a spatial conflict map for efficient conflict queries
 // Returns a 2D array where conflict_map[r][c] = conflict_index if there's a conflict at (r,c), -1 otherwise
@@ -821,15 +771,31 @@ lazy_solve_conflict_zone(CNF& local_cnf,
         }
     }
     
+    //create empty assignment, which we can later fill with the previous solution
+    std::vector<int> initial_assignment;
+    first_iteration = true;
+    last_iteration_was_satisfiable = true;
     while (!local_solution_found && iteration < max_iterations) {
         iteration++;
         std::cout << "[LNS] Lazy solving iteration " << iteration << "..." << std::endl;
         
         // Solve the current CNF with MiniSAT
-        auto minisat_result = SATSolverManager::solve_cnf_with_minisat(local_cnf);
-        
+        //solve without assignment if first iteration or last iteration was unsatisfiable
+        if (first_iteration || !last_iteration_was_satisfiable) {
+            auto minisat_result = SATSolverManager::solve_cnf_with_minisat(local_cnf);
+            first_iteration = false;
+        } else {
+            auto minisat_result = SATSolverManager::solve_cnf_with_minisat(local_cnf, initial_assignment);
+        }
+
         if (!minisat_result.satisfiable) {
             std::cout << "[LNS] Local problem is unsatisfiable after " << iteration << " iterations" << std::endl;
+            //try solving without initial assignment once(set flag), only when this statement is reached twice in a row, we know there is no solution
+            if (last_iteration_was_satisfiable) {
+                last_iteration_was_satisfiable = false; //trying to solve without assumptions will show if there is a solution at all
+            } else {
+                break;
+            }
             break;
         }
         
@@ -857,7 +823,11 @@ lazy_solve_conflict_zone(CNF& local_cnf,
             std::cout << "[LNS] Found collision-free local solution!" << std::endl;
             
         } else {
-            // Add collision clauses and continue
+            // Add collision clauses, create new partial(leaving out all paths of colliding agents) assignment from the solution and continue
+            initial_assignment = cnf_constructor.partial_assignment_from_paths(local_paths);
+            //set flag to true, because we found a solution
+            last_iteration_was_satisfiable = true;
+
             std::cout << "[LNS] Adding collision clauses and solving again..." << std::endl;
             
             // Add vertex collision clauses

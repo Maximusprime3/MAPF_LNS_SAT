@@ -65,7 +65,7 @@ int run_crude_lns(...) {
 int run_refactored_lns(...) {
     // Initialize helper classes
     CollisionTracker global_collision_tracker;
-    ConflictBucketManager bucket_manager(rows, cols, 2);
+     ConflictBucketManager bucket_manager(rows, cols, grid, 2);
     MDDManager mdd_manager(problem.grid);
     // ... other managers
     

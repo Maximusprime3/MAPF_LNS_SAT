@@ -58,7 +58,9 @@ private:
 class ConflictBucketManager {
 public:
     // Constructor
-    ConflictBucketManager(int rows, int cols, int offset = 2);
+    ConflictBucketManager(int rows, int cols,
+        const std::vector<std::vector<char>>& grid,
+        int offset = 2);
     
     // Create conflict buckets from collision data
     std::vector<DiamondBucket> create_diamond_buckets(
@@ -81,6 +83,7 @@ public:
     void print_bucket_statistics(const std::vector<DiamondBucket>& buckets) const;
 
 private:
+    std::vector<std::vector<char>>& grid_;
     int rows_, cols_, offset_;
     
     // Helper: check if position is within diamond shape

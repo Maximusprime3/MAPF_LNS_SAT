@@ -1,4 +1,5 @@
 #include "../SATSolverManager.h"
+#include "LNSGeometry.h"
 #include <vector>
 #include <string>
 #include <iostream>
@@ -290,54 +291,6 @@ static std::vector<std::vector<char>> mask_map_outside_diamond(
     return masked;
 }
 
-// Helper: create a masked map keeping only positions in the given shape walkable
-// Takes a set of positions that define the shape to preserve
-static std::vector<std::vector<char>> mask_map_outside_shape(
-    const std::vector<std::vector<char>>& map,
-    const std::set<std::pair<int,int>>& shape_positions) {
-    if (map.empty() || map[0].empty()) return {};
-    int rows = (int)map.size();
-    int cols = (int)map[0].size();
-
-    // Create full-size map filled with unwalkable '@' and then override shape region
-    std::vector<std::vector<char>> masked(rows, std::vector<char>(cols, '@'));
-    
-    // Only preserve positions that are in the shape and within map bounds
-    for (const auto& pos : shape_positions) {
-        int r = pos.first;
-        int c = pos.second;
-        if (r >= 0 && r < rows && c >= 0 && c < cols) {
-            masked[r][c] = map[r][c];
-        }
-    }
-    
-    return masked;
-}
-
-// Helper: create a shape from conflict points by expanding around each point
-// This is useful for creating irregular shapes from multiple conflict locations
-static std::set<std::pair<int,int>> create_shape_from_conflicts(
-    const std::vector<std::pair<int,int>>& conflict_points,
-    int expansion_radius) {
-    std::set<std::pair<int,int>> shape_positions;
-    
-    for (const auto& conflict_point : conflict_points) {
-        int center_row = conflict_point.first;
-        int center_col = conflict_point.second;
-        
-        // Add all positions within expansion_radius of this conflict point
-        for (int r = center_row - expansion_radius; r <= center_row + expansion_radius; ++r) {
-            for (int c = center_col - expansion_radius; c <= center_col + expansion_radius; ++c) {
-                // Use Manhattan distance for diamond-like expansion
-                if (std::abs(r - center_row) + std::abs(c - center_col) <= expansion_radius) {
-                    shape_positions.insert({r, c});
-                }
-            }
-        }
-    }
-    
-    return shape_positions;
-}
 
 // Helper: create a spatial conflict map for efficient conflict queries
 // Returns a 2D array where conflict_map[r][c] = conflict_index if there's a conflict at (r,c), -1 otherwise
@@ -1315,7 +1268,28 @@ select_bucket:
         }
         if (remaining_bucket_indices.empty()) {
             std::cout << "[LNS] No remaining buckets after integration; proceeding to post-processing." << std::endl;
-            goto no_remaining_buckets;
+            // Global evaluation: check if current solution has any conflicts left
+            std::cout << "[LNS] NO remaining buckets, Global evaluation of current solution..." << std::endl;
+            
+            auto [glob_v_coll, glob_e_coll] = SATSolverManager::find_all_collisions(current_solution.agent_paths);
+            if (glob_v_coll.empty() && glob_e_coll.empty()) {
+                std::cout << "[LNS] No conflicts remain in the global solution. SOLVED at makespan "
+                            << current_max_timesteps << std::endl;
+                std::cout << "\n[LNS] Final agent paths:" << std::endl;
+                SATSolverManager::print_agent_paths(current_solution.agent_paths);
+                return 0;
+            }
+            std::cout << "[LNS] Global conflicts remain: vertex=" << glob_v_coll.size()
+                        << ", edge=" << glob_e_coll.size() << ". Rebuilding buckets..." << std::endl;
+
+            // Rebuild conflict_points and conflict_meta from current global conflicts
+            collect_conflicts(glob_v_coll, glob_e_coll, conflict_points, conflict_meta);
+
+            // Reset solved set since indices refer to freshly rebuilt arrays
+            solved_conflict_indices.clear();
+
+            // Rebuild buckets from scratch for the remaining conflicts
+            goto building_buckets;
         }
 
         // Find the most relevant diamond bucket among remaining
@@ -1956,32 +1930,7 @@ select_bucket:
             goto select_bucket;
         }
 
-        
 
-no_remaining_buckets:
-        // Global evaluation: check if current solution has any conflicts left
-        std::cout << "[LNS] NO remaining buckets, Global evaluation of current solution..." << std::endl;
-        {
-            auto [glob_v_coll, glob_e_coll] = SATSolverManager::find_all_collisions(current_solution.agent_paths);
-            if (glob_v_coll.empty() && glob_e_coll.empty()) {
-                std::cout << "[LNS] No conflicts remain in the global solution. SOLVED at makespan "
-                          << current_max_timesteps << std::endl;
-                std::cout << "\n[LNS] Final agent paths:" << std::endl;
-                SATSolverManager::print_agent_paths(current_solution.agent_paths);
-                return 0;
-            }
-            std::cout << "[LNS] Global conflicts remain: vertex=" << glob_v_coll.size()
-                      << ", edge=" << glob_e_coll.size() << ". Rebuilding buckets..." << std::endl;
-
-            // Rebuild conflict_points and conflict_meta from current global conflicts
-            collect_conflicts(glob_v_coll, glob_e_coll, conflict_points, conflict_meta);
-
-            // Reset solved set since indices refer to freshly rebuilt arrays
-            solved_conflict_indices.clear();
-
-            // Rebuild buckets from scratch for the remaining conflicts
-            goto building_buckets;
-        }
 
         // TODO: Use SATSolverManager to solve the local CNF
         // - Replace the conflicting paths with new solutions

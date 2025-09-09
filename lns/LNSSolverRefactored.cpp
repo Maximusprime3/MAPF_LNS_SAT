@@ -47,7 +47,7 @@ int run_refactored_lns(const std::string& map_path,
     int num_agents_int = (int)problem.starts.size();
     
     CollisionTracker global_collision_tracker;
-    ConflictBucketManager bucket_manager(rows, cols, 2); // offset = 2
+    ConflictBucketManager bucket_manager(rows, cols, problem.grid, 2); // offset = 2
     MDDManager mdd_manager(problem.grid);
     ZoneExpansionManager expansion_manager(rows, cols);
     PathManager path_manager;

@@ -20,7 +20,7 @@ This document describes the refactoring of the original `LNSSolver.cpp` into a m
 ### 3. **Poor Separation of Concerns**
 - Conflict detection, bucket creation, and solving all mixed together
 - No clear boundaries between different responsibilities
-- Hard to modify one aspect without affecting others
+- Hard to modify one aspect without affecting others        
 
 ## Refactoring Solution
 
@@ -141,7 +141,7 @@ int run_refactored_lns(...) {
     
     // 1. Initialize helper classes
     CollisionTracker global_collision_tracker;
-    ConflictBucketManager bucket_manager(rows, cols, 2);
+    ConflictBucketManager bucket_manager(rows, cols, problem.grid, 2); // offset = 2
     MDDManager mdd_manager(problem.grid);
     // ... other managers
     
@@ -206,7 +206,7 @@ tracker.print_summary("[LNS] ");
 
 ### Using ConflictBucketManager
 ```cpp
-ConflictBucketManager bucket_manager(rows, cols, 2);
+ConflictBucketManager bucket_manager(rows, cols, grid, 2);
 auto buckets = bucket_manager.create_diamond_buckets(
     conflict_points, conflict_meta, solved_conflict_indices);
 bucket_manager.print_bucket_statistics(buckets);

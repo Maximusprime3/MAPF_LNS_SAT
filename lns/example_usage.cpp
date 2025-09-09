@@ -28,8 +28,8 @@ int main() {
     // Example 2: Using ConflictBucketManager
     std::cout << "\n2. ConflictBucketManager Example:" << std::endl;
     int rows = 20, cols = 20, offset = 2;
-    ConflictBucketManager bucket_manager(rows, cols, offset);
-    
+    std::vector<std::vector<char>> grid(rows, std::vector<char>(cols, '.'));
+    ConflictBucketManager bucket_manager(rows, cols, grid, offset);
     // Create some example conflict points
     std::vector<std::pair<int,int>> conflict_points = {
         {5, 5}, {7, 8}, {3, 4}, {4, 4}
