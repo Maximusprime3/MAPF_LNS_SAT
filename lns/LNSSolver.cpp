@@ -8,6 +8,7 @@
 #include <algorithm>
 #include <climits>
 #include <cmath>
+#include <unordered_map>
 
 //TO DO:
 // in the case of 100% coverage, the solver should get all known conflict clauses to add them to the cnf
@@ -21,9 +22,9 @@ struct LNSProblem {
 ///INSPECT ALL OTHER GREEN
 struct CurrentSolution {
     std::unordered_map<int, std::vector<std::pair<int,int>>> agent_paths;  // agent_id -> path
-    // Optimized 3D path map: [row][col][timestep] -> list of agent_ids present at that cell and time
-    // Using unordered_map for sparse representation to save memory
-    std::unordered_map<int, std::unordered_map<int, std::unordered_map<int, std::vector<int>>>> path_map_3d;
+    // Map flattened (row, col, timestep) -> list of agents occupying that cell at that time
+    // Key is encoded as ((row * cols) + col) * (max_timestep + 1) + t
+    std::unordered_map<long long, std::vector<int>> path_map;
     int max_timestep;
     int rows, cols;  // Store dimensions for bounds checking
     // Waiting time tracking: agent_id -> number of timesteps spent waiting at goal
@@ -36,19 +37,25 @@ struct CurrentSolution {
         agent_paths.reserve(num_agents);
         agent_waiting_time.reserve(num_agents);
     }
+
+    // Helper to encode 3D coordinates into a single key for path_map
+    long long encode_key(int r, int c, int t) const {
+        return (static_cast<long long>(r) * cols + c) * (max_timestep + 1LL) + t;
+    }
     
     // Create path map by "drawing" all agent paths including timesteps
     void create_path_map() {
         // Clear existing path map
-        path_map_3d.clear();
+        path_map.clear();
         
         for (const auto& [agent_id, path] : agent_paths) {
             for (size_t t = 0; t < path.size(); ++t) {
                 auto [r, c] = path[t];
                 if (r >= 0 && r < rows && c >= 0 && c < cols) {
-                    int tt = (int)t;
+                    int tt = static_cast<int>(t);
                     if (tt <= max_timestep) {
-                        path_map_3d[r][c][tt].push_back(static_cast<int>(agent_id));
+                        long long key = encode_key(r, c, tt);
+                        path_map[key].push_back(static_cast<int>(agent_id));
                     }
                 }
             }
@@ -58,15 +65,10 @@ struct CurrentSolution {
     // Find agents that pass through a specific position at a specific time
     std::vector<int> get_agents_at_position_time(int r, int c, int t) const {
         if (r >= 0 && r < rows && c >= 0 && c < cols && t >= 0 && t <= max_timestep) {
-            auto row_it = path_map_3d.find(r);
-            if (row_it != path_map_3d.end()) {
-                auto col_it = row_it->second.find(c);
-                if (col_it != row_it->second.end()) {
-                    auto time_it = col_it->second.find(t);
-                    if (time_it != col_it->second.end()) {
-                        return time_it->second;
-                    }
-                }
+            long long key = encode_key(r, c, t);
+            auto it = path_map.find(key);
+            if (it != path_map.end()) {
+                return it->second;
             }
         }
         return {};
@@ -89,22 +91,14 @@ struct CurrentSolution {
 
             for (const auto& [r, c] : zone_positions) {
                 if (r < 0 || r >= rows || c < 0 || c >= cols) continue;
-                        for (const auto& [r, c] : zone_positions) {
-                if (r < 0 || r >= rows || c < 0 || c >= cols) continue;
-            
-                auto row_it = path_map_3d.find(r);
-                if (row_it != path_map_3d.end()) {
-                    auto col_it = row_it->second.find(c);
-                    if (col_it != row_it->second.end()) {
-                        for (int t = begin; t <= finish; ++t) {
-                            auto time_it = col_it->second.find(t);
-                            if (time_it != col_it->second.end()) {
-                                agents_in_zone.insert(time_it->second.begin(), time_it->second.end());
-                            }
-                        }
+                for (int t = begin; t <= finish; ++t) {
+                    long long key = encode_key(r, c, t);
+                    auto it = path_map.find(key);
+                    if (it != path_map.end()) {
+                        agents_in_zone.insert(it->second.begin(), it->second.end());        
                     }
                 }
-        }
+            }
         return agents_in_zone;
     }
     
@@ -390,19 +384,16 @@ static std::vector<std::tuple<int, int, std::pair<int,int>, int>> check_vertex_c
                 int path_index = global_timestep - entry_t;
                 if (path_index < (int)path.size()) {
                     auto position = path[path_index];
-                    position_agents[position].push_back(agent_id);
-                }
-            }
-        }
-        
-        // Check for collisions (more than one agent at same position)
-        for (const auto& [position, agents] : position_agents) {
-            if (agents.size() > 1) {
-                // Add collision for each pair of agents
-                for (size_t i = 0; i < agents.size(); ++i) {
-                    for (size_t j = i + 1; j < agents.size(); ++j) {
-                        collisions.emplace_back(agents[i], agents[j], position, timestep);
+                    //find if any other agent is at the same position
+                    auto it = position_agents.find(position);
+                    if (it != position_agents.end()) {
+                        //add collision for each other agent at the same position
+                        for (int other_agent : it->second) {
+                            collisions.emplace_back(other_agent, agent_id, position, timestep);
+                        }
                     }
+                    //store agent position so if any other agent gets there at the same time we can find the vertex collision
+                    position_agents[position].push_back(agent_id);
                 }
             }
         }
@@ -426,9 +417,8 @@ static std::vector<std::tuple<int, int, std::pair<int,int>, std::pair<int,int>, 
     
     // For each timestep (except the last), detect true swaps (opposite edges)
     for (int timestep = 0; timestep < max_timesteps - 1; ++timestep) {
-        // Collect all actual moves (from != to) at this timestep
-        std::vector<std::tuple<int, std::pair<int,int>, std::pair<int,int>>> moves; // agent, from, to
-        moves.reserve(local_paths.size());
+        EdgeAgentMap edge_map;
+        edge_map.reserve(local_paths.size());
         
         for (const auto& [agent_id, path] : local_paths) {
             auto entry_exit = local_entry_exit_time.at(agent_id);
@@ -447,25 +437,26 @@ static std::vector<std::tuple<int, int, std::pair<int,int>, std::pair<int,int>, 
                 int path_index = global_timestep - entry_t;
                 int next_path_index = global_next_timestep - entry_t;
                 
-                if (path_index < (int)path.size() && next_path_index < (int)path.size()) {
+                if (path_index < static_cast<int>(path.size()) && next_path_index < static_cast<int>(path.size())) {
+                    // find reverse edge and check if it exists in the edge_map
                     auto from = path[path_index];
                     auto to = path[next_path_index];
                     if (from != to) {
-                        moves.emplace_back(agent_id, from, to);
+                        auto edge = std::make_pair(from, to);
+                        auto rev_edge = std::make_pair(to, from);
+
+                        auto it = edge_map.find(rev_edge);
+                        if (it != edge_map.end()) {
+                            for (int other_agent : it->second) {
+                                //we will find all edge collisions when we check the second agent that is part of the edge collision
+                                edge_collisions.emplace_back(other_agent, agent_id,
+                                                            rev_edge.first, rev_edge.second,
+                                                            timestep);
+                            }
+                        }
+                        //store movement of agent so if any other agent moves like that in reverse we can find the edge collision
+                        edge_map[edge].push_back(agent_id);
                     }
-                }
-            }
-        }
-        
-        // Check pairs for exact reverse movement over the same edge
-        for (size_t i = 0; i < moves.size(); ++i) {
-            int a1; std::pair<int,int> a1_from, a1_to;
-            std::tie(a1, a1_from, a1_to) = moves[i];
-            for (size_t j = i + 1; j < moves.size(); ++j) {
-                int a2; std::pair<int,int> a2_from, a2_to;
-                std::tie(a2, a2_from, a2_to) = moves[j];
-                if (a1_from == a2_to && a1_to == a2_from) {
-                    edge_collisions.emplace_back(a1, a2, a1_from, a1_to, timestep);
                 }
             }
         }

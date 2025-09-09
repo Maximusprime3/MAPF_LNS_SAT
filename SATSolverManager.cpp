@@ -807,19 +807,16 @@ SATSolverManager::find_vertex_collisions(const AgentPaths& agent_paths) {
         for (const auto& [agent_id, path] : agent_paths) {
             if (timestep < (int)path.size()) {
                 auto position = path[timestep];
-                position_agents[position].push_back(agent_id);
-            }
-        }
-        
-        // Check for collisions (more than one agent at same position)
-        for (const auto& [position, agents] : position_agents) {
-            if (agents.size() > 1) {
-                // Add collision for each pair of agents
-                for (size_t i = 0; i < agents.size(); ++i) {
-                    for (size_t j = i + 1; j < agents.size(); ++j) {
-                        collisions.emplace_back(agents[i], agents[j], position, timestep);
+                //find if any other agent is at the same position
+                auto it = position_agents.find(position);
+                if (it != position_agents.end()) {
+                    //add collision for each other agent at the same position
+                    for (int other_agent : it->second) {
+                        collisions.emplace_back(other_agent, agent_id, position, timestep);
                     }
                 }
+                //store agent position so if any other agent gets there at the same time we can find the vertex collision
+                position_agents[position].push_back(agent_id);
             }
         }
     }
@@ -845,30 +842,32 @@ SATSolverManager::find_edge_collisions(const AgentPaths& agent_paths) {
     // For each timestep (except the last), detect true swaps (opposite edges)
     for (int timestep = 0; timestep < max_timesteps - 1; ++timestep) {
         // Collect all actual moves (from != to) at this timestep
-        std::vector<std::tuple<int, std::pair<int,int>, std::pair<int,int>>> moves; // agent, from, to
-        moves.reserve(agent_paths.size());
+        EdgeAgentMap edge_map;
+        edge_map.reserve(agent_paths.size());
+
         for (const auto& [agent_id, path] : agent_paths) {
             if (timestep + 1 < (int)path.size()) {
                 auto from = path[timestep];
                 auto to = path[timestep + 1];
                 if (from != to) {
-                    moves.emplace_back(agent_id, from, to);
+                    auto edge = std::make_pair(from, to);
+                    auto rev_edge = std::make_pair(to, from);
+
+                    auto it = edge_map.find(rev_edge);
+                    if (it != edge_map.end()) {
+                        for (int other_agent : it->second) {
+                            //we will find all edge collisions when we check the second agent that is part of the edge collision
+                            edge_collisions.emplace_back(other_agent, agent_id,
+                                                        rev_edge.first, rev_edge.second,
+                                                        timestep);
+                        }
+                    }
+                    //store movement of agent so if any other agent moves like that in reverse we can find the edge collision
+                    edge_map[edge].push_back(agent_id);
                 }
             }
         }
 
-        // Check pairs for exact reverse movement over the same edge
-        for (size_t i = 0; i < moves.size(); ++i) {
-            int a1; std::pair<int,int> a1_from, a1_to;
-            std::tie(a1, a1_from, a1_to) = moves[i];
-            for (size_t j = i + 1; j < moves.size(); ++j) {
-                int a2; std::pair<int,int> a2_from, a2_to;
-                std::tie(a2, a2_from, a2_to) = moves[j];
-                if (a1_from == a2_to && a1_to == a2_from) {
-                    edge_collisions.emplace_back(a1, a2, a1_from, a1_to, timestep);
-                }
-            }
-        }
     }
 
     return edge_collisions;
