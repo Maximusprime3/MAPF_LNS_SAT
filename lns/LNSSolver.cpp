@@ -591,7 +591,7 @@ lazy_solve_with_waiting_time(CurrentSolution& current_solution,
             break;
         }
         
-        // Find agent with most waiting time
+        // get agent with most waiting time
         std::tie(agent_with_most_waiting, max_waiting_time) = current_agents_with_waiting[0];
         std::cout << "[LNS] Agent " << agent_with_most_waiting 
                   << " has the most waiting time: " << max_waiting_time << " timesteps" << std::endl;
@@ -766,6 +766,7 @@ lazy_solve_with_waiting_time(CurrentSolution& current_solution,
         std::cout << "[LNS] Waiting time strategies exhausted, restoring backup..." << std::endl;
         // Restore waiting times if no solution found
         current_solution.restore_waiting_times(waiting_time_backup);
+        //dont need to restore entry exit time because next we will expand the zone and they will change anyways
     }
     
     return {false, {}, all_discovered_vertex_collisions, all_discovered_edge_collisions};
@@ -778,7 +779,7 @@ lazy_solve_conflict_zone(CNF& local_cnf,
                         CNFConstructor& cnf_constructor,
                         const std::unordered_map<int, std::pair<int,int>>& local_entry_exit_time,
                         int start_t, int end_t,
-                        int max_iterations = 10000,
+                        int max_iterations = 100000,
                         // Optional: pre-discovered collisions to avoid rediscovering
                         const std::vector<std::tuple<int, int, std::pair<int,int>, int>>* known_vertex_collisions = nullptr,
                         const std::vector<std::tuple<int, int, std::pair<int,int>, std::pair<int,int>, int>>* known_edge_collisions = nullptr) {
@@ -1080,6 +1081,8 @@ int run_crude_lns(const std::string& map_path,
         std::cout << "[LNS] Created current solution with " << current_solution.agent_paths.size() 
                   << " agent paths and path map of size " << rows << "x" << cols << std::endl;
 
+
+building_buckets:
         // Step 2: Conflict analysis
         std::cout << "[LNS] Step 2: Analyzing conflicts..." << std::endl;
         auto [vertex_collisions, edge_collisions] = SATSolverManager::find_all_collisions(current_solution.agent_paths);
@@ -1129,8 +1132,13 @@ int run_crude_lns(const std::string& map_path,
         std::vector<ConflictMeta> conflict_meta;
         conflict_points.reserve(vertex_collisions.size() + edge_collisions.size() * 2);
         conflict_meta.reserve(vertex_collisions.size() + edge_collisions.size() * 2);
+
+        // Track conflicts solved/consumed across bucket resolutions in this makespan attempt
+        // This can be used to rebuild or skip buckets in a future iteration step
+        std::set<int> solved_conflict_indices;
         
-bucket_build_start:
+
+    
         // Vertex collisions: (agent1, agent2, position, timestep)
         for (const auto& v : vertex_collisions) {
             int a1 = std::get<0>(v);
@@ -1141,6 +1149,7 @@ bucket_build_start:
             conflict_meta.push_back(ConflictMeta{a1, a2, t, false, pos, {-1,-1}});
         }
         // Edge collisions: (agent1, agent2, pos1, pos2, timestep)
+        // edge collisions are represented by two conflict points
         for (const auto& e : edge_collisions) {
             int a1 = std::get<0>(e);
             int a2 = std::get<1>(e);
@@ -1151,7 +1160,7 @@ bucket_build_start:
             conflict_points.push_back(pos1);
             conflict_meta.push_back(ConflictMeta{a1, a2, t, true, pos1, pos2});
             conflict_points.push_back(pos2);
-            conflict_meta.push_back(ConflictMeta{a1, a2, t, true, pos1, pos2});
+            conflict_meta.push_back(ConflictMeta{a1, a2, t, true, pos1, pos2});// same meta for both endpoints
         }
 
         struct DiamondBucket { 
@@ -1160,9 +1169,7 @@ bucket_build_start:
             std::vector<std::vector<char>> masked_map; 
         };
 
-        // Track conflicts solved/consumed across bucket resolutions in this makespan attempt
-        // This can be used to rebuild or skip buckets in a future iteration step
-        std::set<int> solved_conflict_indices;
+        
 
 
         // Step 3: Build conflict buckets
@@ -1170,15 +1177,19 @@ bucket_build_start:
         
         // Create spatial conflict map for efficient queries
         auto conflict_map = create_conflict_map(conflict_points, rows, cols);
-        
+
+building_buckets:        
         // Diamond buckets: create diamond-shaped windows around conflicts using helper function
         // Design principle: Each conflict belongs to exactly one bucket (closed neighborhoods)
         // This ensures non-overlapping conflict resolution regions
         std::vector<DiamondBucket> diamond_buckets;
         std::vector<char> diamond_used(conflict_points.size(), 0);
-        
+    
         for (size_t i = 0; i < conflict_points.size(); ++i) {
+            //if the conflict is already used in another bucket, we can skip it
             if (diamond_used[i]) continue;
+            //if the conflict is already solved, we can skip it
+            if (diamond_used[i] || solved_conflict_indices.find(i) != solved_conflict_indices.end()) continue;
             
             // Collect all conflicts that will be part of this diamond bucket
             std::vector<std::pair<int,int>> bucket_conflicts;
@@ -1209,11 +1220,11 @@ bucket_build_start:
                             // ERROR: Found a conflict that was already used in another bucket
                             // This indicates a logic error - conflicts should belong to exactly one bucket
                             std::cerr << "[ERROR] Found already used conflict " << conflict_idx 
-                                      << " at position (" << r << "," << c 
-                                      << ") in new positions of diamond bucket. "
-                                      << "This indicates a logic error in the bucket creation algorithm." << std::endl;
+                                    << " at position (" << r << "," << c 
+                                    << ") in new positions of diamond bucket. "
+                                    << "This indicates a logic error in the bucket creation algorithm." << std::endl;
                             std::cerr << "[ERROR] Conflict was already used but found in expanded shape. "
-                                      << "This should not happen with proper closed neighborhood design." << std::endl;
+                                    << "This should not happen with proper closed neighborhood design." << std::endl;
                             return 1; // Exit with error code
                         } else {
                             // Found a new unused conflict in the expanded shape
@@ -1255,8 +1266,8 @@ bucket_build_start:
             for (int conflict_idx : bucket.indices) {
                 if (all_conflicts_used[conflict_idx]) {
                     std::cerr << "[ERROR] Conflict " << conflict_idx 
-                              << " was assigned to multiple diamond buckets. "
-                              << "This violates the closed neighborhood design." << std::endl;
+                            << " was assigned to multiple diamond buckets. "
+                            << "This violates the closed neighborhood design." << std::endl;
                     return 1;
                 }
                 all_conflicts_used[conflict_idx] = 1;
@@ -1273,17 +1284,18 @@ bucket_build_start:
         
         if (unused_conflicts > 0) {
             std::cerr << "[WARNING] " << unused_conflicts 
-                      << " conflicts were not assigned to any diamond bucket." << std::endl;
+                    << " conflicts were not assigned to any diamond bucket." << std::endl;
         }
         
         std::cout << "[LNS] Formed " << diamond_buckets.size() << " diamond-shaped conflict bucket(s)." << std::endl;
         for (size_t bi = 0; bi < diamond_buckets.size(); ++bi) {
             const auto& b = diamond_buckets[bi];
             std::cout << "  Diamond Bucket " << bi << ": positions=" << b.positions.size() 
-                      << ", conflicts=" << b.indices.size() << std::endl;
+                    << ", conflicts=" << b.indices.size() << std::endl;
         }
+    
+select_bucket:
         
-reselect_bucket:
         // Step 4: Decide which bucket to tackle
         std::cout << "[LNS] Step 4: Selecting most relevant bucket..." << std::endl;
         
@@ -1303,7 +1315,7 @@ reselect_bucket:
         }
         if (remaining_bucket_indices.empty()) {
             std::cout << "[LNS] No remaining buckets after integration; proceeding to post-processing." << std::endl;
-            goto after_bucket_round;
+            goto no_remaining_buckets;
         }
 
         // Find the most relevant diamond bucket among remaining
@@ -1339,9 +1351,9 @@ reselect_bucket:
         
         const auto& best_bucket = diamond_buckets[best_bucket_idx];
         std::cout << "[LNS] Selected most relevant diamond bucket " << best_bucket_idx 
-                  << " with " << best_conflict_count << " conflicts and " 
-                  << best_shape_size << " positions." << std::endl;
-        
+                << " with " << best_conflict_count << " conflicts and " 
+                << best_shape_size << " positions." << std::endl;
+
         //now we can solve that bucket with 
         // Step 5: Create map crop for the selected bucket
         std::cout << "[LNS] Step 5: Creating map crop for selected bucket..." << std::endl;
@@ -1398,7 +1410,7 @@ reselect_bucket:
                 local_zone_paths[agent_id] = std::move(segment);
                 local_entry_exit_time[agent_id] = {entry_t, exit_t};
                 std::cout << "  Agent " << agent_id << " local segment t=[" << entry_t << "," << exit_t
-                          << "] len=" << (exit_t - entry_t + 1) << std::endl;
+                        << "] len=" << (exit_t - entry_t + 1) << std::endl;
             }
         }
 
@@ -1433,9 +1445,9 @@ reselect_bucket:
             int relative_entry = entry_t - start_t;
             int relative_exit = exit_t - start_t;
             std::cout << "  Agent " << agent_id << " MDD: start=(" << zone_start_pos.first << "," << zone_start_pos.second 
-                      << ") goal=(" << zone_goal_pos.first << "," << zone_goal_pos.second 
-                      << ") path_length=" << agent_path_length 
-                      << " active levels=[" << relative_entry << "," << relative_exit << "] of " << zone_mdd_length << std::endl;
+                    << ") goal=(" << zone_goal_pos.first << "," << zone_goal_pos.second 
+                    << ") path_length=" << agent_path_length 
+                    << " active levels=[" << relative_entry << "," << relative_exit << "] of " << zone_mdd_length << std::endl;
         }
         
         std::cout << "[LNS] Created " << local_mdds.size() << " local MDDs" << std::endl;
@@ -1448,11 +1460,11 @@ reselect_bucket:
         CNF local_cnf = cnf_constructor.construct_cnf();
         
         std::cout << "[LNS] Created lazy CNF with " << local_cnf.get_clauses().size() 
-                  << " clauses and " << cnf_constructor.get_variable_count() << " variables" << std::endl;
+                << " clauses and " << cnf_constructor.get_variable_count() << " variables" << std::endl;
         
         // Step 9b: Extract vertex collision clauses for lazy solving
         std::cout << "[LNS] Step 9b: Extracting vertex collision clauses..." << std::endl;
-        int vertex_collisions = 0;
+        int number_of_vertex_collisions = 0;
         std::vector<std::tuple<int, int, std::pair<int,int>, int>> initial_vertex_collisions;
         for (int idx : best_bucket.indices) {
             if (idx < 0 || idx >= (int)conflict_meta.size()) continue;
@@ -1461,14 +1473,14 @@ reselect_bucket:
             if (!meta.is_edge) {
                 // Track this collision for lazy solving
                 initial_vertex_collisions.emplace_back(meta.agent1, meta.agent2, meta.pos1, meta.timestep);
-                vertex_collisions++;
+                number_of_vertex_collisions++;
             }
         }
-        std::cout << "[LNS] Extracted " << vertex_collisions << " vertex collision clauses" << std::endl;
+        std::cout << "[LNS] Extracted " << number_of_vertex_collisions << " vertex collision clauses" << std::endl;
         
         // Step 9c: Extract edge collision clauses for lazy solving
         std::cout << "[LNS] Step 9c: Extracting edge collision clauses..." << std::endl;
-        int edge_collisions = 0;
+        int number_of_edge_collisions = 0;
         std::vector<std::tuple<int, int, std::pair<int,int>, std::pair<int,int>, int>> initial_edge_collisions;
         for (int idx : best_bucket.indices) {
             if (idx < 0 || idx >= (int)conflict_meta.size()) continue;
@@ -1477,39 +1489,39 @@ reselect_bucket:
             if (meta.is_edge) {
                 // Track this collision for lazy solving
                 initial_edge_collisions.emplace_back(meta.agent1, meta.agent2, meta.pos1, meta.pos2, meta.timestep);
-                edge_collisions++;
+                number_of_edge_collisions++;
             }
         }
-        std::cout << "[LNS] Extracted " << edge_collisions << " edge collision clauses" << std::endl;
+        std::cout << "[LNS] Extracted " << number_of_edge_collisions << " edge collision clauses" << std::endl;
         
         std::cout << "[LNS] Final local CNF: " << local_cnf.get_clauses().size() 
-                  << " total clauses" << std::endl;
+                << " total clauses" << std::endl;
         
         // Step 10: Lazy solving of conflict zone
         std::cout << "[LNS] Step 10: Starting lazy solving of conflict zone..." << std::endl;
         
         auto lazy_result = lazy_solve_conflict_zone(
             local_cnf, cnf_constructor, local_entry_exit_time, start_t, end_t,
-            10000, // max_iterations
+            1000000, // max_iterations
             &initial_vertex_collisions, // Pass initial discovered collisions
             &initial_edge_collisions);
-        
+
         if (lazy_result.solution_found) {
             // Update global solution with local paths using helper function
             current_solution.update_with_local_paths(lazy_result.local_paths, local_entry_exit_time);
             
             // Update global collision tracking with all collisions discovered in this bucket
             global_discovered_vertex_collisions.insert(global_discovered_vertex_collisions.end(),
-                                                     lazy_result.discovered_vertex_collisions.begin(),
-                                                     lazy_result.discovered_vertex_collisions.end());
+                                                    lazy_result.discovered_vertex_collisions.begin(),
+                                                    lazy_result.discovered_vertex_collisions.end());
             global_discovered_edge_collisions.insert(global_discovered_edge_collisions.end(),
-                                                   lazy_result.discovered_edge_collisions.begin(),
-                                                   lazy_result.discovered_edge_collisions.end());
+                                                lazy_result.discovered_edge_collisions.begin(),
+                                                lazy_result.discovered_edge_collisions.end());
             
             std::cout << "[LNS] Updated global collision tracking: " << global_discovered_vertex_collisions.size() 
-                      << " vertex collisions, " << global_discovered_edge_collisions.size() << " edge collisions" << std::endl;
+                    << " vertex collisions, " << global_discovered_edge_collisions.size() << " edge collisions" << std::endl;
 
-            // Case 1: Solved via waiting-time strategy without expansion
+            // Case 1: Solved without waiting-time and without expansion
             // Mark all conflicts in this bucket as solved/consumed
             for (int idx : best_bucket.indices) {
                 if (idx >= 0 && idx < (int)conflict_meta.size()) {
@@ -1517,10 +1529,10 @@ reselect_bucket:
                 }
             }
             std::cout << "[LNS] Bucket solved without expansion. Marked " << best_bucket.indices.size()
-                      << " conflicts as solved. Selecting next bucket..." << std::endl;
-            goto reselect_bucket;
+                    << " conflicts as solved. Selecting next bucket..." << std::endl;
+            goto select_bucket;
         }
-        
+
         if (!lazy_result.solution_found) {
             std::cout << "[LNS] Local problem appears to be unsatisfiable in current zone" << std::endl;
             
@@ -1551,25 +1563,30 @@ reselect_bucket:
                     if (waiting_time_result.solution_found) {
                         expansion_solution_found = true;
                         std::cout << "[LNS] Successfully resolved conflicts using waiting time strategy!" << std::endl;
-                        
+                        // update solved conflict indices
+                        for (int idx_cons : best_bucket.indices) {
+                            if (idx_cons >= 0 && idx_cons < (int)conflict_meta.size()) {
+                                solved_conflict_indices.insert(idx_cons);
+                            }
+                        }
                         // Update global collision tracking with all collisions discovered in this bucket
                         global_discovered_vertex_collisions.insert(global_discovered_vertex_collisions.end(),
-                                                                 waiting_time_result.discovered_vertex_collisions.begin(),
-                                                                 waiting_time_result.discovered_vertex_collisions.end());
+                                                                waiting_time_result.discovered_vertex_collisions.begin(),
+                                                                waiting_time_result.discovered_vertex_collisions.end());
                         global_discovered_edge_collisions.insert(global_discovered_edge_collisions.end(),
-                                                               waiting_time_result.discovered_edge_collisions.begin(),
-                                                               waiting_time_result.discovered_edge_collisions.end());
+                                                            waiting_time_result.discovered_edge_collisions.begin(),
+                                                            waiting_time_result.discovered_edge_collisions.end());
                         
                         std::cout << "[LNS] Updated global collision tracking: " << global_discovered_vertex_collisions.size() 
-                                  << " vertex collisions, " << global_discovered_edge_collisions.size() << " edge collisions" << std::endl;
+                                << " vertex collisions, " << global_discovered_edge_collisions.size() << " edge collisions" << std::endl;
                     } else {
-                        std::cout << "[LNS] Waiting time strategy failed, checking original bucket size..." << std::endl;
+                        std::cout << "[LNS] Waiting time strategy failed, checking bucket size..." << std::endl;
                         
                         // Check if the original bucket already covers the entire map
                         int total_map_cells = rows * cols;
                         double original_bucket_coverage = (double)best_bucket.positions.size() / total_map_cells;
                         std::cout << "[LNS] Original bucket coverage: " << (original_bucket_coverage * 100.0) << "% of map (" 
-                                  << best_bucket.positions.size() << "/" << total_map_cells << " cells)" << std::endl;
+                                << best_bucket.positions.size() << "/" << total_map_cells << " cells)" << std::endl;
                         
                         if (original_bucket_coverage >= 1.0) {
                             std::cout << "[LNS] The original bucket covers 100% of the map - this is already a global problem!" << std::endl;
@@ -1580,7 +1597,7 @@ reselect_bucket:
                             goto increase_makespan; // Jump to end of makespan attempt
                         } else {
                             std::cout << "[LNS] Original bucket coverage is " << (original_bucket_coverage * 100.0) 
-                                      << "%, can still expand. Will try expansion factor " << (expansion_factor + 1) << std::endl;
+                                    << "%, can still expand. Will try expansion factor " << (expansion_factor + 1) << std::endl;
                         }
                         
                         // Update bucket collision tracking (waiting_time_result already contains accumulated collisions)
@@ -1601,9 +1618,11 @@ reselect_bucket:
                     
                     // Recreate the bucket conflicts from the original bucket indices
                     std::vector<std::pair<int,int>> expanded_bucket_conflicts;
+                    std::vector<int> expanded_conflict_indices;
                     for (int idx : best_bucket.indices) {
                         if (idx >= 0 && idx < (int)conflict_points.size()) {
                             expanded_bucket_conflicts.push_back(conflict_points[idx]);
+                            expanded_conflict_indices.push_back(idx);
                         }
                     }
                     
@@ -1617,18 +1636,21 @@ reselect_bucket:
                     std::set<std::pair<int,int>> previous_bucket_shape(best_bucket.positions.begin(), best_bucket.positions.end());
                     auto new_positions_in_expansion = find_new_positions(expanded_diamond_positions, previous_bucket_shape);
                     
-                   
+                
                     
                     std::cout << "[LNS] Checking " << new_positions_in_expansion.size() << " new positions for conflicts (efficient approach)" << std::endl;
                     
                     std::vector<int> newly_touched_conflicts;
-                    std::vector<int> expanded_conflict_indices = best_bucket.indices; // Initialize with original conflicts
+                    
                     
                     // Check only the new positions for conflicts (efficient!)
                     for (const auto& pos : new_positions_in_expansion) {
                         auto [r, c] = pos;
                         int conflict_idx = conflict_map[r][c];
+                        
                         if (conflict_idx != -1) {
+                            //check if the conflict is already solved
+                            if (solved_conflict_indices.find(conflict_idx) != solved_conflict_indices.end()) continue;
                             // Check if this conflict was not part of the original bucket
                             bool was_in_original_bucket = false;
                             for (int original_idx : best_bucket.indices) {
@@ -1642,10 +1664,13 @@ reselect_bucket:
                                 newly_touched_conflicts.push_back(conflict_idx);
                                 std::cout << "  Found newly touched conflict " << conflict_idx << " at position (" << r << "," << c << ")" << std::endl;
                             }
+                            else{
+                                std::cout << "[LNS] ERROR: Conflict in new zone " << conflict_idx << " was already in the original bucket/previous zone" << std::endl;
+                            }
                         }
                     }
                     
-                    if (!newly_touched_conflicts.empty()) {
+                    if (!newly_touched_conflicts.empty()) { //we have new conflicts to add to the expanded bucket, need to expand the bucket further
                         std::cout << "[LNS] Merging " << newly_touched_conflicts.size() << " newly touched conflicts into expanded bucket" << std::endl;
                         
                         //set previous bucket shape to the expanded diamond positions (as we checked for conflicts in the expanded diamond shape)
@@ -1655,6 +1680,7 @@ reselect_bucket:
                         for (int new_conflict_idx : newly_touched_conflicts) {
                             if (new_conflict_idx >= 0 && new_conflict_idx < (int)conflict_points.size()) {
                                 expanded_bucket_conflicts.push_back(conflict_points[new_conflict_idx]);
+                                expanded_conflict_indices.push_back(conflict_idx);
                             }
                         }
                         
@@ -1668,7 +1694,7 @@ reselect_bucket:
                         int iteration = 0;
                         
                         
-                        while (found_more_conflicts ) {
+                        while (found_more_conflicts) { //keep expanding the bucket until we find no more conflicts that are in the expanded area
                             iteration++;
                             found_more_conflicts = false;
                             
@@ -1679,13 +1705,16 @@ reselect_bucket:
                             auto new_positions_from_merged = find_new_positions(current_expanded_shape, previous_bucket_shape);
                             
                             std::cout << "[LNS] Iteration " << iteration << ": Checking " << new_positions_from_merged.size() 
-                                      << " new positions from merged conflicts" << std::endl;
+                                    << " new positions from merged conflicts" << std::endl;
                             
                             // Check only the new positions for conflicts
                             for (const auto& pos : new_positions_from_merged) {
                                 auto [r, c] = pos;
                                 int conflict_idx = conflict_map[r][c];
+                                
                                 if (conflict_idx != -1) {
+                                    //check if the conflict is already solved
+                                    if (solved_conflict_indices.find(conflict_idx) != solved_conflict_indices.end()) continue;
                                     // Check if this conflict was not already in our expanded bucket
                                     bool already_in_expanded_bucket = false;
                                     for (int existing_idx : expanded_conflict_indices) {
@@ -1699,6 +1728,7 @@ reselect_bucket:
                                         // Found another new conflict in the expanded area
                                         expanded_bucket_conflicts.push_back(conflict_points[conflict_idx]);
                                         expanded_conflict_indices.push_back(conflict_idx);
+                                        newly_touched_conflicts.push_back(conflict_idx); //log for adding clauses to cnf later
                                         found_more_conflicts = true;
                                         std::cout << "  Found additional conflict " << conflict_idx << " at position (" << r << "," << c << ")" << std::endl;
                                     }
@@ -1710,7 +1740,7 @@ reselect_bucket:
                             
                             if (found_more_conflicts) {
                                 std::cout << "[LNS] Found " << expanded_bucket_conflicts.size() - (best_bucket.indices.size() + newly_touched_conflicts.size()) 
-                                          << " additional conflicts in iteration " << iteration << std::endl;
+                                        << " additional conflicts in iteration " << iteration << std::endl;
                             }
                         }
                         
@@ -1718,11 +1748,11 @@ reselect_bucket:
                         // Final expanded diamond with all discovered conflicts
                         expanded_diamond_positions = create_shape_from_conflicts(expanded_bucket_conflicts, expanded_offset);
                         std::cout << "[LNS] Final expanded bucket contains " << expanded_diamond_positions.size() 
-                                  << " positions with " << expanded_bucket_conflicts.size() << " conflicts" << std::endl;
+                                << " positions with " << expanded_bucket_conflicts.size() << " conflicts" << std::endl;
                     }
                     
-                    // Step 3: Recreate zone with expanded bucket
-                    std::cout << "[LNS] Recreating zone with expanded bucket..." << std::endl;
+                    // Step 3: create new zone with expanded bucket
+                    std::cout << "[LNS] creating zone with expanded bucket..." << std::endl;
                     
                     // Update zone positions set with expanded diamond
                     std::set<std::pair<int,int>> expanded_zone_positions_set(expanded_diamond_positions.begin(), expanded_diamond_positions.end());
@@ -1763,8 +1793,8 @@ reselect_bucket:
                         if (!segment.empty()) {
                             expanded_local_zone_paths[agent_id] = std::move(segment);
                             expanded_local_entry_exit_time[agent_id] = {entry_t, exit_t};
-                            std::cout << "  Agent " << agent_id << " local segment t=[" << entry_t << "," << exit_t
-                                      << "] len=" << (exit_t - entry_t + 1) << std::endl;
+                            std::cout << "[LNS] ERROR:  Agent " << agent_id << " local segment t=[" << entry_t << "," << exit_t
+                                    << "] len=" << (exit_t - entry_t + 1) << std::endl;
                         }
                     }
                     
@@ -1790,10 +1820,10 @@ reselect_bucket:
                     // Step 4: Try waiting time strategy with expanded zone
                     std::cout << "[LNS] Trying waiting time strategy with expanded zone..." << std::endl;
                     
-                    // Add newly touched conflicts to expanded conflict indices
-                    expanded_conflict_indices.insert(expanded_conflict_indices.end(), newly_touched_conflicts.begin(), newly_touched_conflicts.end());
+                    // alread added newly touched conflicts to expanded conflict indices
+                    //expanded_conflict_indices.insert(expanded_conflict_indices.end(), newly_touched_conflicts.begin(), newly_touched_conflicts.end());
                     
-                    // Extract collision clauses for newly found conflicts (proactive approach)
+                    // Extract collision clauses for newly found conflicts
                     std::vector<std::tuple<int, int, std::pair<int,int>, int>> new_vertex_collisions;
                     std::vector<std::tuple<int, int, std::pair<int,int>, std::pair<int,int>, int>> new_edge_collisions;
                     
@@ -1809,18 +1839,25 @@ reselect_bucket:
                             }
                         }
                     }
-                    
+            
                     // Add new collision clauses to bucket collision tracking
                     bucket_discovered_vertex_collisions.insert(bucket_discovered_vertex_collisions.end(), 
-                                                             new_vertex_collisions.begin(), new_vertex_collisions.end());
+                                                            new_vertex_collisions.begin(), new_vertex_collisions.end());
                     bucket_discovered_edge_collisions.insert(bucket_discovered_edge_collisions.end(),
-                                                           new_edge_collisions.begin(), new_edge_collisions.end());
+                                                        new_edge_collisions.begin(), new_edge_collisions.end());
                     
                     std::cout << "[LNS] Added " << new_vertex_collisions.size() << " new vertex collisions and " 
-                              << new_edge_collisions.size() << " new edge collisions to bucket tracking" << std::endl;
+                            << new_edge_collisions.size() << " new edge collisions to bucket tracking" << std::endl;
                     std::cout << "[LNS] Using " << expanded_conflict_indices.size() << " conflict indices (original: " << best_bucket.indices.size() 
-                              << ", newly touched: " << newly_touched_conflicts.size() << ")" << std::endl;
+                            << ", newly touched: " << newly_touched_conflicts.size() << ")" << std::endl;
                     
+                    //if the expanded zone is the whole map, we provided all global discovered collisions
+                    if (expanded_zone_positions_set.size() == rows * cols) {
+                        std::cout << "[LNS] Expanded zone is the whole map, providing all global discovered collisions" << std::endl;
+                        bucket_discovered_vertex_collisions.insert(global_discovered_vertex_collisions.begin(), global_discovered_vertex_collisions.end());
+                        bucket_discovered_edge_collisions.insert(global_discovered_edge_collisions.begin(), global_discovered_edge_collisions.end());
+                    }
+
                     auto expanded_waiting_time_result = lazy_solve_with_waiting_time(
                         current_solution, masked_map, expanded_zone_positions_set, expanded_local_mdds, expanded_local_zone_paths, expanded_local_entry_exit_time,
                         bucket_discovered_vertex_collisions, bucket_discovered_edge_collisions, conflict_meta, expanded_conflict_indices, start_t, end_t);
@@ -1828,17 +1865,17 @@ reselect_bucket:
                     if (expanded_waiting_time_result.solution_found) {
                         expansion_solution_found = true;
                         std::cout << "[LNS] Successfully resolved conflicts using expanded bucket with factor " << expansion_factor << "!" << std::endl;
-                        
+                        //soleved with expansion
                         // Update global collision tracking with all collisions discovered in this bucket
                         global_discovered_vertex_collisions.insert(global_discovered_vertex_collisions.end(),
-                                                                 expanded_waiting_time_result.discovered_vertex_collisions.begin(),
-                                                                 expanded_waiting_time_result.discovered_vertex_collisions.end());
+                                                                expanded_waiting_time_result.discovered_vertex_collisions.begin(),
+                                                                expanded_waiting_time_result.discovered_vertex_collisions.end());
                         global_discovered_edge_collisions.insert(global_discovered_edge_collisions.end(),
-                                                               expanded_waiting_time_result.discovered_edge_collisions.begin(),
-                                                               expanded_waiting_time_result.discovered_edge_collisions.end());
+                                                            expanded_waiting_time_result.discovered_edge_collisions.begin(),
+                                                            expanded_waiting_time_result.discovered_edge_collisions.end());
                         
                         std::cout << "[LNS] Updated global collision tracking: " << global_discovered_vertex_collisions.size() 
-                                  << " vertex collisions, " << global_discovered_edge_collisions.size() << " edge collisions" << std::endl;
+                                << " vertex collisions, " << global_discovered_edge_collisions.size() << " edge collisions" << std::endl;
 
                         // Case 2: Solved after expansion
                         // Determine if this expanded bucket absorbed other conflicts/buckets
@@ -1855,12 +1892,18 @@ reselect_bucket:
                         }
 
                         if (absorbed_other_buckets) {
+                            //we have absorbed other buckets, so we need to rebuild the buckets
                             std::cout << "[LNS] Expanded bucket absorbed additional conflicts (" << (expanded_count - original_count)
-                                      << "). Global solution updated. Rebuilding remaining buckets view and selecting next..." << std::endl;
+                                    << "). Global solution updated. Rebuilding remaining buckets view and selecting next..." << std::endl;
+                            goto building_buckets;
                         } else {
+                            //we did not absorb other buckets, so we can continue with the next bucket
                             std::cout << "[LNS] Expanded bucket did not absorb other buckets. Selecting next bucket..." << std::endl;
+                            goto select_bucket;
                         }
-                        goto reselect_bucket;
+                       
+
+
                     } else {
                         std::cout << "[LNS] Expanded bucket with factor " << expansion_factor << " did not resolve conflicts, checking zone size..." << std::endl;
                         
@@ -1894,13 +1937,13 @@ reselect_bucket:
             // If we reach here, all expansion strategies were exhausted without finding a solution
             // and without hitting 100% coverage (otherwise we would have used goto)
             std::cout << "[LNS] All expansion strategies exhausted without hitting 100% coverage." << std::endl;
-            std::cout << "[LNS] This suggests the problem may be too constrained at current makespan." << std::endl;
+            std::cout << "[LNS] This suggests the problem is too constrained at current makespan." << std::endl;
             std::cout << "[LNS] Breaking out of current makespan attempt to try with higher makespan..." << std::endl;
             std::cout << "[LNS] THIS SHOULD NOT HAPPEN, SOMETHING IS WRONG WITH THE EXPANSION STRATEGY" << std::endl;
             break; // This breaks out of the current makespan attempt
             
         } else {
-            std::cout << "[LNS] Successfully resolved conflicts in selected bucket!" << std::endl;
+            std::cout << "[LNS] Successfully resolved conflicts in selected bucket without need for waiting time strategy or expansion!" << std::endl;
             
             // TODO: Continue LNS iteration
             //if zone did not expand, we can continue with the next most relevant bucket
@@ -1910,14 +1953,14 @@ reselect_bucket:
             // 3. If no conflicts, we have a complete solution
             
             std::cout << "[LNS] Selecting next bucket after successful local solve..." << std::endl;
-            goto reselect_bucket;
+            goto select_bucket;
         }
 
         
 
-after_bucket_round:
+no_remaining_buckets:
         // Global evaluation: check if current solution has any conflicts left
-        std::cout << "[LNS] Global evaluation of current solution..." << std::endl;
+        std::cout << "[LNS] NO remaining buckets, Global evaluation of current solution..." << std::endl;
         {
             auto [glob_v_coll, glob_e_coll] = SATSolverManager::find_all_collisions(current_solution.agent_paths);
             if (glob_v_coll.empty() && glob_e_coll.empty()) {
@@ -1933,7 +1976,7 @@ after_bucket_round:
             // Rebuild conflict_points and conflict_meta from current global conflicts
             conflict_points.clear();
             conflict_meta.clear();
-            // Re-add vertex conflicts
+            // add vertex conflicts
             for (const auto& v : glob_v_coll) {
                 int a1 = std::get<0>(v);
                 int a2 = std::get<1>(v);
@@ -1942,7 +1985,7 @@ after_bucket_round:
                 conflict_points.push_back(pos);
                 conflict_meta.push_back(ConflictMeta{a1, a2, t, false, pos, {-1,-1}});
             }
-            // Re-add edge conflicts (both endpoints for spatial clustering)
+            // add edge conflicts (both endpoints for spatial clustering)
             for (const auto& e : glob_e_coll) {
                 int a1 = std::get<0>(e);
                 int a2 = std::get<1>(e);
@@ -1959,7 +2002,7 @@ after_bucket_round:
             solved_conflict_indices.clear();
 
             // Rebuild buckets from scratch for the remaining conflicts
-            goto bucket_build_start;
+            goto building_buckets;
         }
 
         // TODO: Use SATSolverManager to solve the local CNF
