@@ -1,0 +1,57 @@
+# Makefile to build the helpers-only crude LNS solver
+
+CXX := g++
+CXXFLAGS := -std=gnu++17 -O2 -pthread -D__STDC_FORMAT_MACROS -fpermissive
+
+INCLUDES := \
+  -I. \
+  -I./minisat \
+  -I./minisat/minisat-master \
+  -I./cnf \
+  -I./mdd \
+  -I./lns \
+  -I./probSAT-master
+
+SRCS := \
+  lns/main_crude_lns.cpp \
+  lns/LNSSolver_more_helpers.cpp \
+  lns/LNSGeometry.cpp \
+  lns/LNSProblemIO.cpp \
+  SATSolverManager.cpp \
+  cnf/CNF.cpp \
+  cnf/CNFConstructor.cpp \
+  cnf/CNFProbSATConstructor.cpp \
+  mdd/MDD.cpp \
+  mdd/MDDNode.cpp \
+  mdd/MDDConstructor.cpp \
+  minisat/minisat-wrapper.cpp \
+  minisat/minisat-master/minisat/core/Solver.cc \
+  minisat/minisat-master/minisat/utils/System.cc \
+  probSAT-master/probSAT_inmem.c
+
+OBJS := $(SRCS:.cpp=.o)
+
+TARGET := main_crude_lns_helpers
+
+.PHONY: all clean run
+
+all: $(TARGET)
+
+$(TARGET): $(OBJS)
+	$(CXX) $(CXXFLAGS) $(INCLUDES) $^ -o $@
+
+%.o: %.cpp
+	$(CXX) $(CXXFLAGS) $(INCLUDES) -c $< -o $@
+
+%.o: %.cc
+	$(CXX) $(CXXFLAGS) $(INCLUDES) -c $< -o $@
+
+%.o: %.c
+	$(CC) -O2 -D__STDC_FORMAT_MACROS -I. -I./probSAT-master -c $< -o $@
+
+run: $(TARGET)
+	./$(TARGET) mapf-map/maze-32-32-2.map mapf-scen-even/scen-even/maze-32-32-2-even-1.scen 3 0 minisat 42
+
+clean:
+	rm -f $(OBJS) $(TARGET)
+

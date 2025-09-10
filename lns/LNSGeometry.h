@@ -15,3 +15,34 @@ std::vector<std::vector<char>> mask_map_outside_shape(
 std::set<std::pair<int,int>> create_shape_from_conflicts(
     const std::vector<std::pair<int,int>>& conflict_points,
     int expansion_radius);
+
+// Overload: restricted to map bounds (rows x cols)
+std::set<std::pair<int,int>> create_shape_from_conflicts(
+    const std::vector<std::pair<int,int>>& conflict_points,
+    int expansion_radius,
+    int rows,
+    int cols);
+
+// Overload: restricted to map bounds using the map itself
+std::set<std::pair<int,int>> create_shape_from_conflicts(
+    const std::vector<std::pair<int,int>>& conflict_points,
+    int expansion_radius,
+    const std::vector<std::vector<char>>& map);
+
+// Find positions that are in current_shape but not in previous_shape
+std::set<std::pair<int,int>> find_new_positions(
+    const std::set<std::pair<int,int>>& current_shape,
+    const std::set<std::pair<int,int>>& previous_shape);
+
+// Overload: restricted to map bounds (rows x cols)
+std::set<std::pair<int,int>> find_new_positions(
+    const std::set<std::pair<int,int>>& current_shape,
+    const std::set<std::pair<int,int>>& previous_shape,
+    int rows,
+    int cols);
+
+// Overload: restricted to map bounds using the map itself
+std::set<std::pair<int,int>> find_new_positions(
+    const std::set<std::pair<int,int>>& current_shape,
+    const std::set<std::pair<int,int>>& previous_shape,
+    const std::vector<std::vector<char>>& map);

@@ -1,6 +1,7 @@
 #pragma once
 
 #include "../SATSolverManager.h"
+#include "LNSCore.h"
 #include <vector>
 #include <string>
 #include <unordered_map>
@@ -8,10 +9,7 @@
 #include <tuple>
 #include <memory>
 
-// Forward declarations
-struct CurrentSolution;
-struct ConflictMeta;
-struct DiamondBucket;
+// Core types are defined in LNSCore.h
 
 // ============================================================================
 // COLLISION TRACKER - Manages collision discovery and tracking

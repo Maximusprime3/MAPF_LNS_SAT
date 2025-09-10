@@ -3,6 +3,8 @@
 #include <iostream>
 #include <algorithm>
 #include <random>
+#include "cnf/CNFConstructor.h"
+#include "SATSolverManager.h"
 
 // ============================================================================
 // COLLISION TRACKER IMPLEMENTATION
@@ -450,63 +452,75 @@ WaitingTimeStrategyManager::WaitingTimeResult WaitingTimeStrategyManager::execut
     WaitingTimeResult result;
     result.solution_found = false;
     result.discovered_collisions = initial_collisions;
-    
-    // Find agents involved in conflicts
-    std::set<int> agents_involved_in_conflicts;
-    for (int idx : conflict_indices) {
-        if (idx >= 0 && idx < (int)conflict_meta.size()) {
-            const auto& meta = conflict_meta[idx];
-            agents_involved_in_conflicts.insert(meta.agent1);
-            agents_involved_in_conflicts.insert(meta.agent2);
-        }
-    }
-    
-    auto agents_with_waiting = get_agents_with_waiting_time(current_solution, agents_involved_in_conflicts);
-    
-    if (agents_with_waiting.empty()) {
+
+    // If there are no MDDs/agents to solve for, bail early
+    if (local_mdds.empty()) {
         return result;
     }
-    
-    // Backup waiting times
-    auto waiting_time_backup = current_solution.backup_waiting_times();
-    
-    // Try waiting time strategy
-    int attempt = 0;
-    int max_attempts = 0;
-    for (const auto& [agent_id, waiting_time] : agents_with_waiting) {
-        max_attempts += waiting_time;
-    }
-    
-    while (!result.solution_found && attempt < max_attempts) {
-        attempt++;
-        
-        auto current_agents_with_waiting = get_agents_with_waiting_time(current_solution, agents_involved_in_conflicts);
-        if (current_agents_with_waiting.empty()) {
-            break;
+
+    // 1) Build a lazy CNF from local MDDs (path/transition/occupancy clauses only)
+    CNFConstructor cnf_constructor(local_mdds, true); // true = lazy encoding
+    // Construct base CNF (without explicit collision clauses for now)
+    CNF local_cnf = cnf_constructor.construct_cnf();
+
+    // 2) Seed an initial partial assignment from the current local paths if available
+    //    This reuses assignments across consecutive runs.
+    std::unordered_map<int, std::vector<MDDNode::Position>> seed_paths;
+    seed_paths.reserve(local_zone_paths.size());
+    for (const auto& kv : local_zone_paths) {
+        const int agent_id = kv.first;
+        const auto& path_pairs = kv.second;
+        std::vector<MDDNode::Position> path_positions;
+        path_positions.reserve(path_pairs.size());
+        for (const auto& p : path_pairs) {
+            path_positions.push_back(MDDNode::Position{p.first, p.second});
         }
-        
-        auto [agent_with_most_waiting, max_waiting_time] = current_agents_with_waiting[0];
-        
-        // Use waiting time and expand MDD
-        current_solution.use_waiting_time(agent_with_most_waiting, 1);
-        
-        // Expand MDD for this agent
-        auto expanded_mdd = expand_agent_mdd(agent_with_most_waiting, current_solution, masked_map, 
-                                           local_zone_paths, local_mdds, local_entry_exit_time, start_t, end_t);
-        
-        if (expanded_mdd) {
-            // Try to solve with expanded MDD
-            // This would involve creating CNF and solving
-            // For now, we'll assume it might work
-            result.solution_found = true;
+        seed_paths[agent_id] = std::move(path_positions);
+    }
+    std::vector<int> initial_assignment = cnf_constructor.partial_assignment_from_paths(seed_paths);
+
+    // 3) Try solving with initial assignment; if UNSAT, try a one-time safety run without any assignment
+    bool tried_unseeded_safety_run = false;
+    MiniSatSolution minisat_result;
+
+    // First attempt: with initial assignment if we have any, otherwise unseeded
+    if (!initial_assignment.empty()) {
+        minisat_result = SATSolverManager::solve_cnf_with_minisat(local_cnf, &initial_assignment);
+    } else {
+        minisat_result = SATSolverManager::solve_cnf_with_minisat(local_cnf, nullptr);
+        tried_unseeded_safety_run = true; // we already did the unseeded run
+    }
+
+    // If UNSAT and we used a seeded run, do one safety run unseeded
+    if (!minisat_result.satisfiable && !tried_unseeded_safety_run) {
+        minisat_result = SATSolverManager::solve_cnf_with_minisat(local_cnf, nullptr);
+        tried_unseeded_safety_run = true;
+    }
+
+    if (!minisat_result.satisfiable) {
+        // No solution found in this strategy
+        return result;
+    }
+
+    // 4) On SAT: translate the assignment back to local paths
+    auto local_paths_pos = cnf_constructor.cnf_assignment_to_paths(minisat_result.assignment);
+
+    // Convert to pair<int,int> for the result type
+    std::unordered_map<int, std::vector<std::pair<int,int>>> local_paths_pairs;
+    local_paths_pairs.reserve(local_paths_pos.size());
+    for (const auto& kv : local_paths_pos) {
+        const int agent_id = kv.first;
+        const auto& path_positions = kv.second;
+        std::vector<std::pair<int,int>> path_pairs;
+        path_pairs.reserve(path_positions.size());
+        for (const auto& pos : path_positions) {
+            path_pairs.emplace_back(pos.first, pos.second);
         }
+        local_paths_pairs[agent_id] = std::move(path_pairs);
     }
-    
-    // Restore waiting times if no solution found
-    if (!result.solution_found) {
-        current_solution.restore_waiting_times(waiting_time_backup);
-    }
-    
+
+    result.solution_found = true;
+    result.local_paths = std::move(local_paths_pairs);
     return result;
 }
 

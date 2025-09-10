@@ -1,5 +1,7 @@
 #include "../SATSolverManager.h"
 #include "LNSGeometry.h"
+#include "LNSCore.h"
+#include "LNSProblemIO.h"
 #include <vector>
 #include <string>
 #include <iostream>
@@ -7,258 +9,16 @@
 #include <random>
 #include <set>
 #include <algorithm>
+#include <iterator>
 #include <climits>
 #include <cmath>
 #include <unordered_map>
 
 //TO DO:
 // in the case of 100% coverage, the solver should get all known conflict clauses to add them to the cnf
+// MINISAT ASSUMPTIONS ARE NOT HARD, It sets polarity hints via setPolarity, not hard assumptions.
 
-struct LNSProblem {
-    std::vector<std::vector<char>> grid;
-    std::vector<std::pair<int,int>> starts;
-    std::vector<std::pair<int,int>> goals;
-};
 
-// Metadata describing a single conflict between two agents.
-// This is useful when building conflict buckets or applying waiting time
-// strategies where we only need to reason about the agents involved and the
-// timesteps of the conflicts.
-struct ConflictMeta {
-    int agent1;
-    int agent2;
-    int timestep;
-    bool is_edge;                 // true for edge conflict, false for vertex
-    std::pair<int,int> pos1;      // vertex position or first edge endpoint
-    std::pair<int,int> pos2;      // second edge endpoint if edge conflict
-};
-
-// Represents a diamond shaped conflict bucket.  Each bucket stores the set of
-// grid positions that belong to the diamond as well as the indices of the
-// conflicts contained within the bucket.  Buckets are used to isolate regions
-// of the map for local solving.
-struct DiamondBucket {
-    std::set<std::pair<int,int>> positions;
-    std::vector<int> indices;
-};
-
-// Represents a current solution to the MAPF problem.
-struct CurrentSolution {
-    std::unordered_map<int, std::vector<std::pair<int,int>>> agent_paths;  // agent_id -> path
-    // Map flattened (row, col, timestep) -> list of agents occupying that cell at that time
-    // Key is encoded as ((row * cols) + col) * (max_timestep + 1) + t
-    std::unordered_map<long long, std::vector<int>> path_map;
-    int max_timestep;
-    int rows, cols;  // Store dimensions for bounds checking
-    // Waiting time tracking: agent_id -> number of timesteps spent waiting at goal
-    std::unordered_map<int, int> agent_waiting_time;
-    
-    CurrentSolution(int rows_, int cols_, int max_t, int num_agents = 50) 
-        : max_timestep(std::max(0, max_t)), rows(rows_), cols(cols_) {
-        // Reserve space for the actual number of agents to avoid rehashing
-        // Default to 50 if not specified, which is reasonable for most MAPF scenarios
-        agent_paths.reserve(num_agents);
-        agent_waiting_time.reserve(num_agents);
-    }
-
-    // Helper to encode 3D coordinates into a single key for path_map
-    long long encode_key(int r, int c, int t) const {
-        return (static_cast<long long>(r) * cols + c) * (max_timestep + 1LL) + t;
-    }
-    
-    // Create path map by "drawing" all agent paths including timesteps
-    void create_path_map() {
-        // Clear existing path map
-        path_map.clear();
-        
-        for (const auto& [agent_id, path] : agent_paths) {
-            for (size_t t = 0; t < path.size(); ++t) {
-                auto [r, c] = path[t];
-                if (r >= 0 && r < rows && c >= 0 && c < cols) {
-                    int tt = static_cast<int>(t);
-                    if (tt <= max_timestep) {
-                        long long key = encode_key(r, c, tt);
-                        path_map[key].push_back(static_cast<int>(agent_id));
-                    }
-                }
-            }
-        }
-    }
-    
-    // Find agents that pass through a specific position at a specific time
-    std::vector<int> get_agents_at_position_time(int r, int c, int t) const {
-        if (r >= 0 && r < rows && c >= 0 && c < cols && t >= 0 && t <= max_timestep) {
-            long long key = encode_key(r, c, t);
-            auto it = path_map.find(key);
-            if (it != path_map.end()) {
-                return it->second;
-            }
-        }
-        return {};
-    }
-    
-    // Find agents that pass through any position in the conflict zone at any time
-    //AHAHH only need agents that pass through the zone at conflict time +- offset
-   // Find agents that pass through any position in the conflict zone
-    // Optionally restrict the search to a specific timestep window
-    std::set<int> get_agents_in_zone(const std::set<std::pair<int,int>>& zone_positions,
-                                    std::optional<int> start_t = std::nullopt,
-                                    std::optional<int> end_t   = std::nullopt) const {
-            std::set<int> agents_in_zone;
-
-            // Determine the effective time window to scan
-            int begin = start_t.value_or(0);
-            int finish = end_t.value_or(max_timestep);
-            begin = std::max(0, begin);
-            finish = std::min(max_timestep, finish);
-
-            for (const auto& [r, c] : zone_positions) {
-                if (r < 0 || r >= rows || c < 0 || c >= cols) continue;
-                for (int t = begin; t <= finish; ++t) {
-                    long long key = encode_key(r, c, t);
-                    auto it = path_map.find(key);
-                    if (it != path_map.end()) {
-                        agents_in_zone.insert(it->second.begin(), it->second.end());        
-                    }
-                }
-            }
-        return agents_in_zone;
-    }
-    
-    // Update global solution with local paths from conflict zone resolution
-    // Replaces the conflicting segments in agent paths with collision-free local paths
-    void update_with_local_paths(const std::unordered_map<int, std::vector<std::pair<int,int>>>& local_paths,
-                                const std::unordered_map<int, std::pair<int,int>>& local_entry_exit_time) {
-        std::cout << "[LNS] Updating global solution with local paths..." << std::endl;
-        
-        for (const auto& [agent_id, local_path] : local_paths) {
-            auto entry_exit = local_entry_exit_time.at(agent_id);
-            int entry_t = entry_exit.first;
-            int exit_t = entry_exit.second;
-            
-            // Get the agent's global path
-            auto& global_path = agent_paths[agent_id];
-            
-            // Replace the segment from entry_t to exit_t with the local path
-            // The local path should have the same length as the segment it replaces
-            int segment_length = exit_t - entry_t + 1;
-            
-            // Bounds checking: ensure entry_t and exit_t are within global_path bounds
-            if (entry_t < 0 || exit_t >= (int)global_path.size() || entry_t > exit_t) {
-                std::cerr << "[ERROR] Agent " << agent_id << " invalid time bounds: entry_t=" << entry_t 
-                          << ", exit_t=" << exit_t << ", global_path_size=" << global_path.size() << std::endl;
-                continue;
-            }
-            
-            if ((int)local_path.size() == segment_length) {
-                // Replace the segment in the global path with bounds checking
-                for (int i = 0; i < segment_length; ++i) {
-                    int target_index = entry_t + i;
-                    if (target_index >= 0 && target_index < (int)global_path.size()) {
-                        global_path[target_index] = local_path[i];
-                    } else {
-                        std::cerr << "[ERROR] Agent " << agent_id << " target index " << target_index 
-                                  << " out of bounds (global_path_size=" << global_path.size() << ")" << std::endl;
-                        break;
-                    }
-                }
-                std::cout << "  Updated agent " << agent_id << " path segment from t=" << entry_t 
-                          << " to t=" << exit_t << " (length=" << segment_length << ")" << std::endl;
-            } else {
-                std::cerr << "[ERROR] Agent " << agent_id << " local path length (" << local_path.size() 
-                          << ") doesn't match expected segment length (" << segment_length << ")" << std::endl;
-            }
-        }
-        
-        // Update the path map to reflect the new paths
-        std::cout << "[LNS] Updating path map with new local paths..." << std::endl;
-        create_path_map();
-        
-        std::cout << "[LNS] Successfully updated global solution with local paths!" << std::endl;
-    }
-    
-    // Calculate waiting time for each agent based on their shortest path vs makespan
-    // This should be called after initial path sampling to track available extra actions
-    void calculate_waiting_times(const std::vector<std::pair<int,int>>& goals, int makespan) {
-        std::cout << "[LNS] Calculating waiting times for agents..." << std::endl;
-        
-        for (const auto& [agent_id, path] : agent_paths) {
-            //if (agent_id < 0 || agent_id >= (int)goals.size()) continue;
-            
-            // Find when the agent reaches its goal
-            auto goal_pos = goals[agent_id];
-            int goal_reached_time = -1;
-            
-            for (int t = 0; t < (int)path.size(); ++t) {
-                if (path[t] == goal_pos) {
-                    goal_reached_time = t;
-                    break;
-                }
-            }
-            
-            if (goal_reached_time != -1) {
-                // Calculate waiting time: makespan - goal_reached_time
-                int waiting_time = makespan - goal_reached_time;
-                agent_waiting_time[agent_id] = std::max(0, waiting_time);
-                
-                std::cout << "  Agent " << agent_id << " reaches goal at t=" << goal_reached_time 
-                          << ", waiting time=" << agent_waiting_time[agent_id] << std::endl;
-            } else {
-                // Agent never reaches goal (shouldn't happen with proper MDDs)
-                agent_waiting_time[agent_id] = 0;
-                std::cerr << "[WARNING] Agent " << agent_id << " never reaches its goal!" << std::endl;
-            }
-        }
-        
-        std::cout << "[LNS] Waiting time calculation complete" << std::endl;
-    }
-    
-    // Get waiting time available for an agent
-    int get_waiting_time(int agent_id) const {
-        auto it = agent_waiting_time.find(agent_id);
-        return (it != agent_waiting_time.end()) ? it->second : 0;
-    }
-    
-    // Use some waiting time for an agent (reduce available waiting time)
-    void use_waiting_time(int agent_id, int timesteps_used) {
-        auto it = agent_waiting_time.find(agent_id);
-        if (it != agent_waiting_time.end()) {
-            it->second = std::max(0, it->second - timesteps_used);
-            std::cout << "  Agent " << agent_id << " used " << timesteps_used 
-                      << " waiting timesteps, " << it->second << " remaining" << std::endl;
-        }
-    }
-    
-    // Backup current waiting times for potential restoration
-    std::unordered_map<int, int> backup_waiting_times() const {
-        return agent_waiting_time;
-    }
-    
-    // Restore waiting times from backup
-    void restore_waiting_times(const std::unordered_map<int, int>& backup) {
-        agent_waiting_time = backup;
-        std::cout << "[LNS] Restored waiting times from backup" << std::endl;
-    }
-    
-    // Get waiting times for a set of agents, sorted by waiting time (descending)
-    std::vector<std::pair<int, int>> get_agents_waiting_times(
-        const std::set<int>& agent_ids) const {
-        std::vector<std::pair<int, int>> agents_with_waiting;
-        
-        for (int agent_id : agent_ids) {
-            int waiting_time = get_waiting_time(agent_id);
-            if (waiting_time > 0) {
-                agents_with_waiting.push_back({agent_id, waiting_time});
-            }
-        }
-        
-        // Sort by waiting time (descending - most waiting time first)
-        std::sort(agents_with_waiting.begin(), agents_with_waiting.end(),
-                  [](const auto& a, const auto& b) { return a.second > b.second; });
-        
-        return agents_with_waiting;
-    }
-};
 
 
 // Helper: create a masked map keeping only positions within diamond shape walkable
@@ -292,39 +52,26 @@ static std::vector<std::vector<char>> mask_map_outside_diamond(
 }
 
 
+
+
 // Helper: create a spatial conflict map for efficient conflict queries
 // Returns a 2D array where conflict_map[r][c] = conflict_index if there's a conflict at (r,c), -1 otherwise
-static std::vector<std::vector<int>> create_conflict_map(
+static std::vector<std::vector<std::vector<int>>> create_conflict_map(
     const std::vector<std::pair<int,int>>& conflict_points,
     int rows, int cols) {
-    std::vector<std::vector<int>> conflict_map(rows, std::vector<int>(cols, -1));
+    std::vector<std::vector<std::vector<int>>> conflict_map(rows, std::vector<std::vector<int>>(cols));
     
     for (size_t i = 0; i < conflict_points.size(); ++i) {
         auto [r, c] = conflict_points[i];
         if (r >= 0 && r < rows && c >= 0 && c < cols) {
-            conflict_map[r][c] = static_cast<int>(i);
+            conflict_map[r][c].push_back(static_cast<int>(i));
         }
     }
     
     return conflict_map;
 }
 
-// Helper: find positions that are in current_shape but not in previous_shape
-// This is more efficient than manually iterating and checking membership
-static std::set<std::pair<int,int>> find_new_positions(
-    const std::set<std::pair<int,int>>& current_shape,
-    const std::set<std::pair<int,int>>& previous_shape) {
-    std::set<std::pair<int,int>> new_positions;
-    
-    // Use set_difference for efficient computation
-    std::set_difference(
-        current_shape.begin(), current_shape.end(),
-        previous_shape.begin(), previous_shape.end(),
-        std::inserter(new_positions, new_positions.begin())
-    );
-    
-    return new_positions;
-}
+
 
 
 // Helper: convert raw vertex and edge collisions into conflict metadata and
@@ -368,40 +115,60 @@ static void collect_conflicts(
 // seed conflict, merging nearby conflicts that fall into the diamond.
 static std::vector<DiamondBucket> build_diamond_buckets(
     const std::vector<std::pair<int,int>>& conflict_points,
-    const std::vector<std::vector<int>>& conflict_map,
+    const std::vector<std::vector<std::vector<int>>>& conflict_map,
+    const std::vector<std::vector<char>>& map,
     const std::set<int>& solved_conflict_indices,
     int offset) {
 
     std::vector<DiamondBucket> diamond_buckets;
     std::vector<char> diamond_used(conflict_points.size(), 0);
+    // Dimensions for safe conflict_map access
+    const int rows = (int)conflict_map.size();
+    const int cols = rows > 0 ? (int)conflict_map[0].size() : 0;
 
     for (size_t i = 0; i < conflict_points.size(); ++i) {
         if (diamond_used[i] || solved_conflict_indices.count(i)) continue;
-
+        std::cout << "[LNS] Building diamond bucket for conflict " << i << std::endl;
         std::vector<std::pair<int,int>> bucket_conflicts;
         bucket_conflicts.push_back(conflict_points[i]);
-        diamond_used[i] = 1;
+        // Collect conflict indices as we grow the bucket to ensure buckets always carry conflicts
+        std::set<int> index_set;
+        index_set.insert((int)i);
+        
 
         std::set<std::pair<int,int>> previous_shape;
         bool found_new_conflicts = true;
         while (found_new_conflicts) {
             found_new_conflicts = false;
-            auto current_shape = create_shape_from_conflicts(bucket_conflicts, offset);
-            auto new_positions = find_new_positions(current_shape, previous_shape);
+            // Use conflict_map dimensions implicitly via map overloads
+            auto current_shape = create_shape_from_conflicts(bucket_conflicts, offset, map);
+            auto new_positions = find_new_positions(current_shape, previous_shape, map);
 
             for (const auto& pos : new_positions) {
                 auto [r, c] = pos;
-                int conflict_idx = conflict_map[r][c];
-                if (conflict_idx != -1) {
+                // Bounds guard to avoid OOB access
+                if (r < 0 || r >= rows || c < 0 || c >= cols) {
+                    std::cerr << "[ERROR] Found position (" << r << "," << c << ") outside of map bounds" << std::endl;
+                    continue;
+                }
+                if (conflict_map[r][c].empty()) continue;
+                for (int conflict_idx : conflict_map[r][c]) {
+                    // Index validity guard
+                    if (conflict_idx < 0 || conflict_idx >= (int)conflict_points.size()) {
+                        std::cerr << "[ERROR] Found invalid conflict index " << conflict_idx << std::endl;
+                        continue;
+                    }
                     if (diamond_used[conflict_idx]) {
                         std::cerr << "[ERROR] Found already used conflict " << conflict_idx
                                   << " at position (" << r << "," << c
                                   << ") in new positions of diamond bucket." << std::endl;
-                        return {};
-                    } else if (!solved_conflict_indices.count(conflict_idx)) {
+                        continue;
+                    }
+                    if (!solved_conflict_indices.count(conflict_idx)) {
                         bucket_conflicts.push_back(conflict_points[conflict_idx]);
                         diamond_used[conflict_idx] = 1;
                         found_new_conflicts = true;
+                        index_set.insert(conflict_idx);
                     }
                 }
             }
@@ -409,18 +176,11 @@ static std::vector<DiamondBucket> build_diamond_buckets(
             previous_shape = std::move(current_shape);
         }
 
-        auto diamond_positions = create_shape_from_conflicts(bucket_conflicts, offset);
+        auto diamond_positions = create_shape_from_conflicts(bucket_conflicts, offset, map);
         DiamondBucket diamond_bucket;
         diamond_bucket.positions = std::move(diamond_positions);
-        diamond_bucket.indices.reserve(bucket_conflicts.size());
-
-        for (const auto& bucket_conflict : bucket_conflicts) {
-            auto [r, c] = bucket_conflict;
-            int conflict_idx = conflict_map[r][c];
-            if (conflict_idx != -1) {
-                diamond_bucket.indices.push_back(conflict_idx);
-            }
-        }
+        
+        diamond_bucket.indices.assign(index_set.begin(), index_set.end());
 
         diamond_buckets.push_back(std::move(diamond_bucket));
     }
@@ -584,6 +344,146 @@ struct LazySolveResult {
     std::vector<std::tuple<int, int, std::pair<int,int>, int>> discovered_vertex_collisions;
     std::vector<std::tuple<int, int, std::pair<int,int>, std::pair<int,int>, int>> discovered_edge_collisions;
 };
+
+// Helper: Lazy solving of conflict zone
+// Returns LazySolveResult with solution status, paths, and discovered collisions
+static LazySolveResult 
+lazy_solve_conflict_zone(CNF& local_cnf, 
+                        CNFConstructor& cnf_constructor,
+                        const std::unordered_map<int, std::pair<int,int>>& local_entry_exit_time,
+                        int start_t, int end_t,
+                        int max_iterations = 100000,
+                        // Optional: pre-discovered collisions to avoid rediscovering
+                        const std::vector<std::tuple<int, int, std::pair<int,int>, int>>* known_vertex_collisions = nullptr,
+                        const std::vector<std::tuple<int, int, std::pair<int,int>, std::pair<int,int>, int>>* known_edge_collisions = nullptr) {
+
+    std::cout << "[LNS] Starting lazy solving of conflict zone..." << std::endl;
+
+    bool local_solution_found = false;
+    int iteration = 0;
+    std::unordered_map<int, std::vector<std::pair<int,int>>> final_local_paths;
+
+    // Track all discovered collisions during solving
+    std::vector<std::tuple<int, int, std::pair<int,int>, int>> discovered_vertex_collisions;
+    std::vector<std::tuple<int, int, std::pair<int,int>, std::pair<int,int>, int>> discovered_edge_collisions;
+
+    // Add pre-discovered collisions to avoid rediscovering them
+    if (known_vertex_collisions && !known_vertex_collisions->empty()) {
+        std::cout << "[LNS] Adding " << known_vertex_collisions->size() << " pre-discovered vertex collisions..." << std::endl;
+        for (const auto& collision : *known_vertex_collisions) {
+            int agent1, agent2, timestep;
+            std::pair<int,int> pos;
+            std::tie(agent1, agent2, pos, timestep) = collision;
+
+            std::vector<int> clause = cnf_constructor.add_single_collision_clause(
+            agent1, agent2, pos, timestep, false);
+            local_cnf.add_clause(clause);
+        }
+    }
+
+    if (known_edge_collisions && !known_edge_collisions->empty()) {
+        std::cout << "[LNS] Adding " << known_edge_collisions->size() << " pre-discovered edge collisions..." << std::endl;
+        for (const auto& edge_collision : *known_edge_collisions) {
+            int agent1, agent2, timestep;
+            std::pair<int,int> pos1, pos2;
+            std::tie(agent1, agent2, pos1, pos2, timestep) = edge_collision;
+
+            std::vector<int> clause = cnf_constructor.add_single_edge_collision_clause(
+            agent1, agent2, pos1, pos2, timestep, false);
+            local_cnf.add_clause(clause);
+        }
+    }
+
+    //create empty assignment, which we can later fill with the previous solution
+    std::vector<int> initial_assignment;
+    bool first_iteration = true;
+    bool last_iteration_was_satisfiable = true;
+    while (!local_solution_found && iteration < max_iterations) {
+        iteration++;
+        std::cout << "[LNS] Lazy solving iteration " << iteration << "..." << std::endl;
+
+        // Solve the current CNF with MiniSAT
+        //solve without assignment if first iteration or last iteration was unsatisfiable
+        MiniSatSolution minisat_result;
+        if (first_iteration || !last_iteration_was_satisfiable) {
+            minisat_result = SATSolverManager::solve_cnf_with_minisat(local_cnf);
+            first_iteration = false;
+        } else {
+            minisat_result = SATSolverManager::solve_cnf_with_minisat(local_cnf, &initial_assignment);
+        }
+
+        if (!minisat_result.satisfiable) {
+            std::cout << "[LNS] Local problem is unsatisfiable after " << iteration << " iterations" << std::endl;
+        //try solving without initial assignment once(set flag), only when this statement is reached twice in a row, we know there is no solution
+            if (last_iteration_was_satisfiable) {
+                last_iteration_was_satisfiable = false; //trying to solve without assumptions will show if there is a solution at all
+            } else {
+                break;
+            }
+        }
+
+        std::cout << "[LNS] Found solution with " << minisat_result.assignment.size() << " variable assignments" << std::endl;
+
+        // Translate solution to paths using helper function
+        auto local_paths = cnf_constructor.cnf_assignment_to_paths(minisat_result.assignment);
+        std::cout << "[LNS] Extracted paths for " << local_paths.size() << " agents" << std::endl;
+
+        // Check paths for collisions using SATSolverManager approach
+        auto new_collisions = check_vertex_collisions_local(local_paths, local_entry_exit_time, start_t, end_t);
+        auto new_edge_collisions = check_edge_collisions_local(local_paths, local_entry_exit_time, start_t, end_t);
+
+        // Track discovered collisions for future use
+        discovered_vertex_collisions.insert(discovered_vertex_collisions.end(), new_collisions.begin(), new_collisions.end());
+        discovered_edge_collisions.insert(discovered_edge_collisions.end(), new_edge_collisions.begin(), new_edge_collisions.end());
+
+        std::cout << "[LNS] Found " << new_collisions.size() << " vertex collisions and " 
+        << new_edge_collisions.size() << " edge collisions" << std::endl;
+
+        // If no collisions, we have a local solution
+        if (new_collisions.empty() && new_edge_collisions.empty()) {
+            local_solution_found = true;
+            final_local_paths = std::move(local_paths);
+            std::cout << "[LNS] Found collision-free local solution!" << std::endl;
+        } else {
+            // Add collision clauses, create new partial(leaving out all paths of colliding agents) assignment from the solution and continue
+            initial_assignment = cnf_constructor.partial_assignment_from_paths(local_paths);
+            //set flag to true, because we found a solution
+            last_iteration_was_satisfiable = true;
+
+            std::cout << "[LNS] Adding collision clauses and solving again..." << std::endl;
+
+            // Add vertex collision clauses
+            for (const auto& collision : new_collisions) {
+                int agent1, agent2, timestep;
+                std::pair<int,int> pos;
+                std::tie(agent1, agent2, pos, timestep) = collision;
+
+                std::vector<int> clause = cnf_constructor.add_single_collision_clause(
+                agent1, agent2, pos, timestep, false);
+                local_cnf.add_clause(clause);
+            }
+
+            // Add edge collision clauses
+            for (const auto& edge_collision : new_edge_collisions) {
+                int agent1, agent2, timestep;
+                std::pair<int,int> pos1, pos2;
+                std::tie(agent1, agent2, pos1, pos2, timestep) = edge_collision;
+
+                std::vector<int> clause = cnf_constructor.add_single_edge_collision_clause(
+                agent1, agent2, pos1, pos2, timestep, false);
+                local_cnf.add_clause(clause);
+            }
+        }
+    }
+
+        if (!local_solution_found) {
+            std::cout << "[LNS] Failed to find local solution after " << max_iterations << " iterations" << std::endl;
+            std::cout << "[LNS] Local problem appears to be unsatisfiable in current zone" << std::endl;
+    }
+
+        return {local_solution_found, final_local_paths, discovered_vertex_collisions, discovered_edge_collisions};
+}
+
 
 // Helper: Lazy solving with waiting time strategy
 // Returns LazySolveResult with solution status, paths, and discovered collisions
@@ -823,7 +723,7 @@ lazy_solve_with_waiting_time(CurrentSolution& current_solution,
             // Update global solution with expanded local paths
             current_solution.update_with_local_paths(using_waiting_time_result.local_paths, local_entry_exit_time);
             
-            return {true, using_waiting_time_result.local_paths, all_discovered_vertex_collisions, all_discovered_edge_collisions};
+            return LazySolveResult{true, using_waiting_time_result.local_paths, all_discovered_vertex_collisions, all_discovered_edge_collisions};
         } else {
             std::cout << "[LNS] Expanded MDD did not resolve conflicts, trying next agent..." << std::endl;
             
@@ -850,125 +750,7 @@ lazy_solve_with_waiting_time(CurrentSolution& current_solution,
     return {false, {}, all_discovered_vertex_collisions, all_discovered_edge_collisions};
 }
 
-// Helper: Lazy solving of conflict zone
-// Returns LazySolveResult with solution status, paths, and discovered collisions
-static LazySolveResult 
-lazy_solve_conflict_zone(CNF& local_cnf, 
-                        CNFConstructor& cnf_constructor,
-                        const std::unordered_map<int, std::pair<int,int>>& local_entry_exit_time,
-                        int start_t, int end_t,
-                        int max_iterations = 100000,
-                        // Optional: pre-discovered collisions to avoid rediscovering
-                        const std::vector<std::tuple<int, int, std::pair<int,int>, int>>* known_vertex_collisions = nullptr,
-                        const std::vector<std::tuple<int, int, std::pair<int,int>, std::pair<int,int>, int>>* known_edge_collisions = nullptr) {
-    
-    std::cout << "[LNS] Starting lazy solving of conflict zone..." << std::endl;
-    
-    bool local_solution_found = false;
-    int iteration = 0;
-    std::unordered_map<int, std::vector<std::pair<int,int>>> final_local_paths;
-    
-    // Track all discovered collisions during solving
-    std::vector<std::tuple<int, int, std::pair<int,int>, int>> discovered_vertex_collisions;
-    std::vector<std::tuple<int, int, std::pair<int,int>, std::pair<int,int>, int>> discovered_edge_collisions;
-    
-    // Add pre-discovered collisions to avoid rediscovering them
-    if (known_vertex_collisions && !known_vertex_collisions->empty()) {
-        std::cout << "[LNS] Adding " << known_vertex_collisions->size() << " pre-discovered vertex collisions..." << std::endl;
-        for (const auto& collision : *known_vertex_collisions) {
-            int agent1, agent2, timestep;
-            std::pair<int,int> pos;
-            std::tie(agent1, agent2, pos, timestep) = collision;
-            
-            std::vector<int> clause = cnf_constructor.add_single_collision_clause(
-                agent1, agent2, pos, timestep, false);
-            local_cnf.add_clause(clause);
-        }
-    }
-    
-    if (known_edge_collisions && !known_edge_collisions->empty()) {
-        std::cout << "[LNS] Adding " << known_edge_collisions->size() << " pre-discovered edge collisions..." << std::endl;
-        for (const auto& edge_collision : *known_edge_collisions) {
-            int agent1, agent2, timestep;
-            std::pair<int,int> pos1, pos2;
-            std::tie(agent1, agent2, pos1, pos2, timestep) = edge_collision;
-            
-            std::vector<int> clause = cnf_constructor.add_single_edge_collision_clause(
-                agent1, agent2, pos1, pos2, timestep, false);
-            local_cnf.add_clause(clause);
-        }
-    }
-    
-    while (!local_solution_found && iteration < max_iterations) {
-        iteration++;
-        std::cout << "[LNS] Lazy solving iteration " << iteration << "..." << std::endl;
-        
-        // Solve the current CNF with MiniSAT
-        auto minisat_result = SATSolverManager::solve_cnf_with_minisat(local_cnf);
-        
-        if (!minisat_result.satisfiable) {
-            std::cout << "[LNS] Local problem is unsatisfiable after " << iteration << " iterations" << std::endl;
-            break;
-        }
-        
-        std::cout << "[LNS] Found solution with " << minisat_result.assignment.size() << " variable assignments" << std::endl;
-        
-        // Translate solution to paths using helper function
-        auto local_paths = cnf_constructor.cnf_assignment_to_paths(minisat_result.assignment);
-        std::cout << "[LNS] Extracted paths for " << local_paths.size() << " agents" << std::endl;
-        
-        // Check paths for collisions using SATSolverManager approach
-        auto new_collisions = check_vertex_collisions_local(local_paths, local_entry_exit_time, start_t, end_t);
-        auto new_edge_collisions = check_edge_collisions_local(local_paths, local_entry_exit_time, start_t, end_t);
-        
-        // Track discovered collisions for future use
-        discovered_vertex_collisions.insert(discovered_vertex_collisions.end(), new_collisions.begin(), new_collisions.end());
-        discovered_edge_collisions.insert(discovered_edge_collisions.end(), new_edge_collisions.begin(), new_edge_collisions.end());
-        
-        std::cout << "[LNS] Found " << new_collisions.size() << " vertex collisions and " 
-                  << new_edge_collisions.size() << " edge collisions" << std::endl;
-        
-        // If no collisions, we have a local solution
-        if (new_collisions.empty() && new_edge_collisions.empty()) {
-            local_solution_found = true;
-            final_local_paths = std::move(local_paths);
-            std::cout << "[LNS] Found collision-free local solution!" << std::endl;
-            
-        } else {
-            // Add collision clauses and continue
-            std::cout << "[LNS] Adding collision clauses and solving again..." << std::endl;
-            
-            // Add vertex collision clauses
-            for (const auto& collision : new_collisions) {
-                int agent1, agent2, timestep;
-                std::pair<int,int> pos;
-                std::tie(agent1, agent2, pos, timestep) = collision;
-                
-                std::vector<int> clause = cnf_constructor.add_single_collision_clause(
-                    agent1, agent2, pos, timestep, false);
-                local_cnf.add_clause(clause);
-            }
-            
-            // Add edge collision clauses
-            for (const auto& edge_collision : new_edge_collisions) {
-                int agent1, agent2, timestep;
-                std::pair<int,int> pos1, pos2;
-                std::tie(agent1, agent2, pos1, pos2, timestep) = edge_collision;
-                
-                std::vector<int> clause = cnf_constructor.add_single_edge_collision_clause(
-                    agent1, agent2, pos1, pos2, timestep, false);
-                local_cnf.add_clause(clause);
-            }
-        }
-    }
-    
-    if (!local_solution_found) {
-        std::cout << "[LNS] Failed to find local solution after " << max_iterations << " iterations" << std::endl;
-        std::cout << "[LNS] Local problem appears to be unsatisfiable in current zone" << std::endl;
-    }
-    
-    return {local_solution_found, final_local_paths, discovered_vertex_collisions, discovered_edge_collisions};
-}
+
 
 // Helper: Create MDDs with shortest paths + waiting time at goal
 // This creates MDDs where agents go to their goal as fast as possible, then wait there
@@ -977,7 +759,7 @@ static std::vector<std::shared_ptr<MDD>> create_mdds_with_waiting_time(
     const std::vector<std::pair<int,int>>& starts,
     const std::vector<std::pair<int,int>>& goals,
     int makespan,
-    const std::vector<std::vector<std::vector<int>>>& distance_matrices) {
+    const std::vector<std::map<std::pair<int,int>, int>>& distance_matrices) {
     
     std::cout << "[LNS] Creating MDDs with shortest paths + waiting time..." << std::endl;
     
@@ -988,16 +770,22 @@ static std::vector<std::shared_ptr<MDD>> create_mdds_with_waiting_time(
         auto start = starts[agent_id];
         auto goal = goals[agent_id];
         
-        // Calculate shortest path length using distance matrix
-        int shortest_path_length = distance_matrices[agent_id][start.first][start.second];
+        // Calculate shortest path length using distance map for this agent
+        int shortest_path_length = -1;
+        const auto& dist_map = distance_matrices[agent_id];
+        auto it = dist_map.find({start.first, start.second});
+        if (it != dist_map.end()) {
+            shortest_path_length = it->second;
+        }
         
         if (shortest_path_length == -1) {
             std::cerr << "[ERROR] No path found for agent " << agent_id << std::endl;
             continue;
         }
         
-        // Create MDD with shortest path length (no waiting time yet)
-        MDDConstructor constructor(grid, start, goal, shortest_path_length - 1);
+        // Create MDD with shortest path length (inclusive depth)
+        // Note: use shortest_path_length directly to ensure sampled paths can reach the goal
+        MDDConstructor constructor(grid, start, goal, shortest_path_length);
         auto mdd = constructor.construct_mdd();
         
         if (!mdd) {
@@ -1027,42 +815,6 @@ static std::vector<std::shared_ptr<MDD>> create_mdds_with_waiting_time(
     return mdds;
 }
 
-// Loads the map and the requested scenario entry, extracting starts/goals for num_agents
-static std::optional<LNSProblem> load_problem(const std::string& map_path,
-                                              const std::string& scenario_path,
-                                              int num_agents,
-                                              int scenario_index /*0-based*/) {
-    LNSProblem problem;
-
-    // Load map
-    problem.grid = SATSolverManager::load_map(map_path);
-    if (problem.grid.empty()) {
-        std::cerr << "[LNS] Failed to load map from: " << map_path << std::endl;
-        return std::nullopt;
-    }
-
-    // Load scenario entries and build starts/goals sets
-    auto entries = SATSolverManager::create_dataframe_from_file(scenario_path);
-    if (entries.empty()) {
-        std::cerr << "[LNS] No entries found in scenario: " << scenario_path << std::endl;
-        return std::nullopt;
-    }
-    auto sets = SATSolverManager::create_starts_and_goals(entries, num_agents);
-    if (sets.empty()) {
-        std::cerr << "[LNS] No start/goal sets could be formed from scenario: " << scenario_path << std::endl;
-        return std::nullopt;
-    }
-    if (scenario_index < 0 || scenario_index >= static_cast<int>(sets.size())) {
-        std::cerr << "[LNS] scenario_index out of range: " << scenario_index
-                  << ", available sets: " << sets.size() << std::endl;
-        return std::nullopt;
-    }
-
-    problem.starts = sets[scenario_index].first;
-    problem.goals = sets[scenario_index].second;
-
-    return problem;
-}
 
 // Entry point for crude LNS (skeleton). Future steps will be filled in iteratively.
 int run_crude_lns(const std::string& map_path,
@@ -1213,8 +965,13 @@ building_buckets:
         // Create spatial conflict map for efficient queries
         auto conflict_map = create_conflict_map(conflict_points, rows, cols);
 
-building_buckets:        
-        auto diamond_buckets = build_diamond_buckets(conflict_points, conflict_meta, solved_conflict_indices, offset);
+      
+        auto diamond_buckets = build_diamond_buckets(conflict_points, conflict_map, problem.grid, solved_conflict_indices, offset);
+        // If no buckets could be formed, avoid infinite rebuild loops
+        if (diamond_buckets.empty()) {
+            std::cout << "[LNS] No conflict buckets created; stopping this attempt to avoid looping." << std::endl;
+            break; // break out of the current makespan attempt/iteration
+        }
         // Validate that all conflicts were assigned to exactly one bucket
         std::vector<char> all_conflicts_used(conflict_points.size(), 0);
         for (const auto& bucket : diamond_buckets) {
@@ -1434,7 +1191,7 @@ select_bucket:
         CNF local_cnf = cnf_constructor.construct_cnf();
         
         std::cout << "[LNS] Created lazy CNF with " << local_cnf.get_clauses().size() 
-                << " clauses and " << cnf_constructor.get_variable_count() << " variables" << std::endl;
+                << " clauses and " << (cnf_constructor.get_next_variable_id() - 1) << " variables" << std::endl;
         
         // Step 9b: Extract vertex collision clauses for lazy solving
         std::cout << "[LNS] Step 9b: Extracting vertex collision clauses..." << std::endl;
@@ -1620,9 +1377,8 @@ select_bucket:
                     // Check only the new positions for conflicts (efficient!)
                     for (const auto& pos : new_positions_in_expansion) {
                         auto [r, c] = pos;
-                        int conflict_idx = conflict_map[r][c];
-                        
-                        if (conflict_idx != -1) {
+                        if (conflict_map[r][c].empty()) continue;
+                        for (int conflict_idx : conflict_map[r][c]) {
                             //check if the conflict is already solved
                             if (solved_conflict_indices.find(conflict_idx) != solved_conflict_indices.end()) continue;
                             // Check if this conflict was not part of the original bucket
@@ -1637,8 +1393,7 @@ select_bucket:
                             if (!was_in_original_bucket) {
                                 newly_touched_conflicts.push_back(conflict_idx);
                                 std::cout << "  Found newly touched conflict " << conflict_idx << " at position (" << r << "," << c << ")" << std::endl;
-                            }
-                            else{
+                            } else {
                                 std::cout << "[LNS] ERROR: Conflict in new zone " << conflict_idx << " was already in the original bucket/previous zone" << std::endl;
                             }
                         }
@@ -1654,7 +1409,7 @@ select_bucket:
                         for (int new_conflict_idx : newly_touched_conflicts) {
                             if (new_conflict_idx >= 0 && new_conflict_idx < (int)conflict_points.size()) {
                                 expanded_bucket_conflicts.push_back(conflict_points[new_conflict_idx]);
-                                expanded_conflict_indices.push_back(conflict_idx);
+                                expanded_conflict_indices.push_back(new_conflict_idx);
                             }
                         }
                         
@@ -1684,9 +1439,8 @@ select_bucket:
                             // Check only the new positions for conflicts
                             for (const auto& pos : new_positions_from_merged) {
                                 auto [r, c] = pos;
-                                int conflict_idx = conflict_map[r][c];
-                                
-                                if (conflict_idx != -1) {
+                                if (conflict_map[r][c].empty()) continue;
+                                for (int conflict_idx : conflict_map[r][c]) {
                                     //check if the conflict is already solved
                                     if (solved_conflict_indices.find(conflict_idx) != solved_conflict_indices.end()) continue;
                                     // Check if this conflict was not already in our expanded bucket
@@ -1828,8 +1582,14 @@ select_bucket:
                     //if the expanded zone is the whole map, we provided all global discovered collisions
                     if (expanded_zone_positions_set.size() == rows * cols) {
                         std::cout << "[LNS] Expanded zone is the whole map, providing all global discovered collisions" << std::endl;
-                        bucket_discovered_vertex_collisions.insert(global_discovered_vertex_collisions.begin(), global_discovered_vertex_collisions.end());
-                        bucket_discovered_edge_collisions.insert(global_discovered_edge_collisions.begin(), global_discovered_edge_collisions.end());
+                        bucket_discovered_vertex_collisions.insert(
+                            bucket_discovered_vertex_collisions.end(),
+                            global_discovered_vertex_collisions.begin(),
+                            global_discovered_vertex_collisions.end());
+                        bucket_discovered_edge_collisions.insert(
+                            bucket_discovered_edge_collisions.end(),
+                            global_discovered_edge_collisions.begin(),
+                            global_discovered_edge_collisions.end());
                     }
 
                     auto expanded_waiting_time_result = lazy_solve_with_waiting_time(

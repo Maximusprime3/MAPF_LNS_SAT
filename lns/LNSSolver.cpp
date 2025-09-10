@@ -1,6 +1,7 @@
 #include "../SATSolverManager.h"
 #include "LNSGeometry.h"
 #include "LNSProblemIO.h"
+#include "LNSCore.h"
 #include <vector>
 #include <string>
 #include <iostream>
@@ -13,11 +14,33 @@
 #include <unordered_map>
 
 //TO DO:
+// MINISAT ASSUMPTIONS ARE NOT HARD, It sets polarity hints via setPolarity, not hard assumptions.
+
 // in the case of 100% coverage, the solver should get all known conflict clauses to add them to the cnf
 
+struct LNSProblem {
+    std::vector<std::vector<char>> grid;
+    std::vector<std::pair<int,int>> starts;
+    std::vector<std::pair<int,int>> goals;
+};
+
+struct ConflictMeta {
+    int agent1;
+    int agent2;
+    int timestep;
+    bool is_edge; // true for edge conflict (swap), false for vertex conflict
+    std::pair<int,int> pos1; // for vertex: position; for edge: first position
+    std::pair<int,int> pos2; // for edge: second position; for vertex: {-1,-1}
+};
+
+struct DiamondBucket { 
+    std::set<std::pair<int,int>> positions; 
+    std::vector<int> indices; 
+    std::vector<std::vector<char>> masked_map; 
+};
 
 
-///INSPECT ALL OTHER GREEN
+
 struct CurrentSolution {
     std::unordered_map<int, std::vector<std::pair<int,int>>> agent_paths;  // agent_id -> path
     // Map flattened (row, col, timestep) -> list of agents occupying that cell at that time
@@ -773,8 +796,8 @@ lazy_solve_conflict_zone(CNF& local_cnf,
     
     //create empty assignment, which we can later fill with the previous solution
     std::vector<int> initial_assignment;
-    first_iteration = true;
-    last_iteration_was_satisfiable = true;
+    bool first_iteration = true;
+    bool last_iteration_was_satisfiable = true;
     while (!local_solution_found && iteration < max_iterations) {
         iteration++;
         std::cout << "[LNS] Lazy solving iteration " << iteration << "..." << std::endl;
@@ -796,7 +819,6 @@ lazy_solve_conflict_zone(CNF& local_cnf,
             } else {
                 break;
             }
-            break;
         }
         
         std::cout << "[LNS] Found solution with " << minisat_result.assignment.size() << " variable assignments" << std::endl;
@@ -990,11 +1012,15 @@ int run_crude_lns(const std::string& map_path,
                   << g.first << "," << g.second << ")" << std::endl;
     }
 
+    std::cout << "[LNS] Starting LNS solver..." << std::endl;
+    
     // Step 2: Compute base makespan (minimum feasible timesteps)
     auto [distance_matrices, base_makespan] = SATSolverManager::compute_max_timesteps(
         problem.grid, problem.starts, problem.goals);
     if (base_makespan <= 0) base_makespan = 1;
 
+    std::cout << "[LNS] Computed base makespan: " << base_makespan << std::endl;
+    
     // Outer loop: increase max timesteps if no solution is found
     const int max_timestep_increase = 10; // crude limit for now
     std::mt19937 rng(static_cast<unsigned int>(seed));
@@ -1091,14 +1117,7 @@ building_buckets:
         
         // We store both the position-only points (for legacy helpers) and rich metadata per point
         std::vector<std::pair<int,int>> conflict_points;
-        struct ConflictMeta {
-            int agent1;
-            int agent2;
-            int timestep;
-            bool is_edge; // true for edge conflict (swap), false for vertex conflict
-            std::pair<int,int> pos1; // for vertex: position; for edge: first position
-            std::pair<int,int> pos2; // for edge: second position; for vertex: {-1,-1}
-        };
+        
         std::vector<ConflictMeta> conflict_meta;
         conflict_points.reserve(vertex_collisions.size() + edge_collisions.size() * 2);
         conflict_meta.reserve(vertex_collisions.size() + edge_collisions.size() * 2);
@@ -1133,11 +1152,7 @@ building_buckets:
             conflict_meta.push_back(ConflictMeta{a1, a2, t, true, pos1, pos2});// same meta for both endpoints
         }
 
-        struct DiamondBucket { 
-            std::set<std::pair<int,int>> positions; 
-            std::vector<int> indices; 
-            std::vector<std::vector<char>> masked_map; 
-        };
+        
 
         
 
@@ -1148,7 +1163,7 @@ building_buckets:
         // Create spatial conflict map for efficient queries
         auto conflict_map = create_conflict_map(conflict_points, rows, cols);
 
-building_buckets:        
+
         // Diamond buckets: create diamond-shaped windows around conflicts using helper function
         // Design principle: Each conflict belongs to exactly one bucket (closed neighborhoods)
         // This ensures non-overlapping conflict resolution regions
@@ -1285,7 +1300,16 @@ select_bucket:
         }
         if (remaining_bucket_indices.empty()) {
             std::cout << "[LNS] No remaining buckets after integration; proceeding to post-processing." << std::endl;
-            goto no_remaining_buckets;
+            // Global evaluation: check if current solution has any conflicts left
+        std::cout << "[LNS] NO remaining buckets, Global evaluation of current solution..." << std::endl;
+        // Rebuild conflict_points and conflict_meta from current global conflicts
+        conflict_points.clear();
+        conflict_meta.clear();
+        // Reset solved set since indices refer to freshly rebuilt arrays
+        solved_conflict_indices.clear();
+        // Rebuild buckets from scratch for the remaining conflicts
+        goto building_buckets;
+    
         }
 
         // Find the most relevant diamond bucket among remaining
@@ -1932,41 +1956,12 @@ no_remaining_buckets:
         // Global evaluation: check if current solution has any conflicts left
         std::cout << "[LNS] NO remaining buckets, Global evaluation of current solution..." << std::endl;
         {
-            auto [glob_v_coll, glob_e_coll] = SATSolverManager::find_all_collisions(current_solution.agent_paths);
-            if (glob_v_coll.empty() && glob_e_coll.empty()) {
-                std::cout << "[LNS] No conflicts remain in the global solution. SOLVED at makespan "
-                          << current_max_timesteps << std::endl;
-                std::cout << "\n[LNS] Final agent paths:" << std::endl;
-                SATSolverManager::print_agent_paths(current_solution.agent_paths);
-                return 0;
-            }
-            std::cout << "[LNS] Global conflicts remain: vertex=" << glob_v_coll.size()
-                      << ", edge=" << glob_e_coll.size() << ". Rebuilding buckets..." << std::endl;
+            
 
             // Rebuild conflict_points and conflict_meta from current global conflicts
             conflict_points.clear();
             conflict_meta.clear();
-            // add vertex conflicts
-            for (const auto& v : glob_v_coll) {
-                int a1 = std::get<0>(v);
-                int a2 = std::get<1>(v);
-                auto pos = std::get<2>(v);
-                int t = std::get<3>(v);
-                conflict_points.push_back(pos);
-                conflict_meta.push_back(ConflictMeta{a1, a2, t, false, pos, {-1,-1}});
-            }
-            // add edge conflicts (both endpoints for spatial clustering)
-            for (const auto& e : glob_e_coll) {
-                int a1 = std::get<0>(e);
-                int a2 = std::get<1>(e);
-                auto pos1 = std::get<2>(e);
-                auto pos2 = std::get<3>(e);
-                int t = std::get<4>(e);
-                conflict_points.push_back(pos1);
-                conflict_meta.push_back(ConflictMeta{a1, a2, t, true, pos1, pos2});
-                conflict_points.push_back(pos2);
-                conflict_meta.push_back(ConflictMeta{a1, a2, t, true, pos1, pos2});
-            }
+            
 
             // Reset solved set since indices refer to freshly rebuilt arrays
             solved_conflict_indices.clear();
