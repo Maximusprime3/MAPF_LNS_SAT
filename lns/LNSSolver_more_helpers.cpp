@@ -18,7 +18,8 @@
 // in the case of 100% coverage, the solver should get all known conflict clauses to add them to the cnf
 // MINISAT ASSUMPTIONS ARE NOT HARD, It sets polarity hints via setPolarity, not hard assumptions.
 
-
+// order conlicts for time
+// if solved with waiting time used need to redraw all paths
 
 
 // Helper: create a masked map keeping only positions within diamond shape walkable
