@@ -18,9 +18,15 @@
 // in the case of 100% coverage, the solver should get all known conflict clauses to add them to the cnf
 // MINISAT ASSUMPTIONS ARE NOT HARD, It sets polarity hints via setPolarity, not hard assumptions.
 
-// order conlicts for time
+// order conlicts for time priority for solving
 // if solved with waiting time used need to redraw all paths
 
+//traffic avoidance sampling from mdds
+//in der email steht noch was
+
+//cnf problem might be because of mdd miss alignment
+//check logic are partly empty mdds ok?
+//if not place agents outside of zone (entry point) without any interactions
 
 // Helper: create a masked map keeping only positions within diamond shape walkable
 // Uses Manhattan distance: |r - center_row| + |c - center_col| <= radius
