@@ -21,7 +21,7 @@
 // DONE order conlicts for time priority for solving
 // if solved with waiting time used need to redraw all paths
 
-//waiting time strategy maybe can use waiting time for every agent that is in a conflict 
+//waiting time strategy maybe can use waiting time for every agent that is in a conflict instead of just one, or one agent for every conflict
 
 //traffic avoidance sampling from mdds
 //in der email steht noch was
@@ -322,36 +322,64 @@ static std::vector<std::tuple<int, int, std::pair<int,int>, std::pair<int,int>, 
 
 // Helper: Align an MDD to a specific time window with empty levels before/after
 // This is used when creating MDDs for local problems or when adding new agents
-static void align_mdd_to_time_window(std::shared_ptr<MDD> mdd, 
-                                    int entry_t, int exit_t, 
+static void align_mdd_to_time_window(std::shared_ptr<MDD> mdd,
+                                    int entry_t, int exit_t,
                                     int start_t, int end_t) {
+   
+
+    if (!mdd) { // do we have an mdd?
+        return;
+    }
+
+    if (end_t < start_t) { // does start and end make sense?
+        std::cerr << "[LNS] ERROR: Invalid time window for MDD alignment (end_t < start_t)." << std::endl;
+        mdd->levels.clear();
+        return;
+    }
+    
+    int zone_mdd_length = end_t - start_t + 1;
     // Calculate relative timesteps within the time window
     int relative_entry = entry_t - start_t;  // 0-based within the time window
     int relative_exit = exit_t - start_t;    // 0-based within the time window
-    int zone_mdd_length = end_t - start_t + 1;
     
-    // Add empty levels before the agent's entry (if agent doesn't start at time window start)
-    for (int empty_level = 0; empty_level < relative_entry; ++empty_level) {
-        mdd->levels[empty_level] = {};  // Empty level
+    relative_entry = std::max(0, std::min(relative_entry, zone_mdd_length - 1));
+    relative_exit = std::max(relative_entry, std::min(relative_exit, zone_mdd_length - 1));
+
+    auto original_levels = mdd->levels;
+    std::map<int, std::vector<std::shared_ptr<MDDNode>>> aligned_levels;
+
+    for (int level = 0; level < relative_entry; ++level) {//add empty levels before the agent's entry
+        aligned_levels[level] = {};
     }
+
     
     // Shift the agent's MDD levels to the correct position
-    std::map<int, std::vector<std::shared_ptr<MDDNode>>> shifted_levels;
-    for (const auto& [level, nodes] : mdd->levels) {
-        int new_level = relative_entry + level;
-        shifted_levels[new_level] = nodes;
-        
-        // Update the time_step in each node
-        for (auto& node : nodes) {
-            node->time_step = new_level;
+    int last_active_level = relative_entry - 1;
+    for (const auto& [level, nodes] : original_levels) {
+        int new_level = level + relative_entry;
+        if (new_level >= zone_mdd_length) {
+            std::cerr << "[LNS] WARNING: MDD level " << new_level
+                      << " exceeds time window length " << zone_mdd_length
+                      << "; truncating." << std::endl;
+            continue;
         }
+
+        auto& target_nodes = aligned_levels[new_level]; //get the target nodes
+        target_nodes = nodes;
+        for (auto& node : target_nodes) {
+            node->time_step = new_level; //update the time_step in each node
+        }
+        last_active_level = std::max(last_active_level, new_level);
     }
-    mdd->levels = shifted_levels;
-    
-    // Add empty levels after the agent's exit (if agent doesn't end at time window end)
-    for (int empty_level = relative_exit + 1; empty_level < zone_mdd_length; ++empty_level) {
-        mdd->levels[empty_level] = {};  // Empty level
+
+
+    last_active_level = std::max(last_active_level, relative_exit);
+
+    for (int level = last_active_level + 1; level < zone_mdd_length; ++level) { //add empty levels after the last active level
+        aligned_levels[level] = {};
     }
+
+    mdd->levels = std::move(aligned_levels);
 }
 
 // Structure to hold lazy solving results including discovered collisions
@@ -391,10 +419,15 @@ lazy_solve_conflict_zone(CNF& local_cnf,
             int agent1, agent2, timestep;
             std::pair<int,int> pos;
             std::tie(agent1, agent2, pos, timestep) = collision;
-
-            std::vector<int> clause = cnf_constructor.add_single_collision_clause(
-            agent1, agent2, pos, timestep, false);
-            local_cnf.add_clause(clause);
+            try {
+                std::vector<int> clause = cnf_constructor.add_single_collision_clause(
+                    agent1, agent2, pos, timestep, false);
+                if (!clause.empty()) local_cnf.add_clause(clause);
+            } catch (const std::exception& e) {
+                std::cout << "[LNS] Skipping invalid pre-discovered vertex collision (" << agent1 << "," << agent2
+                          << ") at pos (" << pos.first << "," << pos.second << ") t=" << timestep
+                          << ": " << e.what() << std::endl;
+            }
         }
     }
 
@@ -404,10 +437,15 @@ lazy_solve_conflict_zone(CNF& local_cnf,
             int agent1, agent2, timestep;
             std::pair<int,int> pos1, pos2;
             std::tie(agent1, agent2, pos1, pos2, timestep) = edge_collision;
-
-            std::vector<int> clause = cnf_constructor.add_single_edge_collision_clause(
-            agent1, agent2, pos1, pos2, timestep, false);
-            local_cnf.add_clause(clause);
+            try {
+                std::vector<int> clause = cnf_constructor.add_single_edge_collision_clause(
+                    agent1, agent2, pos1, pos2, timestep, false);
+                if (!clause.empty()) local_cnf.add_clause(clause);
+            } catch (const std::exception& e) {
+                std::cout << "[LNS] Skipping invalid pre-discovered edge collision (" << agent1 << "," << agent2
+                          << ") pos1=(" << pos1.first << "," << pos1.second << ") pos2=(" << pos2.first << "," << pos2.second
+                          << ") t=" << timestep << ": " << e.what() << std::endl;
+            }
         }
     }
 
@@ -642,11 +680,6 @@ lazy_solve_with_waiting_time(CurrentSolution& current_solution,
         std::cout << "[LNS] Expanding MDD for agent " << agent_with_most_waiting
                   << " by 1 timestep..." << std::endl;
         
-        // Get agent's current entry/exit info
-        auto entry_exit = local_entry_exit_time[agent_with_most_waiting];
-        int entry_t = entry_exit.first;
-        int exit_t = entry_exit.second;
-        
         // Get agent's zone entry and exit points
         auto zone_start_pos = local_path.front();
         auto zone_goal_pos = local_path.back();
@@ -782,8 +815,8 @@ lazy_solve_with_waiting_time(CurrentSolution& current_solution,
             waiting_time_solution_found = true;
             std::cout << "[LNS] Successfully resolved conflicts using waiting time strategy!" << std::endl;
             
-            // Update global solution with expanded local paths
-            current_solution.update_with_local_paths(
+            // Update global solution with expanded local paths using waiting-time aware integration
+            current_solution.update_with_local_paths_waiting(
                 using_waiting_time_result.local_paths,
                 original_entry_exit_time,
                 local_entry_exit_time); 
