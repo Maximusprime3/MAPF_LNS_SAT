@@ -18,7 +18,7 @@
 // in the case of 100% coverage, the solver should get all known conflict clauses to add them to the cnf
 // MINISAT ASSUMPTIONS ARE NOT HARD, It sets polarity hints via setPolarity, not hard assumptions.
 
-// order conlicts for time priority for solving
+// DONE order conlicts for time priority for solving
 // if solved with waiting time used need to redraw all paths
 
 //traffic avoidance sampling from mdds
@@ -519,6 +519,8 @@ lazy_solve_with_waiting_time(CurrentSolution& current_solution,
     
     // Step 1: Backup current waiting times
     auto waiting_time_backup = current_solution.backup_waiting_times();
+    // Also snapshot original entry/exit times to compute expansion deltas later
+    std::unordered_map<int, std::pair<int,int>> original_entry_exit_time = local_entry_exit_time;
     
     // Step 2: Find agents involved in conflicts (not just bystanders in the zone)
     std::set<int> agents_involved_in_conflicts;
@@ -918,7 +920,8 @@ int run_crude_lns(const std::string& map_path,
             current_solution.agent_paths[static_cast<int>(agent_id)] = std::move(as_pairs);
         }
         
-        // Calculate waiting times for each agent
+        // Pad all paths to makespan and then calculate waiting times
+        current_solution.pad_paths_to_makespan();
         current_solution.calculate_waiting_times(problem.goals, current_max_timesteps);
         
         // Create path map by "drawing" all agent paths

@@ -168,6 +168,74 @@ struct CurrentSolution {
         
         std::cout << "[LNS] Successfully updated global solution with local paths!" << std::endl;
     }
+
+    // Update global solution when waiting time was used (local segment lengthened)
+    // For each agent: shift the suffix after the original segment forward by delta
+    // and then replace the segment with the provided local path spanning the new bounds.
+    void update_with_local_paths_waiting(
+        const std::unordered_map<int, std::vector<std::pair<int,int>>>& local_paths,
+        const std::unordered_map<int, std::pair<int,int>>& original_entry_exit_time,
+        const std::unordered_map<int, std::pair<int,int>>& new_entry_exit_time) {
+        std::cout << "[LNS] Updating global solution with local paths (waiting time) ..." << std::endl;
+
+        for (const auto& [agent_id, local_path] : local_paths) {
+            auto it_new = new_entry_exit_time.find(agent_id);
+            if (it_new == new_entry_exit_time.end()) continue;
+            int new_entry_t = it_new->second.first;
+            int new_exit_t  = it_new->second.second;
+
+            auto it_old = original_entry_exit_time.find(agent_id);
+            int old_entry_t = new_entry_t;
+            int old_exit_t  = new_exit_t;
+            if (it_old != original_entry_exit_time.end()) {
+                old_entry_t = it_old->second.first;
+                old_exit_t  = it_old->second.second;
+            }
+
+            int delta = new_exit_t - old_exit_t;
+
+            // Bounds and size checks on global path
+            auto& global_path = agent_paths[agent_id];
+            const int N = (int)global_path.size(); // should be makespan as paths are padded to makespan with last position
+            if (new_entry_t < 0 || new_entry_t > new_exit_t) {
+                std::cerr << "[ERROR] Agent " << agent_id << " invalid new bounds: [" << new_entry_t
+                          << "," << new_exit_t << "], global_path_size=" << N << std::endl;
+                continue;
+            }
+
+            // If waiting time increased the path length, shift the suffix first
+            if (delta > 0) {
+                if (new_exit_t >= N) {
+                    std::cerr << "[ERROR] Agent " << agent_id << " new_exit_t " << new_exit_t
+                              << " out of bounds (N=" << N << ")" << std::endl;
+                    continue;
+                }
+                // Shift suffix [old_exit_t+1 .. N-1] forward by delta within fixed length. 
+                // Note: this is safe as we pad paths to makespan and can replace waiting at the goal with the path that now takes longer
+                for (int t = N - 1; t >= new_exit_t + 1; --t) {
+                    int src = t - delta;
+                    if (src >= old_exit_t + 1 && src < N) global_path[t] = global_path[src];
+                    
+                }
+            }
+
+            // Now replace the (extended) segment with the new local path
+            int segment_length = new_exit_t - new_entry_t + 1;
+            if ((int)local_path.size() != segment_length) {
+                std::cerr << "[ERROR] Agent " << agent_id << " local path len (" << local_path.size()
+                          << ") != expected (" << segment_length << ")" << std::endl;
+                continue;
+            }
+            for (int i = 0; i < segment_length; ++i) {
+                int idx = new_entry_t + i;
+                if (idx >= 0 && idx < N) global_path[idx] = local_path[i];
+            }
+        }
+
+        // Rebuild occupancy map
+        create_path_map();
+        std::cout << "[LNS] Successfully updated global solution with waiting-time local paths!" << std::endl;
+    }
     
     // Calculate waiting time for each agent based on their shortest path vs makespan
     // This should be called after initial path sampling to track available extra actions
@@ -203,6 +271,19 @@ struct CurrentSolution {
         }
         
         std::cout << "[LNS] Waiting time calculation complete" << std::endl;
+    }
+
+    // Ensure every agent path has length max_timestep+1 by padding
+    // trailing steps with the last known position (typically the goal)
+    void pad_paths_to_makespan() {
+        int target_len = max_timestep + 1;
+        for (auto& [agent_id, path] : agent_paths) {
+            if (path.empty()) continue;
+            auto last_pos = path.back();
+            while ((int)path.size() < target_len) {
+                path.push_back(last_pos);
+            }
+        }
     }
     
     // Get waiting time available for an agent
