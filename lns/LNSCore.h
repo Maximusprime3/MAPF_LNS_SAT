@@ -30,6 +30,7 @@ struct DiamondBucket {
     std::set<std::pair<int,int>> positions;
     std::vector<int> indices;
     std::vector<std::vector<char>> masked_map;
+    int earliest_t; // earliest timestep among conflicts in this bucket
 };
 
 

@@ -125,6 +125,7 @@ static std::vector<DiamondBucket> build_diamond_buckets(
     const std::vector<std::vector<std::vector<int>>>& conflict_map,
     const std::vector<std::vector<char>>& map,
     const std::set<int>& solved_conflict_indices,
+    const std::vector<ConflictMeta>& conflict_meta,
     int offset) {
 
     std::vector<DiamondBucket> diamond_buckets;
@@ -141,6 +142,9 @@ static std::vector<DiamondBucket> build_diamond_buckets(
         // Collect conflict indices as we grow the bucket to ensure buckets always carry conflicts
         std::set<int> index_set;
         index_set.insert((int)i);
+        // Track earliest timestep incrementally
+        int bucket_earliest_t = conflict_meta[i].timestep; //set to timestep of first conflict
+
         
 
         std::set<std::pair<int,int>> previous_shape;
@@ -176,6 +180,9 @@ static std::vector<DiamondBucket> build_diamond_buckets(
                         diamond_used[conflict_idx] = 1;
                         found_new_conflicts = true;
                         index_set.insert(conflict_idx);
+                        if (conflict_idx >= 0 && conflict_idx < (int)conflict_meta.size()) {
+                            bucket_earliest_t = std::min(bucket_earliest_t, conflict_meta[conflict_idx].timestep); //update earliest timestep of the bucket
+                        }
                     }
                 }
             }
@@ -188,6 +195,7 @@ static std::vector<DiamondBucket> build_diamond_buckets(
         diamond_bucket.positions = std::move(diamond_positions);
         
         diamond_bucket.indices.assign(index_set.begin(), index_set.end());
+        diamond_bucket.earliest_t = bucket_earliest_t;
 
         diamond_buckets.push_back(std::move(diamond_bucket));
     }
@@ -973,7 +981,7 @@ building_buckets:
         auto conflict_map = create_conflict_map(conflict_points, rows, cols);
 
       
-        auto diamond_buckets = build_diamond_buckets(conflict_points, conflict_map, problem.grid, solved_conflict_indices, offset);
+        auto diamond_buckets = build_diamond_buckets(conflict_points, conflict_map, problem.grid, solved_conflict_indices, conflict_meta, offset);
         // If no buckets could be formed, avoid infinite rebuild loops
         if (diamond_buckets.empty()) {
             std::cout << "[LNS] No conflict buckets created; stopping this attempt to avoid looping." << std::endl;
