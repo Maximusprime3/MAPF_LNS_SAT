@@ -3,6 +3,9 @@
 CXX := g++
 CXXFLAGS := -std=gnu++17 -O2 -pthread -D__STDC_FORMAT_MACROS -fpermissive
 
+# Prevent make from deleting these required sources as intermediates
+.PRECIOUS: minisat/minisat-master/minisat/core/Solver.cc minisat/minisat-master/minisat/utils/System.cc probSAT-master/probSAT_inmem.c
+
 INCLUDES := \
   -I. \
   -I./minisat \
@@ -29,7 +32,12 @@ SRCS := \
   minisat/minisat-master/minisat/utils/System.cc \
   probSAT-master/probSAT_inmem.c
 
-OBJS := $(SRCS:.cpp=.o)
+# Build object files for all C/C++ sources and link only objects to avoid duplicates
+OBJS := $(patsubst %.cpp,%.o,$(patsubst %.cc,%.o,$(patsubst %.c,%.o,$(SRCS))))
+
+# Non-C++ sources to be compiled on the final link step
+CC_SRCS := $(filter %.cc,$(SRCS))
+C_SRCS  := $(filter %.c,$(SRCS))
 
 TARGET := main_crude_lns_helpers
 
@@ -38,7 +46,7 @@ TARGET := main_crude_lns_helpers
 all: $(TARGET)
 
 $(TARGET): $(OBJS)
-	$(CXX) $(CXXFLAGS) $(INCLUDES) $^ -o $@
+	$(CXX) $(CXXFLAGS) $(INCLUDES) $(OBJS) -o $@
 
 %.o: %.cpp
 	$(CXX) $(CXXFLAGS) $(INCLUDES) -c $< -o $@

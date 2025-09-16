@@ -29,6 +29,7 @@
 //cnf problem might be because of mdd miss alignment
 //check logic are partly empty mdds ok?
 //if not place agents outside of zone (entry point) without any interactions
+//THEY are NOT ok, empty layers will produce empty clauses
 
 // Helper: create a masked map keeping only positions within diamond shape walkable
 // Uses Manhattan distance: |r - center_row| + |c - center_col| <= radius
@@ -320,11 +321,12 @@ static std::vector<std::tuple<int, int, std::pair<int,int>, std::pair<int,int>, 
     return edge_collisions;
 }
 
-// Helper: Align an MDD to a specific time window with empty levels before/after
-// This is used when creating MDDs for local problems or when adding new agents
+// Helper: Align an MDD to a specific time window without introducing placeholder empty levels.
+// Only actual agent levels are retained and shifted into the target window,
+//  keeping downstream CNF construction focused on levels that contain nodes.
 static void align_mdd_to_time_window(std::shared_ptr<MDD> mdd,
-                                    int entry_t, int exit_t,
-                                    int start_t, int end_t) {
+                                    int entry_t, int exit_t, //agent's entry and exit times
+                                    int start_t, int end_t) { //time window of problem zone start and end
    
 
     if (!mdd) { // do we have an mdd?
@@ -343,20 +345,20 @@ static void align_mdd_to_time_window(std::shared_ptr<MDD> mdd,
     int relative_exit = exit_t - start_t;    // 0-based within the time window
     
     relative_entry = std::max(0, std::min(relative_entry, zone_mdd_length - 1));
-    relative_exit = std::max(relative_entry, std::min(relative_exit, zone_mdd_length - 1));
+    //relative_exit = std::max(relative_entry, std::min(relative_exit, zone_mdd_length - 1)); //we don't need to do this as we don't add empty levels after the agent's exit
 
     auto original_levels = mdd->levels;
     std::map<int, std::vector<std::shared_ptr<MDDNode>>> aligned_levels;
 
-    for (int level = 0; level < relative_entry; ++level) {//add empty levels before the agent's entry
-        aligned_levels[level] = {};
-    }
+    //for (int level = 0; level < relative_entry; ++level) {//add empty levels before the agent's entry
+    //    aligned_levels[level] = {};
+    //}
 
     
     // Shift the agent's MDD levels to the correct position
-    int last_active_level = relative_entry - 1;
+    //int last_active_level = relative_entry - 1;
     for (const auto& [level, nodes] : original_levels) {
-        int new_level = level + relative_entry;
+        int new_level = level + relative_entry; //shift the level to the correct position in the window
         if (new_level >= zone_mdd_length) {
             std::cerr << "[LNS] WARNING: MDD level " << new_level
                       << " exceeds time window length " << zone_mdd_length
@@ -367,17 +369,17 @@ static void align_mdd_to_time_window(std::shared_ptr<MDD> mdd,
         auto& target_nodes = aligned_levels[new_level]; //get the target nodes
         target_nodes = nodes;
         for (auto& node : target_nodes) {
-            node->time_step = new_level; //update the time_step in each node
+            node->time_step = new_level + start_t; //MDD is now in absolute time scale similar to collision metadata and update logic 
         }
-        last_active_level = std::max(last_active_level, new_level);
+        //last_active_level = std::max(last_active_level, new_level);
     }
 
 
-    last_active_level = std::max(last_active_level, relative_exit);
+    //last_active_level = std::max(last_active_level, relative_exit);
 
-    for (int level = last_active_level + 1; level < zone_mdd_length; ++level) { //add empty levels after the last active level
-        aligned_levels[level] = {};
-    }
+    //for (int level = last_active_level + 1; level < zone_mdd_length; ++level) { //add empty levels after the last active level
+    //    aligned_levels[level] = {};
+    //}
 
     mdd->levels = std::move(aligned_levels);
 }
@@ -718,17 +720,18 @@ lazy_solve_with_waiting_time(CurrentSolution& current_solution,
             new_end_t = new_exit_t;
             std::cout << "[LNS] Time window extended: [" << start_t << ", " << end_t << "] -> [" << start_t << ", " << new_end_t << "]" << std::endl;
             
+            //THEY are NOT ok, empty layers will produce empty clauses
             // Extend all existing MDDs by adding empty levels at the end
-            std::cout << "[LNS] Extending existing MDDs to new time window..." << std::endl;
-            for (const auto& [agent_id, existing_mdd] : local_mdds) {
-                if (agent_id != agent_with_most_waiting) { // Skip the agent we just expanded
+            //std::cout << "[LNS] Extending existing MDDs to new time window..." << std::endl;
+            //for (const auto& [agent_id, existing_mdd] : local_mdds) {
+            //    if (agent_id != agent_with_most_waiting) { // Skip the agent we just expanded
                     // Add empty levels at the end to extend to new_end_t
-                    for (int empty_level = end_t - start_t + 1; empty_level <= new_end_t - start_t; ++empty_level) {
-                        existing_mdd->levels[empty_level] = {};  // Empty level
-                    }
-                    std::cout << "  Extended agent " << agent_id << " MDD with " << (new_end_t - end_t) << " empty levels" << std::endl;
-                }
-            }
+            //        for (int empty_level = end_t - start_t + 1; empty_level <= new_end_t - start_t; ++empty_level) {
+            //            existing_mdd->levels[empty_level] = {};  // Empty level
+            //        }
+            //        std::cout << "  Extended agent " << agent_id << " MDD with " << (new_end_t - end_t) << " empty levels" << std::endl;
+            //    }
+            //}
             
             // Check for new agents that enter the zone at the new timestep(s)
             std::set<int> new_agents_in_extended_window;
