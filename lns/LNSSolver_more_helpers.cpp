@@ -21,6 +21,8 @@
 // DONE order conlicts for time priority for solving
 // if solved with waiting time used need to redraw all paths
 
+//waiting time strategy maybe can use waiting time for every agent that is in a conflict 
+
 //traffic avoidance sampling from mdds
 //in der email steht noch was
 
@@ -553,14 +555,14 @@ lazy_solve_with_waiting_time(CurrentSolution& current_solution,
     }
     
     // Step 3: Find agent with most waiting time
-    auto [agent_with_most_waiting, max_waiting_time] = agents_with_waiting[0];
-    std::cout << "[LNS] Agent " << agent_with_most_waiting 
-              << " has the most waiting time: " << max_waiting_time << " timesteps" << std::endl;
     
     // Use waiting time to expand MDDs and resolve conflicts
     bool waiting_time_solution_found = false;
     int attempt = 0;
-    
+    int agent_with_most_waiting = -1;
+    int max_waiting_time = 0;
+    std::set<int> exhausted_agents;
+
     // Persistent collision tracking across all waiting time attempts
     std::vector<std::tuple<int, int, std::pair<int,int>, int>> all_discovered_vertex_collisions = initial_vertex_collisions;
     std::vector<std::tuple<int, int, std::pair<int,int>, std::pair<int,int>, int>> all_discovered_edge_collisions = initial_edge_collisions;
@@ -586,16 +588,58 @@ lazy_solve_with_waiting_time(CurrentSolution& current_solution,
             break;
         }
         
-        // get agent with most waiting time
-        std::tie(agent_with_most_waiting, max_waiting_time) = current_agents_with_waiting[0];
-        std::cout << "[LNS] Agent " << agent_with_most_waiting 
+        // Pick the agent with the most usable waiting time that hasn't been exhausted yet
+        agent_with_most_waiting = -1;
+        max_waiting_time = 0;
+        for (const auto& candidate : current_agents_with_waiting) {
+            if (exhausted_agents.count(candidate.first) == 0) {
+                agent_with_most_waiting = candidate.first;
+                max_waiting_time = candidate.second;
+                break;
+            }
+        }
+
+        if (agent_with_most_waiting == -1) {
+            std::cout << "[LNS] No remaining agents with usable waiting time" << std::endl;
+            break;
+        }
+
+        std::cout << "[LNS] Agent " << agent_with_most_waiting
                   << " has the most waiting time: " << max_waiting_time << " timesteps" << std::endl;
         
+
+        // Retrieve current zone entry/exit info for the selected agent
+        auto entry_exit_it = local_entry_exit_time.find(agent_with_most_waiting);
+        if (entry_exit_it == local_entry_exit_time.end()) {
+            std::cerr << "[LNS] ERROR: Missing entry/exit info for agent " << agent_with_most_waiting << std::endl;
+            exhausted_agents.insert(agent_with_most_waiting);
+            continue;
+        }
+        int entry_t = entry_exit_it->second.first;
+        int exit_t = entry_exit_it->second.second;
+
+        // Ensure we are not trying to expand past the global makespan
+        if (exit_t >= current_solution.max_timestep) {
+            std::cout << "[LNS] Agent " << agent_with_most_waiting
+                      << " already reaches global timestep " << current_solution.max_timestep
+                      << "; skipping waiting time usage" << std::endl;
+            exhausted_agents.insert(agent_with_most_waiting);
+            continue;
+        }
+
+        auto path_it = local_zone_paths.find(agent_with_most_waiting);
+        if (path_it == local_zone_paths.end() || path_it->second.empty()) {
+            std::cerr << "[LNS] ERROR: Missing local zone path for agent " << agent_with_most_waiting << std::endl;
+            exhausted_agents.insert(agent_with_most_waiting);
+            continue;
+        }
+        const auto& local_path = path_it->second;
+                  
         // Reduce waiting time by 1
         current_solution.use_waiting_time(agent_with_most_waiting, 1);
         
         // Expand this agent's MDD by 1 timestep
-        std::cout << "[LNS] Expanding MDD for agent " << agent_with_most_waiting 
+        std::cout << "[LNS] Expanding MDD for agent " << agent_with_most_waiting
                   << " by 1 timestep..." << std::endl;
         
         // Get agent's current entry/exit info
@@ -604,7 +648,6 @@ lazy_solve_with_waiting_time(CurrentSolution& current_solution,
         int exit_t = entry_exit.second;
         
         // Get agent's zone entry and exit points
-        const auto& local_path = local_zone_paths[agent_with_most_waiting];
         auto zone_start_pos = local_path.front();
         auto zone_goal_pos = local_path.back();
         
@@ -615,7 +658,7 @@ lazy_solve_with_waiting_time(CurrentSolution& current_solution,
         std::cout << "[LNS] Agent " << agent_with_most_waiting 
                   << " MDD expansion: " << original_path_length << " -> " << new_path_length << " timesteps" << std::endl;
         
-        // Create new MDD with expanded length
+        // Create new local MDD with expanded length
         MDDConstructor constructor(masked_map, zone_start_pos, zone_goal_pos, new_path_length - 1);
         auto expanded_mdd = constructor.construct_mdd();
         
@@ -629,7 +672,9 @@ lazy_solve_with_waiting_time(CurrentSolution& current_solution,
         
         // Update entry/exit time to reflect the expanded path
         int new_exit_t = exit_t + 1;
-        local_entry_exit_time[agent_with_most_waiting] = {entry_t, new_exit_t};
+        //local_entry_exit_time[agent_with_most_waiting] = {entry_t, new_exit_t};
+        entry_exit_it->second = {entry_t, new_exit_t}; //does the same thing as above but is more efficient
+
         
         std::cout << "[LNS] Updated agent " << agent_with_most_waiting 
                   << " entry/exit time: [" << entry_t << ", " << new_exit_t << "]" << std::endl;
@@ -738,7 +783,10 @@ lazy_solve_with_waiting_time(CurrentSolution& current_solution,
             std::cout << "[LNS] Successfully resolved conflicts using waiting time strategy!" << std::endl;
             
             // Update global solution with expanded local paths
-            current_solution.update_with_local_paths(using_waiting_time_result.local_paths, local_entry_exit_time);
+            current_solution.update_with_local_paths(
+                using_waiting_time_result.local_paths,
+                original_entry_exit_time,
+                local_entry_exit_time); 
             
             return LazySolveResult{true, using_waiting_time_result.local_paths, all_discovered_vertex_collisions, all_discovered_edge_collisions};
         } else {

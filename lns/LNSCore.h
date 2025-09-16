@@ -129,7 +129,13 @@ struct CurrentSolution {
             int exit_t = entry_exit.second;
             
             // Get the agent's global path
-            auto& global_path = agent_paths[agent_id];
+            auto global_it = agent_paths.find(agent_id);
+            if (global_it == agent_paths.end()) {
+                std::cerr << "[ERROR] Agent " << agent_id
+                          << " missing from global solution when applying local path update" << std::endl;
+                continue;
+            }
+            auto& global_path = global_it->second;
             
             // Replace the segment from entry_t to exit_t with the local path
             // The local path should have the same length as the segment it replaces
@@ -195,7 +201,13 @@ struct CurrentSolution {
             int delta = new_exit_t - old_exit_t;
 
             // Bounds and size checks on global path
-            auto& global_path = agent_paths[agent_id];
+            auto global_it = agent_paths.find(agent_id);
+            if (global_it == agent_paths.end()) {
+                std::cerr << "[ERROR] Agent " << agent_id
+                          << " missing from global solution when applying waiting-time update" << std::endl;
+                continue;
+            }
+            auto& global_path = global_it->second;
             const int N = (int)global_path.size(); // should be makespan as paths are padded to makespan with last position
             if (new_entry_t < 0 || new_entry_t > new_exit_t) {
                 std::cerr << "[ERROR] Agent " << agent_id << " invalid new bounds: [" << new_entry_t
