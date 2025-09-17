@@ -816,6 +816,7 @@ lazy_solve_conflict_zone(CNF& local_cnf,
             //try solving without initial assignment once(set flag), only when this statement is reached twice in a row, we know there is no solution
             if (last_iteration_was_satisfiable) {
                 last_iteration_was_satisfiable = false; //trying to solve without assumptions will show if there is a solution at all
+                continue;
             } else {
                 break;
             }

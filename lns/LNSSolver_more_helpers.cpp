@@ -478,9 +478,11 @@ lazy_solve_conflict_zone(CNF& local_cnf,
         //solve without assignment if first iteration or last iteration was unsatisfiable
         MiniSatSolution minisat_result;
         if (first_iteration || !last_iteration_was_satisfiable) {
+            
             minisat_result = SATSolverManager::solve_cnf_with_minisat(local_cnf);
             first_iteration = false;
         } else {
+            
             minisat_result = SATSolverManager::solve_cnf_with_minisat(local_cnf, &initial_assignment);
         }
 
@@ -489,7 +491,12 @@ lazy_solve_conflict_zone(CNF& local_cnf,
         //try solving without initial assignment once(set flag), only when this statement is reached twice in a row, we know there is no solution
             if (last_iteration_was_satisfiable) {
                 last_iteration_was_satisfiable = false; //trying to solve without assumptions will show if there is a solution at all
+                //safety run solving without assignment
+                std::cout << "[LNS] No Solution found -> Safety run solving without assignment" << std::endl;
+                continue;
             } else {
+                //safety run failed
+                std::cout << "[LNS] No Solution found + Safety run failed -> UNSAT" << std::endl;
                 break;
             }
         }
