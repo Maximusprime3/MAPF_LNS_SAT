@@ -358,10 +358,10 @@ static void align_mdd_to_time_window(std::shared_ptr<MDD> mdd,
     // Shift the agent's MDD levels to the correct position
     //int last_active_level = relative_entry - 1;
     for (const auto& [level, nodes] : original_levels) {
-        int new_level = level + relative_entry; //shift the level to the correct position in the window
-        if (new_level >= zone_mdd_length) {
+        int new_level = level + relative_entry + start_t; //shift the level to the correct position in the window
+        if (new_level >= zone_mdd_length + start_t) {
             std::cerr << "[LNS] WARNING: MDD level " << new_level
-                      << " exceeds time window length " << zone_mdd_length
+                      << " exceeds time window length " << zone_mdd_length + start_t
                       << "; truncating." << std::endl;
             continue;
         }
@@ -369,7 +369,7 @@ static void align_mdd_to_time_window(std::shared_ptr<MDD> mdd,
         auto& target_nodes = aligned_levels[new_level]; //get the target nodes
         target_nodes = nodes;
         for (auto& node : target_nodes) {
-            node->time_step = new_level + start_t; //MDD is now in absolute time scale similar to collision metadata and update logic 
+            node->time_step = new_level; //MDD is now in absolute time scale similar to collision metadata and update logic 
         }
         //last_active_level = std::max(last_active_level, new_level);
     }
@@ -432,10 +432,17 @@ lazy_solve_conflict_zone(CNF& local_cnf,
             }
         }
     }
+    // there can be duplicates in the known_edge_collisions, so we need to check for them
+    std::set<std::tuple<int, int, std::pair<int,int>, std::pair<int,int>, int>> known_edge_collisions_set;
 
     if (known_edge_collisions && !known_edge_collisions->empty()) {
         std::cout << "[LNS] Adding " << known_edge_collisions->size() << " pre-discovered edge collisions..." << std::endl;
         for (const auto& edge_collision : *known_edge_collisions) {
+            //check if we already added this edge collision
+            if (known_edge_collisions_set.count(edge_collision) > 0) {
+                continue;
+            }
+            known_edge_collisions_set.insert(edge_collision);
             int agent1, agent2, timestep;
             std::pair<int,int> pos1, pos2;
             std::tie(agent1, agent2, pos1, pos2, timestep) = edge_collision;
@@ -513,7 +520,13 @@ lazy_solve_conflict_zone(CNF& local_cnf,
             for (const auto& collision : new_collisions) {
                 int agent1, agent2, timestep;
                 std::pair<int,int> pos;
+                //adjust timestep to be global time step
+                timestep += start_t;
                 std::tie(agent1, agent2, pos, timestep) = collision;
+                //print the vertex collision
+                std::cout << "  Vertex collision: " << agent1 << ", " << agent2
+                          << ", (" << pos.first << "," << pos.second << ")"
+                          << ", t=" << timestep << std::endl;
 
                 std::vector<int> clause = cnf_constructor.add_single_collision_clause(
                 agent1, agent2, pos, timestep, false);
@@ -524,12 +537,20 @@ lazy_solve_conflict_zone(CNF& local_cnf,
             for (const auto& edge_collision : new_edge_collisions) {
                 int agent1, agent2, timestep;
                 std::pair<int,int> pos1, pos2;
+                //adjust timestep to be global time step
+                timestep += start_t;
                 std::tie(agent1, agent2, pos1, pos2, timestep) = edge_collision;
+                //print the edge collision
+                std::cout << "  Edge collision: " << agent1 << ", " << agent2
+                          << ", (" << pos1.first << "," << pos1.second << ")"
+                          << " <-> (" << pos2.first << "," << pos2.second << ")"
+                          << ", t=" << timestep << std::endl;
 
                 std::vector<int> clause = cnf_constructor.add_single_edge_collision_clause(
                 agent1, agent2, pos1, pos2, timestep, false);
                 local_cnf.add_clause(clause);
             }
+
         }
     }
 
@@ -696,6 +717,8 @@ lazy_solve_with_waiting_time(CurrentSolution& current_solution,
         // Create new local MDD with expanded length
         MDDConstructor constructor(masked_map, zone_start_pos, zone_goal_pos, new_path_length - 1);
         auto expanded_mdd = constructor.construct_mdd();
+        // align the mdd to the time window
+        align_mdd_to_time_window(expanded_mdd, entry_t, exit_t, start_t, end_t);
         
         if (!expanded_mdd) {
             std::cout << "[LNS] Failed to create expanded MDD for agent " << agent_with_most_waiting << std::endl;
@@ -823,7 +846,9 @@ lazy_solve_with_waiting_time(CurrentSolution& current_solution,
                 using_waiting_time_result.local_paths,
                 original_entry_exit_time,
                 local_entry_exit_time); 
+        
             
+
             return LazySolveResult{true, using_waiting_time_result.local_paths, all_discovered_vertex_collisions, all_discovered_edge_collisions};
         } else {
             std::cout << "[LNS] Expanded MDD did not resolve conflicts, trying next agent..." << std::endl;
@@ -1270,9 +1295,21 @@ select_bucket:
             MDDConstructor constructor(masked_map, zone_start_pos, zone_goal_pos, agent_path_length - 1);
             auto agent_mdd = constructor.construct_mdd();
             
+            //print the mdd
+            std::cout << "  Agent " << agent_id << " MDD: " << std::endl;
+            for (const auto& [level, nodes] : agent_mdd->levels) {
+                std::cout << "    Level " << level << ": " << nodes.size() << " nodes" << std::endl;
+            }
+
             // Align MDD to the zone time window
             align_mdd_to_time_window(agent_mdd, entry_t, exit_t, start_t, end_t);
             
+            //print the mdd
+            std::cout << "AFTER ALIGNMENT  Agent " << agent_id << " MDD: " << std::endl;
+            for (const auto& [level, nodes] : agent_mdd->levels) {
+                std::cout << "    Level " << level << ": " << nodes.size() << " nodes" << std::endl;
+            }
+
             local_mdds[agent_id] = agent_mdd;
             
             int relative_entry = entry_t - start_t;
