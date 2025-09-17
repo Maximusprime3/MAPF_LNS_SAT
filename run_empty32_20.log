@@ -1,0 +1,1072 @@
+[LNS] Loaded map 32x32, agents: 20
+[LNS] Map:
+................................
+................................
+................................
+................................
+................................
+................................
+................................
+................................
+................................
+................................
+................................
+................................
+................................
+................................
+................................
+................................
+................................
+................................
+................................
+................................
+................................
+................................
+................................
+................................
+................................
+................................
+................................
+................................
+................................
+................................
+................................
+................................
+[LNS] Agents (start -> goal):
+  Agent 0: (11,25) -> (20,30)
+  Agent 1: (14,31) -> (23,16)
+  Agent 2: (5,23) -> (5,11)
+  Agent 3: (13,13) -> (28,27)
+  Agent 4: (3,27) -> (13,2)
+  Agent 5: (16,3) -> (0,22)
+  Agent 6: (24,25) -> (22,23)
+  Agent 7: (18,22) -> (27,2)
+  Agent 8: (28,8) -> (11,7)
+  Agent 9: (7,3) -> (12,28)
+  Agent 10: (5,0) -> (2,10)
+  Agent 11: (14,7) -> (26,28)
+  Agent 12: (23,8) -> (24,22)
+  Agent 13: (9,20) -> (20,20)
+  Agent 14: (26,14) -> (31,17)
+  Agent 15: (19,10) -> (28,28)
+  Agent 16: (9,25) -> (26,2)
+  Agent 17: (22,1) -> (0,19)
+  Agent 18: (18,24) -> (10,14)
+  Agent 19: (3,4) -> (11,30)
+
+[LNS] === Attempt with max_timesteps=40 ===
+[LNS] Creating MDDs with shortest paths + waiting time...
+[LNS] Created 20 MDDs with waiting time structure
+[LNS] Built MDDs with waiting time structure for 20 agents at makespan 40
+[LNS] Step 1: Sampling shortest paths and creating current solution...
+[LNS] Calculating waiting times for agents...
+  Agent 19 reaches goal at t=34, waiting time=6
+  Agent 18 reaches goal at t=18, waiting time=22
+  Agent 17 reaches goal at t=40, waiting time=0
+  Agent 16 reaches goal at t=40, waiting time=0
+  Agent 15 reaches goal at t=27, waiting time=13
+  Agent 14 reaches goal at t=8, waiting time=32
+  Agent 13 reaches goal at t=11, waiting time=29
+  Agent 12 reaches goal at t=15, waiting time=25
+  Agent 11 reaches goal at t=33, waiting time=7
+  Agent 10 reaches goal at t=13, waiting time=27
+  Agent 9 reaches goal at t=30, waiting time=10
+  Agent 8 reaches goal at t=18, waiting time=22
+  Agent 7 reaches goal at t=29, waiting time=11
+  Agent 6 reaches goal at t=4, waiting time=36
+  Agent 5 reaches goal at t=35, waiting time=5
+  Agent 4 reaches goal at t=35, waiting time=5
+  Agent 3 reaches goal at t=29, waiting time=11
+  Agent 2 reaches goal at t=12, waiting time=28
+  Agent 1 reaches goal at t=24, waiting time=16
+  Agent 0 reaches goal at t=14, waiting time=26
+[LNS] Waiting time calculation complete
+[LNS] Created current solution with 20 agent paths and path map of size 32x32
+[LNS] Step 2: Analyzing conflicts...
+[LNS] Current solution: vertex collisions=0, edge collisions=1
+[LNS] Step 3: Building conflict buckets...
+[LNS] Building diamond bucket for conflict 0
+[LNS] Formed 1 diamond-shaped conflict bucket(s).
+  Diamond Bucket 0: positions=18, conflicts=2
+[LNS] Step 4: Selecting most relevant bucket...
+[LNS] Selected most relevant diamond bucket 0 with 2 conflicts and 18 positions.
+[LNS] Step 5: Creating map crop for selected bucket...
+[LNS] Step 6: Computing conflict time window and extracting local paths...
+[LNS] Conflict time window: [15, 19]
+[LNS] Agents in zone within window: 4
+  Agent 5 local segment t=[17,17] len=1
+  Agent 9 local segment t=[16,17] len=2
+  Agent 18 local segment t=[15,19] len=5
+  Agent 19 local segment t=[15,19] len=5
+[LNS] Step 8: Creating aligned MDDs for local problem...
+[LNS] Zone MDD length: 5 (from t=15 to t=19)
+  Agent 19 MDD: start=(9,13) goal=(10,16) path_length=5 active levels=[0,4] of 5
+  Agent 9 MDD: start=(12,14) goal=(12,15) path_length=2 active levels=[1,2] of 5
+  Agent 18 MDD: start=(10,17) goal=(10,14) path_length=5 active levels=[0,4] of 5
+  Agent 5 MDD: start=(9,13) goal=(9,13) path_length=1 active levels=[2,2] of 5
+[LNS] Created 4 local MDDs
+[LNS] Step 9: Creating CNF for local problem...
+[LNS] Created lazy CNF with 34 clauses and 19 variables
+[LNS] Step 9b: Extracting vertex collision clauses...
+[LNS] Extracted 0 vertex collision clauses
+[LNS] Step 9c: Extracting edge collision clauses...
+[LNS] Extracted 2 edge collision clauses
+[LNS] Final local CNF: 34 total clauses
+[LNS] Step 10: Starting lazy solving of conflict zone...
+[LNS] Starting lazy solving of conflict zone...
+[LNS] Adding 2 pre-discovered edge collisions...
+[DEBUG] Missing variable(s) for agent 19 expecting pos1=(10,14)@t=17, pos2=(10,15)@t=18. var1=-1, var2=-1
+[DEBUG] Variable map for agent 19:
+  Var 19: agent 19, pos (10,16), t=4
+  Var 18: agent 19, pos (9,16), t=3
+  Var 14: agent 19, pos (9,14), t=1
+  Var 16: agent 19, pos (9,15), t=2
+  Var 12: agent 19, pos (9,13), t=0
+  Var 17: agent 19, pos (10,15), t=3
+  Var 15: agent 19, pos (10,14), t=2
+  Var 13: agent 19, pos (10,13), t=1
+[DEBUG] Missing variable(s) for agent 18 expecting pos2=(10,15)@t=17, pos1=(10,14)@t=18. var3=-1, var4=-1
+[DEBUG] Variable map for agent 18:
+  Var 4: agent 18, pos (10,17), t=1
+  Var 5: agent 18, pos (10,15), t=2
+  Var 7: agent 18, pos (10,14), t=3
+  Var 2: agent 18, pos (10,17), t=0
+  Var 3: agent 18, pos (10,16), t=1
+  Var 6: agent 18, pos (10,16), t=2
+  Var 8: agent 18, pos (10,15), t=3
+  Var 9: agent 18, pos (10,14), t=4
+[LNS] Skipping invalid pre-discovered edge collision (19,18) pos1=(10,14) pos2=(10,15) t=17: Invalid edge collision clause: agent1=19, agent2=18, pos1=(10,14), pos2=(10,15), timestep=17
+[DEBUG] Missing variable(s) for agent 19 expecting pos1=(10,14)@t=17, pos2=(10,15)@t=18. var1=-1, var2=-1
+[DEBUG] Variable map for agent 19:
+  Var 19: agent 19, pos (10,16), t=4
+  Var 18: agent 19, pos (9,16), t=3
+  Var 14: agent 19, pos (9,14), t=1
+  Var 16: agent 19, pos (9,15), t=2
+  Var 12: agent 19, pos (9,13), t=0
+  Var 17: agent 19, pos (10,15), t=3
+  Var 15: agent 19, pos (10,14), t=2
+  Var 13: agent 19, pos (10,13), t=1
+[DEBUG] Missing variable(s) for agent 18 expecting pos2=(10,15)@t=17, pos1=(10,14)@t=18. var3=-1, var4=-1
+[DEBUG] Variable map for agent 18:
+  Var 4: agent 18, pos (10,17), t=1
+  Var 5: agent 18, pos (10,15), t=2
+  Var 7: agent 18, pos (10,14), t=3
+  Var 2: agent 18, pos (10,17), t=0
+  Var 3: agent 18, pos (10,16), t=1
+  Var 6: agent 18, pos (10,16), t=2
+  Var 8: agent 18, pos (10,15), t=3
+  Var 9: agent 18, pos (10,14), t=4
+[LNS] Skipping invalid pre-discovered edge collision (19,18) pos1=(10,14) pos2=(10,15) t=17: Invalid edge collision clause: agent1=19, agent2=18, pos1=(10,14), pos2=(10,15), timestep=17
+[LNS] Lazy solving iteration 1...
+DEBUG: CNF has 34 clauses
+DEBUG: First clause: 1 
+DEBUG: Adding 34 clauses to MiniSAT
+DEBUG: Clause load summary: input=34, added=34, tautologies_skipped=0, duplicates_skipped=0, unit_clauses=7, empties=0, intra_clause_literals_removed=0, added_but_db_unchanged=5
+DEBUG: After adding clauses, solver has 22 clauses and 19 variables
+DEBUG: MiniSAT found 19 variables
+DEBUG: Assignment size: 19
+DEBUG: First few assignment values: 1 1 0 1 0 1 0 1 1 1 
+[LNS] Found solution with 19 variable assignments
+
+=== DEBUG: cnf_assignment_to_paths ===
+Input assignment size: 19
+Input assignment: 1 1 0 1 0 1 0 1 1 1 1 1 1 0 1 0 1 0 1 
+=== END DEBUG ===
+[LNS] Extracted paths for 4 agents
+[LNS] Found 1 vertex collisions and 0 edge collisions
+[LNS] Adding collision clauses and solving again...
+[LNS] Lazy solving iteration 2...
+DEBUG: CNF has 35 clauses
+DEBUG: First clause: 1 
+DEBUG: Adding 35 clauses to MiniSAT
+DEBUG: Clause load summary: input=35, added=35, tautologies_skipped=0, duplicates_skipped=0, unit_clauses=7, empties=0, intra_clause_literals_removed=0, added_but_db_unchanged=5
+DEBUG: After adding clauses, solver has 23 clauses and 19 variables
+DEBUG: MiniSAT found 19 variables
+DEBUG: Assignment size: 19
+DEBUG: First few assignment values: 1 1 0 1 0 1 0 1 1 1 
+[LNS] Found solution with 19 variable assignments
+
+=== DEBUG: cnf_assignment_to_paths ===
+Input assignment size: 19
+Input assignment: 1 1 0 1 0 1 0 1 1 1 1 1 0 1 0 1 0 1 1 
+=== END DEBUG ===
+[LNS] Extracted paths for 4 agents
+[LNS] Found 0 vertex collisions and 0 edge collisions
+[LNS] Found collision-free local solution!
+[LNS] Updating global solution with local paths...
+  Updated agent 5 path segment from t=17 to t=17 (length=1)
+  Updated agent 18 path segment from t=15 to t=19 (length=5)
+  Updated agent 9 path segment from t=16 to t=17 (length=2)
+  Updated agent 19 path segment from t=15 to t=19 (length=5)
+[LNS] Updating path map with new local paths...
+[LNS] Successfully updated global solution with local paths!
+[LNS] Updated global collision tracking: 1 vertex collisions, 0 edge collisions
+[LNS] Bucket solved without expansion. Marked 2 conflicts as solved. Selecting next bucket...
+[LNS] Step 4: Selecting most relevant bucket...
+[LNS] No remaining buckets after integration; proceeding to post-processing.
+[LNS] NO remaining buckets, Global evaluation of current solution...
+[LNS] No conflicts remain in the global solution. SOLVED at makespan 40
+
+[LNS] Final agent paths:
+
+=== Agent Paths ===
+Agent 19 path:
+  Time 0: (3, 4)
+  Time 1: (4, 4)
+  Time 2: (4, 5)
+  Time 3: (4, 6)
+  Time 4: (4, 7)
+  Time 5: (4, 8)
+  Time 6: (4, 9)
+  Time 7: (5, 9)
+  Time 8: (5, 10)
+  Time 9: (5, 11)
+  Time 10: (6, 11)
+  Time 11: (6, 12)
+  Time 12: (7, 12)
+  Time 13: (7, 13)
+  Time 14: (8, 13)
+  Time 15: (9, 13)
+  Time 16: (9, 14)
+  Time 17: (9, 15)
+  Time 18: (9, 16)
+  Time 19: (10, 16)
+  Time 20: (11, 16)
+  Time 21: (11, 17)
+  Time 22: (11, 18)
+  Time 23: (11, 19)
+  Time 24: (11, 20)
+  Time 25: (11, 21)
+  Time 26: (11, 22)
+  Time 27: (11, 23)
+  Time 28: (11, 24)
+  Time 29: (11, 25)
+  Time 30: (11, 26)
+  Time 31: (11, 27)
+  Time 32: (11, 28)
+  Time 33: (11, 29)
+  Time 34: (11, 30)
+  Time 35: (11, 30)
+  Time 36: (11, 30)
+  Time 37: (11, 30)
+  Time 38: (11, 30)
+  Time 39: (11, 30)
+  Time 40: (11, 30)
+
+Agent 18 path:
+  Time 0: (18, 24)
+  Time 1: (17, 24)
+  Time 2: (16, 24)
+  Time 3: (15, 24)
+  Time 4: (15, 23)
+  Time 5: (14, 23)
+  Time 6: (14, 22)
+  Time 7: (13, 22)
+  Time 8: (13, 21)
+  Time 9: (13, 20)
+  Time 10: (12, 20)
+  Time 11: (11, 20)
+  Time 12: (11, 19)
+  Time 13: (10, 19)
+  Time 14: (10, 18)
+  Time 15: (10, 17)
+  Time 16: (10, 17)
+  Time 17: (10, 16)
+  Time 18: (10, 15)
+  Time 19: (10, 14)
+  Time 20: (10, 14)
+  Time 21: (10, 14)
+  Time 22: (10, 14)
+  Time 23: (10, 14)
+  Time 24: (10, 14)
+  Time 25: (10, 14)
+  Time 26: (10, 14)
+  Time 27: (10, 14)
+  Time 28: (10, 14)
+  Time 29: (10, 14)
+  Time 30: (10, 14)
+  Time 31: (10, 14)
+  Time 32: (10, 14)
+  Time 33: (10, 14)
+  Time 34: (10, 14)
+  Time 35: (10, 14)
+  Time 36: (10, 14)
+  Time 37: (10, 14)
+  Time 38: (10, 14)
+  Time 39: (10, 14)
+  Time 40: (10, 14)
+
+Agent 17 path:
+  Time 0: (22, 1)
+  Time 1: (21, 1)
+  Time 2: (20, 1)
+  Time 3: (20, 2)
+  Time 4: (19, 2)
+  Time 5: (19, 3)
+  Time 6: (19, 4)
+  Time 7: (19, 5)
+  Time 8: (19, 6)
+  Time 9: (19, 7)
+  Time 10: (19, 8)
+  Time 11: (18, 8)
+  Time 12: (17, 8)
+  Time 13: (16, 8)
+  Time 14: (15, 8)
+  Time 15: (15, 9)
+  Time 16: (15, 10)
+  Time 17: (15, 11)
+  Time 18: (15, 12)
+  Time 19: (15, 13)
+  Time 20: (15, 14)
+  Time 21: (14, 14)
+  Time 22: (14, 15)
+  Time 23: (14, 16)
+  Time 24: (14, 17)
+  Time 25: (14, 18)
+  Time 26: (13, 18)
+  Time 27: (13, 19)
+  Time 28: (12, 19)
+  Time 29: (11, 19)
+  Time 30: (10, 19)
+  Time 31: (9, 19)
+  Time 32: (8, 19)
+  Time 33: (7, 19)
+  Time 34: (6, 19)
+  Time 35: (5, 19)
+  Time 36: (4, 19)
+  Time 37: (3, 19)
+  Time 38: (2, 19)
+  Time 39: (1, 19)
+  Time 40: (0, 19)
+
+Agent 16 path:
+  Time 0: (9, 25)
+  Time 1: (9, 24)
+  Time 2: (9, 23)
+  Time 3: (10, 23)
+  Time 4: (10, 22)
+  Time 5: (11, 22)
+  Time 6: (12, 22)
+  Time 7: (12, 21)
+  Time 8: (12, 20)
+  Time 9: (12, 19)
+  Time 10: (13, 19)
+  Time 11: (14, 19)
+  Time 12: (14, 18)
+  Time 13: (15, 18)
+  Time 14: (16, 18)
+  Time 15: (16, 17)
+  Time 16: (16, 16)
+  Time 17: (17, 16)
+  Time 18: (18, 16)
+  Time 19: (18, 15)
+  Time 20: (18, 14)
+  Time 21: (18, 13)
+  Time 22: (19, 13)
+  Time 23: (19, 12)
+  Time 24: (20, 12)
+  Time 25: (20, 11)
+  Time 26: (21, 11)
+  Time 27: (22, 11)
+  Time 28: (22, 10)
+  Time 29: (22, 9)
+  Time 30: (22, 8)
+  Time 31: (22, 7)
+  Time 32: (23, 7)
+  Time 33: (24, 7)
+  Time 34: (24, 6)
+  Time 35: (25, 6)
+  Time 36: (25, 5)
+  Time 37: (25, 4)
+  Time 38: (25, 3)
+  Time 39: (25, 2)
+  Time 40: (26, 2)
+
+Agent 15 path:
+  Time 0: (19, 10)
+  Time 1: (20, 10)
+  Time 2: (20, 11)
+  Time 3: (20, 12)
+  Time 4: (21, 12)
+  Time 5: (21, 13)
+  Time 6: (22, 13)
+  Time 7: (23, 13)
+  Time 8: (24, 13)
+  Time 9: (24, 14)
+  Time 10: (24, 15)
+  Time 11: (25, 15)
+  Time 12: (26, 15)
+  Time 13: (26, 16)
+  Time 14: (26, 17)
+  Time 15: (26, 18)
+  Time 16: (27, 18)
+  Time 17: (27, 19)
+  Time 18: (27, 20)
+  Time 19: (28, 20)
+  Time 20: (28, 21)
+  Time 21: (28, 22)
+  Time 22: (28, 23)
+  Time 23: (28, 24)
+  Time 24: (28, 25)
+  Time 25: (28, 26)
+  Time 26: (28, 27)
+  Time 27: (28, 28)
+  Time 28: (28, 28)
+  Time 29: (28, 28)
+  Time 30: (28, 28)
+  Time 31: (28, 28)
+  Time 32: (28, 28)
+  Time 33: (28, 28)
+  Time 34: (28, 28)
+  Time 35: (28, 28)
+  Time 36: (28, 28)
+  Time 37: (28, 28)
+  Time 38: (28, 28)
+  Time 39: (28, 28)
+  Time 40: (28, 28)
+
+Agent 14 path:
+  Time 0: (26, 14)
+  Time 1: (27, 14)
+  Time 2: (27, 15)
+  Time 3: (28, 15)
+  Time 4: (28, 16)
+  Time 5: (29, 16)
+  Time 6: (30, 16)
+  Time 7: (30, 17)
+  Time 8: (31, 17)
+  Time 9: (31, 17)
+  Time 10: (31, 17)
+  Time 11: (31, 17)
+  Time 12: (31, 17)
+  Time 13: (31, 17)
+  Time 14: (31, 17)
+  Time 15: (31, 17)
+  Time 16: (31, 17)
+  Time 17: (31, 17)
+  Time 18: (31, 17)
+  Time 19: (31, 17)
+  Time 20: (31, 17)
+  Time 21: (31, 17)
+  Time 22: (31, 17)
+  Time 23: (31, 17)
+  Time 24: (31, 17)
+  Time 25: (31, 17)
+  Time 26: (31, 17)
+  Time 27: (31, 17)
+  Time 28: (31, 17)
+  Time 29: (31, 17)
+  Time 30: (31, 17)
+  Time 31: (31, 17)
+  Time 32: (31, 17)
+  Time 33: (31, 17)
+  Time 34: (31, 17)
+  Time 35: (31, 17)
+  Time 36: (31, 17)
+  Time 37: (31, 17)
+  Time 38: (31, 17)
+  Time 39: (31, 17)
+  Time 40: (31, 17)
+
+Agent 13 path:
+  Time 0: (9, 20)
+  Time 1: (10, 20)
+  Time 2: (11, 20)
+  Time 3: (12, 20)
+  Time 4: (13, 20)
+  Time 5: (14, 20)
+  Time 6: (15, 20)
+  Time 7: (16, 20)
+  Time 8: (17, 20)
+  Time 9: (18, 20)
+  Time 10: (19, 20)
+  Time 11: (20, 20)
+  Time 12: (20, 20)
+  Time 13: (20, 20)
+  Time 14: (20, 20)
+  Time 15: (20, 20)
+  Time 16: (20, 20)
+  Time 17: (20, 20)
+  Time 18: (20, 20)
+  Time 19: (20, 20)
+  Time 20: (20, 20)
+  Time 21: (20, 20)
+  Time 22: (20, 20)
+  Time 23: (20, 20)
+  Time 24: (20, 20)
+  Time 25: (20, 20)
+  Time 26: (20, 20)
+  Time 27: (20, 20)
+  Time 28: (20, 20)
+  Time 29: (20, 20)
+  Time 30: (20, 20)
+  Time 31: (20, 20)
+  Time 32: (20, 20)
+  Time 33: (20, 20)
+  Time 34: (20, 20)
+  Time 35: (20, 20)
+  Time 36: (20, 20)
+  Time 37: (20, 20)
+  Time 38: (20, 20)
+  Time 39: (20, 20)
+  Time 40: (20, 20)
+
+Agent 12 path:
+  Time 0: (23, 8)
+  Time 1: (24, 8)
+  Time 2: (24, 9)
+  Time 3: (24, 10)
+  Time 4: (24, 11)
+  Time 5: (24, 12)
+  Time 6: (24, 13)
+  Time 7: (24, 14)
+  Time 8: (24, 15)
+  Time 9: (24, 16)
+  Time 10: (24, 17)
+  Time 11: (24, 18)
+  Time 12: (24, 19)
+  Time 13: (24, 20)
+  Time 14: (24, 21)
+  Time 15: (24, 22)
+  Time 16: (24, 22)
+  Time 17: (24, 22)
+  Time 18: (24, 22)
+  Time 19: (24, 22)
+  Time 20: (24, 22)
+  Time 21: (24, 22)
+  Time 22: (24, 22)
+  Time 23: (24, 22)
+  Time 24: (24, 22)
+  Time 25: (24, 22)
+  Time 26: (24, 22)
+  Time 27: (24, 22)
+  Time 28: (24, 22)
+  Time 29: (24, 22)
+  Time 30: (24, 22)
+  Time 31: (24, 22)
+  Time 32: (24, 22)
+  Time 33: (24, 22)
+  Time 34: (24, 22)
+  Time 35: (24, 22)
+  Time 36: (24, 22)
+  Time 37: (24, 22)
+  Time 38: (24, 22)
+  Time 39: (24, 22)
+  Time 40: (24, 22)
+
+Agent 11 path:
+  Time 0: (14, 7)
+  Time 1: (15, 7)
+  Time 2: (16, 7)
+  Time 3: (16, 8)
+  Time 4: (17, 8)
+  Time 5: (18, 8)
+  Time 6: (19, 8)
+  Time 7: (19, 9)
+  Time 8: (20, 9)
+  Time 9: (21, 9)
+  Time 10: (21, 10)
+  Time 11: (22, 10)
+  Time 12: (22, 11)
+  Time 13: (23, 11)
+  Time 14: (24, 11)
+  Time 15: (25, 11)
+  Time 16: (25, 12)
+  Time 17: (25, 13)
+  Time 18: (26, 13)
+  Time 19: (26, 14)
+  Time 20: (26, 15)
+  Time 21: (26, 16)
+  Time 22: (26, 17)
+  Time 23: (26, 18)
+  Time 24: (26, 19)
+  Time 25: (26, 20)
+  Time 26: (26, 21)
+  Time 27: (26, 22)
+  Time 28: (26, 23)
+  Time 29: (26, 24)
+  Time 30: (26, 25)
+  Time 31: (26, 26)
+  Time 32: (26, 27)
+  Time 33: (26, 28)
+  Time 34: (26, 28)
+  Time 35: (26, 28)
+  Time 36: (26, 28)
+  Time 37: (26, 28)
+  Time 38: (26, 28)
+  Time 39: (26, 28)
+  Time 40: (26, 28)
+
+Agent 10 path:
+  Time 0: (5, 0)
+  Time 1: (5, 1)
+  Time 2: (4, 1)
+  Time 3: (4, 2)
+  Time 4: (3, 2)
+  Time 5: (2, 2)
+  Time 6: (2, 3)
+  Time 7: (2, 4)
+  Time 8: (2, 5)
+  Time 9: (2, 6)
+  Time 10: (2, 7)
+  Time 11: (2, 8)
+  Time 12: (2, 9)
+  Time 13: (2, 10)
+  Time 14: (2, 10)
+  Time 15: (2, 10)
+  Time 16: (2, 10)
+  Time 17: (2, 10)
+  Time 18: (2, 10)
+  Time 19: (2, 10)
+  Time 20: (2, 10)
+  Time 21: (2, 10)
+  Time 22: (2, 10)
+  Time 23: (2, 10)
+  Time 24: (2, 10)
+  Time 25: (2, 10)
+  Time 26: (2, 10)
+  Time 27: (2, 10)
+  Time 28: (2, 10)
+  Time 29: (2, 10)
+  Time 30: (2, 10)
+  Time 31: (2, 10)
+  Time 32: (2, 10)
+  Time 33: (2, 10)
+  Time 34: (2, 10)
+  Time 35: (2, 10)
+  Time 36: (2, 10)
+  Time 37: (2, 10)
+  Time 38: (2, 10)
+  Time 39: (2, 10)
+  Time 40: (2, 10)
+
+Agent 9 path:
+  Time 0: (7, 3)
+  Time 1: (8, 3)
+  Time 2: (8, 4)
+  Time 3: (8, 5)
+  Time 4: (9, 5)
+  Time 5: (10, 5)
+  Time 6: (10, 6)
+  Time 7: (10, 7)
+  Time 8: (10, 8)
+  Time 9: (10, 9)
+  Time 10: (11, 9)
+  Time 11: (12, 9)
+  Time 12: (12, 10)
+  Time 13: (12, 11)
+  Time 14: (12, 12)
+  Time 15: (12, 13)
+  Time 16: (12, 14)
+  Time 17: (12, 15)
+  Time 18: (12, 16)
+  Time 19: (12, 17)
+  Time 20: (12, 18)
+  Time 21: (12, 19)
+  Time 22: (12, 20)
+  Time 23: (12, 21)
+  Time 24: (12, 22)
+  Time 25: (12, 23)
+  Time 26: (12, 24)
+  Time 27: (12, 25)
+  Time 28: (12, 26)
+  Time 29: (12, 27)
+  Time 30: (12, 28)
+  Time 31: (12, 28)
+  Time 32: (12, 28)
+  Time 33: (12, 28)
+  Time 34: (12, 28)
+  Time 35: (12, 28)
+  Time 36: (12, 28)
+  Time 37: (12, 28)
+  Time 38: (12, 28)
+  Time 39: (12, 28)
+  Time 40: (12, 28)
+
+Agent 8 path:
+  Time 0: (28, 8)
+  Time 1: (28, 7)
+  Time 2: (27, 7)
+  Time 3: (26, 7)
+  Time 4: (25, 7)
+  Time 5: (24, 7)
+  Time 6: (23, 7)
+  Time 7: (22, 7)
+  Time 8: (21, 7)
+  Time 9: (20, 7)
+  Time 10: (19, 7)
+  Time 11: (18, 7)
+  Time 12: (17, 7)
+  Time 13: (16, 7)
+  Time 14: (15, 7)
+  Time 15: (14, 7)
+  Time 16: (13, 7)
+  Time 17: (12, 7)
+  Time 18: (11, 7)
+  Time 19: (11, 7)
+  Time 20: (11, 7)
+  Time 21: (11, 7)
+  Time 22: (11, 7)
+  Time 23: (11, 7)
+  Time 24: (11, 7)
+  Time 25: (11, 7)
+  Time 26: (11, 7)
+  Time 27: (11, 7)
+  Time 28: (11, 7)
+  Time 29: (11, 7)
+  Time 30: (11, 7)
+  Time 31: (11, 7)
+  Time 32: (11, 7)
+  Time 33: (11, 7)
+  Time 34: (11, 7)
+  Time 35: (11, 7)
+  Time 36: (11, 7)
+  Time 37: (11, 7)
+  Time 38: (11, 7)
+  Time 39: (11, 7)
+  Time 40: (11, 7)
+
+Agent 7 path:
+  Time 0: (18, 22)
+  Time 1: (18, 21)
+  Time 2: (19, 21)
+  Time 3: (19, 20)
+  Time 4: (20, 20)
+  Time 5: (20, 19)
+  Time 6: (21, 19)
+  Time 7: (21, 18)
+  Time 8: (21, 17)
+  Time 9: (21, 16)
+  Time 10: (21, 15)
+  Time 11: (22, 15)
+  Time 12: (23, 15)
+  Time 13: (24, 15)
+  Time 14: (25, 15)
+  Time 15: (26, 15)
+  Time 16: (27, 15)
+  Time 17: (27, 14)
+  Time 18: (27, 13)
+  Time 19: (27, 12)
+  Time 20: (27, 11)
+  Time 21: (27, 10)
+  Time 22: (27, 9)
+  Time 23: (27, 8)
+  Time 24: (27, 7)
+  Time 25: (27, 6)
+  Time 26: (27, 5)
+  Time 27: (27, 4)
+  Time 28: (27, 3)
+  Time 29: (27, 2)
+  Time 30: (27, 2)
+  Time 31: (27, 2)
+  Time 32: (27, 2)
+  Time 33: (27, 2)
+  Time 34: (27, 2)
+  Time 35: (27, 2)
+  Time 36: (27, 2)
+  Time 37: (27, 2)
+  Time 38: (27, 2)
+  Time 39: (27, 2)
+  Time 40: (27, 2)
+
+Agent 6 path:
+  Time 0: (24, 25)
+  Time 1: (24, 24)
+  Time 2: (24, 23)
+  Time 3: (23, 23)
+  Time 4: (22, 23)
+  Time 5: (22, 23)
+  Time 6: (22, 23)
+  Time 7: (22, 23)
+  Time 8: (22, 23)
+  Time 9: (22, 23)
+  Time 10: (22, 23)
+  Time 11: (22, 23)
+  Time 12: (22, 23)
+  Time 13: (22, 23)
+  Time 14: (22, 23)
+  Time 15: (22, 23)
+  Time 16: (22, 23)
+  Time 17: (22, 23)
+  Time 18: (22, 23)
+  Time 19: (22, 23)
+  Time 20: (22, 23)
+  Time 21: (22, 23)
+  Time 22: (22, 23)
+  Time 23: (22, 23)
+  Time 24: (22, 23)
+  Time 25: (22, 23)
+  Time 26: (22, 23)
+  Time 27: (22, 23)
+  Time 28: (22, 23)
+  Time 29: (22, 23)
+  Time 30: (22, 23)
+  Time 31: (22, 23)
+  Time 32: (22, 23)
+  Time 33: (22, 23)
+  Time 34: (22, 23)
+  Time 35: (22, 23)
+  Time 36: (22, 23)
+  Time 37: (22, 23)
+  Time 38: (22, 23)
+  Time 39: (22, 23)
+  Time 40: (22, 23)
+
+Agent 5 path:
+  Time 0: (16, 3)
+  Time 1: (15, 3)
+  Time 2: (15, 4)
+  Time 3: (14, 4)
+  Time 4: (14, 5)
+  Time 5: (13, 5)
+  Time 6: (13, 6)
+  Time 7: (12, 6)
+  Time 8: (12, 7)
+  Time 9: (11, 7)
+  Time 10: (11, 8)
+  Time 11: (11, 9)
+  Time 12: (11, 10)
+  Time 13: (10, 10)
+  Time 14: (10, 11)
+  Time 15: (9, 11)
+  Time 16: (9, 12)
+  Time 17: (9, 13)
+  Time 18: (8, 13)
+  Time 19: (7, 13)
+  Time 20: (6, 13)
+  Time 21: (6, 14)
+  Time 22: (5, 14)
+  Time 23: (4, 14)
+  Time 24: (3, 14)
+  Time 25: (3, 15)
+  Time 26: (2, 15)
+  Time 27: (2, 16)
+  Time 28: (1, 16)
+  Time 29: (0, 16)
+  Time 30: (0, 17)
+  Time 31: (0, 18)
+  Time 32: (0, 19)
+  Time 33: (0, 20)
+  Time 34: (0, 21)
+  Time 35: (0, 22)
+  Time 36: (0, 22)
+  Time 37: (0, 22)
+  Time 38: (0, 22)
+  Time 39: (0, 22)
+  Time 40: (0, 22)
+
+Agent 4 path:
+  Time 0: (3, 27)
+  Time 1: (3, 26)
+  Time 2: (4, 26)
+  Time 3: (4, 25)
+  Time 4: (5, 25)
+  Time 5: (5, 24)
+  Time 6: (6, 24)
+  Time 7: (7, 24)
+  Time 8: (7, 23)
+  Time 9: (8, 23)
+  Time 10: (9, 23)
+  Time 11: (10, 23)
+  Time 12: (10, 22)
+  Time 13: (10, 21)
+  Time 14: (11, 21)
+  Time 15: (12, 21)
+  Time 16: (12, 20)
+  Time 17: (13, 20)
+  Time 18: (13, 19)
+  Time 19: (13, 18)
+  Time 20: (13, 17)
+  Time 21: (13, 16)
+  Time 22: (13, 15)
+  Time 23: (13, 14)
+  Time 24: (13, 13)
+  Time 25: (13, 12)
+  Time 26: (13, 11)
+  Time 27: (13, 10)
+  Time 28: (13, 9)
+  Time 29: (13, 8)
+  Time 30: (13, 7)
+  Time 31: (13, 6)
+  Time 32: (13, 5)
+  Time 33: (13, 4)
+  Time 34: (13, 3)
+  Time 35: (13, 2)
+  Time 36: (13, 2)
+  Time 37: (13, 2)
+  Time 38: (13, 2)
+  Time 39: (13, 2)
+  Time 40: (13, 2)
+
+Agent 3 path:
+  Time 0: (13, 13)
+  Time 1: (13, 14)
+  Time 2: (13, 15)
+  Time 3: (14, 15)
+  Time 4: (15, 15)
+  Time 5: (15, 16)
+  Time 6: (15, 17)
+  Time 7: (15, 18)
+  Time 8: (16, 18)
+  Time 9: (17, 18)
+  Time 10: (17, 19)
+  Time 11: (17, 20)
+  Time 12: (17, 21)
+  Time 13: (18, 21)
+  Time 14: (19, 21)
+  Time 15: (20, 21)
+  Time 16: (21, 21)
+  Time 17: (21, 22)
+  Time 18: (21, 23)
+  Time 19: (21, 24)
+  Time 20: (21, 25)
+  Time 21: (21, 26)
+  Time 22: (22, 26)
+  Time 23: (23, 26)
+  Time 24: (24, 26)
+  Time 25: (25, 26)
+  Time 26: (26, 26)
+  Time 27: (26, 27)
+  Time 28: (27, 27)
+  Time 29: (28, 27)
+  Time 30: (28, 27)
+  Time 31: (28, 27)
+  Time 32: (28, 27)
+  Time 33: (28, 27)
+  Time 34: (28, 27)
+  Time 35: (28, 27)
+  Time 36: (28, 27)
+  Time 37: (28, 27)
+  Time 38: (28, 27)
+  Time 39: (28, 27)
+  Time 40: (28, 27)
+
+Agent 2 path:
+  Time 0: (5, 23)
+  Time 1: (5, 22)
+  Time 2: (5, 21)
+  Time 3: (5, 20)
+  Time 4: (5, 19)
+  Time 5: (5, 18)
+  Time 6: (5, 17)
+  Time 7: (5, 16)
+  Time 8: (5, 15)
+  Time 9: (5, 14)
+  Time 10: (5, 13)
+  Time 11: (5, 12)
+  Time 12: (5, 11)
+  Time 13: (5, 11)
+  Time 14: (5, 11)
+  Time 15: (5, 11)
+  Time 16: (5, 11)
+  Time 17: (5, 11)
+  Time 18: (5, 11)
+  Time 19: (5, 11)
+  Time 20: (5, 11)
+  Time 21: (5, 11)
+  Time 22: (5, 11)
+  Time 23: (5, 11)
+  Time 24: (5, 11)
+  Time 25: (5, 11)
+  Time 26: (5, 11)
+  Time 27: (5, 11)
+  Time 28: (5, 11)
+  Time 29: (5, 11)
+  Time 30: (5, 11)
+  Time 31: (5, 11)
+  Time 32: (5, 11)
+  Time 33: (5, 11)
+  Time 34: (5, 11)
+  Time 35: (5, 11)
+  Time 36: (5, 11)
+  Time 37: (5, 11)
+  Time 38: (5, 11)
+  Time 39: (5, 11)
+  Time 40: (5, 11)
+
+Agent 1 path:
+  Time 0: (14, 31)
+  Time 1: (14, 30)
+  Time 2: (15, 30)
+  Time 3: (15, 29)
+  Time 4: (16, 29)
+  Time 5: (16, 28)
+  Time 6: (16, 27)
+  Time 7: (17, 27)
+  Time 8: (18, 27)
+  Time 9: (18, 26)
+  Time 10: (18, 25)
+  Time 11: (18, 24)
+  Time 12: (18, 23)
+  Time 13: (19, 23)
+  Time 14: (20, 23)
+  Time 15: (21, 23)
+  Time 16: (21, 22)
+  Time 17: (22, 22)
+  Time 18: (22, 21)
+  Time 19: (23, 21)
+  Time 20: (23, 20)
+  Time 21: (23, 19)
+  Time 22: (23, 18)
+  Time 23: (23, 17)
+  Time 24: (23, 16)
+  Time 25: (23, 16)
+  Time 26: (23, 16)
+  Time 27: (23, 16)
+  Time 28: (23, 16)
+  Time 29: (23, 16)
+  Time 30: (23, 16)
+  Time 31: (23, 16)
+  Time 32: (23, 16)
+  Time 33: (23, 16)
+  Time 34: (23, 16)
+  Time 35: (23, 16)
+  Time 36: (23, 16)
+  Time 37: (23, 16)
+  Time 38: (23, 16)
+  Time 39: (23, 16)
+  Time 40: (23, 16)
+
+Agent 0 path:
+  Time 0: (11, 25)
+  Time 1: (12, 25)
+  Time 2: (12, 26)
+  Time 3: (12, 27)
+  Time 4: (13, 27)
+  Time 5: (13, 28)
+  Time 6: (13, 29)
+  Time 7: (13, 30)
+  Time 8: (14, 30)
+  Time 9: (15, 30)
+  Time 10: (16, 30)
+  Time 11: (17, 30)
+  Time 12: (18, 30)
+  Time 13: (19, 30)
+  Time 14: (20, 30)
+  Time 15: (20, 30)
+  Time 16: (20, 30)
+  Time 17: (20, 30)
+  Time 18: (20, 30)
+  Time 19: (20, 30)
+  Time 20: (20, 30)
+  Time 21: (20, 30)
+  Time 22: (20, 30)
+  Time 23: (20, 30)
+  Time 24: (20, 30)
+  Time 25: (20, 30)
+  Time 26: (20, 30)
+  Time 27: (20, 30)
+  Time 28: (20, 30)
+  Time 29: (20, 30)
+  Time 30: (20, 30)
+  Time 31: (20, 30)
+  Time 32: (20, 30)
+  Time 33: (20, 30)
+  Time 34: (20, 30)
+  Time 35: (20, 30)
+  Time 36: (20, 30)
+  Time 37: (20, 30)
+  Time 38: (20, 30)
+  Time 39: (20, 30)
+  Time 40: (20, 30)
+
