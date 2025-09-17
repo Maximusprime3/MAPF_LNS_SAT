@@ -437,6 +437,9 @@ lazy_solve_conflict_zone(CNF& local_cnf,
 
     if (known_edge_collisions && !known_edge_collisions->empty()) {
         std::cout << "[LNS] Adding " << known_edge_collisions->size() << " pre-discovered edge collisions..." << std::endl;
+        //test print all known edge collisions
+        std::cout << "[LNS] Known edge collisions: " << std::endl;
+
         for (const auto& edge_collision : *known_edge_collisions) {
             //check if we already added this edge collision
             if (known_edge_collisions_set.count(edge_collision) > 0) {
@@ -446,6 +449,11 @@ lazy_solve_conflict_zone(CNF& local_cnf,
             int agent1, agent2, timestep;
             std::pair<int,int> pos1, pos2;
             std::tie(agent1, agent2, pos1, pos2, timestep) = edge_collision;
+            //print adding edge collision
+            std::cout << "[LNS] Adding edge collision: " << agent1 << ", " << agent2
+                      << ", (" << pos1.first << "," << pos1.second << ")"
+                      << " <-> (" << pos2.first << "," << pos2.second << ")"
+                      << ", t=" << timestep << std::endl;
             try {
                 std::vector<int> clause = cnf_constructor.add_single_edge_collision_clause(
                     agent1, agent2, pos1, pos2, timestep, false);
@@ -495,6 +503,15 @@ lazy_solve_conflict_zone(CNF& local_cnf,
         // Check paths for collisions using SATSolverManager approach
         auto new_collisions = check_vertex_collisions_local(local_paths, local_entry_exit_time, start_t, end_t);
         auto new_edge_collisions = check_edge_collisions_local(local_paths, local_entry_exit_time, start_t, end_t);
+        //adjust timestep of local collisions to be global time step
+        //print adjusting collisions by start_t
+        std::cout << "[LNS] Adjusting collisions by start_t: " << start_t << std::endl;
+        for (auto& collision : new_collisions) {
+            std::get<3>(collision) += start_t;
+        }
+        for (auto& collision : new_edge_collisions) {
+            std::get<4>(collision) += start_t;
+        }
 
         // Track discovered collisions for future use
         discovered_vertex_collisions.insert(discovered_vertex_collisions.end(), new_collisions.begin(), new_collisions.end());
@@ -520,8 +537,6 @@ lazy_solve_conflict_zone(CNF& local_cnf,
             for (const auto& collision : new_collisions) {
                 int agent1, agent2, timestep;
                 std::pair<int,int> pos;
-                //adjust timestep to be global time step
-                timestep += start_t;
                 std::tie(agent1, agent2, pos, timestep) = collision;
                 //print the vertex collision
                 std::cout << "  Vertex collision: " << agent1 << ", " << agent2
@@ -537,8 +552,6 @@ lazy_solve_conflict_zone(CNF& local_cnf,
             for (const auto& edge_collision : new_edge_collisions) {
                 int agent1, agent2, timestep;
                 std::pair<int,int> pos1, pos2;
-                //adjust timestep to be global time step
-                timestep += start_t;
                 std::tie(agent1, agent2, pos1, pos2, timestep) = edge_collision;
                 //print the edge collision
                 std::cout << "  Edge collision: " << agent1 << ", " << agent2
@@ -1295,21 +1308,10 @@ select_bucket:
             MDDConstructor constructor(masked_map, zone_start_pos, zone_goal_pos, agent_path_length - 1);
             auto agent_mdd = constructor.construct_mdd();
             
-            //print the mdd
-            std::cout << "  Agent " << agent_id << " MDD: " << std::endl;
-            for (const auto& [level, nodes] : agent_mdd->levels) {
-                std::cout << "    Level " << level << ": " << nodes.size() << " nodes" << std::endl;
-            }
 
             // Align MDD to the zone time window
             align_mdd_to_time_window(agent_mdd, entry_t, exit_t, start_t, end_t);
             
-            //print the mdd
-            std::cout << "AFTER ALIGNMENT  Agent " << agent_id << " MDD: " << std::endl;
-            for (const auto& [level, nodes] : agent_mdd->levels) {
-                std::cout << "    Level " << level << ": " << nodes.size() << " nodes" << std::endl;
-            }
-
             local_mdds[agent_id] = agent_mdd;
             
             int relative_entry = entry_t - start_t;
@@ -1350,19 +1352,26 @@ select_bucket:
         
         // Step 9c: Extract edge collision clauses for lazy solving
         std::cout << "[LNS] Step 9c: Extracting edge collision clauses..." << std::endl;
-        int number_of_edge_collisions = 0;
         std::vector<std::tuple<int, int, std::pair<int,int>, std::pair<int,int>, int>> initial_edge_collisions;
+        //all edge collisions are twice in the metadata, so we need to remove duplicates
+        std::set<std::tuple<int, int, std::pair<int,int>, std::pair<int,int>, int>> initial_edge_collisions_set;
         for (int idx : best_bucket.indices) {
             if (idx < 0 || idx >= (int)conflict_meta.size()) continue;
             
             const auto& meta = conflict_meta[idx];
             if (meta.is_edge) {
+                //check if we alread track this collision
+                if (initial_edge_collisions_set.count(std::make_tuple(
+                        meta.agent1, meta.agent2, meta.pos1, meta.pos2, meta.timestep)) > 0) {
+                    continue;
+                }
+                initial_edge_collisions_set.insert(std::make_tuple(
+                    meta.agent1, meta.agent2, meta.pos1, meta.pos2, meta.timestep));
                 // Track this collision for lazy solving
                 initial_edge_collisions.emplace_back(meta.agent1, meta.agent2, meta.pos1, meta.pos2, meta.timestep);
-                number_of_edge_collisions++;
             }
         }
-        std::cout << "[LNS] Extracted " << number_of_edge_collisions << " edge collision clauses" << std::endl;
+        std::cout << "[LNS] Extracted " << initial_edge_collisions.size() << " edge collision clauses" << std::endl;
         
         std::cout << "[LNS] Final local CNF: " << local_cnf.get_clauses().size() 
                 << " total clauses" << std::endl;
