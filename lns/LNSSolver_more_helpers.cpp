@@ -120,6 +120,33 @@ static void collect_conflicts(
     }
 }
 
+static void collect_conflicts_meta(
+    const std::vector<std::tuple<int, int, std::pair<int,int>, int>>& vertex_collisions,
+    const std::vector<std::tuple<int, int, std::pair<int,int>, std::pair<int,int>, int>>& edge_collisions,
+    std::vector<ConflictMeta>& conflict_meta) {
+    conflict_meta.clear();
+    conflict_meta.reserve(vertex_collisions.size() + edge_collisions.size());
+
+    // Vertex conflicts contribute a single metadata entry.
+    for (const auto& v : vertex_collisions) {
+        int a1 = std::get<0>(v);
+        int a2 = std::get<1>(v);
+        auto pos = std::get<2>(v);
+        int t = std::get<3>(v);
+        conflict_meta.push_back(ConflictMeta{a1, a2, t, false, pos, {-1, -1}});
+    }
+
+    // Edge conflicts contribute a single metadata entry.
+    for (const auto& e : edge_collisions) {
+        int a1 = std::get<0>(e);
+        int a2 = std::get<1>(e);
+        auto pos1 = std::get<2>(e);
+        auto pos2 = std::get<3>(e);
+        int t = std::get<4>(e);
+        conflict_meta.push_back(ConflictMeta{a1, a2, t, true, pos1, pos2});
+    }
+}
+
 // Helper: form diamond shaped buckets around conflicts.  Each conflict belongs
 // to exactly one bucket.  The algorithm incrementally grows a diamond around a
 // seed conflict, merging nearby conflicts that fall into the diamond.
@@ -605,197 +632,165 @@ lazy_solve_with_waiting_time(CurrentSolution& current_solution,
     // Also snapshot original entry/exit times to compute expansion deltas later
     std::unordered_map<int, std::pair<int,int>> original_entry_exit_time = local_entry_exit_time;
     
-    // Step 2: Find agents involved in conflicts (not just bystanders in the zone)
-    std::set<int> agents_involved_in_conflicts;
-    for (int idx : best_bucket_indices) {
-        if (idx < 0 || idx >= (int)conflict_meta.size()) continue;
-        const auto& meta = conflict_meta[idx];
-        agents_involved_in_conflicts.insert(meta.agent1);
-        agents_involved_in_conflicts.insert(meta.agent2);
-    }
-    
-    std::cout << "[LNS] Agents involved in conflicts: ";
-    for (int agent_id : agents_involved_in_conflicts) {
-        std::cout << agent_id << " ";
-    }
-    std::cout << std::endl;
-    
-    auto agents_with_waiting = current_solution.get_agents_waiting_times(agents_involved_in_conflicts);
-    
-    // Check if we have any agents with waiting time
-    if (agents_with_waiting.empty()) {
-        std::cout << "[LNS] No agents in conflict zone have waiting time available" << std::endl;
+    // Step 2: find conflicts and determine agents to use waiting time for
+    std::vector<std::tuple<int, int, std::pair<int,int>, int>> all_current_vertex_collisions;
+    std::vector<std::tuple<int, int, std::pair<int,int>, std::pair<int,int>, int>> all_current_edge_collisions;
+    std::vector<ConflictMeta> all_current_conflicts;
+    std::set<int> chosen_agents_currently_in_conflicts;
+    //get conflicts
+    collect_conflicts_meta(initial_vertex_collisions, initial_edge_collisions, all_current_conflicts); //resets all_current_conflicts
+    //helper function to iterate through all current conflicts -> add agents to chosen_agents_currently_in_conflicts
+    //per conflict check if one of the agents already is in the set, if not add the one with more waiting time
+    auto choose_agents_from_current_conflicts = [&](const std::vector<ConflictMeta>& all_current_conflicts,
+                                                    std::set<int>& chosen_agents_currently_in_conflicts) -> bool {
+        //reset chosen_agents_currently_in_conflicts
+        chosen_agents_currently_in_conflicts.clear();
+        bool can_use_waiting_time_for_all_current_conflicts = true;
+        //iterate through all current conflicts -> skip if one of the agents is already chosen, otherwise add the one with more waiting time
+        for (const auto& conflict : all_current_conflicts) {
+            int agent1 = conflict.agent1;
+            int agent2 = conflict.agent2;
+            //check if one of the agents is already chosen
+            if (chosen_agents_currently_in_conflicts.count(agent1) > 0 || chosen_agents_currently_in_conflicts.count(agent2) > 0) {
+                continue;
+            }
+            
+            int agent1_waiting = current_solution.get_waiting_time(agent1);
+            int agent2_waiting = current_solution.get_waiting_time(agent2);
+            
+            //if both agents have 0 waiting time, we can't use waiting time for all conflicts
+            if (agent1_waiting == 0 && agent2_waiting == 0) {
+                can_use_waiting_time_for_all_current_conflicts = false;
+                chosen_agents_currently_in_conflicts.clear();
+                break;
+            }
+            int selected_agent = (agent1_waiting >= agent2_waiting) ? agent1 : agent2;
+            chosen_agents_currently_in_conflicts.insert(selected_agent); //add the one with more waiting time
+        }
+        return can_use_waiting_time_for_all_current_conflicts;
+    };
+    //choose agents
+    bool can_use_waiting_time_for_all_current_conflicts = choose_agents_from_current_conflicts(all_current_conflicts, chosen_agents_currently_in_conflicts);
+
+    if (can_use_waiting_time_for_all_current_conflicts) {
+        //print all chosen agents involved in conflicts
+        std::cout << "[LNS] Chosen agents involved in conflicts: ";
+        for (int agent_id : chosen_agents_currently_in_conflicts) {
+            std::cout << agent_id << " ";
+        }
+        std::cout << std::endl;
+    } else {
+        std::cout << "[LNS] Not enough waiting time. Can't use waiting time for all current conflicts" << std::endl;
         return {false, {}, initial_vertex_collisions, initial_edge_collisions};
     }
     
+    
     // We have waiting time available - use it to resolve conflicts
-    std::cout << "[LNS] Found " << agents_with_waiting.size() 
-              << " agents in conflict zone with waiting time:" << std::endl;
-    for (const auto& [agent_id, waiting_time] : agents_with_waiting) {
-        std::cout << "  Agent " << agent_id << ": " << waiting_time << " waiting timesteps" << std::endl;
-    }
+    std::cout << "[LNS] Found " << chosen_agents_currently_in_conflicts.size() 
+              << " agents in conflicts with, all with waiting time:" << std::endl;
+
     
-    // Step 3: Find agent with most waiting time
-    
-    // Use waiting time to expand MDDs and resolve conflicts
+    // Step 3: Use waiting time to expand MDDs and resolve conflicts
+    // Strategy: One agent per conflict, selected based on waiting time
     bool waiting_time_solution_found = false;
     int attempt = 0;
-    int agent_with_most_waiting = -1;
-    int max_waiting_time = 0;
     std::set<int> exhausted_agents;
 
     // Persistent collision tracking across all waiting time attempts
     std::vector<std::tuple<int, int, std::pair<int,int>, int>> all_discovered_vertex_collisions = initial_vertex_collisions;
     std::vector<std::tuple<int, int, std::pair<int,int>, std::pair<int,int>, int>> all_discovered_edge_collisions = initial_edge_collisions;
     
-    // Calculate total available waiting time as safety limit
-    int total_waiting_time = 0;
-    for (const auto& [agent_id, waiting_time] : agents_with_waiting) {
-        total_waiting_time += waiting_time;
-    }
-    const int max_attempts = total_waiting_time; // Safety limit based on total waiting time
-    std::cout << "[LNS] Total waiting time available: " << total_waiting_time 
-              << " timesteps (max attempts: " << max_attempts << ")" << std::endl;
     
-    while (!waiting_time_solution_found && attempt < max_attempts) {
+    while (!waiting_time_solution_found) {
         attempt++;
         std::cout << "[LNS] Waiting time attempt " << attempt << "..." << std::endl;
-        
-        // Get current agents with waiting time (may have changed from previous attempts)
-        auto current_agents_with_waiting = current_solution.get_agents_waiting_times(agents_involved_in_conflicts);
-        
-        if (current_agents_with_waiting.empty()) {
+        //We have all_current_conflicts either from initial or from previous attempts, we try to use waiting time for each conflict
+        bool can_use_waiting_time_for_all_current_conflicts = choose_agents_from_current_conflicts(all_current_conflicts, chosen_agents_currently_in_conflicts);
+
+        if (!can_use_waiting_time_for_all_current_conflicts) {
             std::cout << "[LNS] No more waiting time available for conflict resolution" << std::endl;
             break;
         }
-        
-        // Pick the agent with the most usable waiting time that hasn't been exhausted yet
-        agent_with_most_waiting = -1;
-        max_waiting_time = 0;
-        for (const auto& candidate : current_agents_with_waiting) {
-            if (exhausted_agents.count(candidate.first) == 0) {
-                agent_with_most_waiting = candidate.first;
-                max_waiting_time = candidate.second;
-                break;
-            }
-        }
 
-        if (agent_with_most_waiting == -1) {
-            std::cout << "[LNS] No remaining agents with usable waiting time" << std::endl;
-            break;
-        }
-
-        std::cout << "[LNS] Agent " << agent_with_most_waiting
-                  << " has the most waiting time: " << max_waiting_time << " timesteps" << std::endl;
+        std::cout << "[LNS] Will expand MDD for " << chosen_agents_currently_in_conflicts.size() << " chosen agents involved in " << all_current_conflicts.size() << " conflicts" << std::endl;
         
-
-        // Retrieve current zone entry/exit info for the selected agent
-        auto entry_exit_it = local_entry_exit_time.find(agent_with_most_waiting);
-        if (entry_exit_it == local_entry_exit_time.end()) {
-            std::cerr << "[LNS] ERROR: Missing entry/exit info for agent " << agent_with_most_waiting << std::endl;
-            exhausted_agents.insert(agent_with_most_waiting);
-            continue;
-        }
-        int entry_t = entry_exit_it->second.first;
-        int exit_t = entry_exit_it->second.second;
-
-        // Ensure we are not trying to expand past the global makespan
-        if (exit_t >= current_solution.max_timestep) {
-            std::cout << "[LNS] Agent " << agent_with_most_waiting
-                      << " already reaches global timestep " << current_solution.max_timestep
-                      << "; skipping waiting time usage" << std::endl;
-            exhausted_agents.insert(agent_with_most_waiting);
-            continue;
-        }
-
-        auto path_it = local_zone_paths.find(agent_with_most_waiting);
-        if (path_it == local_zone_paths.end() || path_it->second.empty()) {
-            std::cerr << "[LNS] ERROR: Missing local zone path for agent " << agent_with_most_waiting << std::endl;
-            exhausted_agents.insert(agent_with_most_waiting);
-            continue;
-        }
-        const auto& local_path = path_it->second;
-                  
-        // Reduce waiting time by 1
-        current_solution.use_waiting_time(agent_with_most_waiting, 1);
-        
-        // Expand this agent's MDD by 1 timestep
-        std::cout << "[LNS] Expanding MDD for agent " << agent_with_most_waiting
-                  << " by 1 timestep..." << std::endl;
-        
-        // Get agent's zone entry and exit points
-        auto zone_start_pos = local_path.front();
-        auto zone_goal_pos = local_path.back();
-        
-        // Calculate new path length (original + 1 extra timestep)
-        int original_path_length = exit_t - entry_t + 1;
-        int new_path_length = original_path_length + 1;
-        
-        std::cout << "[LNS] Agent " << agent_with_most_waiting 
-                  << " MDD expansion: " << original_path_length << " -> " << new_path_length << " timesteps" << std::endl;
-        
-        // Create new local MDD with expanded length
-        MDDConstructor constructor(masked_map, zone_start_pos, zone_goal_pos, new_path_length - 1);
-        auto expanded_mdd = constructor.construct_mdd();
-        // align the mdd to the time window
-        align_mdd_to_time_window(expanded_mdd, entry_t, exit_t, start_t, end_t);
-        
-        if (!expanded_mdd) {
-            std::cout << "[LNS] Failed to create expanded MDD for agent " << agent_with_most_waiting << std::endl;
-            continue;
-        }
-        
-        // Update the local MDD for this agent
-        local_mdds[agent_with_most_waiting] = expanded_mdd;
-        
-        // Update entry/exit time to reflect the expanded path
-        int new_exit_t = exit_t + 1;
-        //local_entry_exit_time[agent_with_most_waiting] = {entry_t, new_exit_t};
-        entry_exit_it->second = {entry_t, new_exit_t}; //does the same thing as above but is more efficient
-
-        
-        std::cout << "[LNS] Updated agent " << agent_with_most_waiting 
-                  << " entry/exit time: [" << entry_t << ", " << new_exit_t << "]" << std::endl;
-        
-        // Determine if we need to extend the time window
+        // track the furthest time window end across all expansions in this attempt
         int new_end_t = end_t;
-        if (new_exit_t > end_t) {
-            new_end_t = new_exit_t;
-            std::cout << "[LNS] Time window extended: [" << start_t << ", " << end_t << "] -> [" << start_t << ", " << new_end_t << "]" << std::endl;
-            
-            //THEY are NOT ok, empty layers will produce empty clauses
-            // Extend all existing MDDs by adding empty levels at the end
-            //std::cout << "[LNS] Extending existing MDDs to new time window..." << std::endl;
-            //for (const auto& [agent_id, existing_mdd] : local_mdds) {
-            //    if (agent_id != agent_with_most_waiting) { // Skip the agent we just expanded
-                    // Add empty levels at the end to extend to new_end_t
-            //        for (int empty_level = end_t - start_t + 1; empty_level <= new_end_t - start_t; ++empty_level) {
-            //            existing_mdd->levels[empty_level] = {};  // Empty level
-            //        }
-            //        std::cout << "  Extended agent " << agent_id << " MDD with " << (new_end_t - end_t) << " empty levels" << std::endl;
-            //    }
-            //}
-            
-            // Check for new agents that enter the zone at the new timestep(s)
-            std::set<int> new_agents_in_extended_window;
-            for (const auto& rc : zone_positions_set) {
-                int r = rc.first, c = rc.second;
-                // Since we expand by exactly 1 timestep, just check the new timestep
-                auto here = current_solution.get_agents_at_position_time(r, c, new_end_t);
-                new_agents_in_extended_window.insert(here.begin(), here.end());
+
+        //iterate through all chosen agents to expand MDDs
+        for (int agent_id : chosen_agents_currently_in_conflicts) {
+            //get entry/exit time
+            auto entry_exit_it = local_entry_exit_time.find(agent_id);
+            if (entry_exit_it == local_entry_exit_time.end()) {
+                std::cerr << "[LNS] ERROR: Missing entry/exit info for agent " << agent_id << std::endl;
+                continue;
             }
-            
-            if (!new_agents_in_extended_window.empty()) {
-                std::cout << "[LNS] Found " << new_agents_in_extended_window.size() 
-                          << " new agents in extended time window: ";
-                for (int agent_id : new_agents_in_extended_window) {
-                    std::cout << agent_id << " ";
-                }
-                std::cout << std::endl;
+            int entry_t = entry_exit_it->second.first;
+            int exit_t = entry_exit_it->second.second;
+
+            //get path
+            auto path_it = local_zone_paths.find(agent_id);
+            if (path_it == local_zone_paths.end() || path_it->second.empty()) {
+                std::cerr << "[LNS] ERROR: Missing local zone path for agent " << agent_id << std::endl;
+                continue;
+            }
+            const auto& local_path = path_it->second;
+
+            //reduce waiting time by 1
+            current_solution.use_waiting_time(agent_id, 1);
+
+            //expand MDD by 1 timestep
+            std::cout << "[LNS] Expanding MDD for agent " << agent_id << " by 1 timestep" << std::endl; 
+
+            //get zone start and goal positions
+            auto zone_start_pos = local_path.front();
+            auto zone_goal_pos = local_path.back();
+
+            //calculate new path length
+            int original_path_length = exit_t - entry_t + 1;
+            int new_path_length = original_path_length + 1;
+            int new_exit_t = exit_t + 1;
+
+            //create new MDD
+            MDDConstructor constructor(masked_map, zone_start_pos, zone_goal_pos, new_path_length - 1);
+            auto expanded_mdd = constructor.construct_mdd();
+
+            //align MDD to the time window
+            align_mdd_to_time_window(expanded_mdd, entry_t, new_exit_t, start_t, end_t);
+
+            //update local MDD
+            local_mdds[agent_id] = expanded_mdd;
+
+            //update entry/exit time
+            local_entry_exit_time[agent_id] = {entry_t, new_exit_t};
+
+            std::cout << "[LNS] Updated agent " << agent_id << " entry/exit time: [" << entry_t << ", " << new_exit_t << "]" << std::endl;
+
+            //determine if we need to extend the time window
+            if (new_exit_t > new_end_t) {
+                new_end_t = new_exit_t;
+                std::cout << "[LNS] Time window extended: [" << start_t << ", " << end_t << "] -> [" << start_t << ", " << new_end_t << "]" << std::endl;
                 
+                // Check for new agents that enter the zone at the new timestep
+                std::set<int> new_agents_in_extended_window;
+                for (const auto& rc : zone_positions_set) {
+                    int r = rc.first, c = rc.second;
+                    // Since we expand by exactly 1 timestep, just check the new timestep
+                    auto here = current_solution.get_agents_at_position_time(r, c, new_end_t);
+                    new_agents_in_extended_window.insert(here.begin(), here.end());
+                }
+                if (!new_agents_in_extended_window.empty()) {
+                    std::cout << "[LNS] Found " << new_agents_in_extended_window.size() 
+                              << " new agents in extended time window: ";
+                    for (int agent_id : new_agents_in_extended_window) {
+                        std::cout << agent_id << " ";
+                    }
+                    std::cout << std::endl;
+                }
+
                 // Add new agents to the local problem
                 for (int new_agent_id : new_agents_in_extended_window) {
-                    if (local_zone_paths.find(new_agent_id) == local_zone_paths.end()) {
+                    if (local_zone_paths.find(new_agent_id) == local_zone_paths.end()) { //this checks if the new agent is really a returning agent
                         // Extract local path for this new agent
                         const auto& path = current_solution.agent_paths.at(new_agent_id);
                         std::vector<std::pair<int,int>> segment;
@@ -811,37 +806,49 @@ lazy_solve_with_waiting_time(CurrentSolution& current_solution,
                                 segment.push_back(pos);
                             }
                         }
-                        
                         if (!segment.empty()) {
                             local_zone_paths[new_agent_id] = std::move(segment);
                             local_entry_exit_time[new_agent_id] = {entry_t, exit_t};
                             std::cout << "  Added new agent " << new_agent_id << " local segment t=[" << entry_t << "," << exit_t
                                       << "] len=" << (exit_t - entry_t + 1) << std::endl;
                             
+                        
                             // Create MDD for the new agent
                             auto zone_start_pos = segment.front();
                             auto zone_goal_pos = segment.back();
                             int agent_path_length = exit_t - entry_t + 1;
-                            
+
                             MDDConstructor constructor(masked_map, zone_start_pos, zone_goal_pos, agent_path_length - 1);
                             auto agent_mdd = constructor.construct_mdd();
                             
                             // Align MDD to the extended time window
                             align_mdd_to_time_window(agent_mdd, entry_t, exit_t, start_t, new_end_t);
-                                
+                            
                             local_mdds[new_agent_id] = agent_mdd;
                             std::cout << "  Created MDD for new agent " << new_agent_id << std::endl;
                             
-                        }
+                        } else {std::cout << "[LNS] ERROR: No segment found for new agent " << new_agent_id << std::endl;}
+                    } else {//agent is a returning agent. The whole first visit is already in the local path
+                        std::cout << "[LNS] New agent " << new_agent_id << " is a returning agent" << std::endl;
+                        // Extract local path for this new agent
+                        const auto& path = current_solution.agent_paths.at(new_agent_id);
+                        //get postition at new_end_t
+                        const auto& pos = path[new_end_t];
+                        //extend path/MDD to include new timestep
+                        //local_entry_exit_time[new_agent_id].second = new_end_t;
+                        auto new_node = std::make_shared<MDDNode>(MDDNode::Position{pos.first, pos.second}, new_end_t);
+                        local_mdds[new_agent_id]->levels[new_end_t] = {new_node};
                     }
                 }
+            } else {
+                std::cout << "[LNS] Time window unchanged: [" << start_t << ", " << end_t << "] (agent exit at " << new_exit_t << ")" << std::endl;
             }
-        } else {
-            std::cout << "[LNS] Time window unchanged: [" << start_t << ", " << end_t << "] (agent exit at " << new_exit_t << ")" << std::endl;
+            
         }
         
-        // Recreate local CNF with expanded MDD
-        std::cout << "[LNS] Recreating local CNF with expanded MDD..." << std::endl;
+        
+        // Recreate local CNF with expanded MDDs
+        std::cout << "[LNS] Recreating local CNF with expanded MDDs" << std::endl;
         
         // Create new CNF constructor with updated MDDs
         CNFConstructor new_cnf_constructor(local_mdds, true); // true = lazy encoding
@@ -866,11 +873,9 @@ lazy_solve_with_waiting_time(CurrentSolution& current_solution,
                 using_waiting_time_result.local_paths,
                 original_entry_exit_time,
                 local_entry_exit_time); 
-        
-            
 
             return LazySolveResult{true, using_waiting_time_result.local_paths, all_discovered_vertex_collisions, all_discovered_edge_collisions};
-        } else {
+        } else { //no solution found 
             std::cout << "[LNS] Expanded MDD did not resolve conflicts, trying next agent..." << std::endl;
             
             // Update persistent collision tracking with newly discovered collisions
@@ -880,6 +885,12 @@ lazy_solve_with_waiting_time(CurrentSolution& current_solution,
             all_discovered_edge_collisions.insert(all_discovered_edge_collisions.end(),
                                                 using_waiting_time_result.discovered_edge_collisions.begin(),
                                                 using_waiting_time_result.discovered_edge_collisions.end());
+
+            //update all_current_conflicts
+            collect_conflicts_meta(
+                using_waiting_time_result.discovered_vertex_collisions, 
+                using_waiting_time_result.discovered_edge_collisions, 
+                all_current_conflicts);
             
             std::cout << "[LNS] Updated collision tracking: " << all_discovered_vertex_collisions.size() 
                       << " vertex collisions, " << all_discovered_edge_collisions.size() << " edge collisions" << std::endl;
