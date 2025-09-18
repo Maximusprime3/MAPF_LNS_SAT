@@ -15,6 +15,10 @@
 #include <unordered_map>
 
 //TO DO:
+//When extending waiting time and finding returning agents
+    //we have split mdd one path previously present in the zone the other is the agent returning into the zone
+    //currently goes wrong in run_empty48_200_offset1 line 1616
+
 // in the case of 100% coverage, the solver should get all known conflict clauses to add them to the cnf
 // MINISAT ASSUMPTIONS ARE NOT HARD, It sets polarity hints via setPolarity, not hard assumptions.
 
@@ -440,6 +444,13 @@ lazy_solve_conflict_zone(CNF& local_cnf,
     // Track all discovered collisions during solving
     std::vector<std::tuple<int, int, std::pair<int,int>, int>> discovered_vertex_collisions;
     std::vector<std::tuple<int, int, std::pair<int,int>, std::pair<int,int>, int>> discovered_edge_collisions;
+    // Track discovered collisions for future use
+    if (known_vertex_collisions) {
+        discovered_vertex_collisions.insert(discovered_vertex_collisions.end(), known_vertex_collisions->begin(), known_vertex_collisions->end());
+    }
+    if (known_edge_collisions) {
+        discovered_edge_collisions.insert(discovered_edge_collisions.end(), known_edge_collisions->begin(), known_edge_collisions->end());
+    }
 
     // Add pre-discovered collisions to avoid rediscovering them
     if (known_vertex_collisions && !known_vertex_collisions->empty()) {
@@ -718,6 +729,7 @@ lazy_solve_with_waiting_time(CurrentSolution& current_solution,
         int new_end_t = end_t;
 
         //iterate through all chosen agents to expand MDDs
+        bool extended_time_window = false;
         for (int agent_id : chosen_agents_currently_in_conflicts) {
             //get entry/exit time
             auto entry_exit_it = local_entry_exit_time.find(agent_id);
@@ -750,13 +762,18 @@ lazy_solve_with_waiting_time(CurrentSolution& current_solution,
             int original_path_length = exit_t - entry_t + 1;
             int new_path_length = original_path_length + 1;
             int new_exit_t = exit_t + 1;
+           
+            if (new_exit_t > new_end_t) {
+                new_end_t = new_exit_t;
+                extended_time_window = true;
+            }
 
             //create new MDD
             MDDConstructor constructor(masked_map, zone_start_pos, zone_goal_pos, new_path_length - 1);
             auto expanded_mdd = constructor.construct_mdd();
 
             //align MDD to the time window
-            align_mdd_to_time_window(expanded_mdd, entry_t, new_exit_t, start_t, end_t);
+            align_mdd_to_time_window(expanded_mdd, entry_t, new_exit_t, start_t, new_end_t);
 
             //update local MDD
             local_mdds[agent_id] = expanded_mdd;
@@ -765,85 +782,150 @@ lazy_solve_with_waiting_time(CurrentSolution& current_solution,
             local_entry_exit_time[agent_id] = {entry_t, new_exit_t};
 
             std::cout << "[LNS] Updated agent " << agent_id << " entry/exit time: [" << entry_t << ", " << new_exit_t << "]" << std::endl;
-
-            //determine if we need to extend the time window
-            if (new_exit_t > new_end_t) {
-                new_end_t = new_exit_t;
-                std::cout << "[LNS] Time window extended: [" << start_t << ", " << end_t << "] -> [" << start_t << ", " << new_end_t << "]" << std::endl;
-                
-                // Check for new agents that enter the zone at the new timestep
-                std::set<int> new_agents_in_extended_window;
-                for (const auto& rc : zone_positions_set) {
-                    int r = rc.first, c = rc.second;
-                    // Since we expand by exactly 1 timestep, just check the new timestep
-                    auto here = current_solution.get_agents_at_position_time(r, c, new_end_t);
-                    new_agents_in_extended_window.insert(here.begin(), here.end());
-                }
-                if (!new_agents_in_extended_window.empty()) {
-                    std::cout << "[LNS] Found " << new_agents_in_extended_window.size() 
-                              << " new agents in extended time window: ";
-                    for (int agent_id : new_agents_in_extended_window) {
-                        std::cout << agent_id << " ";
-                    }
-                    std::cout << std::endl;
-                }
-
-                // Add new agents to the local problem
-                for (int new_agent_id : new_agents_in_extended_window) {
-                    if (local_zone_paths.find(new_agent_id) == local_zone_paths.end()) { //this checks if the new agent is really a returning agent
-                        // Extract local path for this new agent
-                        const auto& path = current_solution.agent_paths.at(new_agent_id);
-                        std::vector<std::pair<int,int>> segment;
-                        int entry_t = -1, exit_t = -1;
-                        
-                        // Since this agent wasn't in the zone before, they can only enter at the new timestep
-                        // Check if agent is in zone at the new timestep
-                        if (new_end_t < (int)path.size()) {
-                            const auto& pos = path[new_end_t];
-                            if (zone_positions_set.count(pos)) {
-                                entry_t = new_end_t;
-                                exit_t = new_end_t;
-                                segment.push_back(pos);
-                            }
-                        }
-                        if (!segment.empty()) {
-                            local_zone_paths[new_agent_id] = std::move(segment);
-                            local_entry_exit_time[new_agent_id] = {entry_t, exit_t};
-                            std::cout << "  Added new agent " << new_agent_id << " local segment t=[" << entry_t << "," << exit_t
-                                      << "] len=" << (exit_t - entry_t + 1) << std::endl;
-                            
-                        
-                            // Create MDD for the new agent
-                            auto zone_start_pos = segment.front();
-                            auto zone_goal_pos = segment.back();
-                            int agent_path_length = exit_t - entry_t + 1;
-
-                            MDDConstructor constructor(masked_map, zone_start_pos, zone_goal_pos, agent_path_length - 1);
-                            auto agent_mdd = constructor.construct_mdd();
-                            
-                            // Align MDD to the extended time window
-                            align_mdd_to_time_window(agent_mdd, entry_t, exit_t, start_t, new_end_t);
-                            
-                            local_mdds[new_agent_id] = agent_mdd;
-                            std::cout << "  Created MDD for new agent " << new_agent_id << std::endl;
-                            
-                        } else {std::cout << "[LNS] ERROR: No segment found for new agent " << new_agent_id << std::endl;}
-                    } else {//agent is a returning agent. The whole first visit is already in the local path
-                        std::cout << "[LNS] New agent " << new_agent_id << " is a returning agent" << std::endl;
-                        // Extract local path for this new agent
-                        const auto& path = current_solution.agent_paths.at(new_agent_id);
-                        //get postition at new_end_t
-                        const auto& pos = path[new_end_t];
-                        //extend path/MDD to include new timestep
-                        //local_entry_exit_time[new_agent_id].second = new_end_t;
-                        auto new_node = std::make_shared<MDDNode>(MDDNode::Position{pos.first, pos.second}, new_end_t);
-                        local_mdds[new_agent_id]->levels[new_end_t] = {new_node};
-                    }
-                }
-            } else {
-                std::cout << "[LNS] Time window unchanged: [" << start_t << ", " << end_t << "] (agent exit at " << new_exit_t << ")" << std::endl;
-            }
             
+        }
+
+        //determine if we need to extend the time window
+        if (extended_time_window) {
+            std::cout << "[LNS] Time window extended: [" << start_t << ", " << end_t << "] -> [" << start_t << ", " << new_end_t << "]" << std::endl;
+            
+            // Check for new agents that enter the zone at the new timestep and could collide with agents in the local zone
+            std::set<int> new_agents_in_extended_window;
+            for (const auto& rc : zone_positions_set) {
+                int r = rc.first, c = rc.second;
+                // Since we expand by exactly 1 timestep, just check the new timestep
+                auto here = current_solution.get_agents_at_position_time(r, c, new_end_t);
+                new_agents_in_extended_window.insert(here.begin(), here.end());
+            }
+            if (!new_agents_in_extended_window.empty()) {
+                std::cout << "[LNS] Found " << new_agents_in_extended_window.size() 
+                          << " new agents in extended time window: ";
+                for (int agent_id : new_agents_in_extended_window) {
+                    std::cout << agent_id << " ";
+                }
+                std::cout << std::endl;
+            }
+
+            //print local zone agents
+            std::cout << "[LNS] Local zone agents: "; 
+            for (const auto& [agent_id, path] : local_zone_paths) {
+                std::cout << agent_id << " ";
+            }
+            std::cout << std::endl;
+
+            // print if new agents are already in the local zone
+            std::cout << "[LNS] New agents already in local zone: ";
+            for (int agent_id : new_agents_in_extended_window) {
+                if (local_zone_paths.find(agent_id) != local_zone_paths.end()) {
+                    std::cout << agent_id << " ";
+                }
+            }
+            std::cout << std::endl;
+            
+            // Add new agents to the local problem
+            for (int new_agent_id : new_agents_in_extended_window) {
+                //skip if member of to be expanded agents because we already expanded them 
+                if (chosen_agents_currently_in_conflicts.count(new_agent_id) > 0) {
+                    continue;
+                }
+                if (local_zone_paths.find(new_agent_id) == local_zone_paths.end()) { //this checks if the new agent wasnt in the local zone before
+                    // Extract local path for this new agent
+                    const auto& path = current_solution.agent_paths.at(new_agent_id);
+                    std::vector<std::pair<int,int>> segment;
+                    int entry_t = -1, exit_t = -1;
+                    
+                    // Since this agent wasn't in the zone before, they can only enter at the new timestep
+                    // Check if agent is in zone at the new timestep
+                    if (new_end_t < (int)path.size()) {
+                        const auto& new_pos = path[new_end_t];
+                        if (zone_positions_set.count(new_pos)) {
+                            entry_t = new_end_t;
+                            exit_t = new_end_t;
+                            segment.push_back(new_pos);
+                        }
+                    }
+                    if (!segment.empty()) {
+                        local_zone_paths[new_agent_id] = std::move(segment);
+                        local_entry_exit_time[new_agent_id] = {entry_t, exit_t};
+                        std::cout << "  Added new agent " << new_agent_id << " local segment t=[" << entry_t << "," << exit_t
+                                  << "] len=" << (exit_t - entry_t + 1) << std::endl;
+                        
+                    
+                        // Create MDD for the new agent
+                        auto zone_start_pos = segment[0];
+                        auto zone_goal_pos = segment[0];
+                        int agent_path_length = exit_t - entry_t + 1;
+                        MDDConstructor constructor(masked_map, zone_start_pos, zone_goal_pos, agent_path_length - 1);
+                        auto agent_mdd = constructor.construct_mdd();
+                        
+                        // Align MDD to the extended time window
+                        align_mdd_to_time_window(agent_mdd, entry_t, exit_t, start_t, new_end_t);
+                        
+                        local_mdds[new_agent_id] = agent_mdd;
+                        std::cout << "  Created MDD for new agent " << new_agent_id << std::endl;
+                        
+                    } else {std::cout << "[LNS] ERROR: No segment found for new agent " << new_agent_id << std::endl;}
+                } else {//agent is a returning agent. The whole first visit is already in the local path
+
+                    //check if the agent was present at the previous last timestep
+                    if (local_entry_exit_time[new_agent_id].second == new_end_t - 1) {//agent is continuing
+                        std::cout << "[LNS] New agent " << new_agent_id << " was present at the previous last timestep" << std::endl;
+                        std::cout << "[LNS] New agent " << new_agent_id << " is a continuing agent" << std::endl;
+
+                        
+                        //update exit time 
+                        start_t = local_entry_exit_time[new_agent_id].first;
+                        
+                        local_entry_exit_time[new_agent_id] = {start_t, new_end_t};
+                        std::cout << "[LNS] New agent " << new_agent_id << " local segment t=[" << start_t << "," << new_end_t
+                                  << "] len=" << (new_end_t - start_t + 1) << std::endl;
+                        
+                        //rebuild MDD for the new agent with the new exit time and position
+                        auto zone_start_pos = local_zone_paths[new_agent_id].front();
+                        const auto& agent_path = current_solution.agent_paths.at(new_agent_id);
+                        auto zone_goal_pos = agent_path[new_end_t];
+                        int agent_path_length = new_end_t - start_t + 1;
+                        MDDConstructor constructor(masked_map, zone_start_pos, zone_goal_pos, agent_path_length - 1);
+                        auto agent_mdd = constructor.construct_mdd();
+                        align_mdd_to_time_window(agent_mdd, start_t, new_end_t , start_t, new_end_t);
+                        local_mdds[new_agent_id] = agent_mdd;
+                        std::cout << "[LNS] Created MDD for new agent " << new_agent_id << std::endl;
+                        
+                    } else {
+                        std::cout << "[LNS] New agent " << new_agent_id << " was not present at the previous last timestep" << std::endl;
+                        std::cout << "[LNS] New agent " << new_agent_id << " is a returning agent" << std::endl;
+                        //print agent entry exit time
+                        std::cout << "[LNS] New agent " << new_agent_id << " entry/exit time: [" << local_entry_exit_time[new_agent_id].first << "," << local_entry_exit_time[new_agent_id].second << "]" << std::endl;
+                        //compare end time with new_end_t
+                        if (local_entry_exit_time[new_agent_id].second == new_end_t -1) {
+                            std::cout << "[LNS] New agent " << new_agent_id << " end time is the same as new_end_t - 1" << std::endl;
+                            std::cout << "THIS SHOULD NOT HAPPEN" << std::endl;
+                        } else {
+                            std::cout << "[LNS] New agent " << new_agent_id << " end time is not the same as new_end_t - 1" << std::endl;
+                        }
+                        //print new_end_t
+                        std::cout << "[LNS] New agent " << new_agent_id << " new_end_t: " << new_end_t << std::endl;
+                        
+                        
+                        //build second MDD for the new agent with just the returning part (len = 1)
+                        //get position from global path
+                        const auto& agent_path = current_solution.agent_paths.at(new_agent_id);
+                        auto zone_start_pos = agent_path[new_end_t];
+                        auto zone_goal_pos = agent_path[new_end_t];
+                        int agent_path_length = 1;
+                        MDDConstructor constructor(masked_map, zone_start_pos, zone_goal_pos, agent_path_length - 1);
+                        auto agent_mdd = constructor.construct_mdd();
+                        start_t = new_end_t;
+                        align_mdd_to_time_window(agent_mdd, start_t, new_end_t, start_t, new_end_t);
+                        //append to the existing MDD
+                        local_mdds[new_agent_id]->levels[new_end_t] = {agent_mdd->levels[new_end_t]};
+                        std::cout << "[LNS] Appended new agent " << new_agent_id << " MDD for timestep " << new_end_t << std::endl;
+                    }
+                   
+                }
+            }
+        } else {
+            std::cout << "[LNS] Time window unchanged: [" << start_t << ", " << end_t << "] " << std::endl;
         }
         
         
@@ -1105,7 +1187,7 @@ building_buckets:
         // Define conflict zones (buckets) using offset
 
       
-        const int offset = 2; // half the standard conflict zone size
+        const int offset = 1; // half the standard conflict zone size
         
         // Build conflict metadata from detected collisions
         std::vector<std::pair<int,int>> conflict_points;
@@ -1459,7 +1541,7 @@ select_bucket:
                     
                     if (waiting_time_result.solution_found) {
                         expansion_solution_found = true;
-                        std::cout << "[LNS] Successfully resolved conflicts using waiting time strategy!" << std::endl;
+                        
                         // update solved conflict indices
                         for (int idx_cons : best_bucket.indices) {
                             if (idx_cons >= 0 && idx_cons < (int)conflict_meta.size()) {
@@ -1476,6 +1558,9 @@ select_bucket:
                         
                         std::cout << "[LNS] Updated global collision tracking: " << global_discovered_vertex_collisions.size() 
                                 << " vertex collisions, " << global_discovered_edge_collisions.size() << " edge collisions" << std::endl;
+
+                        //rebuild buckets because we delayed agents in the zone with waiting time, changing their whole path globally
+                        goto building_buckets;
                     } else {
                         std::cout << "[LNS] Waiting time strategy failed, checking bucket size..." << std::endl;
                         
