@@ -1354,10 +1354,7 @@ select_bucket:
             if (t < earliest_conflict_t) earliest_conflict_t = t;
             if (t > latest_conflict_t) latest_conflict_t = t;
         }
-        if (earliest_conflict_t == INT_MAX) {
-            earliest_conflict_t = 0;
-            latest_conflict_t = current_solution.max_timestep;
-        }
+
         int start_t = std::max(0, earliest_conflict_t - offset);
         int end_t = std::min(current_solution.max_timestep, latest_conflict_t + offset);
         std::cout << "[LNS] Conflict time window: [" << start_t << ", " << end_t << "]" << std::endl;
@@ -1753,12 +1750,13 @@ select_bucket:
                         }
                         
                         
-                        // Final expanded diamond with all discovered conflicts
-                        expanded_diamond_positions = create_shape_from_conflicts(expanded_bucket_conflicts, expanded_offset);
-                        std::cout << "[LNS] Final expanded bucket contains " << expanded_diamond_positions.size() 
-                                << " positions with " << expanded_bucket_conflicts.size() << " conflicts" << std::endl;
+                        
                     }
-                    
+                    // Final expanded diamond with all discovered conflicts
+                    expanded_diamond_positions = create_shape_from_conflicts(expanded_bucket_conflicts, expanded_offset);
+                    std::cout << "[LNS] Final expanded bucket contains " << expanded_diamond_positions.size() 
+                            << " positions with " << expanded_bucket_conflicts.size() << " conflicts (original: " << best_bucket.indices.size() << ")" << std::endl;
+
                     // Step 3: create new zone with expanded bucket
                     std::cout << "[LNS] creating zone with expanded bucket..." << std::endl;
                     
@@ -1766,6 +1764,19 @@ select_bucket:
                     std::set<std::pair<int,int>> expanded_zone_positions_set(expanded_diamond_positions.begin(), expanded_diamond_positions.end());
                     //mask map outside the expanded zone
                     auto expanded_masked_map = mask_map_outside_shape(problem.grid, expanded_zone_positions_set);
+                    //set start and end time for the expanded zone
+                    int earliest_conflict_t = INT_MAX;
+                    int latest_conflict_t = -1;
+                    for (int idx : expanded_conflict_indices) {
+                        if (idx < 0 || idx >= (int)conflict_meta.size()) continue;
+                        int t = conflict_meta[idx].timestep;
+                        if (t < earliest_conflict_t) earliest_conflict_t = t;
+                        if (t > latest_conflict_t) latest_conflict_t = t;
+                    }
+                    std::cout << "[LNS] previous time window: [" << start_t << ", " << end_t << "]" << std::endl;
+                    int start_t = std::max(0, earliest_conflict_t - expanded_offset);
+                    int end_t = std::min(current_solution.max_timestep, latest_conflict_t + expanded_offset);
+                    std::cout << "[LNS] Expanded zone time window: [" << start_t << ", " << end_t << "]" << std::endl;
                     // Recreate local zone paths for the expanded zone
                     std::unordered_map<int, std::vector<std::pair<int,int>>> expanded_local_zone_paths;
                     std::unordered_map<int, std::pair<int,int>> expanded_local_entry_exit_time;
@@ -1774,7 +1785,7 @@ select_bucket:
                     // Find all agents that pass through the expanded zone
                     std::set<int> expanded_agents_in_zone;
                     for (const auto& [agent_id, path] : current_solution.agent_paths) {
-                        for (int t = 0; t < (int)path.size(); ++t) {
+                        for (int t = start_t; t <= end_t && t < (int)path.size(); ++t) {
                             if (expanded_zone_positions_set.count(path[t])) {
                                 expanded_agents_in_zone.insert(agent_id);
                                 break;
@@ -1791,7 +1802,7 @@ select_bucket:
                         int entry_t = -1, exit_t = -1;
                         
                         // Find entry and exit times for this agent in the expanded zone
-                        for (int t = 0; t < (int)path.size(); ++t) {
+                        for (int t = start_t; t <= end_t && t < (int)path.size(); ++t) {
                             if (expanded_zone_positions_set.count(path[t])) {
                                 if (entry_t == -1) entry_t = t;
                                 exit_t = t;
@@ -1816,7 +1827,7 @@ select_bucket:
 
                             expanded_local_zone_paths[agent_id] = std::move(segment);
                             expanded_local_entry_exit_time[agent_id] = std::make_pair(entry_t, exit_t);
-                            std::cout << "[LNS] ERROR:  Agent " << agent_id << " local segment t=[" << entry_t << "," << exit_t
+                            std::cout << "[LNS] Zone contains Agent " << agent_id << " local segment t=[" << entry_t << "," << exit_t
                                     << "] len=" << (exit_t - entry_t + 1) << std::endl;
                         }
                     }
