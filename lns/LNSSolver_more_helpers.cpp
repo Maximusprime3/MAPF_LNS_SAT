@@ -1799,6 +1799,19 @@ select_bucket:
                         }
                         
                         if (!segment.empty()) {
+                            bool extended_zone = false;
+                            for (const auto& pos : segment) {
+                                if (!expanded_zone_positions_set.count(pos)) {
+                                    expanded_zone_positions_set.insert(pos);
+                                    extended_zone = true;
+                                }
+                            }
+
+                            if (extended_zone) {
+                                expanded_masked_map = mask_map_outside_shape(problem.grid, expanded_zone_positions_set);
+                            }
+
+
                             expanded_local_zone_paths[agent_id] = std::move(segment);
                             expanded_local_entry_exit_time[agent_id] = std::make_pair(entry_t, exit_t);
                             std::cout << "[LNS] ERROR:  Agent " << agent_id << " local segment t=[" << entry_t << "," << exit_t
@@ -1816,7 +1829,7 @@ select_bucket:
                         auto zone_goal_pos = local_path.back();
                         int agent_path_length = exit_t - entry_t + 1;
                         
-                        MDDConstructor constructor(masked_map, zone_start_pos, zone_goal_pos, agent_path_length - 1);
+                        MDDConstructor constructor(expanded_masked_map, zone_start_pos, zone_goal_pos, agent_path_length - 1);
                         auto agent_mdd = constructor.construct_mdd();
                         
                         // Align MDD to the time window
@@ -1873,7 +1886,7 @@ select_bucket:
                     }
 
                     auto expanded_waiting_time_result = lazy_solve_with_waiting_time(
-                        current_solution, masked_map, expanded_zone_positions_set, expanded_local_mdds, expanded_local_zone_paths, expanded_local_entry_exit_time,
+                        current_solution, expanded_masked_map, expanded_zone_positions_set, expanded_local_mdds, expanded_local_zone_paths, expanded_local_entry_exit_time,
                         bucket_discovered_vertex_collisions, bucket_discovered_edge_collisions, conflict_meta, expanded_conflict_indices, start_t, end_t);
                     
                     if (expanded_waiting_time_result.solution_found) {
