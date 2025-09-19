@@ -1553,7 +1553,9 @@ select_bucket:
             // Start with collisions discovered from the initial lazy solve attempt
             std::vector<std::tuple<int, int, std::pair<int,int>, int>> bucket_discovered_vertex_collisions = lazy_result.discovered_vertex_collisions;
             std::vector<std::tuple<int, int, std::pair<int,int>, std::pair<int,int>, int>> bucket_discovered_edge_collisions = lazy_result.discovered_edge_collisions;
-            
+            //already start expanded_bucket_discovered_*_collisions since it can profit from the colliisons discovered without waiting time strat
+            std::vector<std::tuple<int, int, std::pair<int,int>, int>> expanded_bucket_discovered_vertex_collisions = bucket_discovered_vertex_collisions;
+            std::vector<std::tuple<int, int, std::pair<int,int>, std::pair<int,int>, int>> expanded_bucket_discovered_edge_collisions = bucket_discovered_edge_collisions;
             while (!expansion_solution_found && expansion_factor <= max_expansion_factor) {
                 std::cout << "[LNS] Attempting resolution with expansion factor " << expansion_factor << "..." << std::endl;
                 
@@ -1613,6 +1615,7 @@ select_bucket:
                         bucket_discovered_edge_collisions = waiting_time_result.discovered_edge_collisions;
                     }
                 } else {
+                    std::cout << "[LNS] ERROR: not an error but HERE STARTS THE EXPANSION STRATEGY" << std::endl;
                     // Expansion attempts: increase bucket offset and try again
                     std::cout << "[LNS] Expanding bucket with expansion factor " << expansion_factor << "..." << std::endl;
                     
@@ -1873,11 +1876,11 @@ select_bucket:
                             }
                         }
                     }
-            
+                    
                     // Add new collision clauses to bucket collision tracking
-                    bucket_discovered_vertex_collisions.insert(bucket_discovered_vertex_collisions.end(), 
+                    expanded_bucket_discovered_vertex_collisions.insert(expanded_bucket_discovered_vertex_collisions.end(), 
                                                             new_vertex_collisions.begin(), new_vertex_collisions.end());
-                    bucket_discovered_edge_collisions.insert(bucket_discovered_edge_collisions.end(),
+                    expanded_bucket_discovered_edge_collisions.insert(expanded_bucket_discovered_edge_collisions.end(),
                                                         new_edge_collisions.begin(), new_edge_collisions.end());
                     
                     std::cout << "[LNS] Added " << new_vertex_collisions.size() << " new vertex collisions and " 
@@ -1888,19 +1891,19 @@ select_bucket:
                     //if the expanded zone is the whole map, we provided all global discovered collisions
                     if (expanded_zone_positions_set.size() == rows * cols) {
                         std::cout << "[LNS] Expanded zone is the whole map, providing all global discovered collisions" << std::endl;
-                        bucket_discovered_vertex_collisions.insert(
-                            bucket_discovered_vertex_collisions.end(),
+                        expanded_bucket_discovered_vertex_collisions.insert(
+                            expanded_bucket_discovered_vertex_collisions.end(),
                             global_discovered_vertex_collisions.begin(),
                             global_discovered_vertex_collisions.end());
-                        bucket_discovered_edge_collisions.insert(
-                            bucket_discovered_edge_collisions.end(),
+                        expanded_bucket_discovered_edge_collisions.insert(
+                            expanded_bucket_discovered_edge_collisions.end(),
                             global_discovered_edge_collisions.begin(),
                             global_discovered_edge_collisions.end());
                     }
 
                     auto expanded_waiting_time_result = lazy_solve_with_waiting_time(
                         current_solution, expanded_masked_map, expanded_zone_positions_set, expanded_local_mdds, expanded_local_zone_paths, expanded_local_entry_exit_time,
-                        bucket_discovered_vertex_collisions, bucket_discovered_edge_collisions, conflict_meta, expanded_conflict_indices, start_t, end_t);
+                        expanded_bucket_discovered_vertex_collisions, expanded_bucket_discovered_edge_collisions, conflict_meta, expanded_conflict_indices, start_t, end_t);
                     
                     if (expanded_waiting_time_result.solution_found) {
                         expansion_solution_found = true;
@@ -1966,8 +1969,8 @@ select_bucket:
                         }
                         
                         // Update bucket collision tracking for next expansion attempt
-                        bucket_discovered_vertex_collisions = expanded_waiting_time_result.discovered_vertex_collisions;
-                        bucket_discovered_edge_collisions = expanded_waiting_time_result.discovered_edge_collisions;
+                        expanded_bucket_discovered_vertex_collisions = expanded_waiting_time_result.discovered_vertex_collisions;
+                        expanded_bucket_discovered_edge_collisions = expanded_waiting_time_result.discovered_edge_collisions;
                     }
                 }
                 
