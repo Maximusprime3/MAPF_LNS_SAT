@@ -1764,7 +1764,8 @@ select_bucket:
                     
                     // Update zone positions set with expanded diamond
                     std::set<std::pair<int,int>> expanded_zone_positions_set(expanded_diamond_positions.begin(), expanded_diamond_positions.end());
-                    
+                    //mask map outside the expanded zone
+                    auto expanded_masked_map = mask_map_outside_shape(problem.grid, expanded_zone_positions_set);
                     // Recreate local zone paths for the expanded zone
                     std::unordered_map<int, std::vector<std::pair<int,int>>> expanded_local_zone_paths;
                     std::unordered_map<int, std::pair<int,int>> expanded_local_entry_exit_time;
@@ -1808,6 +1809,7 @@ select_bucket:
                             }
 
                             if (extended_zone) {
+                                std::cout << "[LNS] ERROR: Agent path built in zone has positions outside the expanded zone" << std::endl;
                                 expanded_masked_map = mask_map_outside_shape(problem.grid, expanded_zone_positions_set);
                             }
 
