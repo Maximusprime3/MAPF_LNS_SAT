@@ -975,12 +975,11 @@ lazy_solve_with_waiting_time(CurrentSolution& current_solution,
             std::cout << "[LNS] Expanded MDD did not resolve conflicts, trying next agent..." << std::endl;
             
             // Update persistent collision tracking with newly discovered collisions
-            all_discovered_vertex_collisions.insert(all_discovered_vertex_collisions.end(), 
-                                                  using_waiting_time_result.discovered_vertex_collisions.begin(),
-                                                  using_waiting_time_result.discovered_vertex_collisions.end());
-            all_discovered_edge_collisions.insert(all_discovered_edge_collisions.end(),
-                                                using_waiting_time_result.discovered_edge_collisions.begin(),
-                                                using_waiting_time_result.discovered_edge_collisions.end());
+            // Lazy solve only returns old collisions it got before aswell as the new ones it discovered
+            // so we dont need to append the discovered vertex collisions but rather replace all_discovered_vertex_collisions
+            all_discovered_vertex_collisions = using_waiting_time_result.discovered_vertex_collisions;
+            all_discovered_edge_collisions = using_waiting_time_result.discovered_edge_collisions;
+
 
             //update all_current_conflicts
             collect_conflicts_meta(

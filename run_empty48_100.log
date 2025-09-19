@@ -521,7 +521,7 @@ DEBUG: Adding 1550 clauses to MiniSAT
 [LNS] Failed to find local solution after 10000 iterations
 [LNS] Local problem appears to be unsatisfiable in current zone
 [LNS] Expanded MDD did not resolve conflicts, trying next agent...
-[LNS] Updated collision tracking: 29 vertex collisions, 5 edge collisions
+[LNS] Updated collision tracking: 17 vertex collisions, 3 edge collisions
 [LNS] Waiting time attempt 2...
 [LNS] Will expand MDD for 6 chosen agents involved in 20 conflicts
   Agent 15 used 1 waiting timesteps, 32 remaining
@@ -553,17 +553,17 @@ DEBUG: Adding 1550 clauses to MiniSAT
 [LNS] Recreating local CNF with expanded MDDs
 [LNS] Attempting lazy solving with expanded MDD...
 [LNS] Starting lazy solving of conflict zone...
-[LNS] Adding 29 pre-discovered vertex collisions...
-[LNS] Adding 5 pre-discovered edge collisions...
+[LNS] Adding 17 pre-discovered vertex collisions...
+[LNS] Adding 3 pre-discovered edge collisions...
 [LNS] Known edge collisions: 
 [LNS] Adding edge collision: 82, 57, (9,24) <-> (10,24), t=9
 [LNS] Adding edge collision: 15, 5, (11,25) <-> (10,25), t=21
 [LNS] Adding edge collision: 2, 88, (13,22) <-> (13,21), t=23
 [LNS] Lazy solving iteration 1...
-DEBUG: CNF has 2593 clauses
+DEBUG: CNF has 2581 clauses
 DEBUG: First clause: 1 
-DEBUG: Adding 2593 clauses to MiniSAT
-DEBUG: Clause load summary: input=2593, added=2581, tautologies_skipped=0, duplicates_skipped=12, unit_clauses=31, empties=0, intra_clause_literals_removed=0, added_but_db_unchanged=42
+DEBUG: Adding 2581 clauses to MiniSAT
+DEBUG: Clause load summary: input=2581, added=2581, tautologies_skipped=0, duplicates_skipped=0, unit_clauses=31, empties=0, intra_clause_literals_removed=0, added_but_db_unchanged=42
 DEBUG: After adding clauses, solver has 2508 clauses and 476 variables
 DEBUG: MiniSAT found 476 variables
 DEBUG: Assignment size: 476
@@ -585,23 +585,23 @@ Input assignment: 1 1 0 1 1 0 0 1 0 1 0 1 1 1 0 1 0 0 1 0 0 0 0 0 0 0 1 0 0 0 0 
   Vertex collision: 5, 88, (12,22), t=26
   Edge collision: 15, 5, (12,25) <-> (11,25), t=22
 [LNS] Lazy solving iteration 2...
-DEBUG: CNF has 2599 clauses
+DEBUG: CNF has 2587 clauses
 DEBUG: First clause: 1 
-DEBUG: Adding 2599 clauses to MiniSAT
+DEBUG: Adding 2587 clauses to MiniSAT
 [LNS] Local problem is unsatisfiable after 2 iterations
 [LNS] No Solution found -> Safety run solving without assignment
 [LNS] Lazy solving iteration 3...
-DEBUG: CNF has 2599 clauses
+DEBUG: CNF has 2587 clauses
 DEBUG: First clause: 1 
-DEBUG: Adding 2599 clauses to MiniSAT
+DEBUG: Adding 2587 clauses to MiniSAT
 [LNS] Local problem is unsatisfiable after 3 iterations
 [LNS] No Solution found + Safety run failed -> UNSAT
 [LNS] Failed to find local solution after 10000 iterations
 [LNS] Local problem appears to be unsatisfiable in current zone
 [LNS] Expanded MDD did not resolve conflicts, trying next agent...
-[LNS] Updated collision tracking: 63 vertex collisions, 11 edge collisions
+[LNS] Updated collision tracking: 22 vertex collisions, 4 edge collisions
 [LNS] Waiting time attempt 3...
-[LNS] Will expand MDD for 6 chosen agents involved in 40 conflicts
+[LNS] Will expand MDD for 6 chosen agents involved in 26 conflicts
   Agent 15 used 1 waiting timesteps, 31 remaining
 [LNS] Expanding MDD for agent 15 by 1 timestep
 [LNS] Updated agent 15 entry/exit time: [20, 29]
@@ -631,31 +631,31 @@ DEBUG: Adding 2599 clauses to MiniSAT
 [LNS] Recreating local CNF with expanded MDDs
 [LNS] Attempting lazy solving with expanded MDD...
 [LNS] Starting lazy solving of conflict zone...
-[LNS] Adding 63 pre-discovered vertex collisions...
-[LNS] Adding 11 pre-discovered edge collisions...
+[LNS] Adding 22 pre-discovered vertex collisions...
+[LNS] Adding 4 pre-discovered edge collisions...
 [LNS] Known edge collisions: 
 [LNS] Adding edge collision: 82, 57, (9,24) <-> (10,24), t=9
 [LNS] Adding edge collision: 15, 5, (11,25) <-> (10,25), t=21
 [LNS] Adding edge collision: 2, 88, (13,22) <-> (13,21), t=23
 [LNS] Adding edge collision: 15, 5, (12,25) <-> (11,25), t=22
 [LNS] Lazy solving iteration 1...
-DEBUG: CNF has 3918 clauses
+DEBUG: CNF has 3877 clauses
 DEBUG: First clause: 1 
-DEBUG: Adding 3918 clauses to MiniSAT
+DEBUG: Adding 3877 clauses to MiniSAT
 [LNS] Local problem is unsatisfiable after 1 iterations
 [LNS] No Solution found -> Safety run solving without assignment
 [LNS] Lazy solving iteration 2...
-DEBUG: CNF has 3918 clauses
+DEBUG: CNF has 3877 clauses
 DEBUG: First clause: 1 
-DEBUG: Adding 3918 clauses to MiniSAT
+DEBUG: Adding 3877 clauses to MiniSAT
 [LNS] Local problem is unsatisfiable after 2 iterations
 [LNS] No Solution found + Safety run failed -> UNSAT
 [LNS] Failed to find local solution after 10000 iterations
 [LNS] Local problem appears to be unsatisfiable in current zone
 [LNS] Expanded MDD did not resolve conflicts, trying next agent...
-[LNS] Updated collision tracking: 126 vertex collisions, 22 edge collisions
+[LNS] Updated collision tracking: 22 vertex collisions, 4 edge collisions
 [LNS] Waiting time attempt 4...
-[LNS] Will expand MDD for 6 chosen agents involved in 74 conflicts
+[LNS] Will expand MDD for 6 chosen agents involved in 26 conflicts
   Agent 15 used 1 waiting timesteps, 30 remaining
 [LNS] Expanding MDD for agent 15 by 1 timestep
 [LNS] Updated agent 15 entry/exit time: [20, 30]
@@ -685,31 +685,31 @@ DEBUG: Adding 3918 clauses to MiniSAT
 [LNS] Recreating local CNF with expanded MDDs
 [LNS] Attempting lazy solving with expanded MDD...
 [LNS] Starting lazy solving of conflict zone...
-[LNS] Adding 126 pre-discovered vertex collisions...
-[LNS] Adding 22 pre-discovered edge collisions...
+[LNS] Adding 22 pre-discovered vertex collisions...
+[LNS] Adding 4 pre-discovered edge collisions...
 [LNS] Known edge collisions: 
 [LNS] Adding edge collision: 82, 57, (9,24) <-> (10,24), t=9
 [LNS] Adding edge collision: 15, 5, (11,25) <-> (10,25), t=21
 [LNS] Adding edge collision: 2, 88, (13,22) <-> (13,21), t=23
 [LNS] Adding edge collision: 15, 5, (12,25) <-> (11,25), t=22
 [LNS] Lazy solving iteration 1...
-DEBUG: CNF has 5648 clauses
+DEBUG: CNF has 5544 clauses
 DEBUG: First clause: 1 
-DEBUG: Adding 5648 clauses to MiniSAT
+DEBUG: Adding 5544 clauses to MiniSAT
 [LNS] Local problem is unsatisfiable after 1 iterations
 [LNS] No Solution found -> Safety run solving without assignment
 [LNS] Lazy solving iteration 2...
-DEBUG: CNF has 5648 clauses
+DEBUG: CNF has 5544 clauses
 DEBUG: First clause: 1 
-DEBUG: Adding 5648 clauses to MiniSAT
+DEBUG: Adding 5544 clauses to MiniSAT
 [LNS] Local problem is unsatisfiable after 2 iterations
 [LNS] No Solution found + Safety run failed -> UNSAT
 [LNS] Failed to find local solution after 10000 iterations
 [LNS] Local problem appears to be unsatisfiable in current zone
 [LNS] Expanded MDD did not resolve conflicts, trying next agent...
-[LNS] Updated collision tracking: 252 vertex collisions, 44 edge collisions
+[LNS] Updated collision tracking: 22 vertex collisions, 4 edge collisions
 [LNS] Waiting time attempt 5...
-[LNS] Will expand MDD for 6 chosen agents involved in 148 conflicts
+[LNS] Will expand MDD for 6 chosen agents involved in 26 conflicts
   Agent 15 used 1 waiting timesteps, 29 remaining
 [LNS] Expanding MDD for agent 15 by 1 timestep
 [LNS] Updated agent 15 entry/exit time: [20, 31]
@@ -739,31 +739,31 @@ DEBUG: Adding 5648 clauses to MiniSAT
 [LNS] Recreating local CNF with expanded MDDs
 [LNS] Attempting lazy solving with expanded MDD...
 [LNS] Starting lazy solving of conflict zone...
-[LNS] Adding 252 pre-discovered vertex collisions...
-[LNS] Adding 44 pre-discovered edge collisions...
+[LNS] Adding 22 pre-discovered vertex collisions...
+[LNS] Adding 4 pre-discovered edge collisions...
 [LNS] Known edge collisions: 
 [LNS] Adding edge collision: 82, 57, (9,24) <-> (10,24), t=9
 [LNS] Adding edge collision: 15, 5, (11,25) <-> (10,25), t=21
 [LNS] Adding edge collision: 2, 88, (13,22) <-> (13,21), t=23
 [LNS] Adding edge collision: 15, 5, (12,25) <-> (11,25), t=22
 [LNS] Lazy solving iteration 1...
-DEBUG: CNF has 7628 clauses
+DEBUG: CNF has 7398 clauses
 DEBUG: First clause: 1 
-DEBUG: Adding 7628 clauses to MiniSAT
+DEBUG: Adding 7398 clauses to MiniSAT
 [LNS] Local problem is unsatisfiable after 1 iterations
 [LNS] No Solution found -> Safety run solving without assignment
 [LNS] Lazy solving iteration 2...
-DEBUG: CNF has 7628 clauses
+DEBUG: CNF has 7398 clauses
 DEBUG: First clause: 1 
-DEBUG: Adding 7628 clauses to MiniSAT
+DEBUG: Adding 7398 clauses to MiniSAT
 [LNS] Local problem is unsatisfiable after 2 iterations
 [LNS] No Solution found + Safety run failed -> UNSAT
 [LNS] Failed to find local solution after 10000 iterations
 [LNS] Local problem appears to be unsatisfiable in current zone
 [LNS] Expanded MDD did not resolve conflicts, trying next agent...
-[LNS] Updated collision tracking: 504 vertex collisions, 88 edge collisions
+[LNS] Updated collision tracking: 22 vertex collisions, 4 edge collisions
 [LNS] Waiting time attempt 6...
-[LNS] Will expand MDD for 6 chosen agents involved in 296 conflicts
+[LNS] Will expand MDD for 6 chosen agents involved in 26 conflicts
   Agent 15 used 1 waiting timesteps, 28 remaining
 [LNS] Expanding MDD for agent 15 by 1 timestep
 [LNS] Updated agent 15 entry/exit time: [20, 32]
@@ -793,31 +793,31 @@ DEBUG: Adding 7628 clauses to MiniSAT
 [LNS] Recreating local CNF with expanded MDDs
 [LNS] Attempting lazy solving with expanded MDD...
 [LNS] Starting lazy solving of conflict zone...
-[LNS] Adding 504 pre-discovered vertex collisions...
-[LNS] Adding 88 pre-discovered edge collisions...
+[LNS] Adding 22 pre-discovered vertex collisions...
+[LNS] Adding 4 pre-discovered edge collisions...
 [LNS] Known edge collisions: 
 [LNS] Adding edge collision: 82, 57, (9,24) <-> (10,24), t=9
 [LNS] Adding edge collision: 15, 5, (11,25) <-> (10,25), t=21
 [LNS] Adding edge collision: 2, 88, (13,22) <-> (13,21), t=23
 [LNS] Adding edge collision: 15, 5, (12,25) <-> (11,25), t=22
 [LNS] Lazy solving iteration 1...
-DEBUG: CNF has 9912 clauses
+DEBUG: CNF has 9430 clauses
 DEBUG: First clause: 1 
-DEBUG: Adding 9912 clauses to MiniSAT
+DEBUG: Adding 9430 clauses to MiniSAT
 [LNS] Local problem is unsatisfiable after 1 iterations
 [LNS] No Solution found -> Safety run solving without assignment
 [LNS] Lazy solving iteration 2...
-DEBUG: CNF has 9912 clauses
+DEBUG: CNF has 9430 clauses
 DEBUG: First clause: 1 
-DEBUG: Adding 9912 clauses to MiniSAT
+DEBUG: Adding 9430 clauses to MiniSAT
 [LNS] Local problem is unsatisfiable after 2 iterations
 [LNS] No Solution found + Safety run failed -> UNSAT
 [LNS] Failed to find local solution after 10000 iterations
 [LNS] Local problem appears to be unsatisfiable in current zone
 [LNS] Expanded MDD did not resolve conflicts, trying next agent...
-[LNS] Updated collision tracking: 1008 vertex collisions, 176 edge collisions
+[LNS] Updated collision tracking: 22 vertex collisions, 4 edge collisions
 [LNS] Waiting time attempt 7...
-[LNS] Will expand MDD for 6 chosen agents involved in 592 conflicts
+[LNS] Will expand MDD for 6 chosen agents involved in 26 conflicts
   Agent 15 used 1 waiting timesteps, 27 remaining
 [LNS] Expanding MDD for agent 15 by 1 timestep
 [LNS] Updated agent 15 entry/exit time: [20, 33]
@@ -847,31 +847,31 @@ DEBUG: Adding 9912 clauses to MiniSAT
 [LNS] Recreating local CNF with expanded MDDs
 [LNS] Attempting lazy solving with expanded MDD...
 [LNS] Starting lazy solving of conflict zone...
-[LNS] Adding 1008 pre-discovered vertex collisions...
-[LNS] Adding 176 pre-discovered edge collisions...
+[LNS] Adding 22 pre-discovered vertex collisions...
+[LNS] Adding 4 pre-discovered edge collisions...
 [LNS] Known edge collisions: 
 [LNS] Adding edge collision: 82, 57, (9,24) <-> (10,24), t=9
 [LNS] Adding edge collision: 15, 5, (11,25) <-> (10,25), t=21
 [LNS] Adding edge collision: 2, 88, (13,22) <-> (13,21), t=23
 [LNS] Adding edge collision: 15, 5, (12,25) <-> (11,25), t=22
 [LNS] Lazy solving iteration 1...
-DEBUG: CNF has 12534 clauses
+DEBUG: CNF has 11548 clauses
 DEBUG: First clause: 1 
-DEBUG: Adding 12534 clauses to MiniSAT
+DEBUG: Adding 11548 clauses to MiniSAT
 [LNS] Local problem is unsatisfiable after 1 iterations
 [LNS] No Solution found -> Safety run solving without assignment
 [LNS] Lazy solving iteration 2...
-DEBUG: CNF has 12534 clauses
+DEBUG: CNF has 11548 clauses
 DEBUG: First clause: 1 
-DEBUG: Adding 12534 clauses to MiniSAT
+DEBUG: Adding 11548 clauses to MiniSAT
 [LNS] Local problem is unsatisfiable after 2 iterations
 [LNS] No Solution found + Safety run failed -> UNSAT
 [LNS] Failed to find local solution after 10000 iterations
 [LNS] Local problem appears to be unsatisfiable in current zone
 [LNS] Expanded MDD did not resolve conflicts, trying next agent...
-[LNS] Updated collision tracking: 2016 vertex collisions, 352 edge collisions
+[LNS] Updated collision tracking: 22 vertex collisions, 4 edge collisions
 [LNS] Waiting time attempt 8...
-[LNS] Will expand MDD for 6 chosen agents involved in 1184 conflicts
+[LNS] Will expand MDD for 6 chosen agents involved in 26 conflicts
   Agent 15 used 1 waiting timesteps, 26 remaining
 [LNS] Expanding MDD for agent 15 by 1 timestep
 [LNS] Updated agent 15 entry/exit time: [20, 34]
@@ -901,31 +901,31 @@ DEBUG: Adding 12534 clauses to MiniSAT
 [LNS] Recreating local CNF with expanded MDDs
 [LNS] Attempting lazy solving with expanded MDD...
 [LNS] Starting lazy solving of conflict zone...
-[LNS] Adding 2016 pre-discovered vertex collisions...
-[LNS] Adding 352 pre-discovered edge collisions...
+[LNS] Adding 22 pre-discovered vertex collisions...
+[LNS] Adding 4 pre-discovered edge collisions...
 [LNS] Known edge collisions: 
 [LNS] Adding edge collision: 82, 57, (9,24) <-> (10,24), t=9
 [LNS] Adding edge collision: 15, 5, (11,25) <-> (10,25), t=21
 [LNS] Adding edge collision: 2, 88, (13,22) <-> (13,21), t=23
 [LNS] Adding edge collision: 15, 5, (12,25) <-> (11,25), t=22
 [LNS] Lazy solving iteration 1...
-DEBUG: CNF has 15733 clauses
+DEBUG: CNF has 13739 clauses
 DEBUG: First clause: 1 
-DEBUG: Adding 15733 clauses to MiniSAT
+DEBUG: Adding 13739 clauses to MiniSAT
 [LNS] Local problem is unsatisfiable after 1 iterations
 [LNS] No Solution found -> Safety run solving without assignment
 [LNS] Lazy solving iteration 2...
-DEBUG: CNF has 15733 clauses
+DEBUG: CNF has 13739 clauses
 DEBUG: First clause: 1 
-DEBUG: Adding 15733 clauses to MiniSAT
+DEBUG: Adding 13739 clauses to MiniSAT
 [LNS] Local problem is unsatisfiable after 2 iterations
 [LNS] No Solution found + Safety run failed -> UNSAT
 [LNS] Failed to find local solution after 10000 iterations
 [LNS] Local problem appears to be unsatisfiable in current zone
 [LNS] Expanded MDD did not resolve conflicts, trying next agent...
-[LNS] Updated collision tracking: 4032 vertex collisions, 704 edge collisions
+[LNS] Updated collision tracking: 22 vertex collisions, 4 edge collisions
 [LNS] Waiting time attempt 9...
-[LNS] Will expand MDD for 6 chosen agents involved in 2368 conflicts
+[LNS] Will expand MDD for 6 chosen agents involved in 26 conflicts
   Agent 15 used 1 waiting timesteps, 25 remaining
 [LNS] Expanding MDD for agent 15 by 1 timestep
 [LNS] Updated agent 15 entry/exit time: [20, 35]
@@ -957,31 +957,31 @@ DEBUG: Adding 15733 clauses to MiniSAT
 [LNS] Recreating local CNF with expanded MDDs
 [LNS] Attempting lazy solving with expanded MDD...
 [LNS] Starting lazy solving of conflict zone...
-[LNS] Adding 4032 pre-discovered vertex collisions...
-[LNS] Adding 704 pre-discovered edge collisions...
+[LNS] Adding 22 pre-discovered vertex collisions...
+[LNS] Adding 4 pre-discovered edge collisions...
 [LNS] Known edge collisions: 
 [LNS] Adding edge collision: 82, 57, (9,24) <-> (10,24), t=9
 [LNS] Adding edge collision: 15, 5, (11,25) <-> (10,25), t=21
 [LNS] Adding edge collision: 2, 88, (13,22) <-> (13,21), t=23
 [LNS] Adding edge collision: 15, 5, (12,25) <-> (11,25), t=22
 [LNS] Lazy solving iteration 1...
-DEBUG: CNF has 20025 clauses
+DEBUG: CNF has 16015 clauses
 DEBUG: First clause: 1 
-DEBUG: Adding 20025 clauses to MiniSAT
+DEBUG: Adding 16015 clauses to MiniSAT
 [LNS] Local problem is unsatisfiable after 1 iterations
 [LNS] No Solution found -> Safety run solving without assignment
 [LNS] Lazy solving iteration 2...
-DEBUG: CNF has 20025 clauses
+DEBUG: CNF has 16015 clauses
 DEBUG: First clause: 1 
-DEBUG: Adding 20025 clauses to MiniSAT
+DEBUG: Adding 16015 clauses to MiniSAT
 [LNS] Local problem is unsatisfiable after 2 iterations
 [LNS] No Solution found + Safety run failed -> UNSAT
 [LNS] Failed to find local solution after 10000 iterations
 [LNS] Local problem appears to be unsatisfiable in current zone
 [LNS] Expanded MDD did not resolve conflicts, trying next agent...
-[LNS] Updated collision tracking: 8064 vertex collisions, 1408 edge collisions
+[LNS] Updated collision tracking: 22 vertex collisions, 4 edge collisions
 [LNS] Waiting time attempt 10...
-[LNS] Will expand MDD for 6 chosen agents involved in 4736 conflicts
+[LNS] Will expand MDD for 6 chosen agents involved in 26 conflicts
   Agent 15 used 1 waiting timesteps, 24 remaining
 [LNS] Expanding MDD for agent 15 by 1 timestep
 [LNS] Updated agent 15 entry/exit time: [20, 36]
@@ -1015,31 +1015,31 @@ DEBUG: Adding 20025 clauses to MiniSAT
 [LNS] Recreating local CNF with expanded MDDs
 [LNS] Attempting lazy solving with expanded MDD...
 [LNS] Starting lazy solving of conflict zone...
-[LNS] Adding 8064 pre-discovered vertex collisions...
-[LNS] Adding 1408 pre-discovered edge collisions...
+[LNS] Adding 22 pre-discovered vertex collisions...
+[LNS] Adding 4 pre-discovered edge collisions...
 [LNS] Known edge collisions: 
 [LNS] Adding edge collision: 82, 57, (9,24) <-> (10,24), t=9
 [LNS] Adding edge collision: 15, 5, (11,25) <-> (10,25), t=21
 [LNS] Adding edge collision: 2, 88, (13,22) <-> (13,21), t=23
 [LNS] Adding edge collision: 15, 5, (12,25) <-> (11,25), t=22
 [LNS] Lazy solving iteration 1...
-DEBUG: CNF has 26343 clauses
+DEBUG: CNF has 18301 clauses
 DEBUG: First clause: 1 
-DEBUG: Adding 26343 clauses to MiniSAT
+DEBUG: Adding 18301 clauses to MiniSAT
 [LNS] Local problem is unsatisfiable after 1 iterations
 [LNS] No Solution found -> Safety run solving without assignment
 [LNS] Lazy solving iteration 2...
-DEBUG: CNF has 26343 clauses
+DEBUG: CNF has 18301 clauses
 DEBUG: First clause: 1 
-DEBUG: Adding 26343 clauses to MiniSAT
+DEBUG: Adding 18301 clauses to MiniSAT
 [LNS] Local problem is unsatisfiable after 2 iterations
 [LNS] No Solution found + Safety run failed -> UNSAT
 [LNS] Failed to find local solution after 10000 iterations
 [LNS] Local problem appears to be unsatisfiable in current zone
 [LNS] Expanded MDD did not resolve conflicts, trying next agent...
-[LNS] Updated collision tracking: 16128 vertex collisions, 2816 edge collisions
+[LNS] Updated collision tracking: 22 vertex collisions, 4 edge collisions
 [LNS] Waiting time attempt 11...
-[LNS] Will expand MDD for 6 chosen agents involved in 9472 conflicts
+[LNS] Will expand MDD for 6 chosen agents involved in 26 conflicts
   Agent 15 used 1 waiting timesteps, 23 remaining
 [LNS] Expanding MDD for agent 15 by 1 timestep
 [LNS] Updated agent 15 entry/exit time: [20, 37]
@@ -1073,31 +1073,31 @@ DEBUG: Adding 26343 clauses to MiniSAT
 [LNS] Recreating local CNF with expanded MDDs
 [LNS] Attempting lazy solving with expanded MDD...
 [LNS] Starting lazy solving of conflict zone...
-[LNS] Adding 16128 pre-discovered vertex collisions...
-[LNS] Adding 2816 pre-discovered edge collisions...
+[LNS] Adding 22 pre-discovered vertex collisions...
+[LNS] Adding 4 pre-discovered edge collisions...
 [LNS] Known edge collisions: 
 [LNS] Adding edge collision: 82, 57, (9,24) <-> (10,24), t=9
 [LNS] Adding edge collision: 15, 5, (11,25) <-> (10,25), t=21
 [LNS] Adding edge collision: 2, 88, (13,22) <-> (13,21), t=23
 [LNS] Adding edge collision: 15, 5, (12,25) <-> (11,25), t=22
 [LNS] Lazy solving iteration 1...
-DEBUG: CNF has 36771 clauses
+DEBUG: CNF has 20665 clauses
 DEBUG: First clause: 1 
-DEBUG: Adding 36771 clauses to MiniSAT
+DEBUG: Adding 20665 clauses to MiniSAT
 [LNS] Local problem is unsatisfiable after 1 iterations
 [LNS] No Solution found -> Safety run solving without assignment
 [LNS] Lazy solving iteration 2...
-DEBUG: CNF has 36771 clauses
+DEBUG: CNF has 20665 clauses
 DEBUG: First clause: 1 
-DEBUG: Adding 36771 clauses to MiniSAT
+DEBUG: Adding 20665 clauses to MiniSAT
 [LNS] Local problem is unsatisfiable after 2 iterations
 [LNS] No Solution found + Safety run failed -> UNSAT
 [LNS] Failed to find local solution after 10000 iterations
 [LNS] Local problem appears to be unsatisfiable in current zone
 [LNS] Expanded MDD did not resolve conflicts, trying next agent...
-[LNS] Updated collision tracking: 32256 vertex collisions, 5632 edge collisions
+[LNS] Updated collision tracking: 22 vertex collisions, 4 edge collisions
 [LNS] Waiting time attempt 12...
-[LNS] Will expand MDD for 6 chosen agents involved in 18944 conflicts
+[LNS] Will expand MDD for 6 chosen agents involved in 26 conflicts
   Agent 15 used 1 waiting timesteps, 22 remaining
 [LNS] Expanding MDD for agent 15 by 1 timestep
 [LNS] Updated agent 15 entry/exit time: [20, 38]
@@ -1133,31 +1133,31 @@ DEBUG: Adding 36771 clauses to MiniSAT
 [LNS] Recreating local CNF with expanded MDDs
 [LNS] Attempting lazy solving with expanded MDD...
 [LNS] Starting lazy solving of conflict zone...
-[LNS] Adding 32256 pre-discovered vertex collisions...
-[LNS] Adding 5632 pre-discovered edge collisions...
+[LNS] Adding 22 pre-discovered vertex collisions...
+[LNS] Adding 4 pre-discovered edge collisions...
 [LNS] Known edge collisions: 
 [LNS] Adding edge collision: 82, 57, (9,24) <-> (10,24), t=9
 [LNS] Adding edge collision: 15, 5, (11,25) <-> (10,25), t=21
 [LNS] Adding edge collision: 2, 88, (13,22) <-> (13,21), t=23
 [LNS] Adding edge collision: 15, 5, (12,25) <-> (11,25), t=22
 [LNS] Lazy solving iteration 1...
-DEBUG: CNF has 55268 clauses
+DEBUG: CNF has 23034 clauses
 DEBUG: First clause: 1 
-DEBUG: Adding 55268 clauses to MiniSAT
+DEBUG: Adding 23034 clauses to MiniSAT
 [LNS] Local problem is unsatisfiable after 1 iterations
 [LNS] No Solution found -> Safety run solving without assignment
 [LNS] Lazy solving iteration 2...
-DEBUG: CNF has 55268 clauses
+DEBUG: CNF has 23034 clauses
 DEBUG: First clause: 1 
-DEBUG: Adding 55268 clauses to MiniSAT
+DEBUG: Adding 23034 clauses to MiniSAT
 [LNS] Local problem is unsatisfiable after 2 iterations
 [LNS] No Solution found + Safety run failed -> UNSAT
 [LNS] Failed to find local solution after 10000 iterations
 [LNS] Local problem appears to be unsatisfiable in current zone
 [LNS] Expanded MDD did not resolve conflicts, trying next agent...
-[LNS] Updated collision tracking: 64512 vertex collisions, 11264 edge collisions
+[LNS] Updated collision tracking: 22 vertex collisions, 4 edge collisions
 [LNS] Waiting time attempt 13...
-[LNS] Will expand MDD for 6 chosen agents involved in 37888 conflicts
+[LNS] Will expand MDD for 6 chosen agents involved in 26 conflicts
   Agent 15 used 1 waiting timesteps, 21 remaining
 [LNS] Expanding MDD for agent 15 by 1 timestep
 [LNS] Updated agent 15 entry/exit time: [20, 39]
@@ -1195,31 +1195,31 @@ DEBUG: Adding 55268 clauses to MiniSAT
 [LNS] Recreating local CNF with expanded MDDs
 [LNS] Attempting lazy solving with expanded MDD...
 [LNS] Starting lazy solving of conflict zone...
-[LNS] Adding 64512 pre-discovered vertex collisions...
-[LNS] Adding 11264 pre-discovered edge collisions...
+[LNS] Adding 22 pre-discovered vertex collisions...
+[LNS] Adding 4 pre-discovered edge collisions...
 [LNS] Known edge collisions: 
 [LNS] Adding edge collision: 82, 57, (9,24) <-> (10,24), t=9
 [LNS] Adding edge collision: 15, 5, (11,25) <-> (10,25), t=21
 [LNS] Adding edge collision: 2, 88, (13,22) <-> (13,21), t=23
 [LNS] Adding edge collision: 15, 5, (12,25) <-> (11,25), t=22
 [LNS] Lazy solving iteration 1...
-DEBUG: CNF has 89941 clauses
+DEBUG: CNF has 25451 clauses
 DEBUG: First clause: 1 
-DEBUG: Adding 89941 clauses to MiniSAT
+DEBUG: Adding 25451 clauses to MiniSAT
 [LNS] Local problem is unsatisfiable after 1 iterations
 [LNS] No Solution found -> Safety run solving without assignment
 [LNS] Lazy solving iteration 2...
-DEBUG: CNF has 89941 clauses
+DEBUG: CNF has 25451 clauses
 DEBUG: First clause: 1 
-DEBUG: Adding 89941 clauses to MiniSAT
+DEBUG: Adding 25451 clauses to MiniSAT
 [LNS] Local problem is unsatisfiable after 2 iterations
 [LNS] No Solution found + Safety run failed -> UNSAT
 [LNS] Failed to find local solution after 10000 iterations
 [LNS] Local problem appears to be unsatisfiable in current zone
 [LNS] Expanded MDD did not resolve conflicts, trying next agent...
-[LNS] Updated collision tracking: 129024 vertex collisions, 22528 edge collisions
+[LNS] Updated collision tracking: 22 vertex collisions, 4 edge collisions
 [LNS] Waiting time attempt 14...
-[LNS] Will expand MDD for 6 chosen agents involved in 75776 conflicts
+[LNS] Will expand MDD for 6 chosen agents involved in 26 conflicts
   Agent 5 used 1 waiting timesteps, 21 remaining
 [LNS] Expanding MDD for agent 5 by 1 timestep
 [LNS] Updated agent 5 entry/exit time: [20, 27]
@@ -1253,31 +1253,31 @@ DEBUG: Adding 89941 clauses to MiniSAT
 [LNS] Recreating local CNF with expanded MDDs
 [LNS] Attempting lazy solving with expanded MDD...
 [LNS] Starting lazy solving of conflict zone...
-[LNS] Adding 129024 pre-discovered vertex collisions...
-[LNS] Adding 22528 pre-discovered edge collisions...
+[LNS] Adding 22 pre-discovered vertex collisions...
+[LNS] Adding 4 pre-discovered edge collisions...
 [LNS] Known edge collisions: 
 [LNS] Adding edge collision: 82, 57, (9,24) <-> (10,24), t=9
 [LNS] Adding edge collision: 15, 5, (11,25) <-> (10,25), t=21
 [LNS] Adding edge collision: 2, 88, (13,22) <-> (13,21), t=23
 [LNS] Adding edge collision: 15, 5, (12,25) <-> (11,25), t=22
 [LNS] Lazy solving iteration 1...
-DEBUG: CNF has 156587 clauses
+DEBUG: CNF has 27585 clauses
 DEBUG: First clause: 1 
-DEBUG: Adding 156587 clauses to MiniSAT
+DEBUG: Adding 27585 clauses to MiniSAT
 [LNS] Local problem is unsatisfiable after 1 iterations
 [LNS] No Solution found -> Safety run solving without assignment
 [LNS] Lazy solving iteration 2...
-DEBUG: CNF has 156587 clauses
+DEBUG: CNF has 27585 clauses
 DEBUG: First clause: 1 
-DEBUG: Adding 156587 clauses to MiniSAT
+DEBUG: Adding 27585 clauses to MiniSAT
 [LNS] Local problem is unsatisfiable after 2 iterations
 [LNS] No Solution found + Safety run failed -> UNSAT
 [LNS] Failed to find local solution after 10000 iterations
 [LNS] Local problem appears to be unsatisfiable in current zone
 [LNS] Expanded MDD did not resolve conflicts, trying next agent...
-[LNS] Updated collision tracking: 258048 vertex collisions, 45056 edge collisions
+[LNS] Updated collision tracking: 22 vertex collisions, 4 edge collisions
 [LNS] Waiting time attempt 15...
-[LNS] Will expand MDD for 6 chosen agents involved in 151552 conflicts
+[LNS] Will expand MDD for 6 chosen agents involved in 26 conflicts
   Agent 15 used 1 waiting timesteps, 20 remaining
 [LNS] Expanding MDD for agent 15 by 1 timestep
 [LNS] Updated agent 15 entry/exit time: [20, 40]
@@ -1311,31 +1311,31 @@ DEBUG: Adding 156587 clauses to MiniSAT
 [LNS] Recreating local CNF with expanded MDDs
 [LNS] Attempting lazy solving with expanded MDD...
 [LNS] Starting lazy solving of conflict zone...
-[LNS] Adding 258048 pre-discovered vertex collisions...
-[LNS] Adding 45056 pre-discovered edge collisions...
+[LNS] Adding 22 pre-discovered vertex collisions...
+[LNS] Adding 4 pre-discovered edge collisions...
 [LNS] Known edge collisions: 
 [LNS] Adding edge collision: 82, 57, (9,24) <-> (10,24), t=9
 [LNS] Adding edge collision: 15, 5, (11,25) <-> (10,25), t=21
 [LNS] Adding edge collision: 2, 88, (13,22) <-> (13,21), t=23
 [LNS] Adding edge collision: 15, 5, (12,25) <-> (11,25), t=22
 [LNS] Lazy solving iteration 1...
-DEBUG: CNF has 288077 clauses
+DEBUG: CNF has 30051 clauses
 DEBUG: First clause: 1 
-DEBUG: Adding 288077 clauses to MiniSAT
+DEBUG: Adding 30051 clauses to MiniSAT
 [LNS] Local problem is unsatisfiable after 1 iterations
 [LNS] No Solution found -> Safety run solving without assignment
 [LNS] Lazy solving iteration 2...
-DEBUG: CNF has 288077 clauses
+DEBUG: CNF has 30051 clauses
 DEBUG: First clause: 1 
-DEBUG: Adding 288077 clauses to MiniSAT
+DEBUG: Adding 30051 clauses to MiniSAT
 [LNS] Local problem is unsatisfiable after 2 iterations
 [LNS] No Solution found + Safety run failed -> UNSAT
 [LNS] Failed to find local solution after 10000 iterations
 [LNS] Local problem appears to be unsatisfiable in current zone
 [LNS] Expanded MDD did not resolve conflicts, trying next agent...
-[LNS] Updated collision tracking: 516096 vertex collisions, 90112 edge collisions
+[LNS] Updated collision tracking: 22 vertex collisions, 4 edge collisions
 [LNS] Waiting time attempt 16...
-[LNS] Will expand MDD for 6 chosen agents involved in 303104 conflicts
+[LNS] Will expand MDD for 6 chosen agents involved in 26 conflicts
   Agent 5 used 1 waiting timesteps, 20 remaining
 [LNS] Expanding MDD for agent 5 by 1 timestep
 [LNS] Updated agent 5 entry/exit time: [20, 28]
@@ -1369,31 +1369,31 @@ DEBUG: Adding 288077 clauses to MiniSAT
 [LNS] Recreating local CNF with expanded MDDs
 [LNS] Attempting lazy solving with expanded MDD...
 [LNS] Starting lazy solving of conflict zone...
-[LNS] Adding 516096 pre-discovered vertex collisions...
-[LNS] Adding 90112 pre-discovered edge collisions...
+[LNS] Adding 22 pre-discovered vertex collisions...
+[LNS] Adding 4 pre-discovered edge collisions...
 [LNS] Known edge collisions: 
 [LNS] Adding edge collision: 82, 57, (9,24) <-> (10,24), t=9
 [LNS] Adding edge collision: 15, 5, (11,25) <-> (10,25), t=21
 [LNS] Adding edge collision: 2, 88, (13,22) <-> (13,21), t=23
 [LNS] Adding edge collision: 15, 5, (12,25) <-> (11,25), t=22
 [LNS] Lazy solving iteration 1...
-DEBUG: CNF has 548410 clauses
+DEBUG: CNF has 32336 clauses
 DEBUG: First clause: 1 
-DEBUG: Adding 548410 clauses to MiniSAT
+DEBUG: Adding 32336 clauses to MiniSAT
 [LNS] Local problem is unsatisfiable after 1 iterations
 [LNS] No Solution found -> Safety run solving without assignment
 [LNS] Lazy solving iteration 2...
-DEBUG: CNF has 548410 clauses
+DEBUG: CNF has 32336 clauses
 DEBUG: First clause: 1 
-DEBUG: Adding 548410 clauses to MiniSAT
+DEBUG: Adding 32336 clauses to MiniSAT
 [LNS] Local problem is unsatisfiable after 2 iterations
 [LNS] No Solution found + Safety run failed -> UNSAT
 [LNS] Failed to find local solution after 10000 iterations
 [LNS] Local problem appears to be unsatisfiable in current zone
 [LNS] Expanded MDD did not resolve conflicts, trying next agent...
-[LNS] Updated collision tracking: 1032192 vertex collisions, 180224 edge collisions
+[LNS] Updated collision tracking: 22 vertex collisions, 4 edge collisions
 [LNS] Waiting time attempt 17...
-[LNS] Will expand MDD for 6 chosen agents involved in 606208 conflicts
+[LNS] Will expand MDD for 6 chosen agents involved in 26 conflicts
   Agent 15 used 1 waiting timesteps, 19 remaining
 [LNS] Expanding MDD for agent 15 by 1 timestep
 [LNS] Updated agent 15 entry/exit time: [20, 41]
@@ -1427,31 +1427,31 @@ DEBUG: Adding 548410 clauses to MiniSAT
 [LNS] Recreating local CNF with expanded MDDs
 [LNS] Attempting lazy solving with expanded MDD...
 [LNS] Starting lazy solving of conflict zone...
-[LNS] Adding 1032192 pre-discovered vertex collisions...
-[LNS] Adding 180224 pre-discovered edge collisions...
+[LNS] Adding 22 pre-discovered vertex collisions...
+[LNS] Adding 4 pre-discovered edge collisions...
 [LNS] Known edge collisions: 
 [LNS] Adding edge collision: 82, 57, (9,24) <-> (10,24), t=9
 [LNS] Adding edge collision: 15, 5, (11,25) <-> (10,25), t=21
 [LNS] Adding edge collision: 2, 88, (13,22) <-> (13,21), t=23
 [LNS] Adding edge collision: 15, 5, (12,25) <-> (11,25), t=22
 [LNS] Lazy solving iteration 1...
-DEBUG: CNF has 1067040 clauses
+DEBUG: CNF has 34870 clauses
 DEBUG: First clause: 1 
-DEBUG: Adding 1067040 clauses to MiniSAT
+DEBUG: Adding 34870 clauses to MiniSAT
 [LNS] Local problem is unsatisfiable after 1 iterations
 [LNS] No Solution found -> Safety run solving without assignment
 [LNS] Lazy solving iteration 2...
-DEBUG: CNF has 1067040 clauses
+DEBUG: CNF has 34870 clauses
 DEBUG: First clause: 1 
-DEBUG: Adding 1067040 clauses to MiniSAT
+DEBUG: Adding 34870 clauses to MiniSAT
 [LNS] Local problem is unsatisfiable after 2 iterations
 [LNS] No Solution found + Safety run failed -> UNSAT
 [LNS] Failed to find local solution after 10000 iterations
 [LNS] Local problem appears to be unsatisfiable in current zone
 [LNS] Expanded MDD did not resolve conflicts, trying next agent...
-[LNS] Updated collision tracking: 2064384 vertex collisions, 360448 edge collisions
+[LNS] Updated collision tracking: 22 vertex collisions, 4 edge collisions
 [LNS] Waiting time attempt 18...
-[LNS] Will expand MDD for 6 chosen agents involved in 1212416 conflicts
+[LNS] Will expand MDD for 6 chosen agents involved in 26 conflicts
   Agent 5 used 1 waiting timesteps, 19 remaining
 [LNS] Expanding MDD for agent 5 by 1 timestep
 [LNS] Updated agent 5 entry/exit time: [20, 29]
@@ -1485,31 +1485,31 @@ DEBUG: Adding 1067040 clauses to MiniSAT
 [LNS] Recreating local CNF with expanded MDDs
 [LNS] Attempting lazy solving with expanded MDD...
 [LNS] Starting lazy solving of conflict zone...
-[LNS] Adding 2064384 pre-discovered vertex collisions...
-[LNS] Adding 360448 pre-discovered edge collisions...
+[LNS] Adding 22 pre-discovered vertex collisions...
+[LNS] Adding 4 pre-discovered edge collisions...
 [LNS] Known edge collisions: 
 [LNS] Adding edge collision: 82, 57, (9,24) <-> (10,24), t=9
 [LNS] Adding edge collision: 15, 5, (11,25) <-> (10,25), t=21
 [LNS] Adding edge collision: 2, 88, (13,22) <-> (13,21), t=23
 [LNS] Adding edge collision: 15, 5, (12,25) <-> (11,25), t=22
 [LNS] Lazy solving iteration 1...
-DEBUG: CNF has 2101668 clauses
+DEBUG: CNF has 37306 clauses
 DEBUG: First clause: 1 
-DEBUG: Adding 2101668 clauses to MiniSAT
+DEBUG: Adding 37306 clauses to MiniSAT
 [LNS] Local problem is unsatisfiable after 1 iterations
 [LNS] No Solution found -> Safety run solving without assignment
 [LNS] Lazy solving iteration 2...
-DEBUG: CNF has 2101668 clauses
+DEBUG: CNF has 37306 clauses
 DEBUG: First clause: 1 
-DEBUG: Adding 2101668 clauses to MiniSAT
+DEBUG: Adding 37306 clauses to MiniSAT
 [LNS] Local problem is unsatisfiable after 2 iterations
 [LNS] No Solution found + Safety run failed -> UNSAT
 [LNS] Failed to find local solution after 10000 iterations
 [LNS] Local problem appears to be unsatisfiable in current zone
 [LNS] Expanded MDD did not resolve conflicts, trying next agent...
-[LNS] Updated collision tracking: 4128768 vertex collisions, 720896 edge collisions
+[LNS] Updated collision tracking: 22 vertex collisions, 4 edge collisions
 [LNS] Waiting time attempt 19...
-[LNS] Will expand MDD for 6 chosen agents involved in 2424832 conflicts
+[LNS] Will expand MDD for 6 chosen agents involved in 26 conflicts
   Agent 15 used 1 waiting timesteps, 18 remaining
 [LNS] Expanding MDD for agent 15 by 1 timestep
 [LNS] Updated agent 15 entry/exit time: [20, 42]
@@ -1543,31 +1543,31 @@ DEBUG: Adding 2101668 clauses to MiniSAT
 [LNS] Recreating local CNF with expanded MDDs
 [LNS] Attempting lazy solving with expanded MDD...
 [LNS] Starting lazy solving of conflict zone...
-[LNS] Adding 4128768 pre-discovered vertex collisions...
-[LNS] Adding 720896 pre-discovered edge collisions...
+[LNS] Adding 22 pre-discovered vertex collisions...
+[LNS] Adding 4 pre-discovered edge collisions...
 [LNS] Known edge collisions: 
 [LNS] Adding edge collision: 82, 57, (9,24) <-> (10,24), t=9
 [LNS] Adding edge collision: 15, 5, (11,25) <-> (10,25), t=21
 [LNS] Adding edge collision: 2, 88, (13,22) <-> (13,21), t=23
 [LNS] Adding edge collision: 15, 5, (12,25) <-> (11,25), t=22
 [LNS] Lazy solving iteration 1...
-DEBUG: CNF has 4168717 clauses
+DEBUG: CNF has 39971 clauses
 DEBUG: First clause: 1 
-DEBUG: Adding 4168717 clauses to MiniSAT
+DEBUG: Adding 39971 clauses to MiniSAT
 [LNS] Local problem is unsatisfiable after 1 iterations
 [LNS] No Solution found -> Safety run solving without assignment
 [LNS] Lazy solving iteration 2...
-DEBUG: CNF has 4168717 clauses
+DEBUG: CNF has 39971 clauses
 DEBUG: First clause: 1 
-DEBUG: Adding 4168717 clauses to MiniSAT
+DEBUG: Adding 39971 clauses to MiniSAT
 [LNS] Local problem is unsatisfiable after 2 iterations
 [LNS] No Solution found + Safety run failed -> UNSAT
 [LNS] Failed to find local solution after 10000 iterations
 [LNS] Local problem appears to be unsatisfiable in current zone
 [LNS] Expanded MDD did not resolve conflicts, trying next agent...
-[LNS] Updated collision tracking: 8257536 vertex collisions, 1441792 edge collisions
+[LNS] Updated collision tracking: 22 vertex collisions, 4 edge collisions
 [LNS] Waiting time attempt 20...
-[LNS] Will expand MDD for 6 chosen agents involved in 4849664 conflicts
+[LNS] Will expand MDD for 6 chosen agents involved in 26 conflicts
   Agent 5 used 1 waiting timesteps, 18 remaining
 [LNS] Expanding MDD for agent 5 by 1 timestep
 [LNS] Updated agent 5 entry/exit time: [20, 30]
@@ -1601,31 +1601,31 @@ DEBUG: Adding 4168717 clauses to MiniSAT
 [LNS] Recreating local CNF with expanded MDDs
 [LNS] Attempting lazy solving with expanded MDD...
 [LNS] Starting lazy solving of conflict zone...
-[LNS] Adding 8257536 pre-discovered vertex collisions...
-[LNS] Adding 1441792 pre-discovered edge collisions...
+[LNS] Adding 22 pre-discovered vertex collisions...
+[LNS] Adding 4 pre-discovered edge collisions...
 [LNS] Known edge collisions: 
 [LNS] Adding edge collision: 82, 57, (9,24) <-> (10,24), t=9
 [LNS] Adding edge collision: 15, 5, (11,25) <-> (10,25), t=21
 [LNS] Adding edge collision: 2, 88, (13,22) <-> (13,21), t=23
 [LNS] Adding edge collision: 15, 5, (12,25) <-> (11,25), t=22
 [LNS] Lazy solving iteration 1...
-DEBUG: CNF has 8300123 clauses
+DEBUG: CNF has 42609 clauses
 DEBUG: First clause: 1 
-DEBUG: Adding 8300123 clauses to MiniSAT
+DEBUG: Adding 42609 clauses to MiniSAT
 [LNS] Local problem is unsatisfiable after 1 iterations
 [LNS] No Solution found -> Safety run solving without assignment
 [LNS] Lazy solving iteration 2...
-DEBUG: CNF has 8300123 clauses
+DEBUG: CNF has 42609 clauses
 DEBUG: First clause: 1 
-DEBUG: Adding 8300123 clauses to MiniSAT
+DEBUG: Adding 42609 clauses to MiniSAT
 [LNS] Local problem is unsatisfiable after 2 iterations
 [LNS] No Solution found + Safety run failed -> UNSAT
 [LNS] Failed to find local solution after 10000 iterations
 [LNS] Local problem appears to be unsatisfiable in current zone
 [LNS] Expanded MDD did not resolve conflicts, trying next agent...
-[LNS] Updated collision tracking: 16515072 vertex collisions, 2883584 edge collisions
+[LNS] Updated collision tracking: 22 vertex collisions, 4 edge collisions
 [LNS] Waiting time attempt 21...
-[LNS] Will expand MDD for 6 chosen agents involved in 9699328 conflicts
+[LNS] Will expand MDD for 6 chosen agents involved in 26 conflicts
   Agent 15 used 1 waiting timesteps, 17 remaining
 [LNS] Expanding MDD for agent 15 by 1 timestep
 [LNS] Updated agent 15 entry/exit time: [20, 43]
@@ -1659,31 +1659,31 @@ DEBUG: Adding 8300123 clauses to MiniSAT
 [LNS] Recreating local CNF with expanded MDDs
 [LNS] Attempting lazy solving with expanded MDD...
 [LNS] Starting lazy solving of conflict zone...
-[LNS] Adding 16515072 pre-discovered vertex collisions...
-[LNS] Adding 2883584 pre-discovered edge collisions...
+[LNS] Adding 22 pre-discovered vertex collisions...
+[LNS] Adding 4 pre-discovered edge collisions...
 [LNS] Known edge collisions: 
 [LNS] Adding edge collision: 82, 57, (9,24) <-> (10,24), t=9
 [LNS] Adding edge collision: 15, 5, (11,25) <-> (10,25), t=21
 [LNS] Adding edge collision: 2, 88, (13,22) <-> (13,21), t=23
 [LNS] Adding edge collision: 15, 5, (12,25) <-> (11,25), t=22
 [LNS] Lazy solving iteration 1...
-DEBUG: CNF has 16560444 clauses
+DEBUG: CNF has 45394 clauses
 DEBUG: First clause: 1 
-DEBUG: Adding 16560444 clauses to MiniSAT
+DEBUG: Adding 45394 clauses to MiniSAT
 [LNS] Local problem is unsatisfiable after 1 iterations
 [LNS] No Solution found -> Safety run solving without assignment
 [LNS] Lazy solving iteration 2...
-DEBUG: CNF has 16560444 clauses
+DEBUG: CNF has 45394 clauses
 DEBUG: First clause: 1 
-DEBUG: Adding 16560444 clauses to MiniSAT
+DEBUG: Adding 45394 clauses to MiniSAT
 [LNS] Local problem is unsatisfiable after 2 iterations
 [LNS] No Solution found + Safety run failed -> UNSAT
 [LNS] Failed to find local solution after 10000 iterations
 [LNS] Local problem appears to be unsatisfiable in current zone
 [LNS] Expanded MDD did not resolve conflicts, trying next agent...
-[LNS] Updated collision tracking: 33030144 vertex collisions, 5767168 edge collisions
+[LNS] Updated collision tracking: 22 vertex collisions, 4 edge collisions
 [LNS] Waiting time attempt 22...
-[LNS] Will expand MDD for 6 chosen agents involved in 19398656 conflicts
+[LNS] Will expand MDD for 6 chosen agents involved in 26 conflicts
   Agent 5 used 1 waiting timesteps, 17 remaining
 [LNS] Expanding MDD for agent 5 by 1 timestep
 [LNS] Updated agent 5 entry/exit time: [20, 31]
@@ -1717,31 +1717,31 @@ DEBUG: Adding 16560444 clauses to MiniSAT
 [LNS] Recreating local CNF with expanded MDDs
 [LNS] Attempting lazy solving with expanded MDD...
 [LNS] Starting lazy solving of conflict zone...
-[LNS] Adding 33030144 pre-discovered vertex collisions...
-[LNS] Adding 5767168 pre-discovered edge collisions...
+[LNS] Adding 22 pre-discovered vertex collisions...
+[LNS] Adding 4 pre-discovered edge collisions...
 [LNS] Known edge collisions: 
 [LNS] Adding edge collision: 82, 57, (9,24) <-> (10,24), t=9
 [LNS] Adding edge collision: 15, 5, (11,25) <-> (10,25), t=21
 [LNS] Adding edge collision: 2, 88, (13,22) <-> (13,21), t=23
 [LNS] Adding edge collision: 15, 5, (12,25) <-> (11,25), t=22
 [LNS] Lazy solving iteration 1...
-DEBUG: CNF has 33078286 clauses
+DEBUG: CNF has 48164 clauses
 DEBUG: First clause: 1 
-DEBUG: Adding 33078286 clauses to MiniSAT
+DEBUG: Adding 48164 clauses to MiniSAT
 [LNS] Local problem is unsatisfiable after 1 iterations
 [LNS] No Solution found -> Safety run solving without assignment
 [LNS] Lazy solving iteration 2...
-DEBUG: CNF has 33078286 clauses
+DEBUG: CNF has 48164 clauses
 DEBUG: First clause: 1 
-DEBUG: Adding 33078286 clauses to MiniSAT
+DEBUG: Adding 48164 clauses to MiniSAT
 [LNS] Local problem is unsatisfiable after 2 iterations
 [LNS] No Solution found + Safety run failed -> UNSAT
 [LNS] Failed to find local solution after 10000 iterations
 [LNS] Local problem appears to be unsatisfiable in current zone
 [LNS] Expanded MDD did not resolve conflicts, trying next agent...
-[LNS] Updated collision tracking: 66060288 vertex collisions, 11534336 edge collisions
+[LNS] Updated collision tracking: 22 vertex collisions, 4 edge collisions
 [LNS] Waiting time attempt 23...
-[LNS] Will expand MDD for 6 chosen agents involved in 38797312 conflicts
+[LNS] Will expand MDD for 6 chosen agents involved in 26 conflicts
   Agent 15 used 1 waiting timesteps, 16 remaining
 [LNS] Expanding MDD for agent 15 by 1 timestep
 [LNS] Updated agent 15 entry/exit time: [20, 44]
@@ -1775,4 +1775,66 @@ DEBUG: Adding 33078286 clauses to MiniSAT
 [LNS] Recreating local CNF with expanded MDDs
 [LNS] Attempting lazy solving with expanded MDD...
 [LNS] Starting lazy solving of conflict zone...
-[LNS] Adding 66060288 pre-discovered vertex collisions...
+[LNS] Adding 22 pre-discovered vertex collisions...
+[LNS] Adding 4 pre-discovered edge collisions...
+[LNS] Known edge collisions: 
+[LNS] Adding edge collision: 82, 57, (9,24) <-> (10,24), t=9
+[LNS] Adding edge collision: 15, 5, (11,25) <-> (10,25), t=21
+[LNS] Adding edge collision: 2, 88, (13,22) <-> (13,21), t=23
+[LNS] Adding edge collision: 15, 5, (12,25) <-> (11,25), t=22
+[LNS] Lazy solving iteration 1...
+DEBUG: CNF has 50980 clauses
+DEBUG: First clause: 1 
+DEBUG: Adding 50980 clauses to MiniSAT
+[LNS] Local problem is unsatisfiable after 1 iterations
+[LNS] No Solution found -> Safety run solving without assignment
+[LNS] Lazy solving iteration 2...
+DEBUG: CNF has 50980 clauses
+DEBUG: First clause: 1 
+DEBUG: Adding 50980 clauses to MiniSAT
+[LNS] Local problem is unsatisfiable after 2 iterations
+[LNS] No Solution found + Safety run failed -> UNSAT
+[LNS] Failed to find local solution after 10000 iterations
+[LNS] Local problem appears to be unsatisfiable in current zone
+[LNS] Expanded MDD did not resolve conflicts, trying next agent...
+[LNS] Updated collision tracking: 22 vertex collisions, 4 edge collisions
+[LNS] Waiting time attempt 24...
+[LNS] No more waiting time available for conflict resolution
+[LNS] Waiting time strategies exhausted, restoring backup...
+[LNS] Restored waiting times from backup
+[LNS] Waiting time strategy failed, checking bucket size...
+[LNS] Original bucket coverage: 1.12847% of map (26/2304 cells)
+[LNS] Original bucket coverage is 1.12847%, can still expand. Will try expansion factor 1
+[LNS] Attempting resolution with expansion factor 1...
+[LNS] Expanding bucket with expansion factor 1...
+[LNS] Restoring original waiting times...
+[LNS] Restored waiting times from backup
+[LNS] Creating expanded bucket with offset 2 (original: 1)
+[LNS] Expanded bucket contains 44 positions (original: 26)
+[LNS] Checking 18 new positions for conflicts (efficient approach)
+[LNS] creating zone with expanded bucket...
+[LNS] Found 22 agents in expanded zone (original: 15)
+[LNS] ERROR:  Agent 2 local segment t=[15,25] len=11
+[LNS] ERROR:  Agent 5 local segment t=[19,29] len=11
+[LNS] ERROR:  Agent 15 local segment t=[19,27] len=9
+[LNS] ERROR:  Agent 17 local segment t=[31,67] len=37
+[LNS] ERROR:  Agent 22 local segment t=[7,16] len=10
+[LNS] ERROR:  Agent 30 local segment t=[40,67] len=28
+[LNS] ERROR:  Agent 32 local segment t=[0,0] len=1
+[LNS] ERROR:  Agent 39 local segment t=[0,8] len=9
+[LNS] ERROR:  Agent 41 local segment t=[10,12] len=3
+[LNS] ERROR:  Agent 56 local segment t=[43,46] len=4
+[LNS] ERROR:  Agent 57 local segment t=[5,13] len=9
+[LNS] ERROR:  Agent 61 local segment t=[27,34] len=8
+[LNS] ERROR:  Agent 62 local segment t=[12,13] len=2
+[LNS] ERROR:  Agent 63 local segment t=[20,20] len=1
+[LNS] ERROR:  Agent 68 local segment t=[11,21] len=11
+[LNS] ERROR:  Agent 75 local segment t=[23,67] len=45
+[LNS] ERROR:  Agent 76 local segment t=[4,7] len=4
+[LNS] ERROR:  Agent 80 local segment t=[5,12] len=8
+[LNS] ERROR:  Agent 81 local segment t=[8,18] len=11
+[LNS] ERROR:  Agent 82 local segment t=[7,17] len=11
+[LNS] ERROR:  Agent 88 local segment t=[21,31] len=11
+[LNS] ERROR:  Agent 93 local segment t=[0,5] len=6
+terminate called after throwing an instance of 'std::invalid_argument'
+  what():  Goal position is not on a free cell
