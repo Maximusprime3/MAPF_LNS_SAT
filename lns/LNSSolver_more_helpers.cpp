@@ -1439,12 +1439,11 @@ select_bucket:
                     //check if he returns at a later timestep
                     for (int t2 = t + 1; t2 <= end_t && t2 < (int)path.size(); ++t2) {
                         if (zone_positions_set.count(path[t2])) {
-                            std::cout << "[LNS] Agent " << agent_id << " returns to the zone at timestep " << t2 << std::endl;
-                            exit_t = t2;
-                            break;
-                        } else {
-                            std::cout << "[LNS] Agent " << agent_id << " does not return to the zone at timestep " << t2 << std::endl;
-                        }
+                            std::cout << "[LNS] WARINING Agent " << agent_id << " returns to the zone at timestep " << t2 << std::endl;
+                            exit_t = t2;/// need to set flat to test if exit is reachable if yes this should be the exit time
+                            //if not reachable need to expand the zone so it is reachable ->check for new conflicts again whoop die loop
+                            // preventable if we automatically include all agents path positions from start to end of the zone
+                        } 
                     }
                     break; // keep going to find if the agent is returning later
                 }
