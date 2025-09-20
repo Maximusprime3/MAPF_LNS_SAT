@@ -421,6 +421,9 @@ struct LazySolveResult {
     std::unordered_map<int, std::vector<std::pair<int,int>>> local_paths;
     std::vector<std::tuple<int, int, std::pair<int,int>, int>> discovered_vertex_collisions;
     std::vector<std::tuple<int, int, std::pair<int,int>, std::pair<int,int>, int>> discovered_edge_collisions;
+    //latest collisions that were discovered before UNSAT
+    std::vector<std::tuple<int, int, std::pair<int,int>, int>> latest_discovered_vertex_collisions;
+    std::vector<std::tuple<int, int, std::pair<int,int>, std::pair<int,int>, int>> latest_discovered_edge_collisions;       
 };
 
 // Helper: Lazy solving of conflict zone
@@ -444,6 +447,9 @@ lazy_solve_conflict_zone(CNF& local_cnf,
     // Track all discovered collisions during solving
     std::vector<std::tuple<int, int, std::pair<int,int>, int>> discovered_vertex_collisions;
     std::vector<std::tuple<int, int, std::pair<int,int>, std::pair<int,int>, int>> discovered_edge_collisions;
+    // Track latest collisions that were discovered before UNSAT
+    std::vector<std::tuple<int, int, std::pair<int,int>, int>> latest_discovered_vertex_collisions;
+    std::vector<std::tuple<int, int, std::pair<int,int>, std::pair<int,int>, int>> latest_discovered_edge_collisions;
     // Track discovered collisions for future use
     if (known_vertex_collisions) {
         discovered_vertex_collisions.insert(discovered_vertex_collisions.end(), known_vertex_collisions->begin(), known_vertex_collisions->end());
@@ -453,9 +459,10 @@ lazy_solve_conflict_zone(CNF& local_cnf,
     }
 
     // Add pre-discovered collisions to avoid rediscovering them
-    if (known_vertex_collisions && !known_vertex_collisions->empty()) {
-        std::cout << "[LNS] Adding " << known_vertex_collisions->size() << " pre-discovered vertex collisions..." << std::endl;
-        for (const auto& collision : *known_vertex_collisions) {
+   
+    if (!discovered_vertex_collisions.empty()) {
+        std::cout << "[LNS] Adding " << discovered_vertex_collisions.size() << " pre-discovered vertex collisions..." << std::endl;
+        for (const auto& collision : discovered_vertex_collisions) {
             int agent1, agent2, timestep;
             std::pair<int,int> pos;
             std::tie(agent1, agent2, pos, timestep) = collision;
@@ -471,22 +478,25 @@ lazy_solve_conflict_zone(CNF& local_cnf,
         }
     }
     // there can be duplicates in the known_edge_collisions, so we need to check for them
-    std::set<std::tuple<int, int, std::pair<int,int>, std::pair<int,int>, int>> known_edge_collisions_set;
+    std::set<std::tuple<int, int, std::pair<int,int>, std::pair<int,int>, int>> discovered_edge_collisions_set;
 
-    if (known_edge_collisions && !known_edge_collisions->empty()) {
-        std::cout << "[LNS] Adding " << known_edge_collisions->size() << " pre-discovered edge collisions..." << std::endl;
+    if (!discovered_edge_collisions.empty()) {
+        std::cout << "[LNS] Adding " << discovered_edge_collisions.size() << " pre-discovered edge collisions..." << std::endl;
         //test print all known edge collisions
-        std::cout << "[LNS] Known edge collisions: " << std::endl;
+        std::cout << "[LNS] Discovered edge collisions: " << std::endl;
 
-        for (const auto& edge_collision : *known_edge_collisions) {
-            //check if we already added this edge collision
-            if (known_edge_collisions_set.count(edge_collision) > 0) {
-                continue;
-            }
-            known_edge_collisions_set.insert(edge_collision);
+        for (const auto& edge_collision : discovered_edge_collisions) {
             int agent1, agent2, timestep;
             std::pair<int,int> pos1, pos2;
             std::tie(agent1, agent2, pos1, pos2, timestep) = edge_collision;
+            
+            //check if we already added this edge collision
+            if (discovered_edge_collisions_set.count(edge_collision) > 0) {
+                std::cout << "[LNS] Skipping DUPLICATE pre-discovered edge collision (" << agent1 << "," << agent2
+                          << ") at (" << pos1.first << "," << pos1.second << ") <-> (" << pos2.first << "," << pos2.second << ") t=" << timestep << std::endl;
+                continue;
+            }
+            discovered_edge_collisions_set.insert(edge_collision);
             //print adding edge collision
             std::cout << "[LNS] Adding edge collision: " << agent1 << ", " << agent2
                       << ", (" << pos1.first << "," << pos1.second << ")"
@@ -561,6 +571,10 @@ lazy_solve_conflict_zone(CNF& local_cnf,
         // Track discovered collisions for future use
         discovered_vertex_collisions.insert(discovered_vertex_collisions.end(), new_collisions.begin(), new_collisions.end());
         discovered_edge_collisions.insert(discovered_edge_collisions.end(), new_edge_collisions.begin(), new_edge_collisions.end());
+        // safe only latest collisions that were discovered before the last run of minisat
+        latest_discovered_vertex_collisions = new_collisions;
+        latest_discovered_edge_collisions = new_edge_collisions;
+
 
         std::cout << "[LNS] Found " << new_collisions.size() << " vertex collisions and " 
         << new_edge_collisions.size() << " edge collisions" << std::endl;
@@ -616,13 +630,15 @@ lazy_solve_conflict_zone(CNF& local_cnf,
             std::cout << "[LNS] Failed to find local solution after " << max_iterations << " iterations" << std::endl;
             std::cout << "[LNS] Local problem appears to be unsatisfiable in current zone" << std::endl;
     }
-
-        return {local_solution_found, final_local_paths, discovered_vertex_collisions, discovered_edge_collisions};
+    //latest_discovered_vertex_collisions and latest_discovered_edge_collisions are the new collisions that were discovered before the last run of minisat 
+    return {local_solution_found, final_local_paths, discovered_vertex_collisions, discovered_edge_collisions, latest_discovered_vertex_collisions, latest_discovered_edge_collisions};
 }
 
 
 // Helper: Lazy solving with waiting time strategy
 // Returns LazySolveResult with solution status, paths, and discovered collisions
+//TODO local zone paths ??? especially for returning agents .. had paths outside zone does it matter?
+//TODO all current conflicts is way to big? should only hold the conflicts that are still active
 static LazySolveResult 
 lazy_solve_with_waiting_time(CurrentSolution& current_solution,
                             const std::vector<std::vector<char>>& masked_map,
@@ -708,6 +724,8 @@ lazy_solve_with_waiting_time(CurrentSolution& current_solution,
     std::set<int> exhausted_agents;
     //zone start never changes
     const int zone_start_t = start_t;
+    // track the furthest time window end across all expansions in this attempt
+    int new_end_t = end_t;
     // Persistent collision tracking across all waiting time attempts
     std::vector<std::tuple<int, int, std::pair<int,int>, int>> all_discovered_vertex_collisions = initial_vertex_collisions;
     std::vector<std::tuple<int, int, std::pair<int,int>, std::pair<int,int>, int>> all_discovered_edge_collisions = initial_edge_collisions;
@@ -726,8 +744,7 @@ lazy_solve_with_waiting_time(CurrentSolution& current_solution,
 
         std::cout << "[LNS] Will expand MDD for " << chosen_agents_currently_in_conflicts.size() << " chosen agents involved in " << all_current_conflicts.size() << " conflicts" << std::endl;
         
-        // track the furthest time window end across all expansions in this attempt
-        int new_end_t = end_t;
+        
 
         //iterate through all chosen agents to expand MDDs
         bool extended_time_window = false;
@@ -765,7 +782,9 @@ lazy_solve_with_waiting_time(CurrentSolution& current_solution,
             int new_exit_t = exit_t + 1;
            
             if (new_exit_t > new_end_t) {
+                //std::cout << "[LNS] New exit time: " << new_exit_t << " is greater than new end time: " << new_end_t << std::endl;
                 new_end_t = new_exit_t;
+                //std::cout << "[LNS] New end time: " << new_end_t << std::endl;
                 extended_time_window = true;
             }
 
@@ -789,7 +808,6 @@ lazy_solve_with_waiting_time(CurrentSolution& current_solution,
         //determine if we need to extend the time window
         if (extended_time_window) {
             std::cout << "[LNS] Time window extended: [" << zone_start_t << ", " << end_t << "] -> [" << zone_start_t << ", " << new_end_t << "]" << std::endl;
-            
             // Check for new agents that enter the zone at the new timestep and could collide with agents in the local zone
             std::set<int> new_agents_in_extended_window;
             for (const auto& rc : zone_positions_set) {
@@ -885,6 +903,10 @@ lazy_solve_with_waiting_time(CurrentSolution& current_solution,
                         auto zone_start_pos = local_zone_paths[new_agent_id].front();
                         const auto& agent_path = current_solution.agent_paths.at(new_agent_id);
                         auto zone_goal_pos = agent_path[exit_t];
+                        local_zone_paths[new_agent_id] = std::vector<std::pair<int,int>>(
+                            agent_path.begin() + entry_t,
+                            agent_path.begin() + exit_t + 1
+                        );
                         int agent_path_length = exit_t - entry_t + 1;
                         MDDConstructor constructor(masked_map, zone_start_pos, zone_goal_pos, agent_path_length - 1);
                         auto agent_mdd = constructor.construct_mdd();
@@ -922,17 +944,31 @@ lazy_solve_with_waiting_time(CurrentSolution& current_solution,
                             agent_path.begin() + entry_t,
                             agent_path.begin() + new_end_t + 1);//segment is [,) interval so we need to add 1 as it does not include the last element
                         
-                        local_zone_paths[new_agent_id] = extended_segment;
-                        local_entry_exit_time[new_agent_id] = std::make_pair(entry_t, new_end_t);
+                        local_zone_paths[new_agent_id] = extended_segment; //this path leads out and back in the zone
+                        local_entry_exit_time[new_agent_id] = std::make_pair(entry_t, new_end_t); //update entry and exit time
                         auto zone_start_pos = extended_segment.front();
                         auto zone_goal_pos = extended_segment.back();
+                        //validate that the start and goal positions are in the zone
+                        if (!zone_positions_set.count(zone_start_pos) || !zone_positions_set.count(zone_goal_pos)) {
+                            std::cout << "[LNS] ERROR: Agent " << new_agent_id << " start or goal position is not in the zone" << std::endl;
+                            std::cout << "start position: " << zone_start_pos.first << "," << zone_start_pos.second << std::endl;
+                            std::cout << "goal position: " << zone_goal_pos.first << "," << zone_goal_pos.second << std::endl;
+                            std::cout << "ERROR: THIS SHOULD NOT HAPPEN" << std::endl;
+                        }
                         MDDConstructor constructor(masked_map, zone_start_pos, zone_goal_pos, new_end_t - entry_t);
                         auto agent_mdd = constructor.construct_mdd();
                         //align MDD to the time window
                         align_mdd_to_time_window(agent_mdd, entry_t, new_end_t, zone_start_t, new_end_t);
                         //append to the existing MDD
                         local_mdds[new_agent_id] = agent_mdd;
-                        
+
+                        //TODO valid path in zone
+                        //update local_zone_paths with a path sample that stays in the zone until new_end_t 
+                        //auto new_zone_path = agent_mdd->sample_random_path(rng);
+                        //local_zone_paths[new_agent_id] = new_zone_path; //this path stays in the zone until new_end_t
+
+
+                        std::cout << "[LNS] Expanded time window for agent " << new_agent_id << " to [" << entry_t << ", " << new_end_t << "]" << std::endl;
                         std::cout << "[LNS] Expanded MDD for agent " << new_agent_id << " to timestep " << new_end_t << std::endl;
                     }
                    
@@ -970,6 +1006,12 @@ lazy_solve_with_waiting_time(CurrentSolution& current_solution,
                 original_entry_exit_time,
                 local_entry_exit_time); 
 
+            //for safety update local_zone_paths with the new local_paths
+            for (const auto& [agent_id, local_path] : using_waiting_time_result.local_paths) {
+                local_zone_paths[agent_id] = local_path;
+                local_entry_exit_time[agent_id] = std::make_pair(local_path.front().first, local_path.back().first);  
+            }
+
             return LazySolveResult{true, using_waiting_time_result.local_paths, all_discovered_vertex_collisions, all_discovered_edge_collisions};
         } else { //no solution found 
             std::cout << "[LNS] Expanded MDD did not resolve conflicts, trying next agent..." << std::endl;
@@ -981,12 +1023,20 @@ lazy_solve_with_waiting_time(CurrentSolution& current_solution,
             all_discovered_edge_collisions = using_waiting_time_result.discovered_edge_collisions;
 
 
-            //update all_current_conflicts
-            collect_conflicts_meta(
-                using_waiting_time_result.discovered_vertex_collisions, 
-                using_waiting_time_result.discovered_edge_collisions, 
-                all_current_conflicts);
-            
+            //rewrite all_current_conflicts to only include the conflicts that are still active
+            //only update if there are actually new latest conflicts
+            // if solver is invoked and has no intermediate result, latest_discovered_*_collisions are empty
+            if (!using_waiting_time_result.latest_discovered_vertex_collisions.empty() || !using_waiting_time_result.latest_discovered_edge_collisions.empty()) {
+                collect_conflicts_meta(
+                    using_waiting_time_result.latest_discovered_vertex_collisions, 
+                    using_waiting_time_result.latest_discovered_edge_collisions, 
+                    all_current_conflicts);
+            }
+            //print current conflicts
+            std::cout << "[LNS] Current conflicts: " << all_current_conflicts.size() << std::endl;
+            for (const auto& conflict : all_current_conflicts) {
+                std::cout << "[LNS] Conflict: " << conflict.agent1 << ", " << conflict.agent2 << ", " << conflict.timestep << std::endl;
+            }
             std::cout << "[LNS] Updated collision tracking: " << all_discovered_vertex_collisions.size() 
                       << " vertex collisions, " << all_discovered_edge_collisions.size() << " edge collisions" << std::endl;
         }
