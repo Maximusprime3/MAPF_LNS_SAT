@@ -1434,7 +1434,19 @@ select_bucket:
                     exit_t = t;
                     //segment.push_back(pos);
                 } else if (exit_t != -1) {
-                    break; // left the zone after entering
+                    
+                    std::cout << "[LNS] Agent " << agent_id << " left the zone at timestep " << t << std::endl;
+                    //check if he returns at a later timestep
+                    for (int t2 = t + 1; t2 <= end_t && t2 < (int)path.size(); ++t2) {
+                        if (zone_positions_set.count(path[t2])) {
+                            std::cout << "[LNS] Agent " << agent_id << " returns to the zone at timestep " << t2 << std::endl;
+                            exit_t = t2;
+                            break;
+                        } else {
+                            std::cout << "[LNS] Agent " << agent_id << " does not return to the zone at timestep " << t2 << std::endl;
+                        }
+                    }
+                    break; // keep going to find if the agent is returning later
                 }
             }
             if (entry_t != -1 && exit_t != -1) {
