@@ -1117,6 +1117,51 @@ static std::vector<std::shared_ptr<MDD>> create_mdds_with_waiting_time(
     return mdds;
 }
 
+// Helper function to find agents present in a zone within a time window
+std::set<int> get_agents_in_zone_within_time_window(
+    const CurrentSolution& current_solution,
+    const std::set<std::pair<int,int>>& zone_positions_set,
+    int start_t,
+    int end_t) {
+    
+    std::set<int> agents_in_window;
+    for (const auto& rc : zone_positions_set) {
+        int r = rc.first, c = rc.second;
+        for (int t = start_t; t <= end_t; ++t) {
+            auto here = current_solution.get_agents_at_position_time(r, c, t);
+            agents_in_window.insert(here.begin(), here.end());
+        }
+    }
+    return agents_in_window;
+}
+
+// Helper function to find earliest and latest conflict times in a bucket
+std::pair<int, int> get_conflict_time_bounds(
+    const std::vector<int>& bucket_indices,
+    const std::vector<ConflictMeta>& conflict_meta) {
+    
+    int earliest_conflict_t = INT_MAX;
+    int latest_conflict_t = -1;
+    
+    for (int idx : bucket_indices) {
+        if (idx < 0 || idx >= (int)conflict_meta.size()) continue;
+        int t = conflict_meta[idx].timestep;
+        if (t < earliest_conflict_t) earliest_conflict_t = t;
+        if (t > latest_conflict_t) latest_conflict_t = t;
+        //print conflict agents and timestep and positions  
+        std::cout << "[LNS] Conflict " << idx << " agents: " << conflict_meta[idx].agent1 << " and " << conflict_meta[idx].agent2 << std::endl;
+        std::cout << "[LNS] Conflict " << idx << " timestep: " << t << std::endl;
+        std::cout << "[LNS] Conflict " << idx << " positions: " << conflict_meta[idx].pos1.first << "," << conflict_meta[idx].pos1.second ;
+        if (conflict_meta[idx].is_edge) {
+            std::cout << " and " << conflict_meta[idx].pos2.first << "," << conflict_meta[idx].pos2.second << std::endl;
+        } else {
+            std::cout << std::endl;
+        }
+    }
+    
+    return {earliest_conflict_t, latest_conflict_t};
+}
+
 
 // Entry point for crude LNS (skeleton). Future steps will be filled in iteratively.
 int run_crude_lns(const std::string& map_path,
@@ -1393,30 +1438,18 @@ select_bucket:
         
         // Step 6: Compute time window [earliest_conflict-offset, latest_conflict+offset]
         std::cout << "[LNS] Step 6: Computing conflict time window and extracting local paths..." << std::endl;
-        std::set<std::pair<int,int>> zone_positions_set(best_bucket.positions.begin(), best_bucket.positions.end());
-        int earliest_conflict_t = INT_MAX;
-        int latest_conflict_t = -1;
-        for (int idx : best_bucket.indices) {
-            if (idx < 0 || idx >= (int)conflict_meta.size()) continue;
-            int t = conflict_meta[idx].timestep;
-            if (t < earliest_conflict_t) earliest_conflict_t = t;
-            if (t > latest_conflict_t) latest_conflict_t = t;
-        }
+        auto [earliest_conflict_t, latest_conflict_t] = get_conflict_time_bounds(best_bucket.indices, conflict_meta);
 
         int start_t = std::max(0, earliest_conflict_t - offset);
         int end_t = std::min(current_solution.max_timestep, latest_conflict_t + offset);
         std::cout << "[LNS] Conflict time window: [" << start_t << ", " << end_t << "]" << std::endl;
-        
+        //set zone positions
+        std::set<std::pair<int,int>> zone_positions_set(best_bucket.positions.begin(), best_bucket.positions.end());
         // Agents present in the zone within the time window
-        std::set<int> agents_in_window;
-        for (const auto& rc : zone_positions_set) {
-            int r = rc.first, c = rc.second;
-            for (int t = start_t; t <= end_t; ++t) {
-                auto here = current_solution.get_agents_at_position_time(r, c, t);
-                agents_in_window.insert(here.begin(), here.end());
-            }
-        }
+        std::set<int> agents_in_window = get_agents_in_zone_within_time_window(
+            current_solution, zone_positions_set, start_t, end_t);
         std::cout << "[LNS] Agents in zone within window: " << agents_in_window.size() << std::endl;
+        //set pending agent queue
         std::vector<int> pending_agents(agents_in_window.begin(), agents_in_window.end());
         const size_t initial_agents_in_window = pending_agents.size();
 
@@ -1427,7 +1460,9 @@ select_bucket:
         for (size_t pending_idx = 0; pending_idx < pending_agents.size(); ++pending_idx) {
             int agent_id = pending_agents[pending_idx]; //get global path
             if (local_zone_paths.find(agent_id) != local_zone_paths.end()) { //if already processed, skip
-                continue;
+                //continue;
+                //print processing again of agent
+                std::cout << "[LNS] Processing Agent " << agent_id << " again" << std::endl;
             }
             const auto& path = current_solution.agent_paths.at(agent_id);
             int entry_t = -1;
@@ -1439,7 +1474,7 @@ select_bucket:
                 contiguous_intervals.reserve(window_span); //less would be enough  window_span/2 +1 ?
             }
 
-           
+           //getting path segments in the zone
             for (int t = start_t; t <= end_t && t < (int)path.size(); ++t) {
                 const auto& pos = path[t]; //walking along the agents path
                 bool pos_in_zone = zone_positions_set.count(pos) > 0;
@@ -1447,8 +1482,11 @@ select_bucket:
                     if (!agent_in_zone) { //agent is entering the zone
                         agent_in_zone = true;
                         if (entry_t == -1) {
+                            //print reentry
+
                             entry_t = t;
                         }
+                        std::cout << "[LNS] Agent " << agent_id << " entered the zone at timestep " << t << std::endl;
                         contiguous_intervals.emplace_back(t, t); // start new interval
                     } else { //agent is already in the zone
                         contiguous_intervals.back().second = t; //last known position in the zone
@@ -1456,14 +1494,18 @@ select_bucket:
                     exit_t = t; 
                 } else if (agent_in_zone) { //agent is leaving the zone (position not in the zone but agent was)
                     contiguous_intervals.back().second = exit_t; //end of interval in the zone
+                    //print exit
+                    std::cout << "[LNS] Agent " << agent_id << " exited the zone at timestep " << t << std::endl;
                     agent_in_zone = false;
                 }       
             }
             if (!contiguous_intervals.empty() && agent_in_zone) {
-                contiguous_intervals.back().second = exit_t; //end of interval in the zone
+                contiguous_intervals.back().second = exit_t; 
+                //print final exit
+                std::cout << "[LNS] Agent " << agent_id << " exited the zone at timestep " << exit_t << std::endl;
             }
 
-            // Declare variables outside the if block to fix scope issues
+           
             std::vector<std::pair<int,int>> segment;
             bool extended_zone = false;
             
@@ -1611,9 +1653,18 @@ select_bucket:
         std::vector<std::tuple<int, int, std::pair<int,int>, int>> initial_vertex_collisions;
         for (int idx : best_bucket.indices) {
             if (idx < 0 || idx >= (int)conflict_meta.size()) continue;
-            
+                       if (conflict_meta[idx].is_edge) {
+                std::cout << " and " << conflict_meta[idx].pos2.first << "," << conflict_meta[idx].pos2.second << std::endl;
+            } else {
+                std::cout << std::endl;
+            }
             const auto& meta = conflict_meta[idx];
             if (!meta.is_edge) {
+                //print conflict
+                std::cout << "[LNS] Conflict " << idx << " agents: " << conflict_meta[idx].agent1 << " and " << conflict_meta[idx].agent2 << std::endl;
+                std::cout << "[LNS] Conflict " << idx << " timestep: " << conflict_meta[idx].timestep << std::endl;
+                std::cout << "[LNS] Conflict " << idx << " positions: " << conflict_meta[idx].pos1.first << "," << conflict_meta[idx].pos1.second ;
+    
                 // Track this collision for lazy solving
                 initial_vertex_collisions.emplace_back(meta.agent1, meta.agent2, meta.pos1, meta.timestep);
                 number_of_vertex_collisions++;
@@ -1631,6 +1682,12 @@ select_bucket:
             
             const auto& meta = conflict_meta[idx];
             if (meta.is_edge) {
+                //print conflict
+                std::cout << "[LNS] Conflict " << idx << " agents: " << conflict_meta[idx].agent1 << " and " << conflict_meta[idx].agent2 << std::endl;
+                std::cout << "[LNS] Conflict " << idx << " timestep: " << conflict_meta[idx].timestep << std::endl;
+                std::cout << "[LNS] Conflict " << idx << " positions: " << conflict_meta[idx].pos1.first << "," << conflict_meta[idx].pos1.second ;
+                std::cout << " and " << conflict_meta[idx].pos2.first << "," << conflict_meta[idx].pos2.second << std::endl;
+                
                 //check if we alread track this collision
                 if (initial_edge_collisions_set.count(std::make_tuple(
                         meta.agent1, meta.agent2, meta.pos1, meta.pos2, meta.timestep)) > 0) {
