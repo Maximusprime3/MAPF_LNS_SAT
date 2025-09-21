@@ -17,7 +17,7 @@
 //TO DO:
 //When extending waiting time and finding returning agents
     //we have split mdd one path previously present in the zone the other is the agent returning into the zone
-    //currently goes wrong in run_empty48_200_offset1 line 1616
+    //works for initial bucket needs to be tested for expansion strategy
 
 // in the case of 100% coverage, the solver should get all known conflict clauses to add them to the cnf
 // MINISAT ASSUMPTIONS ARE NOT HARD, It sets polarity hints via setPolarity, not hard assumptions.
