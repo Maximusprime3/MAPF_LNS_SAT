@@ -1248,8 +1248,6 @@ building_buckets:
         // - Integrate local solutions into the global solution paths
         // - Re-check for remaining conflicts and iterate until none (solved) or limit
         // Define conflict zones (buckets) using offset
-
-      
         const int offset = 1; // half the standard conflict zone size
         
         // Build conflict metadata from detected collisions
@@ -1383,7 +1381,7 @@ select_bucket:
             return 1;
         }
         
-        const auto& best_bucket = diamond_buckets[best_bucket_idx];
+        auto& best_bucket = diamond_buckets[best_bucket_idx];
         std::cout << "[LNS] Selected most relevant diamond bucket " << best_bucket_idx 
                 << " with " << best_conflict_count << " conflicts and " 
                 << best_shape_size << " positions." << std::endl;
@@ -1419,57 +1417,143 @@ select_bucket:
             }
         }
         std::cout << "[LNS] Agents in zone within window: " << agents_in_window.size() << std::endl;
-        
+        std::vector<int> pending_agents(agents_in_window.begin(), agents_in_window.end());
+        const size_t initial_agents_in_window = pending_agents.size();
+
+
         // Step 7: For each agent, extract its subpath inside (zone × [start_t,end_t])
         std::unordered_map<int, std::vector<std::pair<int,int>>> local_zone_paths;
         std::unordered_map<int, std::pair<int,int>> local_entry_exit_time; // agent -> {entry_t, exit_t}
-        for (int agent_id : agents_in_window) {
-            const auto& path = current_solution.agent_paths.at(agent_id);
-            //std::vector<std::pair<int,int>> segment;
-            int entry_t = -1, exit_t = -1;
-            for (int t = start_t; t <= end_t && t < (int)path.size(); ++t) {
-                const auto& pos = path[t];
-                if (zone_positions_set.count(pos)) {
-                    if (entry_t == -1) entry_t = t;
-                    exit_t = t;
-                    //segment.push_back(pos);
-                } else if (exit_t != -1) {
-                    
-                    std::cout << "[LNS] Agent " << agent_id << " left the zone at timestep " << t << std::endl;
-                    //check if he returns at a later timestep
-                    for (int t2 = t + 1; t2 <= end_t && t2 < (int)path.size(); ++t2) {
-                        if (zone_positions_set.count(path[t2])) {
-                            std::cout << "[LNS] WARINING Agent " << agent_id << " returns to the zone at timestep " << t2 << std::endl;
-                            exit_t = t2;/// need to set flat to test if exit is reachable if yes this should be the exit time
-                            //if not reachable need to expand the zone so it is reachable ->check for new conflicts again whoop die loop
-                            // preventable if we automatically include all agents path positions from start to end of the zone
-                        } 
-                    }
-                    break; // keep going to find if the agent is returning later
-                }
+        for (size_t pending_idx = 0; pending_idx < pending_agents.size(); ++pending_idx) {
+            int agent_id = pending_agents[pending_idx]; //get global path
+            if (local_zone_paths.find(agent_id) != local_zone_paths.end()) { //if already processed, skip
+                continue;
             }
-            if (entry_t != -1 && exit_t != -1) {
-                std::vector<std::pair<int,int>> segment(
+            const auto& path = current_solution.agent_paths.at(agent_id);
+            int entry_t = -1;
+            int exit_t = -1;
+            bool agent_in_zone = false;
+            std::vector<std::pair<int,int>> contiguous_intervals;
+            int window_span = end_t - start_t + 1;
+            if (window_span > 0) {    
+                contiguous_intervals.reserve(window_span); //less would be enough  window_span/2 +1 ?
+            }
+
+           
+            for (int t = start_t; t <= end_t && t < (int)path.size(); ++t) {
+                const auto& pos = path[t]; //walking along the agents path
+                bool pos_in_zone = zone_positions_set.count(pos) > 0;
+                if (pos_in_zone) { //agent is in the zone
+                    if (!agent_in_zone) { //agent is entering the zone
+                        agent_in_zone = true;
+                        if (entry_t == -1) {
+                            entry_t = t;
+                        }
+                        contiguous_intervals.emplace_back(t, t); // start new interval
+                    } else { //agent is already in the zone
+                        contiguous_intervals.back().second = t; //last known position in the zone
+                    }
+                    exit_t = t; 
+                } else if (agent_in_zone) { //agent is leaving the zone (position not in the zone but agent was)
+                    contiguous_intervals.back().second = exit_t; //end of interval in the zone
+                    agent_in_zone = false;
+                }       
+            }
+            if (!contiguous_intervals.empty() && agent_in_zone) {
+                contiguous_intervals.back().second = exit_t; //end of interval in the zone
+            }
+
+            // Declare variables outside the if block to fix scope issues
+            std::vector<std::pair<int,int>> segment;
+            bool extended_zone = false;
+            
+            if (!contiguous_intervals.empty()) {
+                if (contiguous_intervals.size() > 1) {
+                    std::cout << "[LNS] Agent " << agent_id << " returned to the zone "
+                              << (contiguous_intervals.size() -1) << " times within time window" << std::endl;
+                }
+            
+
+                entry_t = contiguous_intervals.front().first;
+                exit_t = contiguous_intervals.back().second;
+
+                //TODO if agent left the zone, we can try to route him through the zone to his goal
+                //if that fails we need to expand the zone by his path or introduce pseudo agent for his second path in the zone
+                segment = std::vector<std::pair<int,int>>( //local path from entry to last exit
                     path.begin() + entry_t,
                     path.begin() + exit_t + 1
                 );
-
-                bool extended_zone = false;
-                for (const auto& pos : segment) {
-                    if (!zone_positions_set.count(pos)) {
-                        zone_positions_set.insert(pos);
-                        extended_zone = true;
-                    }
-                }
-                if (extended_zone) {
-                    masked_map = mask_map_outside_shape(problem.grid, zone_positions_set);
-                }
                 
-                local_zone_paths[agent_id] = std::move(segment);
-                local_entry_exit_time[agent_id] = std::make_pair(entry_t, exit_t);
-                std::cout << "  Agent " << agent_id << " local segment t=[" << entry_t << "," << exit_t
-                        << "] len=" << (exit_t - entry_t + 1) << std::endl;
+                //if reentering the zone, we need to add the positions to the zone positions set
+                std::vector<std::pair<int, std::pair<int,int>>> new_positions;
+                //conflicts at new positions
+                std::vector<ConflictMeta> conflicts_meta_at_new_positions;
+                if (contiguous_intervals.size() > 1) {
+                    for (int i = 0; i < contiguous_intervals.size(); ++i) {
+                        const auto& fake_exit_t = contiguous_intervals[i].second;
+                        const auto& reentering_t = contiguous_intervals[i+1].first;
+                        //for the path outside the zone we append new positions
+                        for (int t = fake_exit_t; t <= reentering_t; ++t) {
+                            const auto& pos = path[t];
+                            new_positions.push_back(std::make_pair(t, pos));
+                            zone_positions_set.insert(pos);
+                            extended_zone = true; 
+                        }
+                    }
+                    //we need to check if there are any conflicts at the new positions and add other agents present
+                    // use the conflict map for this
+                    for (const auto& pos_t : new_positions) {
+                        const auto& pos = pos_t.second;
+                        const auto& t = pos_t.first;
+                        if (!conflict_map[pos.first][pos.second].empty()) { //do we have conflicts
+                            for (const auto& conflict_idx : conflict_map[pos.first][pos.second]) {//for every conflict
+                                //is the conflict happening at the time when the agent is at those positions?
+                                const auto& conflict_t = conflict_meta[conflict_idx].timestep;
+                                if (conflict_t == t) {
+                                    conflicts_meta_at_new_positions.push_back(conflict_meta[conflict_idx]); 
+                                    //add other agents present to the pending agents
+                                    if(agent_id != conflict_meta[conflict_idx].agent1) {
+                                        pending_agents.push_back(conflict_meta[conflict_idx].agent1);
+                                    }
+                                    if(agent_id != conflict_meta[conflict_idx].agent2) {
+                                        pending_agents.push_back(conflict_meta[conflict_idx].agent2);
+                                    }
+                                    //add conflict to bucket
+                                    best_bucket.indices.push_back(conflict_idx);
+
+                                }
+                            }
+                        }
+                    }
+                    if (!conflicts_meta_at_new_positions.empty()) {
+                        std::cout << "[LNS] Agent " << agent_id << " has conflicts at new positions: " << conflicts_meta_at_new_positions.size() << std::endl;
+                        //need to add the conflicts and offset around them to the zone positions set
+                        //get all new conflict positions
+                        std::vector<std::pair<int,int>> new_conflict_positions;
+                        for (const auto& conflict_meta : conflicts_meta_at_new_positions) {
+                            new_conflict_positions.push_back(conflict_meta.pos1);
+                            new_conflict_positions.push_back(conflict_meta.pos2);
+                        }
+                        std::cout << "[LNS] New conflict positions: " << new_conflict_positions.size() << std::endl;
+                        //all needed positions are reachable from the conflict by offset around the conflict
+                        auto extra_conflict_shape = create_shape_from_conflicts(new_conflict_positions, offset, problem.grid);                         
+                        zone_positions_set.insert(extra_conflict_shape.begin(), extra_conflict_shape.end());
+                        extended_zone = true; // expand the zone for agents who leave and return to the zone
+                    }
+
+                }
             }
+                
+            if (extended_zone) {
+                masked_map = mask_map_outside_shape(problem.grid, zone_positions_set);
+            }
+
+            //add to local zone paths
+            local_zone_paths[agent_id] = std::move(segment);
+            local_entry_exit_time[agent_id] = std::make_pair(entry_t, exit_t);
+            std::cout << "  Agent " << agent_id << " local segment t=[" << entry_t << "," << exit_t
+                    << "] len=" << (exit_t - entry_t + 1) << std::endl;
+            
         }
 
         // Step 8: Create aligned MDDs for each agent in the zone
