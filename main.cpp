@@ -33,7 +33,7 @@ int main() {
     // Debug: Print all nodes at each level
     std::cout << "Nodes at each level after construction:" << std::endl;
     for (int t = 0; t <= constructor.max_timesteps; ++t) {
-        auto nodes = mdd->get_nodes_at_level(t);
+        const auto& nodes = mdd->get_nodes_at_level(t);
         std::cout << "Level " << t << " (" << nodes.size() << " nodes): ";
         for (const auto& node : nodes) {
             std::cout << "(" << node->position.first << "," << node->position.second << ") ";

@@ -189,12 +189,13 @@ std::shared_ptr<MDD> MDD::copy() const {
 }
 
 // Returns all nodes at a given level (time step)
-std::vector<std::shared_ptr<MDDNode>> MDD::get_nodes_at_level(int level) const {
+const std::vector<std::shared_ptr<MDDNode>> MDD::get_nodes_at_level(int level) const {
+    std::vector<std::shared_ptr<MDDNode>> empty;
     auto it = levels.find(level);
     if (it != levels.end()) {
         return it->second;
     }
-    return {};
+    return empty;
 }
 
 // Samples a random path from the root to a leaf using the MDD structure

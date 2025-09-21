@@ -54,7 +54,7 @@ void CNFProbSATConstructor::construct_probsat_cnf(const std::vector<std::tuple<i
         int agent_id = agent_mdd_pair.first;
         const auto& mdd = agent_mdd_pair.second;
         for (int timestep = 0; timestep <= get_max_timesteps(); ++timestep) {
-            auto nodes_at_timestep = mdd->get_nodes_at_level(timestep);
+            const auto& nodes_at_timestep = mdd->get_nodes_at_level(timestep);
             if (nodes_at_timestep.size() > 1) {
                 for (size_t i = 0; i < nodes_at_timestep.size(); ++i) {
                     for (size_t j = i + 1; j < nodes_at_timestep.size(); ++j) {
@@ -80,8 +80,8 @@ void CNFProbSATConstructor::construct_probsat_cnf(const std::vector<std::tuple<i
                 for (size_t j = i + 1; j < all_agent_ids.size(); ++j) {
                     int agent1_id = all_agent_ids[i];
                     int agent2_id = all_agent_ids[j];
-                    auto agent1_nodes = mdds.at(agent1_id)->get_nodes_at_level(timestep);
-                    auto agent2_nodes = mdds.at(agent2_id)->get_nodes_at_level(timestep);
+                    const auto& agent1_nodes = mdds.at(agent1_id)->get_nodes_at_level(timestep);
+                    const auto& agent2_nodes = mdds.at(agent2_id)->get_nodes_at_level(timestep);
                     for (const auto& node1 : agent1_nodes) {
                         for (const auto& node2 : agent2_nodes) {
                             if (node1->position == node2->position) {

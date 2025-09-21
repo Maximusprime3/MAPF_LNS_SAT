@@ -1748,59 +1748,14 @@ select_bucket:
         std::cout << "[LNS] Created lazy CNF with " << local_cnf.get_clauses().size() 
                 << " clauses and " << (cnf_constructor.get_next_variable_id() - 1) << " variables" << std::endl;
         
-        // Step 9b: Extract vertex collision clauses for lazy solving
-        std::cout << "[LNS] Step 9b: Extracting vertex collision clauses..." << std::endl;
-        int number_of_vertex_collisions = 0;
-        std::vector<std::tuple<int, int, std::pair<int,int>, int>> initial_vertex_collisions;
-        for (int idx : best_bucket.indices) {
-            if (idx < 0 || idx >= (int)conflict_meta.size()) continue;
-                       if (conflict_meta[idx].is_edge) {
-                std::cout << " and " << conflict_meta[idx].pos2.first << "," << conflict_meta[idx].pos2.second << std::endl;
-            } else {
-                std::cout << std::endl;
-            }
-            const auto& meta = conflict_meta[idx];
-            if (!meta.is_edge) {
-                //print conflict
-                std::cout << "[LNS] Conflict " << idx << " agents: " << conflict_meta[idx].agent1 << " and " << conflict_meta[idx].agent2 << std::endl;
-                std::cout << "[LNS] Conflict " << idx << " timestep: " << conflict_meta[idx].timestep << std::endl;
-                std::cout << "[LNS] Conflict " << idx << " positions: " << conflict_meta[idx].pos1.first << "," << conflict_meta[idx].pos1.second ;
-    
-                // Track this collision for lazy solving
-                initial_vertex_collisions.emplace_back(meta.agent1, meta.agent2, meta.pos1, meta.timestep);
-                number_of_vertex_collisions++;
-            }
-        }
-        std::cout << "[LNS] Extracted " << number_of_vertex_collisions << " vertex collision clauses" << std::endl;
+        // Step 9b: Extract collision clauses for lazy solving
+        std::cout << "[LNS] Step 9b: Extracting collision clauses..." << std::endl;
+        auto collision_result = extract_collisions_from_bucket(best_bucket.indices, conflict_meta);
+        std::vector<std::tuple<int, int, std::pair<int,int>, int>> initial_vertex_collisions = collision_result.vertex_collisions;
+        std::vector<std::tuple<int, int, std::pair<int,int>, std::pair<int,int>, int>> initial_edge_collisions = collision_result.edge_collisions;
         
-        // Step 9c: Extract edge collision clauses for lazy solving
-        std::cout << "[LNS] Step 9c: Extracting edge collision clauses..." << std::endl;
-        std::vector<std::tuple<int, int, std::pair<int,int>, std::pair<int,int>, int>> initial_edge_collisions;
-        //all edge collisions are twice in the metadata, so we need to remove duplicates
-        std::set<std::tuple<int, int, std::pair<int,int>, std::pair<int,int>, int>> initial_edge_collisions_set;
-        for (int idx : best_bucket.indices) {
-            if (idx < 0 || idx >= (int)conflict_meta.size()) continue;
-            
-            const auto& meta = conflict_meta[idx];
-            if (meta.is_edge) {
-                //print conflict
-                std::cout << "[LNS] Conflict " << idx << " agents: " << conflict_meta[idx].agent1 << " and " << conflict_meta[idx].agent2 << std::endl;
-                std::cout << "[LNS] Conflict " << idx << " timestep: " << conflict_meta[idx].timestep << std::endl;
-                std::cout << "[LNS] Conflict " << idx << " positions: " << conflict_meta[idx].pos1.first << "," << conflict_meta[idx].pos1.second ;
-                std::cout << " and " << conflict_meta[idx].pos2.first << "," << conflict_meta[idx].pos2.second << std::endl;
-                
-                //check if we alread track this collision
-                if (initial_edge_collisions_set.count(std::make_tuple(
-                        meta.agent1, meta.agent2, meta.pos1, meta.pos2, meta.timestep)) > 0) {
-                    continue;
-                }
-                initial_edge_collisions_set.insert(std::make_tuple(
-                    meta.agent1, meta.agent2, meta.pos1, meta.pos2, meta.timestep));
-                // Track this collision for lazy solving
-                initial_edge_collisions.emplace_back(meta.agent1, meta.agent2, meta.pos1, meta.pos2, meta.timestep);
-            }
-        }
-        std::cout << "[LNS] Extracted " << initial_edge_collisions.size() << " edge collision clauses" << std::endl;
+        std::cout << "[LNS] Extracted " << collision_result.vertex_count << " vertex collision clauses" << std::endl;
+        std::cout << "[LNS] Extracted " << collision_result.edge_count << " edge collision clauses" << std::endl;
         
         std::cout << "[LNS] Final local CNF: " << local_cnf.get_clauses().size() 
                 << " total clauses" << std::endl;

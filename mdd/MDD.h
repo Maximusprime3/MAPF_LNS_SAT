@@ -31,7 +31,7 @@ public:
     // Returns a deep copy of the MDD
     std::shared_ptr<MDD> copy() const;
     // Returns all nodes at a given level (time step)
-    std::vector<std::shared_ptr<MDDNode>> get_nodes_at_level(int level) const;
+    const std::vector<std::shared_ptr<MDDNode>> get_nodes_at_level(int level) const;
     // Samples a random path from the root to a leaf using the MDD structure
     std::vector<MDDNode::Position> sample_random_path(std::mt19937& rng, std::shared_ptr<MDDNode> start = nullptr) const;
     // Returns a string representation of the MDD for printing

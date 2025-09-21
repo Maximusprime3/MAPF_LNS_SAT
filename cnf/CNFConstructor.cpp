@@ -61,7 +61,7 @@ void CNFConstructor::add_single_occupancy_clauses() {
         int agent_id = agent_mdd_pair.first;
         const auto& mdd = agent_mdd_pair.second;
         for (int timestep = 0; timestep <= get_max_timesteps(); ++timestep) {
-            auto nodes_at_timestep = mdd->get_nodes_at_level(timestep);
+            const auto& nodes_at_timestep = mdd->get_nodes_at_level(timestep);
             if (nodes_at_timestep.size() > 1) {
                 // Create clauses that ensure only one of these nodes can be true at a time
                 for (size_t i = 0; i < nodes_at_timestep.size(); ++i) {
@@ -93,8 +93,8 @@ void CNFConstructor::create_no_conflict_clauses() {
                 int agent2_id = all_agent_ids[j];
                 
                 // Check which nodes they can be at in this timestep
-                auto agent1_nodes = mdds.at(agent1_id)->get_nodes_at_level(timestep);
-                auto agent2_nodes = mdds.at(agent2_id)->get_nodes_at_level(timestep);
+                const auto& agent1_nodes = mdds.at(agent1_id)->get_nodes_at_level(timestep);
+                const auto& agent2_nodes = mdds.at(agent2_id)->get_nodes_at_level(timestep);
                 
                 // Add clauses to ensure they don't occupy the same node
                 for (const auto& node1 : agent1_nodes) {
@@ -268,10 +268,10 @@ void CNFConstructor::add_edge_collision_clauses() {
                 int agent2_id = all_agent_ids[j];
                 
                 // Get nodes at current and next timestep for both agents
-                auto agent1_nodes_t = mdds.at(agent1_id)->get_nodes_at_level(timestep);
-                auto agent1_nodes_t1 = mdds.at(agent1_id)->get_nodes_at_level(timestep + 1);
-                auto agent2_nodes_t = mdds.at(agent2_id)->get_nodes_at_level(timestep);
-                auto agent2_nodes_t1 = mdds.at(agent2_id)->get_nodes_at_level(timestep + 1);
+                const auto& agent1_nodes_t = mdds.at(agent1_id)->get_nodes_at_level(timestep);
+                const auto& agent1_nodes_t1 = mdds.at(agent1_id)->get_nodes_at_level(timestep + 1);
+                const auto& agent2_nodes_t = mdds.at(agent2_id)->get_nodes_at_level(timestep);
+                const auto& agent2_nodes_t1 = mdds.at(agent2_id)->get_nodes_at_level(timestep + 1);
                 
                 // Check for edge conflicts: agent1 goes from pos1 to pos2 while agent2 goes from pos2 to pos1
                 for (const auto& node1_t : agent1_nodes_t) {
@@ -391,7 +391,7 @@ bool CNFConstructor::validate_path(int agent_id, const std::vector<MDDNode::Posi
     
     // Check each position is valid at its timestep
     for (size_t timestep = 0; timestep < path.size(); ++timestep) {
-        auto nodes_at_timestep = mdd->get_nodes_at_level(timestep);
+        const auto& nodes_at_timestep = mdd->get_nodes_at_level(timestep);
         bool position_valid = false;
         
         for (const auto& node : nodes_at_timestep) {
@@ -409,7 +409,7 @@ bool CNFConstructor::validate_path(int agent_id, const std::vector<MDDNode::Posi
     // Check transitions are valid (optional - could be more strict)
     for (size_t timestep = 0; timestep < path.size() - 1; ++timestep) {
         // Find the node at current timestep
-        auto nodes_at_timestep = mdd->get_nodes_at_level(timestep);
+        const auto& nodes_at_timestep = mdd->get_nodes_at_level(timestep);
         std::shared_ptr<MDDNode> current_node = nullptr;
         
         for (const auto& node : nodes_at_timestep) {
