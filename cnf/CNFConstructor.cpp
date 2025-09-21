@@ -1,5 +1,6 @@
 #include "CNFConstructor.h"
 #include <algorithm>
+#include <iterator>
 #include <iostream>
 
 CNFConstructor::CNFConstructor(const std::unordered_map<int, std::shared_ptr<MDD>>& mdds, 
@@ -32,16 +33,8 @@ int CNFConstructor::add_variable(int agent_id, const MDDNode::Position& position
 
 void CNFConstructor::create_agent_path_clauses(int agent_id, const std::shared_ptr<MDD>& mdd) {
     // For each level in the MDD, create clauses to ensure valid paths
-    // Sort levels by timestep to ensure consistent variable creation order
-    std::vector<std::pair<int, std::vector<std::shared_ptr<MDDNode>>>> sorted_levels;
-    for (const auto& level_pair : mdd->levels) {
-        sorted_levels.push_back(level_pair);
-    }
-    std::sort(sorted_levels.begin(), sorted_levels.end());
-    for (const auto& level_pair : sorted_levels) {
-        int timestep = level_pair.first;
-        const auto& nodes = level_pair.second;
-        
+    
+    for (const auto& [timestep, nodes] : mdd->levels) {
         // Ensure the agent is at one of the possible nodes at this timestep
         std::vector<int> valid_nodes_clause;
         for (const auto& node : nodes) {
@@ -136,21 +129,27 @@ void CNFConstructor::add_transition_clauses() {
         const auto& mdd = agent_mdd_pair.second;
         
         // Sort levels by timestep to ensure consistent processing order
-        std::vector<std::pair<int, std::vector<std::shared_ptr<MDDNode>>>> sorted_levels;
-        for (const auto& level_pair : mdd->levels) {
-            sorted_levels.push_back(level_pair);
-        }
-        std::sort(sorted_levels.begin(), sorted_levels.end());
+        //std::vector<std::pair<int, std::vector<std::shared_ptr<MDDNode>>>> sorted_levels;
+        //for (const auto& level_pair : mdd->levels) {
+        //    sorted_levels.push_back(level_pair);
+        //}
+        //std::sort(sorted_levels.begin(), sorted_levels.end());
         
         // For each timestep that has a subsequent timestep:
-        for (const auto& level_pair : sorted_levels) {
-            int t = level_pair.first;
-            if (mdd->levels.find(t + 1) == mdd->levels.end()) {
+        //for (const auto& level_pair : sorted_levels) {
+        //    int t = level_pair.first;
+        //    if (mdd->levels.find(t + 1) == mdd->levels.end()) {
+        //        continue; // No next timestep
+        //    }
+        for (auto level_it = mdd->levels.begin(); level_it != mdd->levels.end(); ++level_it) {
+            auto next_level_it = std::next(level_it);
+            if (next_level_it == mdd->levels.end() || next_level_it->first != level_it->first + 1) {
                 continue; // No next timestep
             }
-            
+            int t = level_it->first;
             // For every node at time t:
-            for (const auto& node : level_pair.second) {
+            //for (const auto& node : level_pair.second) {
+            for (const auto& node : level_it->second) {
                 if (!node->children.empty()) { // Only add if there is at least one valid move
                     // Build a clause: ¬x(agent, u, t) ∨ (x(agent, child1, t+1) ∨ ... ∨ x(agent, child_k, t+1))
                     std::vector<int> clause = {-add_variable(agent_id, node->position, t)};

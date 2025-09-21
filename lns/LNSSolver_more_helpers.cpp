@@ -1359,6 +1359,57 @@ AgentProcessingResult process_agent_in_zone(
     return result;
 }
 
+// Helper function to extract both vertex and edge collisions from bucket indices
+struct CollisionExtractionResult {
+    std::vector<std::tuple<int, int, std::pair<int,int>, int>> vertex_collisions;
+    std::vector<std::tuple<int, int, std::pair<int,int>, std::pair<int,int>, int>> edge_collisions;
+    int vertex_count;
+    int edge_count;
+};
+
+CollisionExtractionResult extract_collisions_from_bucket(
+    const std::vector<int>& bucket_indices,
+    const std::vector<ConflictMeta>& conflict_meta) {
+    
+    CollisionExtractionResult result;
+    result.vertex_count = 0;
+    result.edge_count = 0;
+    
+    // Use a set to avoid duplicate edge collisions
+    std::set<std::tuple<int, int, std::pair<int,int>, std::pair<int,int>, int>> edge_collisions_set;
+    
+    for (int idx : bucket_indices) {
+        if (idx < 0 || idx >= (int)conflict_meta.size()) continue;
+        
+        const auto& meta = conflict_meta[idx];
+        
+        // Print conflict info
+        std::cout << "[LNS] Conflict " << idx << " agents: " << meta.agent1 << " and " << meta.agent2 << std::endl;
+        std::cout << "[LNS] Conflict " << idx << " timestep: " << meta.timestep << std::endl;
+        std::cout << "[LNS] Conflict " << idx << " positions: " << meta.pos1.first << "," << meta.pos1.second;
+        
+        if (!meta.is_edge) {
+            // Vertex collision
+            std::cout << std::endl;
+            result.vertex_collisions.emplace_back(meta.agent1, meta.agent2, meta.pos1, meta.timestep);
+            result.vertex_count++;
+        } else {
+            // Edge collision
+            std::cout << " and " << meta.pos2.first << "," << meta.pos2.second << std::endl;
+            
+            // Check for duplicates
+            auto edge_tuple = std::make_tuple(meta.agent1, meta.agent2, meta.pos1, meta.pos2, meta.timestep);
+            if (edge_collisions_set.count(edge_tuple) == 0) {
+                edge_collisions_set.insert(edge_tuple);
+                result.edge_collisions.emplace_back(meta.agent1, meta.agent2, meta.pos1, meta.pos2, meta.timestep);
+                result.edge_count++;
+            }
+        }
+    }
+    
+    return result;
+}
+
 
 // Entry point for crude LNS (skeleton). Future steps will be filled in iteratively.
 int run_crude_lns(const std::string& map_path,

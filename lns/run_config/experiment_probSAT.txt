@@ -1,0 +1,15 @@
+# MAPF LNS SAT Experiment Configuration - ProbSAT Solver
+# Edit these values to configure your experiment
+
+# Map and scenario files
+MAP_FILE="mapf-map/empty-48-48.map"
+SCENARIO_FILE="temp_200_agents.scen"
+
+# Experiment parameters
+NUM_AGENTS=200
+SCENARIO_INDEX=0
+SOLVER="probSAT"
+SEED=42
+
+# Output
+LOG_FILE="run_empty48_200_probSAT.log"

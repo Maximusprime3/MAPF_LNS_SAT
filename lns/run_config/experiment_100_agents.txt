@@ -1,0 +1,15 @@
+# MAPF LNS SAT Experiment Configuration - 100 Agents
+# Edit these values to configure your experiment
+
+# Map and scenario files
+MAP_FILE="mapf-map/empty-48-48.map"
+SCENARIO_FILE="temp_100_agents.scen"
+
+# Experiment parameters
+NUM_AGENTS=100
+SCENARIO_INDEX=0
+SOLVER="minisat"
+SEED=42
+
+# Output
+LOG_FILE="run_empty48_100_1.log"
