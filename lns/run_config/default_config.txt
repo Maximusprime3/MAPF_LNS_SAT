@@ -12,4 +12,4 @@ SOLVER="minisat"
 SEED=42
 
 # Output
-LOG_FILE="run_empty48_200_5.log"
+LOG_FILE="run_empty48_200_6.log"
