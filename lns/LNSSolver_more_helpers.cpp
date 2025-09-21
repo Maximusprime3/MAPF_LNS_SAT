@@ -1031,7 +1031,7 @@ lazy_solve_with_waiting_time(CurrentSolution& current_solution,
                     all_current_conflicts);
                 waiting_time_factor = 1;
             }else{
-                waiting_time_factor += waiting_time_factor;
+                waiting_time_factor += 1;
             }
             //print current conflicts
             std::cout << "[LNS] Current conflicts: " << all_current_conflicts.size() << std::endl;

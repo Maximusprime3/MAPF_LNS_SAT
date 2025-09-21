@@ -2145,133 +2145,131 @@ DEBUG: Adding 1692696 clauses to MiniSAT
 [LNS] Updated collision tracking: 269 vertex collisions, 84 edge collisions
 [LNS] Waiting time attempt 4...
 [LNS] Will expand MDD for 35 chosen agents involved in 275 conflicts
-  Agent 4 used 7 waiting timesteps, 43 remaining
-[LNS] Expanding MDD for agent 4 by 7 timestep
-[LNS] Updated agent 4 entry/exit time: [27, 53]
-  Agent 7 used 7 waiting timesteps, 32 remaining
-[LNS] Expanding MDD for agent 7 by 7 timestep
-[LNS] Updated agent 7 entry/exit time: [30, 44]
-  Agent 12 used 7 waiting timesteps, 51 remaining
-[LNS] Expanding MDD for agent 12 by 7 timestep
-[LNS] Updated agent 12 entry/exit time: [1, 15]
-  Agent 13 used 7 waiting timesteps, 42 remaining
-[LNS] Expanding MDD for agent 13 by 7 timestep
-[LNS] Updated agent 13 entry/exit time: [18, 53]
-  Agent 14 used 7 waiting timesteps, 49 remaining
-[LNS] Expanding MDD for agent 14 by 7 timestep
-[LNS] Updated agent 14 entry/exit time: [8, 53]
-  Agent 16 used 7 waiting timesteps, 38 remaining
-[LNS] Expanding MDD for agent 16 by 7 timestep
-[LNS] Updated agent 16 entry/exit time: [27, 53]
-  Agent 19 used 7 waiting timesteps, 24 remaining
-[LNS] Expanding MDD for agent 19 by 7 timestep
-[LNS] Updated agent 19 entry/exit time: [16, 37]
-  Agent 33 used 7 waiting timesteps, 39 remaining
-[LNS] Expanding MDD for agent 33 by 7 timestep
-[LNS] Updated agent 33 entry/exit time: [14, 36]
-  Agent 36 used 7 waiting timesteps, 61 remaining
-[LNS] Expanding MDD for agent 36 by 7 timestep
-[LNS] Updated agent 36 entry/exit time: [9, 53]
-  Agent 40 used 7 waiting timesteps, 40 remaining
-[LNS] Expanding MDD for agent 40 by 7 timestep
-[LNS] Updated agent 40 entry/exit time: [10, 42]
-  Agent 43 used 7 waiting timesteps, 47 remaining
-[LNS] Expanding MDD for agent 43 by 7 timestep
-[LNS] Updated agent 43 entry/exit time: [17, 53]
-  Agent 59 used 7 waiting timesteps, 60 remaining
-[LNS] Expanding MDD for agent 59 by 7 timestep
-[LNS] Updated agent 59 entry/exit time: [8, 53]
-  Agent 64 used 7 waiting timesteps, 58 remaining
-[LNS] Expanding MDD for agent 64 by 7 timestep
-[LNS] Updated agent 64 entry/exit time: [11, 53]
-  Agent 67 used 7 waiting timesteps, 19 remaining
-[LNS] Expanding MDD for agent 67 by 7 timestep
-[LNS] Updated agent 67 entry/exit time: [21, 52]
-  Agent 72 used 7 waiting timesteps, 45 remaining
-[LNS] Expanding MDD for agent 72 by 7 timestep
-[LNS] Updated agent 72 entry/exit time: [17, 53]
-  Agent 93 used 7 waiting timesteps, 45 remaining
-[LNS] Expanding MDD for agent 93 by 7 timestep
-[LNS] Updated agent 93 entry/exit time: [13, 34]
-  Agent 97 used 7 waiting timesteps, 35 remaining
-[LNS] Expanding MDD for agent 97 by 7 timestep
-[LNS] Updated agent 97 entry/exit time: [32, 53]
-  Agent 99 used 7 waiting timesteps, 59 remaining
-[LNS] Expanding MDD for agent 99 by 7 timestep
-[LNS] Updated agent 99 entry/exit time: [1, 53]
-  Agent 103 used 7 waiting timesteps, 51 remaining
-[LNS] Expanding MDD for agent 103 by 7 timestep
-[LNS] Updated agent 103 entry/exit time: [6, 22]
-  Agent 106 used 7 waiting timesteps, 31 remaining
-[LNS] Expanding MDD for agent 106 by 7 timestep
-[LNS] Updated agent 106 entry/exit time: [23, 45]
-  Agent 107 used 7 waiting timesteps, 56 remaining
-[LNS] Expanding MDD for agent 107 by 7 timestep
-[LNS] Updated agent 107 entry/exit time: [14, 53]
-  Agent 126 used 7 waiting timesteps, 34 remaining
-[LNS] Expanding MDD for agent 126 by 7 timestep
-[LNS] Updated agent 126 entry/exit time: [11, 35]
-  Agent 128 used 7 waiting timesteps, 66 remaining
-[LNS] Expanding MDD for agent 128 by 7 timestep
-[LNS] Updated agent 128 entry/exit time: [1, 53]
-  Agent 132 used 7 waiting timesteps, 41 remaining
-[LNS] Expanding MDD for agent 132 by 7 timestep
-[LNS] Updated agent 132 entry/exit time: [5, 25]
-  Agent 139 used 7 waiting timesteps, 42 remaining
-[LNS] Expanding MDD for agent 139 by 7 timestep
-[LNS] Updated agent 139 entry/exit time: [1, 23]
-  Agent 143 used 7 waiting timesteps, 47 remaining
-[LNS] Expanding MDD for agent 143 by 7 timestep
-[LNS] Updated agent 143 entry/exit time: [14, 53]
-  Agent 148 used 7 waiting timesteps, 38 remaining
-[LNS] Expanding MDD for agent 148 by 7 timestep
-[LNS] Updated agent 148 entry/exit time: [7, 28]
-  Agent 155 used 7 waiting timesteps, 50 remaining
-[LNS] Expanding MDD for agent 155 by 7 timestep
-[LNS] Updated agent 155 entry/exit time: [2, 23]
-  Agent 168 used 7 waiting timesteps, 50 remaining
-[LNS] Expanding MDD for agent 168 by 7 timestep
-[LNS] Updated agent 168 entry/exit time: [3, 23]
-  Agent 171 used 7 waiting timesteps, 50 remaining
-[LNS] Expanding MDD for agent 171 by 7 timestep
-[LNS] Updated agent 171 entry/exit time: [7, 21]
-  Agent 181 used 7 waiting timesteps, 41 remaining
-[LNS] Expanding MDD for agent 181 by 7 timestep
-[LNS] Updated agent 181 entry/exit time: [1, 29]
-  Agent 185 used 7 waiting timesteps, 46 remaining
-[LNS] Expanding MDD for agent 185 by 7 timestep
-[LNS] Updated agent 185 entry/exit time: [1, 21]
-  Agent 190 used 7 waiting timesteps, 44 remaining
-[LNS] Expanding MDD for agent 190 by 7 timestep
-[LNS] Updated agent 190 entry/exit time: [11, 35]
-  Agent 197 used 7 waiting timesteps, 50 remaining
-[LNS] Expanding MDD for agent 197 by 7 timestep
-[LNS] Updated agent 197 entry/exit time: [1, 27]
-  Agent 198 used 7 waiting timesteps, 25 remaining
-[LNS] Expanding MDD for agent 198 by 7 timestep
-[LNS] Updated agent 198 entry/exit time: [19, 48]
-[LNS] Time window extended: [1, 41] -> [1, 53]
-[LNS] Found 17 new agents in extended time window: 4 13 14 16 36 43 53 59 64 72 74 97 99 107 117 128 143 
+  Agent 4 used 5 waiting timesteps, 45 remaining
+[LNS] Expanding MDD for agent 4 by 5 timestep
+[LNS] Updated agent 4 entry/exit time: [27, 51]
+  Agent 7 used 5 waiting timesteps, 34 remaining
+[LNS] Expanding MDD for agent 7 by 5 timestep
+[LNS] Updated agent 7 entry/exit time: [30, 42]
+  Agent 12 used 5 waiting timesteps, 53 remaining
+[LNS] Expanding MDD for agent 12 by 5 timestep
+[LNS] Updated agent 12 entry/exit time: [1, 13]
+  Agent 13 used 5 waiting timesteps, 44 remaining
+[LNS] Expanding MDD for agent 13 by 5 timestep
+[LNS] Updated agent 13 entry/exit time: [18, 51]
+  Agent 14 used 5 waiting timesteps, 51 remaining
+[LNS] Expanding MDD for agent 14 by 5 timestep
+[LNS] Updated agent 14 entry/exit time: [8, 51]
+  Agent 16 used 5 waiting timesteps, 40 remaining
+[LNS] Expanding MDD for agent 16 by 5 timestep
+[LNS] Updated agent 16 entry/exit time: [27, 51]
+  Agent 19 used 5 waiting timesteps, 26 remaining
+[LNS] Expanding MDD for agent 19 by 5 timestep
+[LNS] Updated agent 19 entry/exit time: [16, 35]
+  Agent 33 used 5 waiting timesteps, 41 remaining
+[LNS] Expanding MDD for agent 33 by 5 timestep
+[LNS] Updated agent 33 entry/exit time: [14, 34]
+  Agent 36 used 5 waiting timesteps, 63 remaining
+[LNS] Expanding MDD for agent 36 by 5 timestep
+[LNS] Updated agent 36 entry/exit time: [9, 51]
+  Agent 40 used 5 waiting timesteps, 42 remaining
+[LNS] Expanding MDD for agent 40 by 5 timestep
+[LNS] Updated agent 40 entry/exit time: [10, 40]
+  Agent 43 used 5 waiting timesteps, 49 remaining
+[LNS] Expanding MDD for agent 43 by 5 timestep
+[LNS] Updated agent 43 entry/exit time: [17, 51]
+  Agent 59 used 5 waiting timesteps, 62 remaining
+[LNS] Expanding MDD for agent 59 by 5 timestep
+[LNS] Updated agent 59 entry/exit time: [8, 51]
+  Agent 64 used 5 waiting timesteps, 60 remaining
+[LNS] Expanding MDD for agent 64 by 5 timestep
+[LNS] Updated agent 64 entry/exit time: [11, 51]
+  Agent 67 used 5 waiting timesteps, 21 remaining
+[LNS] Expanding MDD for agent 67 by 5 timestep
+[LNS] Updated agent 67 entry/exit time: [21, 50]
+  Agent 72 used 5 waiting timesteps, 47 remaining
+[LNS] Expanding MDD for agent 72 by 5 timestep
+[LNS] Updated agent 72 entry/exit time: [17, 51]
+  Agent 93 used 5 waiting timesteps, 47 remaining
+[LNS] Expanding MDD for agent 93 by 5 timestep
+[LNS] Updated agent 93 entry/exit time: [13, 32]
+  Agent 97 used 5 waiting timesteps, 37 remaining
+[LNS] Expanding MDD for agent 97 by 5 timestep
+[LNS] Updated agent 97 entry/exit time: [32, 51]
+  Agent 99 used 5 waiting timesteps, 61 remaining
+[LNS] Expanding MDD for agent 99 by 5 timestep
+[LNS] Updated agent 99 entry/exit time: [1, 51]
+  Agent 103 used 5 waiting timesteps, 53 remaining
+[LNS] Expanding MDD for agent 103 by 5 timestep
+[LNS] Updated agent 103 entry/exit time: [6, 20]
+  Agent 106 used 5 waiting timesteps, 33 remaining
+[LNS] Expanding MDD for agent 106 by 5 timestep
+[LNS] Updated agent 106 entry/exit time: [23, 43]
+  Agent 107 used 5 waiting timesteps, 58 remaining
+[LNS] Expanding MDD for agent 107 by 5 timestep
+[LNS] Updated agent 107 entry/exit time: [14, 51]
+  Agent 126 used 5 waiting timesteps, 36 remaining
+[LNS] Expanding MDD for agent 126 by 5 timestep
+[LNS] Updated agent 126 entry/exit time: [11, 33]
+  Agent 128 used 5 waiting timesteps, 68 remaining
+[LNS] Expanding MDD for agent 128 by 5 timestep
+[LNS] Updated agent 128 entry/exit time: [1, 51]
+  Agent 132 used 5 waiting timesteps, 43 remaining
+[LNS] Expanding MDD for agent 132 by 5 timestep
+[LNS] Updated agent 132 entry/exit time: [5, 23]
+  Agent 139 used 5 waiting timesteps, 44 remaining
+[LNS] Expanding MDD for agent 139 by 5 timestep
+[LNS] Updated agent 139 entry/exit time: [1, 21]
+  Agent 143 used 5 waiting timesteps, 49 remaining
+[LNS] Expanding MDD for agent 143 by 5 timestep
+[LNS] Updated agent 143 entry/exit time: [14, 51]
+  Agent 148 used 5 waiting timesteps, 40 remaining
+[LNS] Expanding MDD for agent 148 by 5 timestep
+[LNS] Updated agent 148 entry/exit time: [7, 26]
+  Agent 155 used 5 waiting timesteps, 52 remaining
+[LNS] Expanding MDD for agent 155 by 5 timestep
+[LNS] Updated agent 155 entry/exit time: [2, 21]
+  Agent 168 used 5 waiting timesteps, 52 remaining
+[LNS] Expanding MDD for agent 168 by 5 timestep
+[LNS] Updated agent 168 entry/exit time: [3, 21]
+  Agent 171 used 5 waiting timesteps, 52 remaining
+[LNS] Expanding MDD for agent 171 by 5 timestep
+[LNS] Updated agent 171 entry/exit time: [7, 19]
+  Agent 181 used 5 waiting timesteps, 43 remaining
+[LNS] Expanding MDD for agent 181 by 5 timestep
+[LNS] Updated agent 181 entry/exit time: [1, 27]
+  Agent 185 used 5 waiting timesteps, 48 remaining
+[LNS] Expanding MDD for agent 185 by 5 timestep
+[LNS] Updated agent 185 entry/exit time: [1, 19]
+  Agent 190 used 5 waiting timesteps, 46 remaining
+[LNS] Expanding MDD for agent 190 by 5 timestep
+[LNS] Updated agent 190 entry/exit time: [11, 33]
+  Agent 197 used 5 waiting timesteps, 52 remaining
+[LNS] Expanding MDD for agent 197 by 5 timestep
+[LNS] Updated agent 197 entry/exit time: [1, 25]
+  Agent 198 used 5 waiting timesteps, 27 remaining
+[LNS] Expanding MDD for agent 198 by 5 timestep
+[LNS] Updated agent 198 entry/exit time: [19, 46]
+[LNS] Time window extended: [1, 41] -> [1, 51]
+[LNS] Found 16 new agents in extended time window: 4 13 14 16 36 43 53 59 64 72 97 99 107 117 128 143 
 [LNS] Local zone agents: 117 59 107 198 197 192 190 185 181 67 126 64 183 56 52 196 69 128 40 99 155 33 92 4 75 36 154 134 7 25 16 143 42 13 199 72 43 161 14 132 15 47 106 18 136 19 12 139 171 24 87 89 21 148 93 94 97 29 156 103 113 114 173 17 144 37 164 168 177 53 180 
 [LNS] New agents already in local zone: 4 13 14 16 36 43 53 59 64 72 97 99 107 117 128 143 
 [LNS] New agent 53 was not present at the previous last timestep
 [LNS] New agent 53 is a returning agent
 [LNS] New agent 53 entry/exit time: [19,46]
 [LNS] New agent 53 end time is not the same as new_end_t - 1
-[LNS] New agent 53 new_end_t: 53
+[LNS] New agent 53 new_end_t: 51
 will relay on the agent path to stay in the zone until new_end_t
-[LNS] Expanded time window for agent 53 to [19, 53]
-[LNS] Expanded MDD for agent 53 to timestep 53
-  Added new agent 74 local segment t=[53,53] len=1
-  Created MDD for new agent 74
+[LNS] Expanded time window for agent 53 to [19, 51]
+[LNS] Expanded MDD for agent 53 to timestep 51
 [LNS] New agent 117 was not present at the previous last timestep
 [LNS] New agent 117 is a returning agent
 [LNS] New agent 117 entry/exit time: [42,46]
 [LNS] New agent 117 end time is not the same as new_end_t - 1
-[LNS] New agent 117 new_end_t: 53
+[LNS] New agent 117 new_end_t: 51
 will relay on the agent path to stay in the zone until new_end_t
-[LNS] Expanded time window for agent 117 to [42, 53]
-[LNS] Expanded MDD for agent 117 to timestep 53
+[LNS] Expanded time window for agent 117 to [42, 51]
+[LNS] Expanded MDD for agent 117 to timestep 51
 [LNS] Recreating local CNF with expanded MDDs
 [LNS] Attempting lazy solving with expanded MDD...
 [LNS] Starting lazy solving of conflict zone...
@@ -2279,15 +2277,15 @@ will relay on the agent path to stay in the zone until new_end_t
 [LNS] Adding 84 pre-discovered edge collisions...
 [LNS] Discovered edge collisions: 
 [LNS] Lazy solving iteration 1...
-DEBUG: CNF has 3068854 clauses
+DEBUG: CNF has 2611175 clauses
 DEBUG: First clause: 1 
-DEBUG: Adding 3068854 clauses to MiniSAT
+DEBUG: Adding 2611175 clauses to MiniSAT
 [LNS] Local problem is unsatisfiable after 1 iterations
 [LNS] No Solution found -> Safety run solving without assignment
 [LNS] Lazy solving iteration 2...
-DEBUG: CNF has 3068854 clauses
+DEBUG: CNF has 2611175 clauses
 DEBUG: First clause: 1 
-DEBUG: Adding 3068854 clauses to MiniSAT
+DEBUG: Adding 2611175 clauses to MiniSAT
 [LNS] Local problem is unsatisfiable after 2 iterations
 [LNS] No Solution found + Safety run failed -> UNSAT
 [LNS] Failed to find local solution after 10000 iterations
@@ -2297,134 +2295,128 @@ DEBUG: Adding 3068854 clauses to MiniSAT
 [LNS] Updated collision tracking: 269 vertex collisions, 84 edge collisions
 [LNS] Waiting time attempt 5...
 [LNS] Will expand MDD for 36 chosen agents involved in 275 conflicts
-  Agent 4 used 15 waiting timesteps, 28 remaining
-[LNS] Expanding MDD for agent 4 by 15 timestep
-[LNS] Updated agent 4 entry/exit time: [27, 68]
-  Agent 7 used 15 waiting timesteps, 17 remaining
-[LNS] Expanding MDD for agent 7 by 15 timestep
-[LNS] Updated agent 7 entry/exit time: [30, 59]
-  Agent 12 used 15 waiting timesteps, 36 remaining
-[LNS] Expanding MDD for agent 12 by 15 timestep
-[LNS] Updated agent 12 entry/exit time: [1, 30]
-  Agent 13 used 15 waiting timesteps, 27 remaining
-[LNS] Expanding MDD for agent 13 by 15 timestep
-[LNS] Updated agent 13 entry/exit time: [18, 68]
-  Agent 14 used 15 waiting timesteps, 34 remaining
-[LNS] Expanding MDD for agent 14 by 15 timestep
-[LNS] Updated agent 14 entry/exit time: [8, 68]
-  Agent 16 used 15 waiting timesteps, 23 remaining
-[LNS] Expanding MDD for agent 16 by 15 timestep
-[LNS] Updated agent 16 entry/exit time: [27, 68]
-  Agent 33 used 15 waiting timesteps, 24 remaining
-[LNS] Expanding MDD for agent 33 by 15 timestep
-[LNS] Updated agent 33 entry/exit time: [14, 51]
-  Agent 36 used 15 waiting timesteps, 46 remaining
-[LNS] Expanding MDD for agent 36 by 15 timestep
-[LNS] Updated agent 36 entry/exit time: [9, 68]
-  Agent 40 used 15 waiting timesteps, 25 remaining
-[LNS] Expanding MDD for agent 40 by 15 timestep
-[LNS] Updated agent 40 entry/exit time: [10, 57]
-  Agent 42 used 15 waiting timesteps, 15 remaining
-[LNS] Expanding MDD for agent 42 by 15 timestep
-[LNS] Updated agent 42 entry/exit time: [10, 44]
-  Agent 43 used 15 waiting timesteps, 32 remaining
-[LNS] Expanding MDD for agent 43 by 15 timestep
-[LNS] Updated agent 43 entry/exit time: [17, 68]
-  Agent 59 used 15 waiting timesteps, 45 remaining
-[LNS] Expanding MDD for agent 59 by 15 timestep
-[LNS] Updated agent 59 entry/exit time: [8, 68]
-  Agent 64 used 15 waiting timesteps, 43 remaining
-[LNS] Expanding MDD for agent 64 by 15 timestep
-[LNS] Updated agent 64 entry/exit time: [11, 68]
-  Agent 67 used 15 waiting timesteps, 4 remaining
-[LNS] Expanding MDD for agent 67 by 15 timestep
-[LNS] Updated agent 67 entry/exit time: [21, 67]
-  Agent 72 used 15 waiting timesteps, 30 remaining
-[LNS] Expanding MDD for agent 72 by 15 timestep
-[LNS] Updated agent 72 entry/exit time: [17, 68]
-  Agent 92 used 15 waiting timesteps, 38 remaining
-[LNS] Expanding MDD for agent 92 by 15 timestep
-[LNS] Updated agent 92 entry/exit time: [1, 28]
-  Agent 93 used 15 waiting timesteps, 30 remaining
-[LNS] Expanding MDD for agent 93 by 15 timestep
-[LNS] Updated agent 93 entry/exit time: [13, 49]
-  Agent 94 used 15 waiting timesteps, 32 remaining
-[LNS] Expanding MDD for agent 94 by 15 timestep
-[LNS] Updated agent 94 entry/exit time: [1, 31]
-  Agent 97 used 15 waiting timesteps, 20 remaining
-[LNS] Expanding MDD for agent 97 by 15 timestep
-[LNS] Updated agent 97 entry/exit time: [32, 68]
-  Agent 99 used 15 waiting timesteps, 44 remaining
-[LNS] Expanding MDD for agent 99 by 15 timestep
-[LNS] Updated agent 99 entry/exit time: [1, 68]
-  Agent 106 used 15 waiting timesteps, 16 remaining
-[LNS] Expanding MDD for agent 106 by 15 timestep
-[LNS] Updated agent 106 entry/exit time: [23, 60]
-  Agent 107 used 15 waiting timesteps, 41 remaining
-[LNS] Expanding MDD for agent 107 by 15 timestep
-[LNS] Updated agent 107 entry/exit time: [14, 68]
-  Agent 113 used 15 waiting timesteps, 25 remaining
-[LNS] Expanding MDD for agent 113 by 15 timestep
-[LNS] Updated agent 113 entry/exit time: [14, 44]
-  Agent 114 used 15 waiting timesteps, 41 remaining
-[LNS] Expanding MDD for agent 114 by 15 timestep
-[LNS] Updated agent 114 entry/exit time: [3, 32]
-  Agent 128 used 15 waiting timesteps, 51 remaining
-[LNS] Expanding MDD for agent 128 by 15 timestep
-[LNS] Updated agent 128 entry/exit time: [1, 68]
-  Agent 132 used 15 waiting timesteps, 26 remaining
-[LNS] Expanding MDD for agent 132 by 15 timestep
-[LNS] Updated agent 132 entry/exit time: [5, 40]
-  Agent 134 used 15 waiting timesteps, 24 remaining
-[LNS] Expanding MDD for agent 134 by 15 timestep
-[LNS] Updated agent 134 entry/exit time: [18, 45]
-  Agent 143 used 15 waiting timesteps, 32 remaining
-[LNS] Expanding MDD for agent 143 by 15 timestep
-[LNS] Updated agent 143 entry/exit time: [14, 68]
-  Agent 155 used 15 waiting timesteps, 35 remaining
-[LNS] Expanding MDD for agent 155 by 15 timestep
-[LNS] Updated agent 155 entry/exit time: [2, 38]
-  Agent 161 used 15 waiting timesteps, 40 remaining
-[LNS] Expanding MDD for agent 161 by 15 timestep
-[LNS] Updated agent 161 entry/exit time: [6, 38]
-  Agent 168 used 15 waiting timesteps, 35 remaining
-[LNS] Expanding MDD for agent 168 by 15 timestep
-[LNS] Updated agent 168 entry/exit time: [3, 38]
-  Agent 173 used 15 waiting timesteps, 27 remaining
-[LNS] Expanding MDD for agent 173 by 15 timestep
-[LNS] Updated agent 173 entry/exit time: [2, 29]
-  Agent 190 used 15 waiting timesteps, 29 remaining
-[LNS] Expanding MDD for agent 190 by 15 timestep
-[LNS] Updated agent 190 entry/exit time: [11, 50]
-  Agent 196 used 15 waiting timesteps, 34 remaining
-[LNS] Expanding MDD for agent 196 by 15 timestep
-[LNS] Updated agent 196 entry/exit time: [1, 20]
-  Agent 197 used 15 waiting timesteps, 35 remaining
-[LNS] Expanding MDD for agent 197 by 15 timestep
-[LNS] Updated agent 197 entry/exit time: [1, 42]
-  Agent 198 used 15 waiting timesteps, 10 remaining
-[LNS] Expanding MDD for agent 198 by 15 timestep
-[LNS] Updated agent 198 entry/exit time: [19, 63]
-[LNS] Time window extended: [1, 41] -> [1, 68]
+  Agent 4 used 7 waiting timesteps, 38 remaining
+[LNS] Expanding MDD for agent 4 by 7 timestep
+[LNS] Updated agent 4 entry/exit time: [27, 58]
+  Agent 7 used 7 waiting timesteps, 27 remaining
+[LNS] Expanding MDD for agent 7 by 7 timestep
+[LNS] Updated agent 7 entry/exit time: [30, 49]
+  Agent 12 used 7 waiting timesteps, 46 remaining
+[LNS] Expanding MDD for agent 12 by 7 timestep
+[LNS] Updated agent 12 entry/exit time: [1, 20]
+  Agent 13 used 7 waiting timesteps, 37 remaining
+[LNS] Expanding MDD for agent 13 by 7 timestep
+[LNS] Updated agent 13 entry/exit time: [18, 58]
+  Agent 14 used 7 waiting timesteps, 44 remaining
+[LNS] Expanding MDD for agent 14 by 7 timestep
+[LNS] Updated agent 14 entry/exit time: [8, 58]
+  Agent 16 used 7 waiting timesteps, 33 remaining
+[LNS] Expanding MDD for agent 16 by 7 timestep
+[LNS] Updated agent 16 entry/exit time: [27, 58]
+  Agent 33 used 7 waiting timesteps, 34 remaining
+[LNS] Expanding MDD for agent 33 by 7 timestep
+[LNS] Updated agent 33 entry/exit time: [14, 41]
+  Agent 36 used 7 waiting timesteps, 56 remaining
+[LNS] Expanding MDD for agent 36 by 7 timestep
+[LNS] Updated agent 36 entry/exit time: [9, 58]
+  Agent 40 used 7 waiting timesteps, 35 remaining
+[LNS] Expanding MDD for agent 40 by 7 timestep
+[LNS] Updated agent 40 entry/exit time: [10, 47]
+  Agent 42 used 7 waiting timesteps, 23 remaining
+[LNS] Expanding MDD for agent 42 by 7 timestep
+[LNS] Updated agent 42 entry/exit time: [10, 36]
+  Agent 43 used 7 waiting timesteps, 42 remaining
+[LNS] Expanding MDD for agent 43 by 7 timestep
+[LNS] Updated agent 43 entry/exit time: [17, 58]
+  Agent 59 used 7 waiting timesteps, 55 remaining
+[LNS] Expanding MDD for agent 59 by 7 timestep
+[LNS] Updated agent 59 entry/exit time: [8, 58]
+  Agent 64 used 7 waiting timesteps, 53 remaining
+[LNS] Expanding MDD for agent 64 by 7 timestep
+[LNS] Updated agent 64 entry/exit time: [11, 58]
+  Agent 67 used 7 waiting timesteps, 14 remaining
+[LNS] Expanding MDD for agent 67 by 7 timestep
+[LNS] Updated agent 67 entry/exit time: [21, 57]
+  Agent 72 used 7 waiting timesteps, 40 remaining
+[LNS] Expanding MDD for agent 72 by 7 timestep
+[LNS] Updated agent 72 entry/exit time: [17, 58]
+  Agent 92 used 7 waiting timesteps, 46 remaining
+[LNS] Expanding MDD for agent 92 by 7 timestep
+[LNS] Updated agent 92 entry/exit time: [1, 20]
+  Agent 93 used 7 waiting timesteps, 40 remaining
+[LNS] Expanding MDD for agent 93 by 7 timestep
+[LNS] Updated agent 93 entry/exit time: [13, 39]
+  Agent 97 used 7 waiting timesteps, 30 remaining
+[LNS] Expanding MDD for agent 97 by 7 timestep
+[LNS] Updated agent 97 entry/exit time: [32, 58]
+  Agent 99 used 7 waiting timesteps, 54 remaining
+[LNS] Expanding MDD for agent 99 by 7 timestep
+[LNS] Updated agent 99 entry/exit time: [1, 58]
+  Agent 106 used 7 waiting timesteps, 26 remaining
+[LNS] Expanding MDD for agent 106 by 7 timestep
+[LNS] Updated agent 106 entry/exit time: [23, 50]
+  Agent 107 used 7 waiting timesteps, 51 remaining
+[LNS] Expanding MDD for agent 107 by 7 timestep
+[LNS] Updated agent 107 entry/exit time: [14, 58]
+  Agent 113 used 7 waiting timesteps, 33 remaining
+[LNS] Expanding MDD for agent 113 by 7 timestep
+[LNS] Updated agent 113 entry/exit time: [14, 36]
+  Agent 114 used 7 waiting timesteps, 49 remaining
+[LNS] Expanding MDD for agent 114 by 7 timestep
+[LNS] Updated agent 114 entry/exit time: [3, 24]
+  Agent 128 used 7 waiting timesteps, 61 remaining
+[LNS] Expanding MDD for agent 128 by 7 timestep
+[LNS] Updated agent 128 entry/exit time: [1, 58]
+  Agent 132 used 7 waiting timesteps, 36 remaining
+[LNS] Expanding MDD for agent 132 by 7 timestep
+[LNS] Updated agent 132 entry/exit time: [5, 30]
+  Agent 134 used 7 waiting timesteps, 32 remaining
+[LNS] Expanding MDD for agent 134 by 7 timestep
+[LNS] Updated agent 134 entry/exit time: [18, 37]
+  Agent 143 used 7 waiting timesteps, 42 remaining
+[LNS] Expanding MDD for agent 143 by 7 timestep
+[LNS] Updated agent 143 entry/exit time: [14, 58]
+  Agent 155 used 7 waiting timesteps, 45 remaining
+[LNS] Expanding MDD for agent 155 by 7 timestep
+[LNS] Updated agent 155 entry/exit time: [2, 28]
+  Agent 161 used 7 waiting timesteps, 48 remaining
+[LNS] Expanding MDD for agent 161 by 7 timestep
+[LNS] Updated agent 161 entry/exit time: [6, 30]
+  Agent 168 used 7 waiting timesteps, 45 remaining
+[LNS] Expanding MDD for agent 168 by 7 timestep
+[LNS] Updated agent 168 entry/exit time: [3, 28]
+  Agent 181 used 7 waiting timesteps, 36 remaining
+[LNS] Expanding MDD for agent 181 by 7 timestep
+[LNS] Updated agent 181 entry/exit time: [1, 34]
+  Agent 185 used 7 waiting timesteps, 41 remaining
+[LNS] Expanding MDD for agent 185 by 7 timestep
+[LNS] Updated agent 185 entry/exit time: [1, 26]
+  Agent 190 used 7 waiting timesteps, 39 remaining
+[LNS] Expanding MDD for agent 190 by 7 timestep
+[LNS] Updated agent 190 entry/exit time: [11, 40]
+  Agent 196 used 7 waiting timesteps, 42 remaining
+[LNS] Expanding MDD for agent 196 by 7 timestep
+[LNS] Updated agent 196 entry/exit time: [1, 12]
+  Agent 197 used 7 waiting timesteps, 45 remaining
+[LNS] Expanding MDD for agent 197 by 7 timestep
+[LNS] Updated agent 197 entry/exit time: [1, 32]
+  Agent 198 used 7 waiting timesteps, 20 remaining
+[LNS] Expanding MDD for agent 198 by 7 timestep
+[LNS] Updated agent 198 entry/exit time: [19, 53]
+[LNS] Time window extended: [1, 41] -> [1, 58]
 [LNS] Found 16 new agents in extended time window: 4 13 14 16 36 43 53 59 64 72 74 97 99 107 128 143 
-[LNS] Local zone agents: 74 117 59 107 198 197 192 190 185 181 67 126 64 183 56 52 196 69 128 40 99 155 33 92 4 75 36 154 134 7 25 16 143 42 13 199 72 43 161 14 132 15 47 106 18 136 19 12 139 171 24 87 89 21 148 93 94 97 29 156 103 113 114 173 17 144 37 164 168 177 53 180 
-[LNS] New agents already in local zone: 4 13 14 16 36 43 53 59 64 72 74 97 99 107 128 143 
+[LNS] Local zone agents: 117 59 107 198 197 192 190 185 181 67 126 64 183 56 52 196 69 128 40 99 155 33 92 4 75 36 154 134 7 25 16 143 42 13 199 72 43 161 14 132 15 47 106 18 136 19 12 139 171 24 87 89 21 148 93 94 97 29 156 103 113 114 173 17 144 37 164 168 177 53 180 
+[LNS] New agents already in local zone: 4 13 14 16 36 43 53 59 64 72 97 99 107 128 143 
 [LNS] New agent 53 was not present at the previous last timestep
 [LNS] New agent 53 is a returning agent
-[LNS] New agent 53 entry/exit time: [19,53]
+[LNS] New agent 53 entry/exit time: [19,51]
 [LNS] New agent 53 end time is not the same as new_end_t - 1
-[LNS] New agent 53 new_end_t: 68
+[LNS] New agent 53 new_end_t: 58
 will relay on the agent path to stay in the zone until new_end_t
-[LNS] Expanded time window for agent 53 to [19, 68]
-[LNS] Expanded MDD for agent 53 to timestep 68
-[LNS] New agent 74 was not present at the previous last timestep
-[LNS] New agent 74 is a returning agent
-[LNS] New agent 74 entry/exit time: [53,53]
-[LNS] New agent 74 end time is not the same as new_end_t - 1
-[LNS] New agent 74 new_end_t: 68
-will relay on the agent path to stay in the zone until new_end_t
-[LNS] Expanded time window for agent 74 to [53, 68]
-[LNS] Expanded MDD for agent 74 to timestep 68
+[LNS] Expanded time window for agent 53 to [19, 58]
+[LNS] Expanded MDD for agent 53 to timestep 58
+  Added new agent 74 local segment t=[58,58] len=1
+  Created MDD for new agent 74
 [LNS] Recreating local CNF with expanded MDDs
 [LNS] Attempting lazy solving with expanded MDD...
 [LNS] Starting lazy solving of conflict zone...
@@ -2432,15 +2424,15 @@ will relay on the agent path to stay in the zone until new_end_t
 [LNS] Adding 84 pre-discovered edge collisions...
 [LNS] Discovered edge collisions: 
 [LNS] Lazy solving iteration 1...
-DEBUG: CNF has 7359230 clauses
+DEBUG: CNF has 4354191 clauses
 DEBUG: First clause: 1 
-DEBUG: Adding 7359230 clauses to MiniSAT
+DEBUG: Adding 4354191 clauses to MiniSAT
 [LNS] Local problem is unsatisfiable after 1 iterations
 [LNS] No Solution found -> Safety run solving without assignment
 [LNS] Lazy solving iteration 2...
-DEBUG: CNF has 7359230 clauses
+DEBUG: CNF has 4354191 clauses
 DEBUG: First clause: 1 
-DEBUG: Adding 7359230 clauses to MiniSAT
+DEBUG: Adding 4354191 clauses to MiniSAT
 [LNS] Local problem is unsatisfiable after 2 iterations
 [LNS] No Solution found + Safety run failed -> UNSAT
 [LNS] Failed to find local solution after 10000 iterations
@@ -2449,782 +2441,141 @@ DEBUG: Adding 7359230 clauses to MiniSAT
 [LNS] Current conflicts: 275
 [LNS] Updated collision tracking: 269 vertex collisions, 84 edge collisions
 [LNS] Waiting time attempt 6...
-[LNS] Will expand MDD for 37 chosen agents involved in 275 conflicts
-  Agent 4 used 31 waiting timesteps, 0 remaining
-[LNS] Expanding MDD for agent 4 by 31 timestep
-[LNS] Updated agent 4 entry/exit time: [27, 99]
-  Agent 12 used 31 waiting timesteps, 5 remaining
-[LNS] Expanding MDD for agent 12 by 31 timestep
-[LNS] Updated agent 12 entry/exit time: [1, 61]
-  Agent 13 used 31 waiting timesteps, 0 remaining
-[LNS] Expanding MDD for agent 13 by 31 timestep
-[LNS] Updated agent 13 entry/exit time: [18, 99]
-  Agent 14 used 31 waiting timesteps, 3 remaining
-[LNS] Expanding MDD for agent 14 by 31 timestep
-[LNS] Updated agent 14 entry/exit time: [8, 99]
-  Agent 16 used 31 waiting timesteps, 0 remaining
-[LNS] Expanding MDD for agent 16 by 31 timestep
-[LNS] Updated agent 16 entry/exit time: [27, 99]
-  Agent 19 used 31 waiting timesteps, 0 remaining
-[LNS] Expanding MDD for agent 19 by 31 timestep
-[LNS] Updated agent 19 entry/exit time: [16, 68]
-  Agent 33 used 31 waiting timesteps, 0 remaining
-[LNS] Expanding MDD for agent 33 by 31 timestep
-[LNS] Updated agent 33 entry/exit time: [14, 82]
-  Agent 36 used 31 waiting timesteps, 15 remaining
-[LNS] Expanding MDD for agent 36 by 31 timestep
-[LNS] Updated agent 36 entry/exit time: [9, 99]
-  Agent 40 used 31 waiting timesteps, 0 remaining
-[LNS] Expanding MDD for agent 40 by 31 timestep
-[LNS] Updated agent 40 entry/exit time: [10, 88]
-  Agent 52 used 31 waiting timesteps, 14 remaining
-[LNS] Expanding MDD for agent 52 by 31 timestep
-[LNS] Updated agent 52 entry/exit time: [16, 61]
-  Agent 56 used 31 waiting timesteps, 0 remaining
-[LNS] Expanding MDD for agent 56 by 31 timestep
-[LNS] Updated agent 56 entry/exit time: [22, 68]
-  Agent 59 used 31 waiting timesteps, 14 remaining
-[LNS] Expanding MDD for agent 59 by 31 timestep
-[LNS] Updated agent 59 entry/exit time: [8, 99]
-  Agent 64 used 31 waiting timesteps, 12 remaining
-[LNS] Expanding MDD for agent 64 by 31 timestep
-[LNS] Updated agent 64 entry/exit time: [11, 99]
-  Agent 67 used 31 waiting timesteps, 0 remaining
-[LNS] Expanding MDD for agent 67 by 31 timestep
-[LNS] Updated agent 67 entry/exit time: [21, 98]
-  Agent 69 used 31 waiting timesteps, 1 remaining
-[LNS] Expanding MDD for agent 69 by 31 timestep
-[LNS] Updated agent 69 entry/exit time: [25, 67]
-  Agent 72 used 31 waiting timesteps, 0 remaining
-[LNS] Expanding MDD for agent 72 by 31 timestep
-[LNS] Updated agent 72 entry/exit time: [17, 99]
-  Agent 93 used 31 waiting timesteps, 0 remaining
-[LNS] Expanding MDD for agent 93 by 31 timestep
-[LNS] Updated agent 93 entry/exit time: [13, 80]
-  Agent 97 used 31 waiting timesteps, 0 remaining
-[LNS] Expanding MDD for agent 97 by 31 timestep
-[LNS] Updated agent 97 entry/exit time: [32, 99]
-  Agent 99 used 31 waiting timesteps, 13 remaining
-[LNS] Expanding MDD for agent 99 by 31 timestep
-[LNS] Updated agent 99 entry/exit time: [1, 99]
-  Agent 103 used 31 waiting timesteps, 20 remaining
-[LNS] Expanding MDD for agent 103 by 31 timestep
-[LNS] Updated agent 103 entry/exit time: [6, 53]
-  Agent 106 used 31 waiting timesteps, 0 remaining
-[LNS] Expanding MDD for agent 106 by 31 timestep
-[LNS] Updated agent 106 entry/exit time: [23, 91]
-  Agent 107 used 31 waiting timesteps, 10 remaining
-[LNS] Expanding MDD for agent 107 by 31 timestep
-[LNS] Updated agent 107 entry/exit time: [14, 99]
-  Agent 113 used 31 waiting timesteps, 0 remaining
-[LNS] Expanding MDD for agent 113 by 31 timestep
-[LNS] Updated agent 113 entry/exit time: [14, 75]
-  Agent 114 used 31 waiting timesteps, 10 remaining
-[LNS] Expanding MDD for agent 114 by 31 timestep
-[LNS] Updated agent 114 entry/exit time: [3, 63]
-  Agent 126 used 31 waiting timesteps, 3 remaining
-[LNS] Expanding MDD for agent 126 by 31 timestep
-[LNS] Updated agent 126 entry/exit time: [11, 66]
-  Agent 128 used 31 waiting timesteps, 20 remaining
-[LNS] Expanding MDD for agent 128 by 31 timestep
-[LNS] Updated agent 128 entry/exit time: [1, 99]
-  Agent 132 used 31 waiting timesteps, 0 remaining
-[LNS] Expanding MDD for agent 132 by 31 timestep
-[LNS] Updated agent 132 entry/exit time: [5, 71]
-  Agent 139 used 31 waiting timesteps, 11 remaining
-[LNS] Expanding MDD for agent 139 by 31 timestep
-[LNS] Updated agent 139 entry/exit time: [1, 54]
-  Agent 143 used 31 waiting timesteps, 1 remaining
-[LNS] Expanding MDD for agent 143 by 31 timestep
-[LNS] Updated agent 143 entry/exit time: [14, 99]
-  Agent 148 used 31 waiting timesteps, 7 remaining
-[LNS] Expanding MDD for agent 148 by 31 timestep
-[LNS] Updated agent 148 entry/exit time: [7, 59]
-  Agent 155 used 31 waiting timesteps, 4 remaining
-[LNS] Expanding MDD for agent 155 by 31 timestep
-[LNS] Updated agent 155 entry/exit time: [2, 69]
-  Agent 168 used 31 waiting timesteps, 4 remaining
-[LNS] Expanding MDD for agent 168 by 31 timestep
-[LNS] Updated agent 168 entry/exit time: [3, 69]
-  Agent 181 used 31 waiting timesteps, 10 remaining
-[LNS] Expanding MDD for agent 181 by 31 timestep
-[LNS] Updated agent 181 entry/exit time: [1, 60]
-  Agent 185 used 31 waiting timesteps, 15 remaining
-[LNS] Expanding MDD for agent 185 by 31 timestep
-[LNS] Updated agent 185 entry/exit time: [1, 52]
-  Agent 190 used 31 waiting timesteps, 0 remaining
-[LNS] Expanding MDD for agent 190 by 31 timestep
-[LNS] Updated agent 190 entry/exit time: [11, 81]
-  Agent 197 used 31 waiting timesteps, 4 remaining
-[LNS] Expanding MDD for agent 197 by 31 timestep
-[LNS] Updated agent 197 entry/exit time: [1, 73]
-  Agent 198 used 31 waiting timesteps, 0 remaining
-[LNS] Expanding MDD for agent 198 by 31 timestep
-[LNS] Updated agent 198 entry/exit time: [19, 94]
-[LNS] Time window extended: [1, 41] -> [1, 99]
+[LNS] Will expand MDD for 36 chosen agents involved in 275 conflicts
+  Agent 4 used 9 waiting timesteps, 29 remaining
+[LNS] Expanding MDD for agent 4 by 9 timestep
+[LNS] Updated agent 4 entry/exit time: [27, 67]
+  Agent 7 used 9 waiting timesteps, 18 remaining
+[LNS] Expanding MDD for agent 7 by 9 timestep
+[LNS] Updated agent 7 entry/exit time: [30, 58]
+  Agent 12 used 9 waiting timesteps, 37 remaining
+[LNS] Expanding MDD for agent 12 by 9 timestep
+[LNS] Updated agent 12 entry/exit time: [1, 29]
+  Agent 13 used 9 waiting timesteps, 28 remaining
+[LNS] Expanding MDD for agent 13 by 9 timestep
+[LNS] Updated agent 13 entry/exit time: [18, 67]
+  Agent 14 used 9 waiting timesteps, 35 remaining
+[LNS] Expanding MDD for agent 14 by 9 timestep
+[LNS] Updated agent 14 entry/exit time: [8, 67]
+  Agent 16 used 9 waiting timesteps, 24 remaining
+[LNS] Expanding MDD for agent 16 by 9 timestep
+[LNS] Updated agent 16 entry/exit time: [27, 67]
+  Agent 19 used 9 waiting timesteps, 17 remaining
+[LNS] Expanding MDD for agent 19 by 9 timestep
+[LNS] Updated agent 19 entry/exit time: [16, 44]
+  Agent 33 used 9 waiting timesteps, 25 remaining
+[LNS] Expanding MDD for agent 33 by 9 timestep
+[LNS] Updated agent 33 entry/exit time: [14, 50]
+  Agent 36 used 9 waiting timesteps, 47 remaining
+[LNS] Expanding MDD for agent 36 by 9 timestep
+[LNS] Updated agent 36 entry/exit time: [9, 67]
+  Agent 40 used 9 waiting timesteps, 26 remaining
+[LNS] Expanding MDD for agent 40 by 9 timestep
+[LNS] Updated agent 40 entry/exit time: [10, 56]
+  Agent 52 used 9 waiting timesteps, 36 remaining
+[LNS] Expanding MDD for agent 52 by 9 timestep
+[LNS] Updated agent 52 entry/exit time: [16, 39]
+  Agent 59 used 9 waiting timesteps, 46 remaining
+[LNS] Expanding MDD for agent 59 by 9 timestep
+[LNS] Updated agent 59 entry/exit time: [8, 67]
+  Agent 64 used 9 waiting timesteps, 44 remaining
+[LNS] Expanding MDD for agent 64 by 9 timestep
+[LNS] Updated agent 64 entry/exit time: [11, 67]
+  Agent 67 used 9 waiting timesteps, 5 remaining
+[LNS] Expanding MDD for agent 67 by 9 timestep
+[LNS] Updated agent 67 entry/exit time: [21, 66]
+  Agent 72 used 9 waiting timesteps, 31 remaining
+[LNS] Expanding MDD for agent 72 by 9 timestep
+[LNS] Updated agent 72 entry/exit time: [17, 67]
+  Agent 92 used 9 waiting timesteps, 37 remaining
+[LNS] Expanding MDD for agent 92 by 9 timestep
+[LNS] Updated agent 92 entry/exit time: [1, 29]
+  Agent 93 used 9 waiting timesteps, 31 remaining
+[LNS] Expanding MDD for agent 93 by 9 timestep
+[LNS] Updated agent 93 entry/exit time: [13, 48]
+  Agent 94 used 9 waiting timesteps, 38 remaining
+[LNS] Expanding MDD for agent 94 by 9 timestep
+[LNS] Updated agent 94 entry/exit time: [1, 25]
+  Agent 97 used 9 waiting timesteps, 21 remaining
+[LNS] Expanding MDD for agent 97 by 9 timestep
+[LNS] Updated agent 97 entry/exit time: [32, 67]
+  Agent 99 used 9 waiting timesteps, 45 remaining
+[LNS] Expanding MDD for agent 99 by 9 timestep
+[LNS] Updated agent 99 entry/exit time: [1, 67]
+  Agent 103 used 9 waiting timesteps, 44 remaining
+[LNS] Expanding MDD for agent 103 by 9 timestep
+[LNS] Updated agent 103 entry/exit time: [6, 29]
+  Agent 106 used 9 waiting timesteps, 17 remaining
+[LNS] Expanding MDD for agent 106 by 9 timestep
+[LNS] Updated agent 106 entry/exit time: [23, 59]
+  Agent 107 used 9 waiting timesteps, 42 remaining
+[LNS] Expanding MDD for agent 107 by 9 timestep
+[LNS] Updated agent 107 entry/exit time: [14, 67]
+  Agent 114 used 9 waiting timesteps, 40 remaining
+[LNS] Expanding MDD for agent 114 by 9 timestep
+[LNS] Updated agent 114 entry/exit time: [3, 33]
+  Agent 126 used 9 waiting timesteps, 27 remaining
+[LNS] Expanding MDD for agent 126 by 9 timestep
+[LNS] Updated agent 126 entry/exit time: [11, 42]
+  Agent 128 used 9 waiting timesteps, 52 remaining
+[LNS] Expanding MDD for agent 128 by 9 timestep
+[LNS] Updated agent 128 entry/exit time: [1, 67]
+  Agent 132 used 9 waiting timesteps, 27 remaining
+[LNS] Expanding MDD for agent 132 by 9 timestep
+[LNS] Updated agent 132 entry/exit time: [5, 39]
+  Agent 139 used 9 waiting timesteps, 35 remaining
+[LNS] Expanding MDD for agent 139 by 9 timestep
+[LNS] Updated agent 139 entry/exit time: [1, 30]
+  Agent 143 used 9 waiting timesteps, 33 remaining
+[LNS] Expanding MDD for agent 143 by 9 timestep
+[LNS] Updated agent 143 entry/exit time: [14, 67]
+  Agent 148 used 9 waiting timesteps, 31 remaining
+[LNS] Expanding MDD for agent 148 by 9 timestep
+[LNS] Updated agent 148 entry/exit time: [7, 35]
+  Agent 155 used 9 waiting timesteps, 36 remaining
+[LNS] Expanding MDD for agent 155 by 9 timestep
+[LNS] Updated agent 155 entry/exit time: [2, 37]
+  Agent 168 used 9 waiting timesteps, 36 remaining
+[LNS] Expanding MDD for agent 168 by 9 timestep
+[LNS] Updated agent 168 entry/exit time: [3, 37]
+  Agent 173 used 9 waiting timesteps, 33 remaining
+[LNS] Expanding MDD for agent 173 by 9 timestep
+[LNS] Updated agent 173 entry/exit time: [2, 23]
+  Agent 190 used 9 waiting timesteps, 30 remaining
+[LNS] Expanding MDD for agent 190 by 9 timestep
+[LNS] Updated agent 190 entry/exit time: [11, 49]
+  Agent 197 used 9 waiting timesteps, 36 remaining
+[LNS] Expanding MDD for agent 197 by 9 timestep
+[LNS] Updated agent 197 entry/exit time: [1, 41]
+  Agent 198 used 9 waiting timesteps, 11 remaining
+[LNS] Expanding MDD for agent 198 by 9 timestep
+[LNS] Updated agent 198 entry/exit time: [19, 62]
+[LNS] Time window extended: [1, 41] -> [1, 67]
+[LNS] Found 16 new agents in extended time window: 4 13 14 16 36 43 53 59 64 72 74 97 99 107 128 143 
 [LNS] Local zone agents: 74 117 59 107 198 197 192 190 185 181 67 126 64 183 56 52 196 69 128 40 99 155 33 92 4 75 36 154 134 7 25 16 143 42 13 199 72 43 161 14 132 15 47 106 18 136 19 12 139 171 24 87 89 21 148 93 94 97 29 156 103 113 114 173 17 144 37 164 168 177 53 180 
-[LNS] New agents already in local zone: 
-[LNS] Recreating local CNF with expanded MDDs
-[LNS] Attempting lazy solving with expanded MDD...
-[LNS] Starting lazy solving of conflict zone...
-[LNS] Adding 269 pre-discovered vertex collisions...
-[LNS] Adding 84 pre-discovered edge collisions...
-[LNS] Discovered edge collisions: 
-[LNS] Lazy solving iteration 1...
-DEBUG: CNF has 17843811 clauses
-DEBUG: First clause: 1 
-DEBUG: Adding 17843811 clauses to MiniSAT
-[LNS] Local problem is unsatisfiable after 1 iterations
-[LNS] No Solution found -> Safety run solving without assignment
-[LNS] Lazy solving iteration 2...
-DEBUG: CNF has 17843811 clauses
-DEBUG: First clause: 1 
-DEBUG: Adding 17843811 clauses to MiniSAT
-[LNS] Local problem is unsatisfiable after 2 iterations
-[LNS] No Solution found + Safety run failed -> UNSAT
-[LNS] Failed to find local solution after 10000 iterations
-[LNS] Local problem appears to be unsatisfiable in current zone
-[LNS] Expanded MDD did not resolve conflicts, trying next agent...
-[LNS] Current conflicts: 275
-[LNS] Updated collision tracking: 269 vertex collisions, 84 edge collisions
-[LNS] Waiting time attempt 7...
-[LNS] No more waiting time available for conflict resolution
-[LNS] Waiting time strategies exhausted, restoring backup...
-[LNS] Restored waiting times from backup
-[LNS] Waiting time strategy failed, checking bucket size...
-[LNS] Original bucket coverage: 4.03646% of map (93/2304 cells)
-[LNS] Original bucket coverage is 4.03646%, can still expand. Will try expansion factor 1
-[LNS] Attempting resolution with expansion factor 1...
-[LNS] ERROR: not an error but HERE STARTS THE EXPANSION STRATEGY
-[LNS] Expanding bucket with expansion factor 1...
-[LNS] Restoring original waiting times...
-[LNS] Restored waiting times from backup
-[LNS] Creating expanded bucket with offset 2 (original: 1)
-[LNS] Expanded bucket contains 151 positions (original: 93)
-[LNS] Checking 58 new positions for conflicts (efficient approach)
-  Found newly touched conflict 36 at position (15,29)
-[LNS] ERROR: Conflict in new zone 211 was already in the original bucket/previous zone
-  Found newly touched conflict 117 at position (17,28)
-  Found newly touched conflict 435 at position (17,29)
-  Found newly touched conflict 188 at position (17,30)
-[LNS] ERROR: Conflict in new zone 221 was already in the original bucket/previous zone
-  Found newly touched conflict 264 at position (17,30)
-  Found newly touched conflict 436 at position (17,30)
-  Found newly touched conflict 20 at position (17,31)
-  Found newly touched conflict 59 at position (17,36)
-  Found newly touched conflict 451 at position (24,24)
-  Found newly touched conflict 483 at position (24,24)
-  Found newly touched conflict 243 at position (24,36)
-  Found newly touched conflict 484 at position (25,24)
-  Found newly touched conflict 434 at position (25,30)
-  Found newly touched conflict 433 at position (26,30)
-  Found newly touched conflict 399 at position (26,34)
-  Found newly touched conflict 34 at position (27,31)
-  Found newly touched conflict 136 at position (28,30)
-  Found newly touched conflict 347 at position (28,30)
-[LNS] ERROR: Conflict in new zone 69 was already in the original bucket/previous zone
-  Found newly touched conflict 19 at position (29,31)
-  Found newly touched conflict 330 at position (30,26)
-  Found newly touched conflict 363 at position (30,26)
-  Found newly touched conflict 108 at position (31,27)
-[LNS] Merging 22 newly touched conflicts into expanded bucket
-[LNS] After merging new conflicts, expanded bucket contains 206 positions
-[LNS] Iteration 1: Checking 55 new positions from merged conflicts
-  Found additional conflict 55 at position (15,27)
-  Found additional conflict 57 at position (15,36)
-  Found additional conflict 140 at position (17,37)
-  Found additional conflict 39 at position (23,24)
-  Found additional conflict 247 at position (23,24)
-  Found additional conflict 452 at position (24,23)
-  Found additional conflict 273 at position (25,22)
-  Found additional conflict 334 at position (25,22)
-  Found additional conflict 340 at position (25,22)
-  Found additional conflict 491 at position (25,22)
-  Found additional conflict 492 at position (25,23)
-  Found additional conflict 279 at position (26,24)
-  Found additional conflict 299 at position (26,24)
-  Found additional conflict 342 at position (26,24)
-  Found additional conflict 362 at position (26,24)
-  Found additional conflict 400 at position (27,34)
-  Found additional conflict 21 at position (28,31)
-  Found additional conflict 24 at position (28,31)
-  Found additional conflict 25 at position (28,31)
-  Found additional conflict 134 at position (33,27)
-  Found additional conflict 464 at position (33,27)
-[LNS] Found 0 additional conflicts in iteration 1
-[LNS] Iteration 2: Checking 40 new positions from merged conflicts
-  Found additional conflict 439 at position (13,36)
-  Found additional conflict 272 at position (14,26)
-  Found additional conflict 151 at position (14,27)
-  Found additional conflict 248 at position (14,37)
-  Found additional conflict 311 at position (14,37)
-  Found additional conflict 135 at position (15,26)
-  Found additional conflict 410 at position (18,38)
-  Found additional conflict 305 at position (22,23)
-  Found additional conflict 358 at position (22,23)
-  Found additional conflict 317 at position (23,22)
-  Found additional conflict 319 at position (23,22)
-  Found additional conflict 320 at position (23,22)
-  Found additional conflict 415 at position (27,22)
-  Found additional conflict 289 at position (27,23)
-  Found additional conflict 268 at position (27,36)
-  Found additional conflict 167 at position (28,35)
-  Found additional conflict 157 at position (33,25)
-  Found additional conflict 284 at position (33,26)
-  Found additional conflict 324 at position (33,26)
-  Found additional conflict 371 at position (33,26)
-  Found additional conflict 463 at position (33,28)
-  Found additional conflict 166 at position (33,29)
-  Found additional conflict 144 at position (34,27)
-  Found additional conflict 154 at position (34,28)
-  Found additional conflict 192 at position (34,28)
-  Found additional conflict 176 at position (35,27)
-[LNS] Found 0 additional conflicts in iteration 2
-[LNS] Iteration 3: Checking 66 new positions from merged conflicts
-  Found additional conflict 191 at position (11,36)
-  Found additional conflict 122 at position (12,35)
-  Found additional conflict 123 at position (12,35)
-  Found additional conflict 124 at position (12,35)
-  Found additional conflict 110 at position (12,36)
-  Found additional conflict 440 at position (12,36)
-  Found additional conflict 405 at position (13,25)
-  Found additional conflict 406 at position (14,25)
-  Found additional conflict 1 at position (14,39)
-  Found additional conflict 209 at position (15,24)
-  Found additional conflict 409 at position (18,39)
-  Found additional conflict 322 at position (20,23)
-  Found additional conflict 448 at position (22,21)
-  Found additional conflict 447 at position (22,22)
-  Found additional conflict 125 at position (23,21)
-  Found additional conflict 35 at position (27,21)
-  Found additional conflict 416 at position (27,21)
-  Found additional conflict 155 at position (28,36)
-  Found additional conflict 145 at position (28,37)
-  Found additional conflict 87 at position (30,35)
-  Found additional conflict 171 at position (33,23)
-  Found additional conflict 182 at position (33,23)
-  Found additional conflict 226 at position (33,23)
-  Found additional conflict 298 at position (33,23)
-  Found additional conflict 160 at position (33,24)
-  Found additional conflict 245 at position (33,31)
-  Found additional conflict 259 at position (33,31)
-  Found additional conflict 315 at position (33,31)
-  Found additional conflict 161 at position (36,27)
-[LNS] Found 0 additional conflicts in iteration 3
-[LNS] Iteration 4: Checking 85 new positions from merged conflicts
-  Found additional conflict 72 at position (9,36)
-  Found additional conflict 73 at position (9,36)
-  Found additional conflict 74 at position (9,36)
-  Found additional conflict 169 at position (11,25)
-  Found additional conflict 467 at position (11,25)
-  Found additional conflict 127 at position (13,23)
-  Found additional conflict 200 at position (15,23)
-  Found additional conflict 476 at position (19,24)
-  Found additional conflict 475 at position (20,24)
-  Found additional conflict 189 at position (20,39)
-  Found additional conflict 56 at position (28,20)
-  Found additional conflict 128 at position (29,38)
-  Found additional conflict 382 at position (31,24)
-  Found additional conflict 68 at position (31,36)
-  Found additional conflict 88 at position (32,35)
-  Found additional conflict 179 at position (33,22)
-  Found additional conflict 196 at position (33,22)
-  Found additional conflict 236 at position (33,22)
-  Found additional conflict 290 at position (33,22)
-  Found additional conflict 357 at position (33,22)
-  Found additional conflict 119 at position (33,33)
-  Found additional conflict 232 at position (34,31)
-[LNS] Found 0 additional conflicts in iteration 4
-[LNS] Iteration 5: Checking 67 new positions from merged conflicts
-  Found additional conflict 93 at position (7,36)
-  Found additional conflict 64 at position (9,37)
-  Found additional conflict 81 at position (10,24)
-  Found additional conflict 150 at position (10,24)
-  Found additional conflict 426 at position (10,24)
-  Found additional conflict 269 at position (10,25)
-  Found additional conflict 468 at position (10,25)
-  Found additional conflict 101 at position (11,23)
-  Found additional conflict 286 at position (11,24)
-  Found additional conflict 115 at position (12,23)
-  Found additional conflict 246 at position (12,23)
-  Found additional conflict 222 at position (13,22)
-  Found additional conflict 142 at position (21,38)
-  Found additional conflict 129 at position (21,39)
-  Found additional conflict 163 at position (22,39)
-  Found additional conflict 460 at position (22,39)
-  Found additional conflict 348 at position (28,18)
-  Found additional conflict 52 at position (31,37)
-  Found additional conflict 43 at position (31,38)
-  Found additional conflict 218 at position (32,21)
-  Found additional conflict 275 at position (32,21)
-  Found additional conflict 109 at position (33,34)
-  Found additional conflict 53 at position (34,34)
-[LNS] Found 0 additional conflicts in iteration 5
-[LNS] Iteration 6: Checking 56 new positions from merged conflicts
-  Found additional conflict 302 at position (6,35)
-  Found additional conflict 116 at position (7,34)
-  Found additional conflict 104 at position (7,35)
-  Found additional conflict 113 at position (7,35)
-  Found additional conflict 114 at position (7,35)
-  Found additional conflict 89 at position (9,23)
-  Found additional conflict 77 at position (9,24)
-  Found additional conflict 425 at position (9,24)
-  Found additional conflict 91 at position (10,23)
-  Found additional conflict 147 at position (22,38)
-  Found additional conflict 459 at position (23,39)
-  Found additional conflict 490 at position (26,18)
-  Found additional conflict 12 at position (27,17)
-  Found additional conflict 228 at position (29,18)
-  Found additional conflict 75 at position (36,34)
-[LNS] Found 0 additional conflicts in iteration 6
-[LNS] Iteration 7: Checking 40 new positions from merged conflicts
-  Found additional conflict 294 at position (6,34)
-  Found additional conflict 354 at position (6,34)
-  Found additional conflict 131 at position (7,33)
-  Found additional conflict 277 at position (7,33)
-  Found additional conflict 350 at position (25,19)
-  Found additional conflict 489 at position (26,19)
-  Found additional conflict 257 at position (37,34)
-  Found additional conflict 424 at position (38,34)
-[LNS] Found 0 additional conflicts in iteration 7
-[LNS] Iteration 8: Checking 17 new positions from merged conflicts
-  Found additional conflict 462 at position (37,32)
-  Found additional conflict 461 at position (38,32)
-  Found additional conflict 423 at position (39,34)
-[LNS] Found 0 additional conflicts in iteration 8
-[LNS] Iteration 9: Checking 11 new positions from merged conflicts
-  Found additional conflict 13 at position (37,31)
-[LNS] Found 0 additional conflicts in iteration 9
-[LNS] Iteration 10: Checking 2 new positions from merged conflicts
-[LNS] Final expanded bucket contains 590 positions with 255 conflicts (original: 85)
-[LNS] creating zone with expanded bucket...
-[LNS] previous time window: [1, 41]
-[LNS] Expanded zone time window: [0, 53]
-[LNS] Found 155 agents in expanded zone (original: 72)
-[LNS] Zone contains Agent 0 local segment t=[14,53] len=40
-[LNS] Zone contains Agent 2 local segment t=[15,26] len=12
-[LNS] Zone contains Agent 4 local segment t=[20,53] len=34
-[LNS] Zone contains Agent 5 local segment t=[19,53] len=35
-[LNS] Zone contains Agent 7 local segment t=[17,38] len=22
-[LNS] Zone contains Agent 9 local segment t=[12,53] len=42
-[LNS] Zone contains Agent 11 local segment t=[0,3] len=4
-[LNS] Zone contains Agent 12 local segment t=[0,12] len=13
-[LNS] Zone contains Agent 13 local segment t=[9,53] len=45
-[LNS] Zone contains Agent 14 local segment t=[0,53] len=54
-[LNS] Zone contains Agent 15 local segment t=[0,27] len=28
-[LNS] Zone contains Agent 16 local segment t=[16,53] len=38
-[LNS] Zone contains Agent 17 local segment t=[6,53] len=48
-[LNS] Zone contains Agent 18 local segment t=[10,40] len=31
-[LNS] Zone contains Agent 19 local segment t=[0,42] len=43
-[LNS] Zone contains Agent 20 local segment t=[47,47] len=1
-[LNS] Zone contains Agent 21 local segment t=[14,43] len=30
-[LNS] Zone contains Agent 22 local segment t=[0,53] len=54
-[LNS] Zone contains Agent 23 local segment t=[10,53] len=44
-[LNS] Zone contains Agent 24 local segment t=[5,33] len=29
-[LNS] Zone contains Agent 25 local segment t=[11,40] len=30
-[LNS] Zone contains Agent 26 local segment t=[21,25] len=5
-[LNS] Zone contains Agent 27 local segment t=[17,34] len=18
-[LNS] Zone contains Agent 28 local segment t=[9,19] len=11
-[LNS] Zone contains Agent 29 local segment t=[12,39] len=28
-[LNS] Zone contains Agent 30 local segment t=[22,53] len=32
-[LNS] Zone contains Agent 32 local segment t=[0,1] len=2
-[LNS] Zone contains Agent 33 local segment t=[7,29] len=23
-[LNS] Zone contains Agent 34 local segment t=[19,53] len=35
-[LNS] Zone contains Agent 35 local segment t=[0,1] len=2
-[LNS] Zone contains Agent 36 local segment t=[0,53] len=54
-[LNS] Zone contains Agent 37 local segment t=[14,53] len=40
-[LNS] Zone contains Agent 39 local segment t=[0,8] len=9
-[LNS] Zone contains Agent 40 local segment t=[0,53] len=54
-[LNS] Zone contains Agent 41 local segment t=[10,12] len=3
-[LNS] Zone contains Agent 42 local segment t=[0,38] len=39
-[LNS] Zone contains Agent 43 local segment t=[9,53] len=45
-[LNS] Zone contains Agent 44 local segment t=[0,4] len=5
-[LNS] Zone contains Agent 45 local segment t=[2,28] len=27
-[LNS] Zone contains Agent 47 local segment t=[0,18] len=19
-[LNS] Zone contains Agent 48 local segment t=[0,0] len=1
-[LNS] Zone contains Agent 49 local segment t=[1,20] len=20
-[LNS] Zone contains Agent 50 local segment t=[12,53] len=42
-[LNS] Zone contains Agent 51 local segment t=[13,48] len=36
-[LNS] Zone contains Agent 52 local segment t=[3,35] len=33
-[LNS] Zone contains Agent 53 local segment t=[10,53] len=44
-[LNS] Zone contains Agent 56 local segment t=[10,46] len=37
-[LNS] Zone contains Agent 57 local segment t=[0,13] len=14
-[LNS] Zone contains Agent 58 local segment t=[22,29] len=8
-[LNS] Zone contains Agent 59 local segment t=[0,53] len=54
-[LNS] Zone contains Agent 61 local segment t=[13,53] len=41
-[LNS] Zone contains Agent 62 local segment t=[4,14] len=11
-[LNS] Zone contains Agent 63 local segment t=[10,35] len=26
-[LNS] Zone contains Agent 64 local segment t=[0,53] len=54
-[LNS] Zone contains Agent 65 local segment t=[0,23] len=24
-[LNS] Zone contains Agent 66 local segment t=[3,26] len=24
-[LNS] Zone contains Agent 67 local segment t=[11,45] len=35
-[LNS] Zone contains Agent 68 local segment t=[11,35] len=25
-[LNS] Zone contains Agent 69 local segment t=[16,42] len=27
-[LNS] Zone contains Agent 70 local segment t=[0,35] len=36
-[LNS] Zone contains Agent 71 local segment t=[12,24] len=13
-[LNS] Zone contains Agent 72 local segment t=[5,53] len=49
-[LNS] Zone contains Agent 74 local segment t=[39,53] len=15
-[LNS] Zone contains Agent 75 local segment t=[0,53] len=54
-[LNS] Zone contains Agent 76 local segment t=[4,29] len=26
-[LNS] Zone contains Agent 77 local segment t=[1,20] len=20
-[LNS] Zone contains Agent 80 local segment t=[5,53] len=49
-[LNS] Zone contains Agent 81 local segment t=[8,19] len=12
-[LNS] Zone contains Agent 82 local segment t=[7,27] len=21
-[LNS] Zone contains Agent 83 local segment t=[6,53] len=48
-[LNS] Zone contains Agent 84 local segment t=[0,28] len=29
-[LNS] Zone contains Agent 86 local segment t=[5,13] len=9
-[LNS] Zone contains Agent 87 local segment t=[0,13] len=14
-[LNS] Zone contains Agent 88 local segment t=[21,53] len=33
-[LNS] Zone contains Agent 89 local segment t=[11,44] len=34
-[LNS] Zone contains Agent 91 local segment t=[7,27] len=21
-[LNS] Zone contains Agent 92 local segment t=[0,20] len=21
-[LNS] Zone contains Agent 93 local segment t=[0,53] len=54
-[LNS] Zone contains Agent 94 local segment t=[0,31] len=32
-[LNS] Zone contains Agent 95 local segment t=[2,2] len=1
-[LNS] Zone contains Agent 97 local segment t=[24,53] len=30
-[LNS] Zone contains Agent 98 local segment t=[0,53] len=54
-[LNS] Zone contains Agent 99 local segment t=[0,53] len=54
-[LNS] Zone contains Agent 100 local segment t=[0,1] len=2
-[LNS] Zone contains Agent 101 local segment t=[14,53] len=40
-[LNS] Zone contains Agent 102 local segment t=[0,15] len=16
-[LNS] Zone contains Agent 103 local segment t=[0,23] len=24
-[LNS] Zone contains Agent 104 local segment t=[35,46] len=12
-[LNS] Zone contains Agent 105 local segment t=[0,22] len=23
-[LNS] Zone contains Agent 106 local segment t=[14,35] len=22
-[LNS] Zone contains Agent 107 local segment t=[5,53] len=49
-[LNS] Zone contains Agent 108 local segment t=[16,53] len=38
-[LNS] Zone contains Agent 109 local segment t=[9,12] len=4
-[LNS] Zone contains Agent 111 local segment t=[1,5] len=5
-[LNS] Zone contains Agent 112 local segment t=[0,11] len=12
-[LNS] Zone contains Agent 113 local segment t=[0,30] len=31
-[LNS] Zone contains Agent 114 local segment t=[0,19] len=20
-[LNS] Zone contains Agent 115 local segment t=[0,3] len=4
-[LNS] Zone contains Agent 117 local segment t=[27,53] len=27
-[LNS] Zone contains Agent 118 local segment t=[4,17] len=14
-[LNS] Zone contains Agent 120 local segment t=[0,38] len=39
-[LNS] Zone contains Agent 123 local segment t=[11,53] len=43
-[LNS] Zone contains Agent 124 local segment t=[14,31] len=18
-[LNS] Zone contains Agent 125 local segment t=[41,46] len=6
-[LNS] Zone contains Agent 126 local segment t=[0,37] len=38
-[LNS] Zone contains Agent 128 local segment t=[0,53] len=54
-[LNS] Zone contains Agent 129 local segment t=[13,13] len=1
-[LNS] Zone contains Agent 131 local segment t=[0,24] len=25
-[LNS] Zone contains Agent 132 local segment t=[0,22] len=23
-[LNS] Zone contains Agent 133 local segment t=[37,44] len=8
-[LNS] Zone contains Agent 134 local segment t=[9,53] len=45
-[LNS] Zone contains Agent 135 local segment t=[0,26] len=27
-[LNS] Zone contains Agent 136 local segment t=[23,52] len=30
-[LNS] Zone contains Agent 138 local segment t=[0,18] len=19
-[LNS] Zone contains Agent 139 local segment t=[0,20] len=21
-[LNS] Zone contains Agent 143 local segment t=[6,53] len=48
-[LNS] Zone contains Agent 144 local segment t=[21,53] len=33
-[LNS] Zone contains Agent 145 local segment t=[17,53] len=37
-[LNS] Zone contains Agent 146 local segment t=[10,53] len=44
-[LNS] Zone contains Agent 147 local segment t=[5,22] len=18
-[LNS] Zone contains Agent 148 local segment t=[0,29] len=30
-[LNS] Zone contains Agent 149 local segment t=[0,10] len=11
-[LNS] Zone contains Agent 152 local segment t=[0,2] len=3
-[LNS] Zone contains Agent 153 local segment t=[7,40] len=34
-[LNS] Zone contains Agent 154 local segment t=[2,19] len=18
-[LNS] Zone contains Agent 155 local segment t=[0,25] len=26
-[LNS] Zone contains Agent 156 local segment t=[6,37] len=32
-[LNS] Zone contains Agent 158 local segment t=[21,53] len=33
-[LNS] Zone contains Agent 160 local segment t=[2,4] len=3
-[LNS] Zone contains Agent 161 local segment t=[0,23] len=24
-[LNS] Zone contains Agent 163 local segment t=[13,30] len=18
-[LNS] Zone contains Agent 164 local segment t=[14,48] len=35
-[LNS] Zone contains Agent 165 local segment t=[24,53] len=30
-[LNS] Zone contains Agent 168 local segment t=[3,17] len=15
-[LNS] Zone contains Agent 171 local segment t=[0,24] len=25
-[LNS] Zone contains Agent 172 local segment t=[16,19] len=4
-[LNS] Zone contains Agent 173 local segment t=[0,27] len=28
-[LNS] Zone contains Agent 174 local segment t=[5,15] len=11
-[LNS] Zone contains Agent 175 local segment t=[3,4] len=2
-[LNS] Zone contains Agent 177 local segment t=[0,24] len=25
-[LNS] Zone contains Agent 180 local segment t=[2,53] len=52
-[LNS] Zone contains Agent 181 local segment t=[0,28] len=29
-[LNS] Zone contains Agent 182 local segment t=[0,15] len=16
-[LNS] Zone contains Agent 183 local segment t=[7,53] len=47
-[LNS] Zone contains Agent 185 local segment t=[0,17] len=18
-[LNS] Zone contains Agent 186 local segment t=[3,3] len=1
-[LNS] Zone contains Agent 190 local segment t=[0,53] len=54
-[LNS] Zone contains Agent 192 local segment t=[0,14] len=15
-[LNS] Zone contains Agent 193 local segment t=[0,24] len=25
-[LNS] Zone contains Agent 194 local segment t=[3,53] len=51
-[LNS] Zone contains Agent 195 local segment t=[9,53] len=45
-[LNS] Zone contains Agent 196 local segment t=[0,16] len=17
-[LNS] Zone contains Agent 197 local segment t=[0,20] len=21
-[LNS] Zone contains Agent 198 local segment t=[6,53] len=48
-[LNS] Zone contains Agent 199 local segment t=[31,53] len=23
-[LNS] Trying waiting time strategy with expanded zone...
-[LNS] Added 132 new vertex collisions and 38 new edge collisions to bucket tracking
-[LNS] Using 255 conflict indices (original: 85, newly touched: 170)
-[LNS] Starting waiting time strategy...
-[LNS] Chosen agents involved in conflicts: 0 4 9 13 14 15 16 22 23 25 33 36 37 40 43 50 53 56 57 59 62 63 64 67 68 70 72 74 75 83 87 88 89 91 92 93 94 97 98 99 101 103 106 107 108 113 118 123 126 128 132 139 143 145 146 147 153 155 158 161 165 168 171 173 180 182 183 190 192 194 197 198 199 
-[LNS] Found 73 agents in conflicts with, all with waiting time:
-[LNS] Waiting time attempt 1...
-[LNS] Will expand MDD for 73 chosen agents involved in 248 conflicts
-  Agent 0 used 1 waiting timesteps, 58 remaining
-[LNS] Expanding MDD for agent 0 by 1 timestep
-[LNS] Updated agent 0 entry/exit time: [14, 54]
-  Agent 4 used 1 waiting timesteps, 54 remaining
-[LNS] Expanding MDD for agent 4 by 1 timestep
-[LNS] Updated agent 4 entry/exit time: [20, 54]
-  Agent 9 used 1 waiting timesteps, 59 remaining
-[LNS] Expanding MDD for agent 9 by 1 timestep
-[LNS] Updated agent 9 entry/exit time: [12, 54]
-  Agent 13 used 1 waiting timesteps, 53 remaining
-[LNS] Expanding MDD for agent 13 by 1 timestep
-[LNS] Updated agent 13 entry/exit time: [9, 54]
-  Agent 14 used 1 waiting timesteps, 60 remaining
-[LNS] Expanding MDD for agent 14 by 1 timestep
-[LNS] Updated agent 14 entry/exit time: [0, 54]
-  Agent 15 used 1 waiting timesteps, 49 remaining
-[LNS] Expanding MDD for agent 15 by 1 timestep
-[LNS] Updated agent 15 entry/exit time: [0, 28]
-  Agent 16 used 1 waiting timesteps, 49 remaining
-[LNS] Expanding MDD for agent 16 by 1 timestep
-[LNS] Updated agent 16 entry/exit time: [16, 54]
-  Agent 22 used 1 waiting timesteps, 61 remaining
-[LNS] Expanding MDD for agent 22 by 1 timestep
-[LNS] Updated agent 22 entry/exit time: [0, 54]
-  Agent 23 used 1 waiting timesteps, 62 remaining
-[LNS] Expanding MDD for agent 23 by 1 timestep
-[LNS] Updated agent 23 entry/exit time: [10, 54]
-  Agent 25 used 1 waiting timesteps, 37 remaining
-[LNS] Expanding MDD for agent 25 by 1 timestep
-[LNS] Updated agent 25 entry/exit time: [11, 41]
-  Agent 33 used 1 waiting timesteps, 50 remaining
-[LNS] Expanding MDD for agent 33 by 1 timestep
-[LNS] Updated agent 33 entry/exit time: [7, 30]
-  Agent 36 used 1 waiting timesteps, 72 remaining
-[LNS] Expanding MDD for agent 36 by 1 timestep
-[LNS] Updated agent 36 entry/exit time: [0, 54]
-  Agent 37 used 1 waiting timesteps, 35 remaining
-[LNS] Expanding MDD for agent 37 by 1 timestep
-[LNS] Updated agent 37 entry/exit time: [14, 54]
-  Agent 40 used 1 waiting timesteps, 51 remaining
-[LNS] Expanding MDD for agent 40 by 1 timestep
-[LNS] Updated agent 40 entry/exit time: [0, 54]
-  Agent 43 used 1 waiting timesteps, 58 remaining
-[LNS] Expanding MDD for agent 43 by 1 timestep
-[LNS] Updated agent 43 entry/exit time: [9, 54]
-  Agent 50 used 1 waiting timesteps, 66 remaining
-[LNS] Expanding MDD for agent 50 by 1 timestep
-[LNS] Updated agent 50 entry/exit time: [12, 54]
-  Agent 53 used 1 waiting timesteps, 45 remaining
-[LNS] Expanding MDD for agent 53 by 1 timestep
-[LNS] Updated agent 53 entry/exit time: [10, 54]
-  Agent 56 used 1 waiting timesteps, 19 remaining
-[LNS] Expanding MDD for agent 56 by 1 timestep
-[LNS] Updated agent 56 entry/exit time: [10, 47]
-  Agent 57 used 1 waiting timesteps, 68 remaining
-[LNS] Expanding MDD for agent 57 by 1 timestep
-[LNS] Updated agent 57 entry/exit time: [0, 14]
-  Agent 59 used 1 waiting timesteps, 71 remaining
-[LNS] Expanding MDD for agent 59 by 1 timestep
-[LNS] Updated agent 59 entry/exit time: [0, 54]
-  Agent 62 used 1 waiting timesteps, 60 remaining
-[LNS] Expanding MDD for agent 62 by 1 timestep
-[LNS] Updated agent 62 entry/exit time: [4, 15]
-  Agent 63 used 1 waiting timesteps, 45 remaining
-[LNS] Expanding MDD for agent 63 by 1 timestep
-[LNS] Updated agent 63 entry/exit time: [10, 36]
-  Agent 64 used 1 waiting timesteps, 69 remaining
-[LNS] Expanding MDD for agent 64 by 1 timestep
-[LNS] Updated agent 64 entry/exit time: [0, 54]
-  Agent 67 used 1 waiting timesteps, 30 remaining
-[LNS] Expanding MDD for agent 67 by 1 timestep
-[LNS] Updated agent 67 entry/exit time: [11, 46]
-  Agent 68 used 1 waiting timesteps, 38 remaining
-[LNS] Expanding MDD for agent 68 by 1 timestep
-[LNS] Updated agent 68 entry/exit time: [11, 36]
-  Agent 70 used 1 waiting timesteps, 43 remaining
-[LNS] Expanding MDD for agent 70 by 1 timestep
-[LNS] Updated agent 70 entry/exit time: [0, 36]
-  Agent 72 used 1 waiting timesteps, 56 remaining
-[LNS] Expanding MDD for agent 72 by 1 timestep
-[LNS] Updated agent 72 entry/exit time: [5, 54]
-  Agent 74 used 1 waiting timesteps, 26 remaining
-[LNS] Expanding MDD for agent 74 by 1 timestep
-[LNS] Updated agent 74 entry/exit time: [39, 54]
-  Agent 75 used 1 waiting timesteps, 56 remaining
-[LNS] Expanding MDD for agent 75 by 1 timestep
-[LNS] Updated agent 75 entry/exit time: [0, 54]
-  Agent 83 used 1 waiting timesteps, 65 remaining
-[LNS] Expanding MDD for agent 83 by 1 timestep
-[LNS] Updated agent 83 entry/exit time: [6, 54]
-  Agent 87 used 1 waiting timesteps, 66 remaining
-[LNS] Expanding MDD for agent 87 by 1 timestep
-[LNS] Updated agent 87 entry/exit time: [0, 14]
-  Agent 88 used 1 waiting timesteps, 40 remaining
-[LNS] Expanding MDD for agent 88 by 1 timestep
-[LNS] Updated agent 88 entry/exit time: [21, 54]
-  Agent 89 used 1 waiting timesteps, 32 remaining
-[LNS] Expanding MDD for agent 89 by 1 timestep
-[LNS] Updated agent 89 entry/exit time: [11, 45]
-  Agent 91 used 1 waiting timesteps, 42 remaining
-[LNS] Expanding MDD for agent 91 by 1 timestep
-[LNS] Updated agent 91 entry/exit time: [7, 28]
-  Agent 92 used 1 waiting timesteps, 53 remaining
-[LNS] Expanding MDD for agent 92 by 1 timestep
-[LNS] Updated agent 92 entry/exit time: [0, 21]
-  Agent 93 used 1 waiting timesteps, 56 remaining
-[LNS] Expanding MDD for agent 93 by 1 timestep
-[LNS] Updated agent 93 entry/exit time: [0, 54]
-  Agent 94 used 1 waiting timesteps, 47 remaining
-[LNS] Expanding MDD for agent 94 by 1 timestep
-[LNS] Updated agent 94 entry/exit time: [0, 32]
-  Agent 97 used 1 waiting timesteps, 46 remaining
-[LNS] Expanding MDD for agent 97 by 1 timestep
-[LNS] Updated agent 97 entry/exit time: [24, 54]
-  Agent 98 used 1 waiting timesteps, 77 remaining
-[LNS] Expanding MDD for agent 98 by 1 timestep
-[LNS] Updated agent 98 entry/exit time: [0, 54]
-  Agent 99 used 1 waiting timesteps, 70 remaining
-[LNS] Expanding MDD for agent 99 by 1 timestep
-[LNS] Updated agent 99 entry/exit time: [0, 54]
-  Agent 101 used 1 waiting timesteps, 44 remaining
-[LNS] Expanding MDD for agent 101 by 1 timestep
-[LNS] Updated agent 101 entry/exit time: [14, 54]
-  Agent 103 used 1 waiting timesteps, 57 remaining
-[LNS] Expanding MDD for agent 103 by 1 timestep
-[LNS] Updated agent 103 entry/exit time: [0, 24]
-  Agent 106 used 1 waiting timesteps, 42 remaining
-[LNS] Expanding MDD for agent 106 by 1 timestep
-[LNS] Updated agent 106 entry/exit time: [14, 36]
-  Agent 107 used 1 waiting timesteps, 66 remaining
-[LNS] Expanding MDD for agent 107 by 1 timestep
-[LNS] Updated agent 107 entry/exit time: [5, 54]
-  Agent 108 used 1 waiting timesteps, 64 remaining
-[LNS] Expanding MDD for agent 108 by 1 timestep
-[LNS] Updated agent 108 entry/exit time: [16, 54]
-  Agent 113 used 1 waiting timesteps, 43 remaining
-[LNS] Expanding MDD for agent 113 by 1 timestep
-[LNS] Updated agent 113 entry/exit time: [0, 31]
-  Agent 118 used 1 waiting timesteps, 59 remaining
-[LNS] Expanding MDD for agent 118 by 1 timestep
-[LNS] Updated agent 118 entry/exit time: [4, 18]
-  Agent 123 used 1 waiting timesteps, 69 remaining
-[LNS] Expanding MDD for agent 123 by 1 timestep
-[LNS] Updated agent 123 entry/exit time: [11, 54]
-  Agent 126 used 1 waiting timesteps, 42 remaining
-[LNS] Expanding MDD for agent 126 by 1 timestep
-[LNS] Updated agent 126 entry/exit time: [0, 38]
-  Agent 128 used 1 waiting timesteps, 77 remaining
-[LNS] Expanding MDD for agent 128 by 1 timestep
-[LNS] Updated agent 128 entry/exit time: [0, 54]
-  Agent 132 used 1 waiting timesteps, 52 remaining
-[LNS] Expanding MDD for agent 132 by 1 timestep
-[LNS] Updated agent 132 entry/exit time: [0, 23]
-  Agent 139 used 1 waiting timesteps, 52 remaining
-[LNS] Expanding MDD for agent 139 by 1 timestep
-[LNS] Updated agent 139 entry/exit time: [0, 21]
-  Agent 143 used 1 waiting timesteps, 58 remaining
-[LNS] Expanding MDD for agent 143 by 1 timestep
-[LNS] Updated agent 143 entry/exit time: [6, 54]
-  Agent 145 used 1 waiting timesteps, 63 remaining
-[LNS] Expanding MDD for agent 145 by 1 timestep
-[LNS] Updated agent 145 entry/exit time: [17, 54]
-  Agent 146 used 1 waiting timesteps, 53 remaining
-[LNS] Expanding MDD for agent 146 by 1 timestep
-[LNS] Updated agent 146 entry/exit time: [10, 54]
-  Agent 147 used 1 waiting timesteps, 29 remaining
-[LNS] Expanding MDD for agent 147 by 1 timestep
-[LNS] Updated agent 147 entry/exit time: [5, 23]
-  Agent 153 used 1 waiting timesteps, 31 remaining
-[LNS] Expanding MDD for agent 153 by 1 timestep
-[LNS] Updated agent 153 entry/exit time: [7, 41]
-  Agent 155 used 1 waiting timesteps, 56 remaining
-[LNS] Expanding MDD for agent 155 by 1 timestep
-[LNS] Updated agent 155 entry/exit time: [0, 26]
-  Agent 158 used 1 waiting timesteps, 45 remaining
-[LNS] Expanding MDD for agent 158 by 1 timestep
-[LNS] Updated agent 158 entry/exit time: [21, 54]
-  Agent 161 used 1 waiting timesteps, 58 remaining
-[LNS] Expanding MDD for agent 161 by 1 timestep
-[LNS] Updated agent 161 entry/exit time: [0, 24]
-  Agent 165 used 1 waiting timesteps, 56 remaining
-[LNS] Expanding MDD for agent 165 by 1 timestep
-[LNS] Updated agent 165 entry/exit time: [24, 54]
-  Agent 168 used 1 waiting timesteps, 61 remaining
-[LNS] Expanding MDD for agent 168 by 1 timestep
-[LNS] Updated agent 168 entry/exit time: [3, 18]
-  Agent 171 used 1 waiting timesteps, 56 remaining
-[LNS] Expanding MDD for agent 171 by 1 timestep
-[LNS] Updated agent 171 entry/exit time: [0, 25]
-  Agent 173 used 1 waiting timesteps, 41 remaining
-[LNS] Expanding MDD for agent 173 by 1 timestep
-[LNS] Updated agent 173 entry/exit time: [0, 28]
-  Agent 180 used 1 waiting timesteps, 55 remaining
-[LNS] Expanding MDD for agent 180 by 1 timestep
-[LNS] Updated agent 180 entry/exit time: [2, 54]
-  Agent 182 used 1 waiting timesteps, 63 remaining
-[LNS] Expanding MDD for agent 182 by 1 timestep
-[LNS] Updated agent 182 entry/exit time: [0, 16]
-  Agent 183 used 1 waiting timesteps, 46 remaining
-[LNS] Expanding MDD for agent 183 by 1 timestep
-[LNS] Updated agent 183 entry/exit time: [7, 54]
-  Agent 190 used 1 waiting timesteps, 55 remaining
-[LNS] Expanding MDD for agent 190 by 1 timestep
-[LNS] Updated agent 190 entry/exit time: [0, 54]
-  Agent 192 used 1 waiting timesteps, 67 remaining
-[LNS] Expanding MDD for agent 192 by 1 timestep
-[LNS] Updated agent 192 entry/exit time: [0, 15]
-  Agent 194 used 1 waiting timesteps, 66 remaining
-[LNS] Expanding MDD for agent 194 by 1 timestep
-[LNS] Updated agent 194 entry/exit time: [3, 54]
-  Agent 197 used 1 waiting timesteps, 61 remaining
-[LNS] Expanding MDD for agent 197 by 1 timestep
-[LNS] Updated agent 197 entry/exit time: [0, 21]
-  Agent 198 used 1 waiting timesteps, 36 remaining
-[LNS] Expanding MDD for agent 198 by 1 timestep
-[LNS] Updated agent 198 entry/exit time: [6, 54]
-  Agent 199 used 1 waiting timesteps, 26 remaining
-[LNS] Expanding MDD for agent 199 by 1 timestep
-[LNS] Updated agent 199 entry/exit time: [31, 54]
-[LNS] Time window extended: [0, 53] -> [0, 54]
-[LNS] Found 50 new agents in extended time window: 0 4 5 9 13 14 16 17 22 23 30 34 36 37 40 43 50 53 59 61 64 72 74 75 80 83 88 93 97 98 99 101 107 108 117 123 128 134 143 144 145 146 158 165 180 183 190 194 195 198 
-[LNS] Local zone agents: 199 198 197 196 195 194 193 192 190 186 185 183 182 181 180 177 175 174 173 172 171 168 165 164 163 161 160 158 69 67 65 62 58 57 56 53 52 51 50 49 48 47 45 44 43 42 41 40 39 37 36 35 16 143 14 12 139 11 138 68 9 136 66 7 134 64 5 132 34 17 144 63 4 131 33 15 61 2 129 13 59 0 29 156 18 145 19 146 20 147 21 148 22 149 23 24 25 152 26 153 27 154 28 155 30 32 70 71 72 74 75 76 77 80 81 82 83 84 86 87 88 89 91 92 93 94 95 97 98 99 100 101 102 103 104 105 106 107 108 109 111 112 113 114 115 117 118 120 123 124 125 126 128 133 135 
-[LNS] New agents already in local zone: 0 4 5 9 13 14 16 17 22 23 30 34 36 37 40 43 50 53 59 61 64 72 74 75 80 83 88 93 97 98 99 101 107 108 117 123 128 134 143 144 145 146 158 165 180 183 190 194 195 198 
-[LNS] New agent 5 was present at the previous last timestep
-[LNS] New agent 5 is a continuing agent
-[LNS] New agent 5 local segment t=[19,54] len=36
-[LNS] Created MDD for new agent 5
-[LNS] New agent 17 was present at the previous last timestep
-[LNS] New agent 17 is a continuing agent
-[LNS] New agent 17 local segment t=[6,54] len=49
-[LNS] Created MDD for new agent 17
-[LNS] New agent 30 was present at the previous last timestep
-[LNS] New agent 30 is a continuing agent
-[LNS] New agent 30 local segment t=[22,54] len=33
-[LNS] Created MDD for new agent 30
-[LNS] New agent 34 was present at the previous last timestep
-[LNS] New agent 34 is a continuing agent
-[LNS] New agent 34 local segment t=[19,54] len=36
-[LNS] Created MDD for new agent 34
-[LNS] New agent 61 was present at the previous last timestep
-[LNS] New agent 61 is a continuing agent
-[LNS] New agent 61 local segment t=[13,54] len=42
-[LNS] Created MDD for new agent 61
-[LNS] New agent 80 was present at the previous last timestep
-[LNS] New agent 80 is a continuing agent
-[LNS] New agent 80 local segment t=[5,54] len=50
-[LNS] Created MDD for new agent 80
-[LNS] New agent 117 was present at the previous last timestep
-[LNS] New agent 117 is a continuing agent
-[LNS] New agent 117 local segment t=[27,54] len=28
-[LNS] Created MDD for new agent 117
-[LNS] New agent 134 was present at the previous last timestep
-[LNS] New agent 134 is a continuing agent
-[LNS] New agent 134 local segment t=[9,54] len=46
-[LNS] Created MDD for new agent 134
-[LNS] New agent 144 was present at the previous last timestep
-[LNS] New agent 144 is a continuing agent
-[LNS] New agent 144 local segment t=[21,54] len=34
-[LNS] Created MDD for new agent 144
-[LNS] New agent 195 was present at the previous last timestep
-[LNS] New agent 195 is a continuing agent
-[LNS] New agent 195 local segment t=[9,54] len=46
-[LNS] Created MDD for new agent 195
+[LNS] New agents already in local zone: 4 13 14 16 36 43 53 59 64 72 74 97 99 107 128 143 
+[LNS] New agent 43 was not present at the previous last timestep
+[LNS] New agent 43 is a returning agent
+[LNS] New agent 43 entry/exit time: [17,58]
+[LNS] New agent 43 end time is not the same as new_end_t - 1
+[LNS] New agent 43 new_end_t: 67
+will relay on the agent path to stay in the zone until new_end_t
+[LNS] Expanded time window for agent 43 to [17, 67]
+[LNS] Expanded MDD for agent 43 to timestep 67
+[LNS] New agent 53 was not present at the previous last timestep
+[LNS] New agent 53 is a returning agent
+[LNS] New agent 53 entry/exit time: [19,58]
+[LNS] New agent 53 end time is not the same as new_end_t - 1
+[LNS] New agent 53 new_end_t: 67
+will relay on the agent path to stay in the zone until new_end_t
+[LNS] Expanded time window for agent 53 to [19, 67]
+[LNS] Expanded MDD for agent 53 to timestep 67
+[LNS] New agent 74 was not present at the previous last timestep
+[LNS] New agent 74 is a returning agent
+[LNS] New agent 74 entry/exit time: [58,58]
+[LNS] New agent 74 end time is not the same as new_end_t - 1
+[LNS] New agent 74 new_end_t: 67
+will relay on the agent path to stay in the zone until new_end_t
+[LNS] Expanded time window for agent 74 to [58, 67]
+[LNS] Expanded MDD for agent 74 to timestep 67
 [LNS] Recreating local CNF with expanded MDDs
