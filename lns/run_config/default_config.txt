@@ -2,11 +2,11 @@
 # Edit these values to configure your experiment
 
 # Map and scenario files
-MAP_FILE="mapf-map/empty-48-48.map"
-SCENARIO_FILE="temp_200_agents.scen"
+MAP_FILE="mapf-map/room-64-64-16.map"
+SCENARIO_FILE="mapf-scen-even/scen-even/room-64-64-16-even-1.scen"
 
 # Experiment parameters
-NUM_AGENTS=200
+NUM_AGENTS=100
 SCENARIO_INDEX=0
 SOLVER="minisat"
 SEED=42

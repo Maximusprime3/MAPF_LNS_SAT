@@ -219,11 +219,15 @@ std::vector<ScenarioEntry> SATSolverManager::create_dataframe_from_file(const st
             entry.map_name = tokens[1];
             entry.map_width = std::stoi(tokens[2]);
             entry.map_height = std::stoi(tokens[3]);
-            entry.start_x = std::stoi(tokens[4]);
-            entry.start_y = std::stoi(tokens[5]);
-            entry.goal_x = std::stoi(tokens[6]);
-            entry.goal_y = std::stoi(tokens[7]);
+            entry.start_x = std::stoi(tokens[5]);
+            entry.start_y = std::stoi(tokens[4]); //movingai is (y, x)
+            entry.goal_x = std::stoi(tokens[7]);
+            entry.goal_y = std::stoi(tokens[6]);
             entry.optimal_length = std::stoi(tokens[8]);
+            //print entry
+            //std::cout << "Entry: " << entry.start_x << "," << entry.start_y << " -> " << entry.goal_x << "," << entry.goal_y << std::endl;
+            //map width and height
+            //std::cout << "Map width: " << entry.map_width << ", Map height: " << entry.map_height << std::endl;
         } catch (const std::exception& e) {
             std::cerr << "Warning: Failed to parse scenario line: " << line << "\n" << e.what() << std::endl;
             continue;

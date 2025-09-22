@@ -70,7 +70,7 @@ static std::vector<std::vector<char>> mask_map_outside_diamond(
 
 // Helper: create a spatial conflict map for efficient conflict queries
 // Returns a 2D array where conflict_map[r][c] = conflict_index if there's a conflict at (r,c), -1 otherwise
-static std::vector<std::vector<std::vector<int>>> create_conflict_map(
+static std::vector<std::vector<std::vector<int>>> create_conflict_map_2D(
     const std::vector<std::pair<int,int>>& conflict_points,
     int rows, int cols) {
     std::vector<std::vector<std::vector<int>>> conflict_map(rows, std::vector<std::vector<int>>(cols));
@@ -84,7 +84,32 @@ static std::vector<std::vector<std::vector<int>>> create_conflict_map(
     
     return conflict_map;
 }
-
+static std::vector<std::vector<std::vector<int>>> create_conflict_map_3D(
+    const std::vector<ConflictMeta>& all_conflict_meta,
+    int rows, int cols, int timesteps) {
+    std::vector<std::vector<std::vector<int>>> conflict_map(rows, std::vector<std::vector<int>>(cols, std::vector<int>(timesteps)));
+    int idx = 0;
+    int x, y, t;
+    for (const auto& meta : all_conflict_meta) {
+        x = meta.pos1.first;
+        y = meta.pos1.second;
+        t = meta.timestep;
+        if (x >= 0 && x < rows && y >= 0 && y < cols && t >= 0 && t < timesteps) {
+            conflict_map[x][y][t] = idx;
+        }
+        idx++;
+        if (meta.is_edge) {
+            x = meta.pos2.first;
+            y = meta.pos2.second;
+            t = meta.timestep;
+            if (x >= 0 && x < rows && y >= 0 && y < cols && t >= 0 && t < timesteps) {
+                conflict_map[x][y][t] = idx;
+            }
+            idx++;
+        }
+    }
+    return conflict_map;
+}
 
 
 
@@ -178,8 +203,11 @@ static std::vector<DiamondBucket> build_diamond_buckets(
         index_set.insert((int)i);
         // Track earliest timestep incrementally
         int bucket_earliest_t = conflict_meta[i].timestep; //set to timestep of first conflict
-
-        
+        int bucket_latest_t = conflict_meta[i].timestep;
+        //set time window relvant for this conflict
+        int start_t = conflict_meta[i].timestep - offset;
+        int end_t = conflict_meta[i].timestep + offset;
+        bool changed_time_window = false;
 
         std::set<std::pair<int,int>> previous_shape;
         bool found_new_conflicts = true;
@@ -187,9 +215,16 @@ static std::vector<DiamondBucket> build_diamond_buckets(
             found_new_conflicts = false;
             // Use conflict_map dimensions implicitly via map overloads
             auto current_shape = create_shape_from_conflicts(bucket_conflicts, offset, map);
-            auto new_positions = find_new_positions(current_shape, previous_shape, map);
+            std::set<std::pair<int,int>> check_shape;
+            if (changed_time_window) {
+                check_shape = current_shape;
+            } else {
+                auto new_positions = find_new_positions(current_shape, previous_shape, map);
+                check_shape = new_positions;
+            }
+            
 
-            for (const auto& pos : new_positions) {
+            for (const auto& pos : check_shape) {
                 auto [r, c] = pos;
                 // Bounds guard to avoid OOB access
                 if (r < 0 || r >= rows || c < 0 || c >= cols) {
@@ -204,18 +239,39 @@ static std::vector<DiamondBucket> build_diamond_buckets(
                         continue;
                     }
                     if (diamond_used[conflict_idx]) {
-                        std::cerr << "[ERROR] Found already used conflict " << conflict_idx
-                                  << " at position (" << r << "," << c
-                                  << ") in new positions of diamond bucket." << std::endl;
+                        if (!changed_time_window) {
+                            if (conflict_meta[conflict_idx].timestep < start_t || conflict_meta[conflict_idx].timestep > end_t) {
+                                std::cerr << "[ERROR] Found already used conflict " << conflict_idx
+                                        << " at position (" << r << "," << c
+                                        << ") in new positions of diamond bucket." << std::endl;
+                            }
+                        }
                         continue;
                     }
                     if (!solved_conflict_indices.count(conflict_idx)) {
+                        if (conflict_meta[conflict_idx].timestep < start_t || conflict_meta[conflict_idx].timestep > end_t) {
+                            continue; //only include conflicts that are in the time window
+                        }
                         bucket_conflicts.push_back(conflict_points[conflict_idx]);
                         diamond_used[conflict_idx] = 1;
                         found_new_conflicts = true;
                         index_set.insert(conflict_idx);
                         if (conflict_idx >= 0 && conflict_idx < (int)conflict_meta.size()) {
                             bucket_earliest_t = std::min(bucket_earliest_t, conflict_meta[conflict_idx].timestep); //update earliest timestep of the bucket
+                            bucket_latest_t = std::max(bucket_latest_t, conflict_meta[conflict_idx].timestep);
+                            if (start_t == bucket_earliest_t - offset && end_t == bucket_latest_t + offset) {
+                                changed_time_window = false;
+                            }
+                            if (start_t > bucket_earliest_t-offset) {
+                                start_t = bucket_earliest_t - offset;
+                                changed_time_window = true;
+                            }
+                            if (end_t < bucket_latest_t+offset) {
+                                end_t = bucket_latest_t + offset;
+                                changed_time_window = true;
+                            }
+
+                            
                         }
                     }
                 }
@@ -1006,7 +1062,10 @@ lazy_solve_with_waiting_time(CurrentSolution& current_solution,
             //for safety update local_zone_paths with the new local_paths
             for (const auto& [agent_id, local_path] : using_waiting_time_result.local_paths) {
                 local_zone_paths[agent_id] = local_path;
-                local_entry_exit_time[agent_id] = std::make_pair(local_path.front().first, local_path.back().first);  
+                if (local_entry_exit_time.find(agent_id) == local_entry_exit_time.end()) {
+                    std::cout << "[LNS] ERROR: Local entry exit time not found for agent " << agent_id << std::endl;
+                    std::cout << "ERROR: THIS SHOULD NOT HAPPEN" << std::endl;
+                }
             }
 
             return LazySolveResult{true, using_waiting_time_result.local_paths, all_discovered_vertex_collisions, all_discovered_edge_collisions};
@@ -1557,7 +1616,7 @@ building_buckets:
         std::cout << "[LNS] Step 3: Building conflict buckets..." << std::endl;
         
         // Create spatial conflict map for efficient queries
-        auto conflict_map = create_conflict_map(conflict_points, rows, cols);
+        auto conflict_map = create_conflict_map_2D(conflict_points, rows, cols);
 
       
         auto diamond_buckets = build_diamond_buckets(conflict_points, conflict_map, problem.grid, solved_conflict_indices, conflict_meta, offset);
