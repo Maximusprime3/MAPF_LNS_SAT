@@ -1,0 +1,2899 @@
+[LNS] Loaded map 64x64, agents: 200
+[LNS] Map:
+.@...@.@........................@...@.....@...@.................
+.......@.............@...@.........@.........@....@.............
+......................@.........@.....................@....@....
+..@.@..@...........................@@.............@.@.....@....@
+......@..@.........@........@...................................
+.....@.@........@@............@...@..@......@.........@.....@...
+............@........@.....@..................@...@...@@......@.
+..@..........................@..........@........@..............
+......@.@..............@...........@....................@...@...
+@@................@....@..........................@....@.......@
+.....@.................@....................@....@.......@@.....
+.@...........................@.............@..............@.....
+.@..@.....@.................@.....@@..........................@.
+.........@@......@.@.............@..........@................@..
+....@....@..............@..@............@..@...@..........@.....
+....@............@...........@.@...@........@.....@.............
+..............................................@..@..............
+..@.......@...@...............................@..........@......
+......................@.@......@.....@@.......@...@.@...........
+@......@..........@....@..............................@....@....
+@.@..........@......@..@............@..@.......@.....@........@.
+....@.....@...@..@...........@.@@@..........@@..@........@......
+...............@.....@@....................@...............@....
+..@.@..@@@.@.....@..............@...@.........@.................
+..........@......@..............@........@.......@...@..........
+..................@..................................@.@.....@..
+@....@...@@...@..........@....................@.................
+........@.......@.@....................................@...@.@.@
+@................@.........@......@..@..............@...........
+....@..@..@@............@........................@..............
+..................................@..@...........@...........@..
+........@..........@.........@........@.....@..............@.@..
+................@...........@..............@........@........@..
+...@...@...........@.......@.....................@..............
+.....@.............@...................@.@................@.....
+...@.....@..........@@..........@..........................@....
+....@...@..............@..............@.@............@.......@..
+.......@....................................@.............@.....
+.................@@.....@....@................@.................
+.....@..@..........@....@....@@.........@..@....@..@.........@..
+..@.......@.@......@..........@.@@....................@....@....
+..............@...........................@....@................
+.....@...........@.............@....@........................@..
+....@......@........@........@......@..........@.....@.@........
+..@@....@..........@..@...............@.................@..@....
+..................@.........@@.....@.................@......@...
+...................@.........@...@.........@........@......@....
+..@...@.....@......................................@........@...
+@..............@............................@.....@...@@........
+............................@............@..@......@............
+.............................@.@@..........@....@......@..@.....
+.....@.....@................@@@.@......................@..@@....
+...@.@...@.........@............@...................@...........
+....@..................@.......@@.......@..@..........@....@.@..
+.....................@@...@..@...............@.......@..@......@
+...................@......@......@............@................@
+.......@..@..@.@..@.@..@@..@....@@..........@...................
+..................@...........................@@@...@...........
+...........................@....@.........@.....................
+........@..........@......@........@............................
+...............................@..................@.@...........
+........................@....................@.......@........@.
+..@..........................@..@...@.....@.@.........@.........
+@@.........@@@.............@....@..................@........@.@@
+[LNS] Agents (start -> goal):
+  Agent 0: (42,38) -> (8,9)
+  Agent 1: (52,39) -> (41,15)
+  Agent 2: (6,48) -> (11,45)
+  Agent 3: (62,7) -> (7,55)
+  Agent 4: (10,0) -> (63,40)
+  Agent 5: (22,63) -> (39,41)
+  Agent 6: (35,14) -> (7,41)
+  Agent 7: (33,0) -> (41,38)
+  Agent 8: (15,24) -> (21,18)
+  Agent 9: (45,34) -> (43,33)
+  Agent 10: (10,16) -> (4,25)
+  Agent 11: (53,19) -> (42,54)
+  Agent 12: (4,26) -> (35,27)
+  Agent 13: (8,43) -> (56,48)
+  Agent 14: (5,0) -> (54,44)
+  Agent 15: (39,32) -> (52,61)
+  Agent 16: (18,59) -> (19,15)
+  Agent 17: (62,51) -> (0,34)
+  Agent 18: (33,12) -> (17,62)
+  Agent 19: (37,53) -> (30,7)
+  Agent 20: (62,0) -> (9,42)
+  Agent 21: (5,8) -> (34,25)
+  Agent 22: (44,15) -> (45,45)
+  Agent 23: (9,28) -> (13,43)
+  Agent 24: (8,16) -> (16,26)
+  Agent 25: (13,25) -> (53,14)
+  Agent 26: (41,45) -> (39,28)
+  Agent 27: (44,34) -> (44,40)
+  Agent 28: (51,52) -> (45,19)
+  Agent 29: (52,63) -> (31,60)
+  Agent 30: (46,47) -> (30,12)
+  Agent 31: (49,40) -> (63,43)
+  Agent 32: (0,56) -> (49,14)
+  Agent 33: (48,30) -> (61,60)
+  Agent 34: (23,39) -> (28,18)
+  Agent 35: (19,62) -> (28,47)
+  Agent 36: (59,0) -> (13,57)
+  Agent 37: (12,52) -> (60,5)
+  Agent 38: (10,53) -> (4,54)
+  Agent 39: (2,51) -> (14,17)
+  Agent 40: (15,33) -> (19,27)
+  Agent 41: (10,14) -> (62,22)
+  Agent 42: (2,57) -> (59,22)
+  Agent 43: (50,18) -> (48,16)
+  Agent 44: (50,33) -> (42,53)
+  Agent 45: (54,62) -> (4,55)
+  Agent 46: (1,63) -> (52,12)
+  Agent 47: (49,30) -> (36,42)
+  Agent 48: (35,40) -> (51,52)
+  Agent 49: (55,0) -> (15,57)
+  Agent 50: (55,56) -> (31,0)
+  Agent 51: (53,29) -> (37,17)
+  Agent 52: (28,32) -> (20,17)
+  Agent 53: (48,24) -> (27,58)
+  Agent 54: (50,35) -> (52,37)
+  Agent 55: (34,62) -> (7,8)
+  Agent 56: (59,61) -> (18,18)
+  Agent 57: (55,61) -> (58,53)
+  Agent 58: (25,52) -> (25,45)
+  Agent 59: (38,62) -> (46,7)
+  Agent 60: (61,47) -> (53,11)
+  Agent 61: (34,43) -> (36,41)
+  Agent 62: (5,10) -> (42,51)
+  Agent 63: (23,33) -> (45,47)
+  Agent 64: (6,38) -> (41,4)
+  Agent 65: (31,55) -> (0,44)
+  Agent 66: (63,61) -> (14,8)
+  Agent 67: (32,0) -> (47,58)
+  Agent 68: (16,62) -> (45,44)
+  Agent 69: (16,14) -> (19,13)
+  Agent 70: (2,34) -> (10,36)
+  Agent 71: (22,62) -> (19,50)
+  Agent 72: (50,56) -> (59,37)
+  Agent 73: (35,35) -> (58,31)
+  Agent 74: (57,29) -> (12,42)
+  Agent 75: (16,59) -> (3,23)
+  Agent 76: (4,5) -> (3,6)
+  Agent 77: (63,19) -> (21,19)
+  Agent 78: (60,56) -> (20,3)
+  Agent 79: (27,50) -> (57,11)
+  Agent 80: (27,2) -> (15,14)
+  Agent 81: (52,18) -> (41,26)
+  Agent 82: (52,14) -> (25,29)
+  Agent 83: (43,8) -> (48,41)
+  Agent 84: (49,55) -> (16,0)
+  Agent 85: (4,61) -> (27,7)
+  Agent 86: (36,57) -> (48,47)
+  Agent 87: (43,31) -> (36,57)
+  Agent 88: (63,46) -> (1,19)
+  Agent 89: (46,45) -> (34,44)
+  Agent 90: (29,53) -> (47,32)
+  Agent 91: (58,55) -> (25,22)
+  Agent 92: (57,49) -> (52,59)
+  Agent 93: (49,57) -> (38,25)
+  Agent 94: (20,6) -> (9,14)
+  Agent 95: (60,59) -> (46,6)
+  Agent 96: (25,15) -> (7,59)
+  Agent 97: (1,54) -> (41,59)
+  Agent 98: (0,63) -> (39,0)
+  Agent 99: (41,10) -> (50,63)
+  Agent 100: (51,44) -> (39,9)
+  Agent 101: (19,43) -> (10,46)
+  Agent 102: (3,17) -> (25,26)
+  Agent 103: (16,0) -> (59,59)
+  Agent 104: (46,16) -> (29,6)
+  Agent 105: (52,40) -> (2,43)
+  Agent 106: (2,45) -> (29,52)
+  Agent 107: (27,11) -> (46,58)
+  Agent 108: (17,45) -> (31,31)
+  Agent 109: (43,21) -> (12,16)
+  Agent 110: (16,50) -> (62,43)
+  Agent 111: (1,47) -> (18,30)
+  Agent 112: (37,4) -> (39,3)
+  Agent 113: (40,52) -> (40,55)
+  Agent 114: (57,42) -> (6,16)
+  Agent 115: (60,28) -> (16,22)
+  Agent 116: (56,35) -> (32,11)
+  Agent 117: (63,6) -> (60,9)
+  Agent 118: (30,57) -> (5,55)
+  Agent 119: (10,34) -> (6,31)
+  Agent 120: (39,4) -> (34,43)
+  Agent 121: (36,41) -> (46,27)
+  Agent 122: (42,41) -> (16,9)
+  Agent 123: (48,22) -> (62,61)
+  Agent 124: (12,16) -> (5,9)
+  Agent 125: (61,34) -> (5,8)
+  Agent 126: (34,63) -> (30,9)
+  Agent 127: (3,20) -> (63,61)
+  Agent 128: (12,55) -> (13,55)
+  Agent 129: (30,26) -> (15,0)
+  Agent 130: (61,50) -> (63,44)
+  Agent 131: (7,4) -> (31,15)
+  Agent 132: (4,59) -> (28,7)
+  Agent 133: (35,29) -> (29,42)
+  Agent 134: (53,49) -> (52,51)
+  Agent 135: (10,35) -> (41,60)
+  Agent 136: (48,57) -> (1,8)
+  Agent 137: (18,0) -> (41,56)
+  Agent 138: (0,62) -> (41,2)
+  Agent 139: (5,14) -> (16,35)
+  Agent 140: (5,62) -> (49,13)
+  Agent 141: (24,9) -> (37,16)
+  Agent 142: (13,48) -> (15,59)
+  Agent 143: (48,38) -> (50,44)
+  Agent 144: (56,42) -> (11,7)
+  Agent 145: (39,0) -> (9,58)
+  Agent 146: (53,33) -> (14,48)
+  Agent 147: (27,40) -> (18,44)
+  Agent 148: (5,28) -> (62,35)
+  Agent 149: (2,24) -> (54,3)
+  Agent 150: (53,18) -> (53,18)
+  Agent 151: (8,13) -> (40,53)
+  Agent 152: (43,5) -> (9,61)
+  Agent 153: (50,51) -> (54,10)
+  Agent 154: (45,47) -> (60,60)
+  Agent 155: (44,16) -> (26,15)
+  Agent 156: (4,27) -> (54,4)
+  Agent 157: (5,53) -> (3,53)
+  Agent 158: (1,59) -> (43,31)
+  Agent 159: (11,47) -> (58,19)
+  Agent 160: (27,51) -> (21,11)
+  Agent 161: (32,60) -> (13,1)
+  Agent 162: (44,58) -> (33,14)
+  Agent 163: (42,59) -> (11,4)
+  Agent 164: (11,17) -> (63,37)
+  Agent 165: (22,55) -> (59,23)
+  Agent 166: (1,31) -> (48,19)
+  Agent 167: (43,19) -> (22,38)
+  Agent 168: (59,62) -> (17,4)
+  Agent 169: (36,5) -> (23,60)
+  Agent 170: (4,55) -> (62,47)
+  Agent 171: (21,7) -> (50,47)
+  Agent 172: (12,9) -> (60,10)
+  Agent 173: (63,2) -> (3,38)
+  Agent 174: (24,59) -> (27,36)
+  Agent 175: (9,3) -> (42,41)
+  Agent 176: (59,29) -> (7,61)
+  Agent 177: (4,36) -> (60,39)
+  Agent 178: (43,33) -> (47,54)
+  Agent 179: (63,30) -> (0,6)
+  Agent 180: (36,15) -> (36,47)
+  Agent 181: (15,5) -> (47,63)
+  Agent 182: (53,46) -> (45,54)
+  Agent 183: (25,6) -> (44,46)
+  Agent 184: (24,58) -> (17,39)
+  Agent 185: (0,50) -> (19,48)
+  Agent 186: (11,0) -> (41,62)
+  Agent 187: (1,62) -> (60,34)
+  Agent 188: (63,10) -> (38,13)
+  Agent 189: (30,52) -> (11,24)
+  Agent 190: (41,26) -> (34,50)
+  Agent 191: (6,19) -> (44,48)
+  Agent 192: (39,2) -> (54,60)
+  Agent 193: (22,58) -> (36,56)
+  Agent 194: (10,2) -> (11,59)
+  Agent 195: (34,54) -> (6,49)
+  Agent 196: (63,21) -> (52,55)
+  Agent 197: (52,49) -> (0,21)
+  Agent 198: (62,8) -> (57,0)
+  Agent 199: (35,55) -> (60,32)
+
+[LNS] === Attempt with max_timesteps=103 ===
+[LNS] Creating MDDs with shortest paths + waiting time...
+[LNS] Created 200 MDDs with waiting time structure
+[LNS] Built MDDs with waiting time structure for 200 agents at makespan 103
+[LNS] Step 1: Sampling shortest paths and creating current solution...
+[LNS] Calculating waiting times for agents...
+  Agent 199 reaches goal at t=48, waiting time=55
+  Agent 198 reaches goal at t=13, waiting time=90
+  Agent 197 reaches goal at t=80, waiting time=23
+  Agent 196 reaches goal at t=45, waiting time=58
+  Agent 195 reaches goal at t=35, waiting time=68
+  Agent 194 reaches goal at t=62, waiting time=41
+  Agent 193 reaches goal at t=16, waiting time=87
+  Agent 192 reaches goal at t=73, waiting time=30
+  Agent 191 reaches goal at t=67, waiting time=36
+  Agent 190 reaches goal at t=31, waiting time=72
+  Agent 189 reaches goal at t=47, waiting time=56
+  Agent 188 reaches goal at t=28, waiting time=75
+  Agent 187 reaches goal at t=87, waiting time=16
+  Agent 186 reaches goal at t=92, waiting time=11
+  Agent 185 reaches goal at t=21, waiting time=82
+  Agent 184 reaches goal at t=26, waiting time=77
+  Agent 183 reaches goal at t=59, waiting time=44
+  Agent 182 reaches goal at t=16, waiting time=87
+  Agent 181 reaches goal at t=90, waiting time=13
+  Agent 180 reaches goal at t=34, waiting time=69
+  Agent 179 reaches goal at t=87, waiting time=16
+  Agent 178 reaches goal at t=27, waiting time=76
+  Agent 177 reaches goal at t=61, waiting time=42
+  Agent 176 reaches goal at t=84, waiting time=19
+  Agent 175 reaches goal at t=71, waiting time=32
+  Agent 174 reaches goal at t=26, waiting time=77
+  Agent 173 reaches goal at t=96, waiting time=7
+  Agent 172 reaches goal at t=55, waiting time=48
+  Agent 171 reaches goal at t=69, waiting time=34
+  Agent 170 reaches goal at t=66, waiting time=37
+  Agent 169 reaches goal at t=68, waiting time=35
+  Agent 168 reaches goal at t=100, waiting time=3
+  Agent 167 reaches goal at t=40, waiting time=63
+  Agent 166 reaches goal at t=59, waiting time=44
+  Agent 165 reaches goal at t=69, waiting time=34
+  Agent 164 reaches goal at t=72, waiting time=31
+  Agent 163 reaches goal at t=86, waiting time=17
+  Agent 162 reaches goal at t=55, waiting time=48
+  Agent 161 reaches goal at t=78, waiting time=25
+  Agent 160 reaches goal at t=46, waiting time=57
+  Agent 159 reaches goal at t=75, waiting time=28
+  Agent 158 reaches goal at t=70, waiting time=33
+  Agent 157 reaches goal at t=2, waiting time=101
+  Agent 156 reaches goal at t=73, waiting time=30
+  Agent 155 reaches goal at t=19, waiting time=84
+  Agent 154 reaches goal at t=28, waiting time=75
+  Agent 153 reaches goal at t=49, waiting time=54
+  Agent 152 reaches goal at t=90, waiting time=13
+  Agent 151 reaches goal at t=72, waiting time=31
+  Agent 150 reaches goal at t=0, waiting time=103
+  Agent 149 reaches goal at t=73, waiting time=30
+  Agent 148 reaches goal at t=64, waiting time=39
+  Agent 147 reaches goal at t=13, waiting time=90
+  Agent 146 reaches goal at t=54, waiting time=49
+  Agent 145 reaches goal at t=88, waiting time=15
+  Agent 144 reaches goal at t=80, waiting time=23
+  Agent 143 reaches goal at t=10, waiting time=93
+  Agent 142 reaches goal at t=13, waiting time=90
+  Agent 141 reaches goal at t=20, waiting time=83
+  Agent 140 reaches goal at t=93, waiting time=10
+  Agent 139 reaches goal at t=32, waiting time=71
+  Agent 138 reaches goal at t=101, waiting time=2
+  Agent 137 reaches goal at t=79, waiting time=24
+  Agent 136 reaches goal at t=96, waiting time=7
+  Agent 135 reaches goal at t=56, waiting time=47
+  Agent 134 reaches goal at t=3, waiting time=100
+  Agent 133 reaches goal at t=19, waiting time=84
+  Agent 132 reaches goal at t=76, waiting time=27
+  Agent 131 reaches goal at t=35, waiting time=68
+  Agent 130 reaches goal at t=8, waiting time=95
+  Agent 129 reaches goal at t=41, waiting time=62
+  Agent 128 reaches goal at t=1, waiting time=102
+  Agent 127 reaches goal at t=101, waiting time=2
+  Agent 126 reaches goal at t=60, waiting time=43
+  Agent 125 reaches goal at t=82, waiting time=21
+  Agent 124 reaches goal at t=14, waiting time=89
+  Agent 123 reaches goal at t=53, waiting time=50
+  Agent 122 reaches goal at t=58, waiting time=45
+  Agent 121 reaches goal at t=24, waiting time=79
+  Agent 120 reaches goal at t=44, waiting time=59
+  Agent 119 reaches goal at t=7, waiting time=96
+  Agent 118 reaches goal at t=29, waiting time=74
+  Agent 117 reaches goal at t=6, waiting time=97
+  Agent 116 reaches goal at t=48, waiting time=55
+  Agent 115 reaches goal at t=50, waiting time=53
+  Agent 114 reaches goal at t=77, waiting time=26
+  Agent 113 reaches goal at t=5, waiting time=98
+  Agent 112 reaches goal at t=3, waiting time=100
+  Agent 111 reaches goal at t=34, waiting time=69
+  Agent 110 reaches goal at t=53, waiting time=50
+  Agent 109 reaches goal at t=38, waiting time=65
+  Agent 108 reaches goal at t=28, waiting time=75
+  Agent 107 reaches goal at t=66, waiting time=37
+  Agent 106 reaches goal at t=34, waiting time=69
+  Agent 105 reaches goal at t=53, waiting time=50
+  Agent 104 reaches goal at t=27, waiting time=76
+  Agent 103 reaches goal at t=102, waiting time=1
+  Agent 102 reaches goal at t=31, waiting time=72
+  Agent 101 reaches goal at t=12, waiting time=91
+  Agent 100 reaches goal at t=47, waiting time=56
+  Agent 99 reaches goal at t=64, waiting time=39
+  Agent 98 reaches goal at t=102, waiting time=1
+  Agent 97 reaches goal at t=47, waiting time=56
+  Agent 96 reaches goal at t=62, waiting time=41
+  Agent 95 reaches goal at t=67, waiting time=36
+  Agent 94 reaches goal at t=19, waiting time=84
+  Agent 93 reaches goal at t=43, waiting time=60
+  Agent 92 reaches goal at t=15, waiting time=88
+  Agent 91 reaches goal at t=66, waiting time=37
+  Agent 90 reaches goal at t=39, waiting time=64
+  Agent 89 reaches goal at t=13, waiting time=90
+  Agent 88 reaches goal at t=89, waiting time=14
+  Agent 87 reaches goal at t=33, waiting time=70
+  Agent 86 reaches goal at t=22, waiting time=81
+  Agent 85 reaches goal at t=77, waiting time=26
+  Agent 84 reaches goal at t=90, waiting time=13
+  Agent 83 reaches goal at t=38, waiting time=65
+  Agent 82 reaches goal at t=42, waiting time=61
+  Agent 81 reaches goal at t=19, waiting time=84
+  Agent 80 reaches goal at t=24, waiting time=79
+  Agent 79 reaches goal at t=69, waiting time=34
+  Agent 78 reaches goal at t=93, waiting time=10
+  Agent 77 reaches goal at t=48, waiting time=55
+  Agent 76 reaches goal at t=2, waiting time=101
+  Agent 75 reaches goal at t=49, waiting time=54
+  Agent 74 reaches goal at t=58, waiting time=45
+  Agent 73 reaches goal at t=27, waiting time=76
+  Agent 72 reaches goal at t=28, waiting time=75
+  Agent 71 reaches goal at t=17, waiting time=86
+  Agent 70 reaches goal at t=10, waiting time=93
+  Agent 69 reaches goal at t=4, waiting time=99
+  Agent 68 reaches goal at t=47, waiting time=56
+  Agent 67 reaches goal at t=73, waiting time=30
+  Agent 66 reaches goal at t=102, waiting time=1
+  Agent 65 reaches goal at t=42, waiting time=61
+  Agent 64 reaches goal at t=69, waiting time=34
+  Agent 63 reaches goal at t=36, waiting time=67
+  Agent 62 reaches goal at t=78, waiting time=25
+  Agent 61 reaches goal at t=4, waiting time=99
+  Agent 60 reaches goal at t=44, waiting time=59
+  Agent 59 reaches goal at t=63, waiting time=40
+  Agent 58 reaches goal at t=7, waiting time=96
+  Agent 57 reaches goal at t=11, waiting time=92
+  Agent 56 reaches goal at t=84, waiting time=19
+  Agent 55 reaches goal at t=81, waiting time=22
+  Agent 54 reaches goal at t=4, waiting time=99
+  Agent 53 reaches goal at t=55, waiting time=48
+  Agent 52 reaches goal at t=23, waiting time=80
+  Agent 51 reaches goal at t=28, waiting time=75
+  Agent 50 reaches goal at t=80, waiting time=23
+  Agent 49 reaches goal at t=97, waiting time=6
+  Agent 48 reaches goal at t=28, waiting time=75
+  Agent 47 reaches goal at t=25, waiting time=78
+  Agent 46 reaches goal at t=102, waiting time=1
+  Agent 45 reaches goal at t=57, waiting time=46
+  Agent 44 reaches goal at t=28, waiting time=75
+  Agent 43 reaches goal at t=4, waiting time=99
+  Agent 42 reaches goal at t=92, waiting time=11
+  Agent 41 reaches goal at t=62, waiting time=41
+  Agent 40 reaches goal at t=10, waiting time=93
+  Agent 39 reaches goal at t=46, waiting time=57
+  Agent 38 reaches goal at t=7, waiting time=96
+  Agent 37 reaches goal at t=95, waiting time=8
+  Agent 36 reaches goal at t=103, waiting time=0
+  Agent 35 reaches goal at t=24, waiting time=79
+  Agent 34 reaches goal at t=26, waiting time=77
+  Agent 33 reaches goal at t=43, waiting time=60
+  Agent 32 reaches goal at t=91, waiting time=12
+  Agent 31 reaches goal at t=17, waiting time=86
+  Agent 30 reaches goal at t=51, waiting time=52
+  Agent 29 reaches goal at t=24, waiting time=79
+  Agent 28 reaches goal at t=39, waiting time=64
+  Agent 27 reaches goal at t=8, waiting time=95
+  Agent 26 reaches goal at t=21, waiting time=82
+  Agent 25 reaches goal at t=51, waiting time=52
+  Agent 24 reaches goal at t=18, waiting time=85
+  Agent 23 reaches goal at t=19, waiting time=84
+  Agent 22 reaches goal at t=35, waiting time=68
+  Agent 21 reaches goal at t=46, waiting time=57
+  Agent 20 reaches goal at t=95, waiting time=8
+  Agent 19 reaches goal at t=53, waiting time=50
+  Agent 18 reaches goal at t=66, waiting time=37
+  Agent 17 reaches goal at t=79, waiting time=24
+  Agent 16 reaches goal at t=49, waiting time=54
+  Agent 15 reaches goal at t=42, waiting time=61
+  Agent 14 reaches goal at t=93, waiting time=10
+  Agent 13 reaches goal at t=55, waiting time=48
+  Agent 12 reaches goal at t=32, waiting time=71
+  Agent 11 reaches goal at t=46, waiting time=57
+  Agent 10 reaches goal at t=15, waiting time=88
+  Agent 9 reaches goal at t=3, waiting time=100
+  Agent 8 reaches goal at t=12, waiting time=91
+  Agent 7 reaches goal at t=46, waiting time=57
+  Agent 6 reaches goal at t=55, waiting time=48
+  Agent 5 reaches goal at t=39, waiting time=64
+  Agent 4 reaches goal at t=93, waiting time=10
+  Agent 3 reaches goal at t=103, waiting time=0
+  Agent 2 reaches goal at t=8, waiting time=95
+  Agent 1 reaches goal at t=35, waiting time=68
+  Agent 0 reaches goal at t=63, waiting time=40
+[LNS] Waiting time calculation complete
+[LNS] Created current solution with 200 agent paths and path map of size 64x64
+[LNS] Step 2: Analyzing conflicts...
+[LNS] Current solution: vertex collisions=487, edge collisions=67
+[LNS] Step 3: Building conflict buckets...
+[LNS] Building diamond bucket for conflict 0
+[LNS] Building diamond bucket for conflict 1
+[LNS] Building diamond bucket for conflict 3
+[LNS] Building diamond bucket for conflict 4
+[LNS] Building diamond bucket for conflict 5
+[LNS] Building diamond bucket for conflict 7
+[LNS] Building diamond bucket for conflict 8
+[LNS] Building diamond bucket for conflict 11
+[LNS] Building diamond bucket for conflict 14
+[LNS] Building diamond bucket for conflict 15
+[LNS] Building diamond bucket for conflict 18
+[LNS] Building diamond bucket for conflict 19
+[LNS] Building diamond bucket for conflict 20
+[LNS] Building diamond bucket for conflict 21
+[LNS] Building diamond bucket for conflict 25
+[LNS] Building diamond bucket for conflict 26
+[LNS] Building diamond bucket for conflict 29
+[LNS] Building diamond bucket for conflict 30
+[LNS] Building diamond bucket for conflict 31
+[LNS] Building diamond bucket for conflict 33
+[LNS] Building diamond bucket for conflict 34
+[LNS] Building diamond bucket for conflict 35
+[LNS] Building diamond bucket for conflict 36
+[LNS] Building diamond bucket for conflict 39
+[LNS] Building diamond bucket for conflict 40
+[LNS] Building diamond bucket for conflict 42
+[LNS] Building diamond bucket for conflict 43
+[LNS] Building diamond bucket for conflict 45
+[LNS] Building diamond bucket for conflict 50
+[LNS] Building diamond bucket for conflict 54
+[LNS] Building diamond bucket for conflict 58
+[LNS] Building diamond bucket for conflict 59
+[LNS] Building diamond bucket for conflict 60
+[LNS] Building diamond bucket for conflict 61
+[LNS] Building diamond bucket for conflict 66
+[LNS] Building diamond bucket for conflict 72
+[LNS] Building diamond bucket for conflict 73
+[LNS] Building diamond bucket for conflict 76
+[LNS] Building diamond bucket for conflict 79
+[LNS] Building diamond bucket for conflict 85
+[LNS] Building diamond bucket for conflict 86
+[LNS] Building diamond bucket for conflict 90
+[LNS] Building diamond bucket for conflict 92
+[LNS] Building diamond bucket for conflict 93
+[LNS] Building diamond bucket for conflict 99
+[LNS] Building diamond bucket for conflict 103
+[LNS] Building diamond bucket for conflict 105
+[LNS] Building diamond bucket for conflict 106
+[LNS] Building diamond bucket for conflict 107
+[LNS] Building diamond bucket for conflict 108
+[LNS] Building diamond bucket for conflict 112
+[LNS] Building diamond bucket for conflict 113
+[LNS] Building diamond bucket for conflict 114
+[LNS] Building diamond bucket for conflict 120
+[LNS] Building diamond bucket for conflict 121
+[LNS] Building diamond bucket for conflict 127
+[LNS] Building diamond bucket for conflict 129
+[LNS] Building diamond bucket for conflict 130
+[LNS] Building diamond bucket for conflict 131
+[LNS] Building diamond bucket for conflict 132
+[LNS] Building diamond bucket for conflict 136
+[LNS] Building diamond bucket for conflict 138
+[LNS] Building diamond bucket for conflict 153
+[LNS] Building diamond bucket for conflict 154
+[LNS] Building diamond bucket for conflict 158
+[LNS] Building diamond bucket for conflict 159
+[LNS] Building diamond bucket for conflict 160
+[LNS] Building diamond bucket for conflict 164
+[LNS] Building diamond bucket for conflict 168
+[LNS] Building diamond bucket for conflict 171
+[LNS] Building diamond bucket for conflict 172
+[LNS] Building diamond bucket for conflict 182
+[LNS] Building diamond bucket for conflict 183
+[LNS] Building diamond bucket for conflict 187
+[LNS] Building diamond bucket for conflict 193
+[LNS] Building diamond bucket for conflict 200
+[LNS] Building diamond bucket for conflict 201
+[LNS] Building diamond bucket for conflict 204
+[LNS] Building diamond bucket for conflict 205
+[LNS] Building diamond bucket for conflict 212
+[LNS] Building diamond bucket for conflict 217
+[LNS] Building diamond bucket for conflict 225
+[LNS] Building diamond bucket for conflict 228
+[LNS] Building diamond bucket for conflict 229
+[LNS] Building diamond bucket for conflict 235
+[LNS] Building diamond bucket for conflict 236
+[LNS] Building diamond bucket for conflict 249
+[LNS] Building diamond bucket for conflict 255
+[LNS] Building diamond bucket for conflict 261
+[LNS] Building diamond bucket for conflict 263
+[LNS] Building diamond bucket for conflict 269
+[LNS] Building diamond bucket for conflict 271
+[LNS] Building diamond bucket for conflict 274
+[LNS] Building diamond bucket for conflict 275
+[LNS] Building diamond bucket for conflict 276
+[LNS] Building diamond bucket for conflict 277
+[LNS] Building diamond bucket for conflict 282
+[LNS] Building diamond bucket for conflict 284
+[LNS] Building diamond bucket for conflict 288
+[LNS] Building diamond bucket for conflict 291
+[LNS] Building diamond bucket for conflict 299
+[LNS] Building diamond bucket for conflict 301
+[LNS] Building diamond bucket for conflict 302
+[LNS] Building diamond bucket for conflict 304
+[LNS] Building diamond bucket for conflict 308
+[LNS] Building diamond bucket for conflict 309
+[LNS] Building diamond bucket for conflict 320
+[LNS] Building diamond bucket for conflict 324
+[LNS] Building diamond bucket for conflict 346
+[LNS] Building diamond bucket for conflict 357
+[LNS] Building diamond bucket for conflict 361
+[LNS] Building diamond bucket for conflict 364
+[LNS] Building diamond bucket for conflict 368
+[LNS] Building diamond bucket for conflict 375
+[LNS] Building diamond bucket for conflict 376
+[LNS] Building diamond bucket for conflict 379
+[LNS] Building diamond bucket for conflict 380
+[LNS] Building diamond bucket for conflict 385
+[LNS] Building diamond bucket for conflict 387
+[LNS] Building diamond bucket for conflict 389
+[LNS] Building diamond bucket for conflict 402
+[LNS] Building diamond bucket for conflict 404
+[LNS] Building diamond bucket for conflict 410
+[LNS] Building diamond bucket for conflict 412
+[LNS] Building diamond bucket for conflict 416
+[LNS] Building diamond bucket for conflict 419
+[LNS] Building diamond bucket for conflict 423
+[LNS] Building diamond bucket for conflict 429
+[LNS] Building diamond bucket for conflict 434
+[LNS] Building diamond bucket for conflict 436
+[LNS] Building diamond bucket for conflict 447
+[LNS] Building diamond bucket for conflict 452
+[LNS] Building diamond bucket for conflict 455
+[LNS] Building diamond bucket for conflict 456
+[LNS] Building diamond bucket for conflict 460
+[LNS] Building diamond bucket for conflict 461
+[LNS] Building diamond bucket for conflict 466
+[LNS] Building diamond bucket for conflict 471
+[LNS] Building diamond bucket for conflict 475
+[LNS] Building diamond bucket for conflict 477
+[LNS] Building diamond bucket for conflict 480
+[LNS] Building diamond bucket for conflict 481
+[LNS] Building diamond bucket for conflict 483
+[LNS] Building diamond bucket for conflict 484
+[LNS] Building diamond bucket for conflict 485
+[LNS] Building diamond bucket for conflict 489
+[LNS] Building diamond bucket for conflict 499
+[LNS] Building diamond bucket for conflict 501
+[LNS] Building diamond bucket for conflict 507
+[LNS] Building diamond bucket for conflict 515
+[LNS] Building diamond bucket for conflict 521
+[LNS] Building diamond bucket for conflict 547
+[LNS] Building diamond bucket for conflict 553
+[LNS] Building diamond bucket for conflict 561
+[LNS] Building diamond bucket for conflict 573
+[LNS] Building diamond bucket for conflict 575
+[LNS] Building diamond bucket for conflict 583
+[LNS] Building diamond bucket for conflict 593
+[LNS] Building diamond bucket for conflict 605
+[LNS] Building diamond bucket for conflict 609
+[LNS] Building diamond bucket for conflict 615
+[LNS] Formed 161 diamond-shaped conflict bucket(s).
+  Diamond Bucket 0: positions=5, conflicts=1
+  Diamond Bucket 1: positions=9, conflicts=3
+  Diamond Bucket 2: positions=11, conflicts=3
+  Diamond Bucket 3: positions=5, conflicts=1
+  Diamond Bucket 4: positions=12, conflicts=6
+  Diamond Bucket 5: positions=7, conflicts=2
+  Diamond Bucket 6: positions=7, conflicts=5
+  Diamond Bucket 7: positions=12, conflicts=5
+  Diamond Bucket 8: positions=12, conflicts=5
+  Diamond Bucket 9: positions=5, conflicts=1
+  Diamond Bucket 10: positions=5, conflicts=3
+  Diamond Bucket 11: positions=4, conflicts=2
+  Diamond Bucket 12: positions=8, conflicts=9
+  Diamond Bucket 13: positions=15, conflicts=5
+  Diamond Bucket 14: positions=72, conflicts=67
+  Diamond Bucket 15: positions=8, conflicts=2
+  Diamond Bucket 16: positions=9, conflicts=4
+  Diamond Bucket 17: positions=5, conflicts=1
+  Diamond Bucket 18: positions=38, conflicts=27
+  Diamond Bucket 19: positions=20, conflicts=10
+  Diamond Bucket 20: positions=8, conflicts=2
+  Diamond Bucket 21: positions=17, conflicts=6
+  Diamond Bucket 22: positions=5, conflicts=1
+  Diamond Bucket 23: positions=5, conflicts=1
+  Diamond Bucket 24: positions=5, conflicts=1
+  Diamond Bucket 25: positions=4, conflicts=1
+  Diamond Bucket 26: positions=5, conflicts=5
+  Diamond Bucket 27: positions=10, conflicts=5
+  Diamond Bucket 28: positions=8, conflicts=5
+  Diamond Bucket 29: positions=8, conflicts=7
+  Diamond Bucket 30: positions=4, conflicts=1
+  Diamond Bucket 31: positions=5, conflicts=1
+  Diamond Bucket 32: positions=5, conflicts=1
+  Diamond Bucket 33: positions=16, conflicts=10
+  Diamond Bucket 34: positions=18, conflicts=6
+  Diamond Bucket 35: positions=32, conflicts=17
+  Diamond Bucket 36: positions=7, conflicts=6
+  Diamond Bucket 37: positions=11, conflicts=3
+  Diamond Bucket 38: positions=17, conflicts=7
+  Diamond Bucket 39: positions=5, conflicts=1
+  Diamond Bucket 40: positions=9, conflicts=3
+  Diamond Bucket 41: positions=11, conflicts=5
+  Diamond Bucket 42: positions=5, conflicts=2
+  Diamond Bucket 43: positions=19, conflicts=13
+  Diamond Bucket 44: positions=5, conflicts=3
+  Diamond Bucket 45: positions=4, conflicts=1
+  Diamond Bucket 46: positions=3, conflicts=1
+  Diamond Bucket 47: positions=5, conflicts=1
+  Diamond Bucket 48: positions=6, conflicts=11
+  Diamond Bucket 49: positions=8, conflicts=2
+  Diamond Bucket 50: positions=5, conflicts=2
+  Diamond Bucket 51: positions=4, conflicts=3
+  Diamond Bucket 52: positions=5, conflicts=2
+  Diamond Bucket 53: positions=21, conflicts=19
+  Diamond Bucket 54: positions=5, conflicts=1
+  Diamond Bucket 55: positions=11, conflicts=5
+  Diamond Bucket 56: positions=5, conflicts=3
+  Diamond Bucket 57: positions=4, conflicts=4
+  Diamond Bucket 58: positions=5, conflicts=1
+  Diamond Bucket 59: positions=5, conflicts=2
+  Diamond Bucket 60: positions=5, conflicts=1
+  Diamond Bucket 61: positions=5, conflicts=1
+  Diamond Bucket 62: positions=5, conflicts=1
+  Diamond Bucket 63: positions=5, conflicts=5
+  Diamond Bucket 64: positions=8, conflicts=2
+  Diamond Bucket 65: positions=51, conflicts=37
+  Diamond Bucket 66: positions=10, conflicts=6
+  Diamond Bucket 67: positions=7, conflicts=3
+  Diamond Bucket 68: positions=5, conflicts=3
+  Diamond Bucket 69: positions=3, conflicts=2
+  Diamond Bucket 70: positions=5, conflicts=4
+  Diamond Bucket 71: positions=5, conflicts=1
+  Diamond Bucket 72: positions=5, conflicts=1
+  Diamond Bucket 73: positions=8, conflicts=3
+  Diamond Bucket 74: positions=5, conflicts=1
+  Diamond Bucket 75: positions=17, conflicts=6
+  Diamond Bucket 76: positions=3, conflicts=1
+  Diamond Bucket 77: positions=8, conflicts=4
+  Diamond Bucket 78: positions=9, conflicts=8
+  Diamond Bucket 79: positions=7, conflicts=4
+  Diamond Bucket 80: positions=19, conflicts=16
+  Diamond Bucket 81: positions=9, conflicts=5
+  Diamond Bucket 82: positions=5, conflicts=2
+  Diamond Bucket 83: positions=10, conflicts=5
+  Diamond Bucket 84: positions=8, conflicts=4
+  Diamond Bucket 85: positions=5, conflicts=1
+  Diamond Bucket 86: positions=8, conflicts=2
+  Diamond Bucket 87: positions=5, conflicts=1
+  Diamond Bucket 88: positions=8, conflicts=3
+  Diamond Bucket 89: positions=8, conflicts=2
+  Diamond Bucket 90: positions=5, conflicts=1
+  Diamond Bucket 91: positions=5, conflicts=4
+  Diamond Bucket 92: positions=6, conflicts=3
+  Diamond Bucket 93: positions=5, conflicts=1
+  Diamond Bucket 94: positions=5, conflicts=2
+  Diamond Bucket 95: positions=4, conflicts=1
+  Diamond Bucket 96: positions=5, conflicts=2
+  Diamond Bucket 97: positions=13, conflicts=5
+  Diamond Bucket 98: positions=16, conflicts=6
+  Diamond Bucket 99: positions=18, conflicts=9
+  Diamond Bucket 100: positions=5, conflicts=1
+  Diamond Bucket 101: positions=3, conflicts=1
+  Diamond Bucket 102: positions=5, conflicts=4
+  Diamond Bucket 103: positions=3, conflicts=1
+  Diamond Bucket 104: positions=4, conflicts=2
+  Diamond Bucket 105: positions=10, conflicts=4
+  Diamond Bucket 106: positions=5, conflicts=1
+  Diamond Bucket 107: positions=8, conflicts=4
+  Diamond Bucket 108: positions=5, conflicts=1
+  Diamond Bucket 109: positions=4, conflicts=1
+  Diamond Bucket 110: positions=14, conflicts=8
+  Diamond Bucket 111: positions=8, conflicts=4
+  Diamond Bucket 112: positions=4, conflicts=1
+  Diamond Bucket 113: positions=5, conflicts=1
+  Diamond Bucket 114: positions=5, conflicts=3
+  Diamond Bucket 115: positions=7, conflicts=3
+  Diamond Bucket 116: positions=5, conflicts=2
+  Diamond Bucket 117: positions=4, conflicts=1
+  Diamond Bucket 118: positions=7, conflicts=2
+  Diamond Bucket 119: positions=5, conflicts=1
+  Diamond Bucket 120: positions=5, conflicts=1
+  Diamond Bucket 121: positions=8, conflicts=2
+  Diamond Bucket 122: positions=5, conflicts=1
+  Diamond Bucket 123: positions=4, conflicts=2
+  Diamond Bucket 124: positions=4, conflicts=1
+  Diamond Bucket 125: positions=5, conflicts=1
+  Diamond Bucket 126: positions=10, conflicts=3
+  Diamond Bucket 127: positions=5, conflicts=1
+  Diamond Bucket 128: positions=5, conflicts=3
+  Diamond Bucket 129: positions=5, conflicts=1
+  Diamond Bucket 130: positions=5, conflicts=1
+  Diamond Bucket 131: positions=4, conflicts=2
+  Diamond Bucket 132: positions=4, conflicts=2
+  Diamond Bucket 133: positions=5, conflicts=1
+  Diamond Bucket 134: positions=7, conflicts=2
+  Diamond Bucket 135: positions=5, conflicts=1
+  Diamond Bucket 136: positions=4, conflicts=1
+  Diamond Bucket 137: positions=5, conflicts=1
+  Diamond Bucket 138: positions=5, conflicts=1
+  Diamond Bucket 139: positions=7, conflicts=2
+  Diamond Bucket 140: positions=5, conflicts=1
+  Diamond Bucket 141: positions=5, conflicts=1
+  Diamond Bucket 142: positions=5, conflicts=1
+  Diamond Bucket 143: positions=5, conflicts=1
+  Diamond Bucket 144: positions=5, conflicts=1
+  Diamond Bucket 145: positions=8, conflicts=2
+  Diamond Bucket 146: positions=8, conflicts=2
+  Diamond Bucket 147: positions=7, conflicts=2
+  Diamond Bucket 148: positions=7, conflicts=2
+  Diamond Bucket 149: positions=11, conflicts=4
+  Diamond Bucket 150: positions=8, conflicts=2
+  Diamond Bucket 151: positions=7, conflicts=2
+  Diamond Bucket 152: positions=7, conflicts=2
+  Diamond Bucket 153: positions=7, conflicts=2
+  Diamond Bucket 154: positions=15, conflicts=6
+  Diamond Bucket 155: positions=6, conflicts=2
+  Diamond Bucket 156: positions=7, conflicts=2
+  Diamond Bucket 157: positions=8, conflicts=2
+  Diamond Bucket 158: positions=8, conflicts=2
+  Diamond Bucket 159: positions=8, conflicts=2
+  Diamond Bucket 160: positions=8, conflicts=2
+[LNS] Step 4: Selecting most relevant bucket...
+[LNS] Selected most relevant diamond bucket 14 with 67 conflicts and 72 positions.
+[LNS] Step 5: Creating map crop for selected bucket...
+[LNS] Step 6: Computing conflict time window and extracting local paths...
+[LNS] Conflict 25 agents: 73 and 0
+[LNS] Conflict 25 timestep: 6
+[LNS] Conflict 25 positions: 40,34
+[LNS] Conflict 51 agents: 30 and 15
+[LNS] Conflict 51 timestep: 11
+[LNS] Conflict 51 positions: 42,40
+[LNS] Conflict 78 agents: 197 and 15
+[LNS] Conflict 78 timestep: 15
+[LNS] Conflict 78 positions: 43,43
+[LNS] Conflict 91 agents: 197 and 47
+[LNS] Conflict 91 timestep: 17
+[LNS] Conflict 91 positions: 43,41
+[LNS] Conflict 97 agents: 197 and 47
+[LNS] Conflict 97 timestep: 18
+[LNS] Conflict 97 positions: 42,41
+[LNS] Conflict 102 agents: 93 and 84
+[LNS] Conflict 102 timestep: 19
+[LNS] Conflict 102 positions: 42,45
+[LNS] Conflict 111 agents: 93 and 84
+[LNS] Conflict 111 timestep: 20
+[LNS] Conflict 111 positions: 42,44
+[LNS] Conflict 123 agents: 146 and 93
+[LNS] Conflict 123 timestep: 21
+[LNS] Conflict 123 positions: 42,43
+[LNS] Conflict 124 agents: 146 and 84
+[LNS] Conflict 124 timestep: 21
+[LNS] Conflict 124 positions: 42,43
+[LNS] Conflict 125 agents: 93 and 84
+[LNS] Conflict 125 timestep: 21
+[LNS] Conflict 125 positions: 42,43
+[LNS] Conflict 126 agents: 115 and 81
+[LNS] Conflict 126 timestep: 21
+[LNS] Conflict 126 positions: 41,26
+[LNS] Conflict 134 agents: 93 and 84
+[LNS] Conflict 134 timestep: 22
+[LNS] Conflict 134 positions: 42,42
+[LNS] Conflict 140 agents: 93 and 84
+[LNS] Conflict 140 timestep: 23
+[LNS] Conflict 140 positions: 42,41
+[LNS] Conflict 141 agents: 82 and 81
+[LNS] Conflict 141 timestep: 23
+[LNS] Conflict 141 positions: 41,26
+[LNS] Conflict 143 agents: 90 and 59
+[LNS] Conflict 143 timestep: 23
+[LNS] Conflict 143 positions: 40,41
+[LNS] Conflict 148 agents: 93 and 84
+[LNS] Conflict 148 timestep: 24
+[LNS] Conflict 148 positions: 41,41
+[LNS] Conflict 150 agents: 93 and 59
+[LNS] Conflict 150 timestep: 24
+[LNS] Conflict 150 positions: 41,41
+[LNS] Conflict 151 agents: 84 and 59
+[LNS] Conflict 151 timestep: 24
+[LNS] Conflict 151 positions: 41,41
+[LNS] Conflict 155 agents: 81 and 1
+[LNS] Conflict 155 timestep: 24
+[LNS] Conflict 155 positions: 41,26
+[LNS] Conflict 163 agents: 93 and 84
+[LNS] Conflict 163 timestep: 25
+[LNS] Conflict 163 positions: 41,40
+[LNS] Conflict 166 agents: 93 and 59
+[LNS] Conflict 166 timestep: 25
+[LNS] Conflict 166 positions: 41,40
+[LNS] Conflict 167 agents: 84 and 59
+[LNS] Conflict 167 timestep: 25
+[LNS] Conflict 167 positions: 41,40
+[LNS] Conflict 178 agents: 93 and 59
+[LNS] Conflict 178 timestep: 26
+[LNS] Conflict 178 positions: 41,39
+[LNS] Conflict 185 agents: 93 and 90
+[LNS] Conflict 185 timestep: 27
+[LNS] Conflict 185 positions: 41,38
+[LNS] Conflict 190 agents: 93 and 59
+[LNS] Conflict 190 timestep: 27
+[LNS] Conflict 190 positions: 41,38
+[LNS] Conflict 191 agents: 90 and 59
+[LNS] Conflict 191 timestep: 27
+[LNS] Conflict 191 positions: 41,38
+[LNS] Conflict 194 agents: 93 and 90
+[LNS] Conflict 194 timestep: 28
+[LNS] Conflict 194 positions: 41,37
+[LNS] Conflict 196 agents: 100 and 81
+[LNS] Conflict 196 timestep: 28
+[LNS] Conflict 196 positions: 41,26
+[LNS] Conflict 198 agents: 93 and 59
+[LNS] Conflict 198 timestep: 28
+[LNS] Conflict 198 positions: 41,37
+[LNS] Conflict 199 agents: 90 and 59
+[LNS] Conflict 199 timestep: 28
+[LNS] Conflict 199 positions: 41,37
+[LNS] Conflict 207 agents: 93 and 59
+[LNS] Conflict 207 timestep: 29
+[LNS] Conflict 207 positions: 41,36
+[LNS] Conflict 214 agents: 91 and 17
+[LNS] Conflict 214 timestep: 29
+[LNS] Conflict 214 positions: 43,41
+[LNS] Conflict 216 agents: 90 and 11
+[LNS] Conflict 216 timestep: 29
+[LNS] Conflict 216 positions: 42,37
+[LNS] Conflict 224 agents: 93 and 59
+[LNS] Conflict 224 timestep: 30
+[LNS] Conflict 224 positions: 41,35
+[LNS] Conflict 238 agents: 93 and 59
+[LNS] Conflict 238 timestep: 31
+[LNS] Conflict 238 positions: 41,34
+[LNS] Conflict 250 agents: 93 and 59
+[LNS] Conflict 250 timestep: 32
+[LNS] Conflict 250 positions: 41,33
+[LNS] Conflict 252 agents: 165 and 17
+[LNS] Conflict 252 timestep: 32
+[LNS] Conflict 252 positions: 40,41
+[LNS] Conflict 257 agents: 93 and 59
+[LNS] Conflict 257 timestep: 33
+[LNS] Conflict 257 positions: 41,32
+[LNS] Conflict 259 agents: 78 and 11
+[LNS] Conflict 259 timestep: 33
+[LNS] Conflict 259 positions: 42,41
+[LNS] Conflict 264 agents: 107 and 93
+[LNS] Conflict 264 timestep: 34
+[LNS] Conflict 264 positions: 41,31
+[LNS] Conflict 265 agents: 107 and 59
+[LNS] Conflict 265 timestep: 34
+[LNS] Conflict 265 positions: 41,31
+[LNS] Conflict 266 agents: 93 and 59
+[LNS] Conflict 266 timestep: 34
+[LNS] Conflict 266 positions: 41,31
+[LNS] Conflict 272 agents: 81 and 7
+[LNS] Conflict 272 timestep: 34
+[LNS] Conflict 272 positions: 41,26
+[LNS] Conflict 278 agents: 81 and 67
+[LNS] Conflict 278 timestep: 35
+[LNS] Conflict 278 positions: 41,26
+[LNS] Conflict 279 agents: 93 and 59
+[LNS] Conflict 279 timestep: 35
+[LNS] Conflict 279 positions: 41,30
+[LNS] Conflict 280 agents: 183 and 81
+[LNS] Conflict 280 timestep: 36
+[LNS] Conflict 280 positions: 41,26
+[LNS] Conflict 285 agents: 93 and 67
+[LNS] Conflict 285 timestep: 37
+[LNS] Conflict 285 positions: 41,28
+[LNS] Conflict 296 agents: 148 and 91
+[LNS] Conflict 296 timestep: 40
+[LNS] Conflict 296 positions: 39,34
+[LNS] Conflict 311 agents: 177 and 56
+[LNS] Conflict 311 timestep: 41
+[LNS] Conflict 311 positions: 40,39
+[LNS] Conflict 318 agents: 177 and 107
+[LNS] Conflict 318 timestep: 42
+[LNS] Conflict 318 positions: 41,39
+[LNS] Conflict 321 agents: 148 and 7
+[LNS] Conflict 321 timestep: 42
+[LNS] Conflict 321 positions: 41,34
+[LNS] Conflict 338 agents: 78 and 37
+[LNS] Conflict 338 timestep: 44
+[LNS] Conflict 338 positions: 38,34
+[LNS] Conflict 348 agents: 67 and 66
+[LNS] Conflict 348 timestep: 46
+[LNS] Conflict 348 positions: 41,37
+[LNS] Conflict 355 agents: 181 and 81
+[LNS] Conflict 355 timestep: 47
+[LNS] Conflict 355 positions: 41,26
+[LNS] Conflict 362 agents: 183 and 7
+[LNS] Conflict 362 timestep: 48
+[LNS] Conflict 362 positions: 41,38
+[LNS] Conflict 374 agents: 181 and 37
+[LNS] Conflict 374 timestep: 51
+[LNS] Conflict 374 positions: 41,30
+[LNS] Conflict 408 agents: 181 and 7
+[LNS] Conflict 408 timestep: 59
+[LNS] Conflict 408 positions: 41,38
+[LNS] Conflict 577 agents: 165 and 78
+[LNS] Conflict 577 timestep: 35
+[LNS] Conflict 577 positions: 41,39 and 42,39
+[LNS] Conflict 578 agents: 165 and 78
+[LNS] Conflict 578 timestep: 35
+[LNS] Conflict 578 positions: 41,39 and 42,39
+[LNS] Conflict 579 agents: 93 and 7
+[LNS] Conflict 579 timestep: 36
+[LNS] Conflict 579 positions: 41,29 and 41,28
+[LNS] Conflict 580 agents: 93 and 7
+[LNS] Conflict 580 timestep: 36
+[LNS] Conflict 580 positions: 41,29 and 41,28
+[LNS] Conflict 581 agents: 183 and 93
+[LNS] Conflict 581 timestep: 37
+[LNS] Conflict 581 positions: 41,27 and 41,28
+[LNS] Conflict 582 agents: 183 and 93
+[LNS] Conflict 582 timestep: 37
+[LNS] Conflict 582 positions: 41,27 and 41,28
+[LNS] Conflict 597 agents: 183 and 66
+[LNS] Conflict 597 timestep: 46
+[LNS] Conflict 597 positions: 41,36 and 41,37
+[LNS] Conflict 598 agents: 183 and 66
+[LNS] Conflict 598 timestep: 46
+[LNS] Conflict 598 positions: 41,36 and 41,37
+[LNS] Conflict 607 agents: 173 and 37
+[LNS] Conflict 607 timestep: 50
+[LNS] Conflict 607 positions: 41,30 and 41,31
+[LNS] Conflict 608 agents: 173 and 37
+[LNS] Conflict 608 timestep: 50
+[LNS] Conflict 608 positions: 41,30 and 41,31
+[LNS] Conflict time window: [5, 60]
+[LNS] Agents in zone within window: 60
+[LNS] Agent 0 entered the zone at timestep 5
+[LNS] Agent 0 exited the zone at timestep 10
+[LNS] Agent 0 exited the zone at timestep 9
+  Agent 0 local segment t=[5,9] len=5
+[LNS] Agent 1 entered the zone at timestep 16
+[LNS] Agent 1 exited the zone at timestep 26
+[LNS] Agent 1 exited the zone at timestep 25
+  Agent 1 local segment t=[16,25] len=10
+[LNS] Agent 3 entered the zone at timestep 39
+[LNS] Agent 3 exited the zone at timestep 40
+[LNS] Agent 3 entered the zone at timestep 41
+[LNS] Agent 3 exited the zone at timestep 42
+[LNS] Agent 3 exited the zone at timestep 41
+[LNS] Agent 3 returned to the zone 1 times within time window
+  Agent 3 local segment t=[39,41] len=3
+[LNS] Agent 4 entered the zone at timestep 57
+[LNS] Agent 4 exited the zone at timestep 60
+  Agent 4 local segment t=[57,60] len=4
+[LNS] Agent 5 entered the zone at timestep 39
+[LNS] Agent 5 exited the zone at timestep 60
+  Agent 5 local segment t=[39,60] len=22
+[LNS] Agent 7 entered the zone at timestep 33
+[LNS] Agent 7 exited the zone at timestep 60
+  Agent 7 local segment t=[33,60] len=28
+[LNS] Agent 11 entered the zone at timestep 28
+[LNS] Agent 11 exited the zone at timestep 39
+[LNS] Agent 11 exited the zone at timestep 38
+  Agent 11 local segment t=[28,38] len=11
+[LNS] Agent 13 entered the zone at timestep 37
+[LNS] Agent 13 exited the zone at timestep 38
+[LNS] Agent 13 entered the zone at timestep 39
+[LNS] Agent 13 exited the zone at timestep 40
+[LNS] Agent 13 exited the zone at timestep 39
+[LNS] Agent 13 returned to the zone 1 times within time window
+  Agent 13 local segment t=[37,39] len=3
+[LNS] Agent 15 entered the zone at timestep 7
+[LNS] Agent 15 exited the zone at timestep 18
+[LNS] Agent 15 exited the zone at timestep 17
+  Agent 15 local segment t=[7,17] len=11
+[LNS] Agent 17 entered the zone at timestep 28
+[LNS] Agent 17 exited the zone at timestep 34
+[LNS] Agent 17 exited the zone at timestep 33
+  Agent 17 local segment t=[28,33] len=6
+[LNS] Agent 26 entered the zone at timestep 5
+[LNS] Agent 26 exited the zone at timestep 21
+[LNS] Agent 26 exited the zone at timestep 20
+  Agent 26 local segment t=[5,20] len=16
+[LNS] Agent 30 entered the zone at timestep 5
+[LNS] Agent 30 exited the zone at timestep 23
+[LNS] Agent 30 exited the zone at timestep 22
+  Agent 30 local segment t=[5,22] len=18
+[LNS] Agent 37 entered the zone at timestep 43
+[LNS] Agent 37 exited the zone at timestep 47
+[LNS] Agent 37 entered the zone at timestep 49
+[LNS] Agent 37 exited the zone at timestep 57
+[LNS] Agent 37 exited the zone at timestep 56
+[LNS] Agent 37 returned to the zone 1 times within time window
+  Agent 37 local segment t=[43,56] len=14
+[LNS] Agent 44 entered the zone at timestep 14
+[LNS] Agent 44 exited the zone at timestep 15
+[LNS] Agent 44 entered the zone at timestep 16
+[LNS] Agent 44 exited the zone at timestep 17
+[LNS] Agent 44 entered the zone at timestep 19
+[LNS] Agent 44 exited the zone at timestep 20
+[LNS] Agent 44 entered the zone at timestep 21
+[LNS] Agent 44 exited the zone at timestep 22
+[LNS] Agent 44 exited the zone at timestep 21
+[LNS] Agent 44 returned to the zone 3 times within time window
+  Agent 44 local segment t=[14,21] len=8
+[LNS] Agent 47 entered the zone at timestep 16
+[LNS] Agent 47 exited the zone at timestep 22
+[LNS] Agent 47 exited the zone at timestep 21
+  Agent 47 local segment t=[16,21] len=6
+[LNS] Agent 48 entered the zone at timestep 11
+[LNS] Agent 48 exited the zone at timestep 15
+[LNS] Agent 48 exited the zone at timestep 14
+  Agent 48 local segment t=[11,14] len=4
+[LNS] Agent 50 entered the zone at timestep 24
+[LNS] Agent 50 exited the zone at timestep 34
+[LNS] Agent 50 entered the zone at timestep 40
+[LNS] Agent 50 exited the zone at timestep 41
+[LNS] Agent 50 exited the zone at timestep 40
+[LNS] Agent 50 returned to the zone 1 times within time window
+  Agent 50 local segment t=[24,40] len=17
+[LNS] Agent 53 entered the zone at timestep 10
+[LNS] Agent 53 exited the zone at timestep 13
+[LNS] Agent 53 exited the zone at timestep 12
+  Agent 53 local segment t=[10,12] len=3
+[LNS] Agent 56 entered the zone at timestep 31
+[LNS] Agent 56 exited the zone at timestep 46
+[LNS] Agent 56 entered the zone at timestep 47
+[LNS] Agent 56 exited the zone at timestep 50
+[LNS] Agent 56 exited the zone at timestep 49
+[LNS] Agent 56 returned to the zone 1 times within time window
+  Agent 56 local segment t=[31,49] len=19
+[LNS] Agent 59 entered the zone at timestep 22
+[LNS] Agent 59 exited the zone at timestep 41
+[LNS] Agent 59 exited the zone at timestep 40
+  Agent 59 local segment t=[22,40] len=19
+[LNS] Agent 62 entered the zone at timestep 56
+[LNS] Agent 62 exited the zone at timestep 60
+[LNS] Agent 62 exited the zone at timestep 59
+  Agent 62 local segment t=[56,59] len=4
+[LNS] Agent 63 entered the zone at timestep 31
+[LNS] Agent 63 exited the zone at timestep 34
+[LNS] Agent 63 exited the zone at timestep 33
+  Agent 63 local segment t=[31,33] len=3
+[LNS] Agent 66 entered the zone at timestep 42
+[LNS] Agent 66 exited the zone at timestep 43
+[LNS] Agent 66 entered the zone at timestep 44
+[LNS] Agent 66 exited the zone at timestep 54
+[LNS] Agent 66 exited the zone at timestep 53
+[LNS] Agent 66 returned to the zone 1 times within time window
+  Agent 66 local segment t=[42,53] len=12
+[LNS] Agent 67 entered the zone at timestep 34
+[LNS] Agent 67 exited the zone at timestep 51
+[LNS] Agent 67 entered the zone at timestep 53
+[LNS] Agent 67 exited the zone at timestep 58
+[LNS] Agent 67 exited the zone at timestep 57
+[LNS] Agent 67 returned to the zone 1 times within time window
+[LNS] Agent 67 has conflicts at new positions: 1
+[LNS] New conflict positions: 2
+[LNS] New conflict 381 Agent 67 and Agent 27
+[LNS] New conflict 381 at position (44,40)
+  Agent 67 local segment t=[34,57] len=24
+[LNS] Agent 68 entered the zone at timestep 43
+[LNS] Agent 68 exited the zone at timestep 47
+[LNS] Agent 68 exited the zone at timestep 46
+  Agent 68 local segment t=[43,46] len=4
+[LNS] Agent 73 entered the zone at timestep 5
+[LNS] Agent 73 exited the zone at timestep 9
+[LNS] Agent 73 exited the zone at timestep 8
+  Agent 73 local segment t=[5,8] len=4
+[LNS] Agent 74 entered the zone at timestep 23
+[LNS] Agent 74 exited the zone at timestep 31
+[LNS] Agent 74 exited the zone at timestep 30
+  Agent 74 local segment t=[23,30] len=8
+[LNS] Agent 78 entered the zone at timestep 30
+[LNS] Agent 78 exited the zone at timestep 40
+[LNS] Agent 78 entered the zone at timestep 42
+[LNS] Agent 78 exited the zone at timestep 46
+[LNS] Agent 78 exited the zone at timestep 45
+[LNS] Agent 78 returned to the zone 1 times within time window
+  Agent 78 local segment t=[30,45] len=16
+[LNS] Agent 79 entered the zone at timestep 23
+[LNS] Agent 79 exited the zone at timestep 30
+[LNS] Agent 79 exited the zone at timestep 29
+  Agent 79 local segment t=[23,29] len=7
+[LNS] Agent 81 entered the zone at timestep 18
+[LNS] Agent 81 exited the zone at timestep 60
+  Agent 81 local segment t=[18,60] len=43
+[LNS] Agent 82 entered the zone at timestep 22
+[LNS] Agent 82 exited the zone at timestep 25
+[LNS] Agent 82 exited the zone at timestep 24
+  Agent 82 local segment t=[22,24] len=3
+[LNS] Agent 84 entered the zone at timestep 17
+[LNS] Agent 84 exited the zone at timestep 33
+[LNS] Agent 84 exited the zone at timestep 32
+  Agent 84 local segment t=[17,32] len=16
+[LNS] Agent 87 entered the zone at timestep 5
+[LNS] Agent 87 exited the zone at timestep 13
+[LNS] Agent 87 exited the zone at timestep 12
+  Agent 87 local segment t=[5,12] len=8
+[LNS] Agent 88 entered the zone at timestep 40
+[LNS] Agent 88 exited the zone at timestep 43
+[LNS] Agent 88 exited the zone at timestep 42
+  Agent 88 local segment t=[40,42] len=3
+[LNS] Agent 89 entered the zone at timestep 5
+[LNS] Agent 89 exited the zone at timestep 6
+[LNS] Agent 89 exited the zone at timestep 5
+  Agent 89 local segment t=[5,5] len=1
+[LNS] Agent 90 entered the zone at timestep 22
+[LNS] Agent 90 exited the zone at timestep 31
+[LNS] Agent 90 exited the zone at timestep 30
+  Agent 90 local segment t=[22,30] len=9
+[LNS] Agent 91 entered the zone at timestep 26
+[LNS] Agent 91 exited the zone at timestep 43
+[LNS] Agent 91 exited the zone at timestep 42
+  Agent 91 local segment t=[26,42] len=17
+[LNS] Agent 93 entered the zone at timestep 18
+[LNS] Agent 93 exited the zone at timestep 40
+[LNS] Agent 93 exited the zone at timestep 39
+  Agent 93 local segment t=[18,39] len=22
+[LNS] Agent 100 entered the zone at timestep 19
+[LNS] Agent 100 exited the zone at timestep 30
+[LNS] Agent 100 exited the zone at timestep 29
+  Agent 100 local segment t=[19,29] len=11
+[LNS] Agent 105 entered the zone at timestep 9
+[LNS] Agent 105 exited the zone at timestep 15
+[LNS] Agent 105 exited the zone at timestep 14
+  Agent 105 local segment t=[9,14] len=6
+[LNS] Agent 107 entered the zone at timestep 30
+[LNS] Agent 107 exited the zone at timestep 52
+[LNS] Agent 107 exited the zone at timestep 51
+  Agent 107 local segment t=[30,51] len=22
+[LNS] Agent 110 entered the zone at timestep 30
+[LNS] Agent 110 exited the zone at timestep 34
+[LNS] Agent 110 exited the zone at timestep 33
+  Agent 110 local segment t=[30,33] len=4
+[LNS] Agent 114 entered the zone at timestep 24
+[LNS] Agent 114 exited the zone at timestep 30
+[LNS] Agent 114 exited the zone at timestep 29
+  Agent 114 local segment t=[24,29] len=6
+[LNS] Agent 115 entered the zone at timestep 20
+[LNS] Agent 115 exited the zone at timestep 23
+[LNS] Agent 115 exited the zone at timestep 22
+  Agent 115 local segment t=[20,22] len=3
+[LNS] Agent 121 entered the zone at timestep 5
+[LNS] Agent 121 exited the zone at timestep 12
+[LNS] Agent 121 exited the zone at timestep 11
+  Agent 121 local segment t=[5,11] len=7
+[LNS] Agent 122 entered the zone at timestep 5
+[LNS] Agent 122 exited the zone at timestep 11
+[LNS] Agent 122 exited the zone at timestep 10
+  Agent 122 local segment t=[5,10] len=6
+[LNS] Agent 137 entered the zone at timestep 53
+[LNS] Agent 137 exited the zone at timestep 60
+  Agent 137 local segment t=[53,60] len=8
+[LNS] Agent 146 entered the zone at timestep 19
+[LNS] Agent 146 exited the zone at timestep 25
+[LNS] Agent 146 exited the zone at timestep 24
+  Agent 146 local segment t=[19,24] len=6
+[LNS] Agent 148 entered the zone at timestep 38
+[LNS] Agent 148 exited the zone at timestep 44
+[LNS] Agent 148 exited the zone at timestep 43
+  Agent 148 local segment t=[38,43] len=6
+[LNS] Agent 162 entered the zone at timestep 28
+[LNS] Agent 162 exited the zone at timestep 32
+[LNS] Agent 162 exited the zone at timestep 31
+  Agent 162 local segment t=[28,31] len=4
+[LNS] Agent 164 entered the zone at timestep 46
+[LNS] Agent 164 exited the zone at timestep 53
+[LNS] Agent 164 exited the zone at timestep 52
+  Agent 164 local segment t=[46,52] len=7
+[LNS] Agent 165 entered the zone at timestep 31
+[LNS] Agent 165 exited the zone at timestep 39
+[LNS] Agent 165 exited the zone at timestep 38
+  Agent 165 local segment t=[31,38] len=8
+[LNS] Agent 171 entered the zone at timestep 40
+[LNS] Agent 171 exited the zone at timestep 45
+[LNS] Agent 171 exited the zone at timestep 44
+  Agent 171 local segment t=[40,44] len=5
+[LNS] Agent 173 entered the zone at timestep 47
+[LNS] Agent 173 exited the zone at timestep 55
+[LNS] Agent 173 entered the zone at timestep 56
+[LNS] Agent 173 exited the zone at timestep 60
+[LNS] Agent 173 exited the zone at timestep 59
+[LNS] Agent 173 returned to the zone 1 times within time window
+[LNS] Agent 173 has conflicts at new positions: 1
+[LNS] New conflict positions: 2
+[LNS] New conflict 397 Agent 173 and Agent 62
+[LNS] New conflict 397 at position (38,32)
+  Agent 173 local segment t=[47,59] len=13
+[LNS] Agent 177 entered the zone at timestep 40
+[LNS] Agent 177 exited the zone at timestep 46
+[LNS] Agent 177 exited the zone at timestep 45
+  Agent 177 local segment t=[40,45] len=6
+[LNS] Agent 178 entered the zone at timestep 9
+[LNS] Agent 178 exited the zone at timestep 16
+[LNS] Agent 178 exited the zone at timestep 15
+  Agent 178 local segment t=[9,15] len=7
+[LNS] Agent 180 entered the zone at timestep 18
+[LNS] Agent 180 exited the zone at timestep 19
+[LNS] Agent 180 entered the zone at timestep 20
+[LNS] Agent 180 exited the zone at timestep 24
+[LNS] Agent 180 exited the zone at timestep 23
+[LNS] Agent 180 returned to the zone 1 times within time window
+  Agent 180 local segment t=[18,23] len=6
+[LNS] Agent 181 entered the zone at timestep 46
+[LNS] Agent 181 exited the zone at timestep 60
+  Agent 181 local segment t=[46,60] len=15
+[LNS] Agent 183 entered the zone at timestep 35
+[LNS] Agent 183 exited the zone at timestep 59
+[LNS] Agent 183 exited the zone at timestep 58
+  Agent 183 local segment t=[35,58] len=24
+[LNS] Agent 197 entered the zone at timestep 14
+[LNS] Agent 197 exited the zone at timestep 28
+[LNS] Agent 197 exited the zone at timestep 27
+  Agent 197 local segment t=[14,27] len=14
+[LNS] Agent 27 entered the zone at timestep 7
+[LNS] Agent 27 exited the zone at timestep 60
+  Agent 27 local segment t=[7,60] len=54
+[LNS] Processing Agent 62 again
+[LNS] Agent 62 entered the zone at timestep 54
+[LNS] Agent 62 exited the zone at timestep 60
+  Agent 62 local segment t=[54,60] len=7
+[LNS] Step 8: Creating aligned MDDs for local problem...
+[LNS] Zone MDD length: 56 (from t=5 to t=60)
+  Agent 27 MDD: start=(44,39) goal=(44,40) path_length=54 active levels=[2,55] of 56
+  Agent 197 MDD: start=(44,43) goal=(37,37) path_length=14 active levels=[9,22] of 56
+  Agent 78 MDD: start=(44,42) goal=(37,34) path_length=16 active levels=[25,40] of 56
+  Agent 137 MDD: start=(39,32) goal=(40,38) path_length=8 active levels=[48,55] of 56
+  Agent 74 MDD: start=(45,40) goal=(39,41) path_length=8 active levels=[18,25] of 56
+  Agent 15 MDD: start=(39,39) goal=(43,45) path_length=11 active levels=[2,12] of 56
+  Agent 68 MDD: start=(41,44) goal=(44,44) path_length=4 active levels=[38,41] of 56
+  Agent 67 MDD: start=(41,25) goal=(44,45) path_length=24 active levels=[29,52] of 56
+  Agent 115 MDD: start=(42,26) goal=(40,26) path_length=3 active levels=[15,17] of 56
+  Agent 79 MDD: start=(39,39) goal=(43,37) path_length=7 active levels=[18,24] of 56
+  Agent 48 MDD: start=(41,45) goal=(44,45) path_length=4 active levels=[6,9] of 56
+  Agent 107 MDD: start=(40,28) goal=(44,45) path_length=22 active levels=[25,46] of 56
+  Agent 47 MDD: start=(44,41) goal=(39,41) path_length=6 active levels=[11,16] of 56
+  Agent 165 MDD: start=(39,41) goal=(44,39) path_length=8 active levels=[26,33] of 56
+  Agent 0 MDD: start=(40,35) goal=(38,33) path_length=5 active levels=[0,4] of 56
+  Agent 59 MDD: start=(40,42) goal=(42,26) path_length=19 active levels=[17,35] of 56
+  Agent 50 MDD: start=(44,43) goal=(37,34) path_length=17 active levels=[19,35] of 56
+  Agent 177 MDD: start=(39,39) goal=(44,39) path_length=6 active levels=[35,40] of 56
+  Agent 13 MDD: start=(41,45) goal=(42,46) path_length=3 active levels=[32,34] of 56
+  Agent 26 MDD: start=(42,41) goal=(40,28) path_length=16 active levels=[0,15] of 56
+  Agent 3 MDD: start=(41,25) goal=(40,26) path_length=3 active levels=[34,36] of 56
+  Agent 62 MDD: start=(38,31) goal=(39,36) path_length=7 active levels=[49,55] of 56
+  Agent 121 MDD: start=(39,39) goal=(43,37) path_length=7 active levels=[0,6] of 56
+  Agent 53 MDD: start=(42,28) goal=(40,28) path_length=3 active levels=[5,7] of 56
+  Agent 180 MDD: start=(37,32) goal=(37,37) path_length=6 active levels=[13,18] of 56
+  Agent 4 MDD: start=(40,27) goal=(42,28) path_length=4 active levels=[52,55] of 56
+  Agent 63 MDD: start=(41,46) goal=(43,46) path_length=3 active levels=[26,28] of 56
+  Agent 122 MDD: start=(40,38) goal=(37,36) path_length=6 active levels=[0,5] of 56
+  Agent 181 MDD: start=(41,25) goal=(42,38) path_length=15 active levels=[41,55] of 56
+  Agent 17 MDD: start=(44,41) goal=(39,41) path_length=6 active levels=[23,28] of 56
+  Agent 1 MDD: start=(42,33) goal=(41,25) path_length=10 active levels=[11,20] of 56
+  Agent 178 MDD: start=(45,40) goal=(44,45) path_length=7 active levels=[4,10] of 56
+  Agent 30 MDD: start=(43,45) goal=(37,34) path_length=18 active levels=[0,17] of 56
+  Agent 89 MDD: start=(41,45) goal=(41,45) path_length=1 active levels=[0,0] of 56
+  Agent 148 MDD: start=(37,34) goal=(42,34) path_length=6 active levels=[33,38] of 56
+  Agent 5 MDD: start=(39,41) goal=(39,41) path_length=22 active levels=[34,55] of 56
+  Agent 7 MDD: start=(41,25) goal=(41,38) path_length=28 active levels=[28,55] of 56
+  Agent 66 MDD: start=(43,39) goal=(39,32) path_length=12 active levels=[37,48] of 56
+  Agent 11 MDD: start=(43,37) goal=(42,46) path_length=11 active levels=[23,33] of 56
+  Agent 73 MDD: start=(39,34) goal=(42,34) path_length=4 active levels=[0,3] of 56
+  Agent 171 MDD: start=(40,28) goal=(42,30) path_length=5 active levels=[35,39] of 56
+  Agent 44 MDD: start=(44,41) goal=(42,46) path_length=8 active levels=[9,16] of 56
+  Agent 162 MDD: start=(37,37) goal=(37,34) path_length=4 active levels=[23,26] of 56
+  Agent 81 MDD: start=(42,26) goal=(41,26) path_length=43 active levels=[13,55] of 56
+  Agent 82 MDD: start=(42,26) goal=(40,26) path_length=3 active levels=[17,19] of 56
+  Agent 84 MDD: start=(44,45) goal=(37,37) path_length=16 active levels=[12,27] of 56
+  Agent 87 MDD: start=(41,34) goal=(38,38) path_length=8 active levels=[0,7] of 56
+  Agent 146 MDD: start=(44,43) goal=(41,45) path_length=6 active levels=[14,19] of 56
+  Agent 88 MDD: start=(42,27) goal=(40,27) path_length=3 active levels=[35,37] of 56
+  Agent 90 MDD: start=(39,41) goal=(43,37) path_length=9 active levels=[17,25] of 56
+  Agent 91 MDD: start=(44,43) goal=(38,33) path_length=17 active levels=[21,37] of 56
+  Agent 93 MDD: start=(42,46) goal=(40,27) path_length=22 active levels=[13,34] of 56
+  Agent 100 MDD: start=(42,34) goal=(41,25) path_length=11 active levels=[14,24] of 56
+  Agent 105 MDD: start=(44,41) goal=(39,41) path_length=6 active levels=[4,9] of 56
+  Agent 37 MDD: start=(37,34) goal=(42,26) path_length=14 active levels=[38,51] of 56
+  Agent 164 MDD: start=(37,37) goal=(43,37) path_length=7 active levels=[41,47] of 56
+  Agent 110 MDD: start=(41,45) goal=(44,45) path_length=4 active levels=[25,28] of 56
+  Agent 114 MDD: start=(42,33) goal=(39,31) path_length=6 active levels=[19,24] of 56
+  Agent 173 MDD: start=(42,28) goal=(37,35) path_length=13 active levels=[42,54] of 56
+  Agent 56 MDD: start=(44,45) goal=(37,34) path_length=19 active levels=[26,44] of 56
+  Agent 183 MDD: start=(41,25) goal=(44,45) path_length=24 active levels=[30,53] of 56
+[LNS] Created 61 local MDDs
+[LNS] Step 9: Creating CNF for local problem...
+[LNS] Created lazy CNF with 244378 clauses and 7839 variables
+[LNS] Step 9b: Extracting collision clauses...
+[LNS] Conflict 25 agents: 73 and 0
+[LNS] Conflict 25 timestep: 6
+[LNS] Conflict 25 positions: 40,34
+[LNS] Conflict 51 agents: 30 and 15
+[LNS] Conflict 51 timestep: 11
+[LNS] Conflict 51 positions: 42,40
+[LNS] Conflict 78 agents: 197 and 15
+[LNS] Conflict 78 timestep: 15
+[LNS] Conflict 78 positions: 43,43
+[LNS] Conflict 91 agents: 197 and 47
+[LNS] Conflict 91 timestep: 17
+[LNS] Conflict 91 positions: 43,41
+[LNS] Conflict 97 agents: 197 and 47
+[LNS] Conflict 97 timestep: 18
+[LNS] Conflict 97 positions: 42,41
+[LNS] Conflict 102 agents: 93 and 84
+[LNS] Conflict 102 timestep: 19
+[LNS] Conflict 102 positions: 42,45
+[LNS] Conflict 111 agents: 93 and 84
+[LNS] Conflict 111 timestep: 20
+[LNS] Conflict 111 positions: 42,44
+[LNS] Conflict 123 agents: 146 and 93
+[LNS] Conflict 123 timestep: 21
+[LNS] Conflict 123 positions: 42,43
+[LNS] Conflict 124 agents: 146 and 84
+[LNS] Conflict 124 timestep: 21
+[LNS] Conflict 124 positions: 42,43
+[LNS] Conflict 125 agents: 93 and 84
+[LNS] Conflict 125 timestep: 21
+[LNS] Conflict 125 positions: 42,43
+[LNS] Conflict 126 agents: 115 and 81
+[LNS] Conflict 126 timestep: 21
+[LNS] Conflict 126 positions: 41,26
+[LNS] Conflict 134 agents: 93 and 84
+[LNS] Conflict 134 timestep: 22
+[LNS] Conflict 134 positions: 42,42
+[LNS] Conflict 140 agents: 93 and 84
+[LNS] Conflict 140 timestep: 23
+[LNS] Conflict 140 positions: 42,41
+[LNS] Conflict 141 agents: 82 and 81
+[LNS] Conflict 141 timestep: 23
+[LNS] Conflict 141 positions: 41,26
+[LNS] Conflict 143 agents: 90 and 59
+[LNS] Conflict 143 timestep: 23
+[LNS] Conflict 143 positions: 40,41
+[LNS] Conflict 148 agents: 93 and 84
+[LNS] Conflict 148 timestep: 24
+[LNS] Conflict 148 positions: 41,41
+[LNS] Conflict 150 agents: 93 and 59
+[LNS] Conflict 150 timestep: 24
+[LNS] Conflict 150 positions: 41,41
+[LNS] Conflict 151 agents: 84 and 59
+[LNS] Conflict 151 timestep: 24
+[LNS] Conflict 151 positions: 41,41
+[LNS] Conflict 155 agents: 81 and 1
+[LNS] Conflict 155 timestep: 24
+[LNS] Conflict 155 positions: 41,26
+[LNS] Conflict 163 agents: 93 and 84
+[LNS] Conflict 163 timestep: 25
+[LNS] Conflict 163 positions: 41,40
+[LNS] Conflict 166 agents: 93 and 59
+[LNS] Conflict 166 timestep: 25
+[LNS] Conflict 166 positions: 41,40
+[LNS] Conflict 167 agents: 84 and 59
+[LNS] Conflict 167 timestep: 25
+[LNS] Conflict 167 positions: 41,40
+[LNS] Conflict 178 agents: 93 and 59
+[LNS] Conflict 178 timestep: 26
+[LNS] Conflict 178 positions: 41,39
+[LNS] Conflict 185 agents: 93 and 90
+[LNS] Conflict 185 timestep: 27
+[LNS] Conflict 185 positions: 41,38
+[LNS] Conflict 190 agents: 93 and 59
+[LNS] Conflict 190 timestep: 27
+[LNS] Conflict 190 positions: 41,38
+[LNS] Conflict 191 agents: 90 and 59
+[LNS] Conflict 191 timestep: 27
+[LNS] Conflict 191 positions: 41,38
+[LNS] Conflict 194 agents: 93 and 90
+[LNS] Conflict 194 timestep: 28
+[LNS] Conflict 194 positions: 41,37
+[LNS] Conflict 196 agents: 100 and 81
+[LNS] Conflict 196 timestep: 28
+[LNS] Conflict 196 positions: 41,26
+[LNS] Conflict 198 agents: 93 and 59
+[LNS] Conflict 198 timestep: 28
+[LNS] Conflict 198 positions: 41,37
+[LNS] Conflict 199 agents: 90 and 59
+[LNS] Conflict 199 timestep: 28
+[LNS] Conflict 199 positions: 41,37
+[LNS] Conflict 207 agents: 93 and 59
+[LNS] Conflict 207 timestep: 29
+[LNS] Conflict 207 positions: 41,36
+[LNS] Conflict 214 agents: 91 and 17
+[LNS] Conflict 214 timestep: 29
+[LNS] Conflict 214 positions: 43,41
+[LNS] Conflict 216 agents: 90 and 11
+[LNS] Conflict 216 timestep: 29
+[LNS] Conflict 216 positions: 42,37
+[LNS] Conflict 224 agents: 93 and 59
+[LNS] Conflict 224 timestep: 30
+[LNS] Conflict 224 positions: 41,35
+[LNS] Conflict 238 agents: 93 and 59
+[LNS] Conflict 238 timestep: 31
+[LNS] Conflict 238 positions: 41,34
+[LNS] Conflict 250 agents: 93 and 59
+[LNS] Conflict 250 timestep: 32
+[LNS] Conflict 250 positions: 41,33
+[LNS] Conflict 252 agents: 165 and 17
+[LNS] Conflict 252 timestep: 32
+[LNS] Conflict 252 positions: 40,41
+[LNS] Conflict 257 agents: 93 and 59
+[LNS] Conflict 257 timestep: 33
+[LNS] Conflict 257 positions: 41,32
+[LNS] Conflict 259 agents: 78 and 11
+[LNS] Conflict 259 timestep: 33
+[LNS] Conflict 259 positions: 42,41
+[LNS] Conflict 264 agents: 107 and 93
+[LNS] Conflict 264 timestep: 34
+[LNS] Conflict 264 positions: 41,31
+[LNS] Conflict 265 agents: 107 and 59
+[LNS] Conflict 265 timestep: 34
+[LNS] Conflict 265 positions: 41,31
+[LNS] Conflict 266 agents: 93 and 59
+[LNS] Conflict 266 timestep: 34
+[LNS] Conflict 266 positions: 41,31
+[LNS] Conflict 272 agents: 81 and 7
+[LNS] Conflict 272 timestep: 34
+[LNS] Conflict 272 positions: 41,26
+[LNS] Conflict 278 agents: 81 and 67
+[LNS] Conflict 278 timestep: 35
+[LNS] Conflict 278 positions: 41,26
+[LNS] Conflict 279 agents: 93 and 59
+[LNS] Conflict 279 timestep: 35
+[LNS] Conflict 279 positions: 41,30
+[LNS] Conflict 280 agents: 183 and 81
+[LNS] Conflict 280 timestep: 36
+[LNS] Conflict 280 positions: 41,26
+[LNS] Conflict 285 agents: 93 and 67
+[LNS] Conflict 285 timestep: 37
+[LNS] Conflict 285 positions: 41,28
+[LNS] Conflict 296 agents: 148 and 91
+[LNS] Conflict 296 timestep: 40
+[LNS] Conflict 296 positions: 39,34
+[LNS] Conflict 311 agents: 177 and 56
+[LNS] Conflict 311 timestep: 41
+[LNS] Conflict 311 positions: 40,39
+[LNS] Conflict 318 agents: 177 and 107
+[LNS] Conflict 318 timestep: 42
+[LNS] Conflict 318 positions: 41,39
+[LNS] Conflict 321 agents: 148 and 7
+[LNS] Conflict 321 timestep: 42
+[LNS] Conflict 321 positions: 41,34
+[LNS] Conflict 338 agents: 78 and 37
+[LNS] Conflict 338 timestep: 44
+[LNS] Conflict 338 positions: 38,34
+[LNS] Conflict 348 agents: 67 and 66
+[LNS] Conflict 348 timestep: 46
+[LNS] Conflict 348 positions: 41,37
+[LNS] Conflict 355 agents: 181 and 81
+[LNS] Conflict 355 timestep: 47
+[LNS] Conflict 355 positions: 41,26
+[LNS] Conflict 362 agents: 183 and 7
+[LNS] Conflict 362 timestep: 48
+[LNS] Conflict 362 positions: 41,38
+[LNS] Conflict 374 agents: 181 and 37
+[LNS] Conflict 374 timestep: 51
+[LNS] Conflict 374 positions: 41,30
+[LNS] Conflict 408 agents: 181 and 7
+[LNS] Conflict 408 timestep: 59
+[LNS] Conflict 408 positions: 41,38
+[LNS] Conflict 577 agents: 165 and 78
+[LNS] Conflict 577 timestep: 35
+[LNS] Conflict 577 positions: 41,39 and 42,39
+[LNS] Conflict 578 agents: 165 and 78
+[LNS] Conflict 578 timestep: 35
+[LNS] Conflict 578 positions: 41,39 and 42,39
+[LNS] Conflict 579 agents: 93 and 7
+[LNS] Conflict 579 timestep: 36
+[LNS] Conflict 579 positions: 41,29 and 41,28
+[LNS] Conflict 580 agents: 93 and 7
+[LNS] Conflict 580 timestep: 36
+[LNS] Conflict 580 positions: 41,29 and 41,28
+[LNS] Conflict 581 agents: 183 and 93
+[LNS] Conflict 581 timestep: 37
+[LNS] Conflict 581 positions: 41,27 and 41,28
+[LNS] Conflict 582 agents: 183 and 93
+[LNS] Conflict 582 timestep: 37
+[LNS] Conflict 582 positions: 41,27 and 41,28
+[LNS] Conflict 597 agents: 183 and 66
+[LNS] Conflict 597 timestep: 46
+[LNS] Conflict 597 positions: 41,36 and 41,37
+[LNS] Conflict 598 agents: 183 and 66
+[LNS] Conflict 598 timestep: 46
+[LNS] Conflict 598 positions: 41,36 and 41,37
+[LNS] Conflict 607 agents: 173 and 37
+[LNS] Conflict 607 timestep: 50
+[LNS] Conflict 607 positions: 41,30 and 41,31
+[LNS] Conflict 608 agents: 173 and 37
+[LNS] Conflict 608 timestep: 50
+[LNS] Conflict 608 positions: 41,30 and 41,31
+[LNS] Conflict 381 agents: 67 and 27
+[LNS] Conflict 381 timestep: 52
+[LNS] Conflict 381 positions: 44,40
+[LNS] Conflict 397 agents: 173 and 62
+[LNS] Conflict 397 timestep: 55
+[LNS] Conflict 397 positions: 38,32
+[LNS] Extracted 59 vertex collision clauses
+[LNS] Extracted 5 edge collision clauses
+[LNS] Final local CNF: 244378 total clauses
+[LNS] Step 10: Starting lazy solving of conflict zone...
+[LNS] Starting lazy solving of conflict zone...
+[LNS] Adding 59 pre-discovered vertex collisions...
+[LNS] Adding 5 pre-discovered edge collisions...
+[LNS] Discovered edge collisions: 
+[LNS] Lazy solving iteration 1...
+DEBUG: CNF has 244442 clauses
+DEBUG: First clause: 1 
+DEBUG: Adding 244442 clauses to MiniSAT
+[LNS] Local problem is unsatisfiable after 1 iterations
+[LNS] No Solution found -> Safety run solving without assignment
+[LNS] Lazy solving iteration 2...
+DEBUG: CNF has 244442 clauses
+DEBUG: First clause: 1 
+DEBUG: Adding 244442 clauses to MiniSAT
+[LNS] Local problem is unsatisfiable after 2 iterations
+[LNS] No Solution found + Safety run failed -> UNSAT
+[LNS] Failed to find local solution after 1000000 iterations
+[LNS] Local problem appears to be unsatisfiable in current zone
+[LNS] Local problem appears to be unsatisfiable in current zone
+[LNS] Attempting resolution with expansion factor 0...
+[LNS] Trying waiting time strategy with original bucket...
+[LNS] Starting waiting time strategy...
+[LNS] Chosen agents involved in conflicts: 7 11 15 37 47 59 62 67 73 78 81 90 91 93 146 165 177 181 183 
+[LNS] Found 19 agents in conflicts with, all with waiting time:
+[LNS] Waiting time attempt 1...
+[LNS] Will expand MDD for 19 chosen agents involved in 64 conflicts
+  Agent 7 used 1 waiting timesteps, 56 remaining
+[LNS] Expanding MDD for agent 7 by 1 timestep
+[LNS] Updated agent 7 entry/exit time: [33, 61]
+  Agent 11 used 1 waiting timesteps, 56 remaining
+[LNS] Expanding MDD for agent 11 by 1 timestep
+[LNS] Updated agent 11 entry/exit time: [28, 39]
+  Agent 15 used 1 waiting timesteps, 60 remaining
+[LNS] Expanding MDD for agent 15 by 1 timestep
+[LNS] Updated agent 15 entry/exit time: [7, 18]
+  Agent 37 used 1 waiting timesteps, 7 remaining
+[LNS] Expanding MDD for agent 37 by 1 timestep
+[LNS] Updated agent 37 entry/exit time: [43, 57]
+  Agent 47 used 1 waiting timesteps, 77 remaining
+[LNS] Expanding MDD for agent 47 by 1 timestep
+[LNS] Updated agent 47 entry/exit time: [16, 22]
+  Agent 59 used 1 waiting timesteps, 39 remaining
+[LNS] Expanding MDD for agent 59 by 1 timestep
+[LNS] Updated agent 59 entry/exit time: [22, 41]
+  Agent 62 used 1 waiting timesteps, 24 remaining
+[LNS] Expanding MDD for agent 62 by 1 timestep
+[LNS] Updated agent 62 entry/exit time: [54, 61]
+  Agent 67 used 1 waiting timesteps, 29 remaining
+[LNS] Expanding MDD for agent 67 by 1 timestep
+[LNS] Updated agent 67 entry/exit time: [34, 58]
+  Agent 73 used 1 waiting timesteps, 75 remaining
+[LNS] Expanding MDD for agent 73 by 1 timestep
+[LNS] Updated agent 73 entry/exit time: [5, 9]
+  Agent 78 used 1 waiting timesteps, 9 remaining
+[LNS] Expanding MDD for agent 78 by 1 timestep
+[LNS] Updated agent 78 entry/exit time: [30, 46]
+  Agent 81 used 1 waiting timesteps, 83 remaining
+[LNS] Expanding MDD for agent 81 by 1 timestep
+[LNS] Updated agent 81 entry/exit time: [18, 61]
+  Agent 90 used 1 waiting timesteps, 63 remaining
+[LNS] Expanding MDD for agent 90 by 1 timestep
+[LNS] Updated agent 90 entry/exit time: [22, 31]
+  Agent 91 used 1 waiting timesteps, 36 remaining
+[LNS] Expanding MDD for agent 91 by 1 timestep
+[LNS] Updated agent 91 entry/exit time: [26, 43]
+  Agent 93 used 1 waiting timesteps, 59 remaining
+[LNS] Expanding MDD for agent 93 by 1 timestep
+[LNS] Updated agent 93 entry/exit time: [18, 40]
+  Agent 146 used 1 waiting timesteps, 48 remaining
+[LNS] Expanding MDD for agent 146 by 1 timestep
+[LNS] Updated agent 146 entry/exit time: [19, 25]
+  Agent 165 used 1 waiting timesteps, 33 remaining
+[LNS] Expanding MDD for agent 165 by 1 timestep
+[LNS] Updated agent 165 entry/exit time: [31, 39]
+  Agent 177 used 1 waiting timesteps, 41 remaining
+[LNS] Expanding MDD for agent 177 by 1 timestep
+[LNS] Updated agent 177 entry/exit time: [40, 46]
+  Agent 181 used 1 waiting timesteps, 12 remaining
+[LNS] Expanding MDD for agent 181 by 1 timestep
+[LNS] Updated agent 181 entry/exit time: [46, 61]
+  Agent 183 used 1 waiting timesteps, 43 remaining
+[LNS] Expanding MDD for agent 183 by 1 timestep
+[LNS] Updated agent 183 entry/exit time: [35, 59]
+[LNS] Time window extended: [5, 60] -> [5, 61]
+[LNS] Found 9 new agents in extended time window: 5 7 27 62 81 137 158 181 186 
+[LNS] Local zone agents: 27 197 78 137 74 15 68 67 115 79 48 107 47 165 0 59 50 177 13 26 3 62 121 53 180 4 63 122 181 17 1 178 30 89 148 5 7 66 11 73 171 44 162 81 82 84 87 146 88 90 91 93 100 105 37 164 110 114 173 56 183 
+[LNS] New agents already in local zone: 5 7 27 62 81 137 181 
+[LNS] New agent 5 was present at the previous last timestep
+[LNS] New agent 5 is a continuing agent
+[LNS] New agent 5 local segment t=[39,61] len=23
+[LNS] Created MDD for new agent 5
+[LNS] New agent 27 was present at the previous last timestep
+[LNS] New agent 27 is a continuing agent
+[LNS] New agent 27 local segment t=[7,61] len=55
+[LNS] Created MDD for new agent 27
+[LNS] New agent 137 was present at the previous last timestep
+[LNS] New agent 137 is a continuing agent
+[LNS] New agent 137 local segment t=[53,61] len=9
+[LNS] Created MDD for new agent 137
+  Added new agent 158 local segment t=[61,61] len=1
+  Created MDD for new agent 158
+  Added new agent 186 local segment t=[61,61] len=1
+  Created MDD for new agent 186
+[LNS] Recreating local CNF with expanded MDDs
+[LNS] Attempting lazy solving with expanded MDD...
+[LNS] Starting lazy solving of conflict zone...
+[LNS] Adding 59 pre-discovered vertex collisions...
+[LNS] Adding 5 pre-discovered edge collisions...
+[LNS] Discovered edge collisions: 
+[LNS] Lazy solving iteration 1...
+DEBUG: CNF has 261389 clauses
+DEBUG: First clause: 1 
+DEBUG: Adding 261389 clauses to MiniSAT
+DEBUG: Clause load summary: input=261389, added=261389, tautologies_skipped=0, duplicates_skipped=0, unit_clauses=207, empties=0, intra_clause_literals_removed=0, added_but_db_unchanged=230
+DEBUG: After adding clauses, solver has 260952 clauses and 8591 variables
+DEBUG: MiniSAT found 8591 variables
+DEBUG: Assignment size: 8591
+DEBUG: First few assignment values: 1 1 0 1 0 1 0 1 0 1 
+[LNS] Found solution with 8591 variable assignments
+
+=== DEBUG: cnf_assignment_to_paths ===
+Input assignment size: 8591
+Input assignment: 1 1 0 1 0 1 0 1 0 1 0 1 0 1 0 1 0 1 0 1 0 1 0 1 0 1 0 0 1 0 0 1 0 0 0 0 0 1 0 0 0 1 0 0 0 0 0 0 1 0 0 0 0 0 0 1 0 0 0 0 0 1 0 0 0 0 0 1 0 0 0 1 0 0 0 0 0 1 0 0 0 0 1 0 1 1 1 0 1 0 0 1 0 0 1 0 0 1 0 0 1 0 0 1 0 0 0 1 0 0 0 1 0 0 0 1 0 0 1 0 0 1 0 0 0 1 0 0 0 1 0 0 0 0 1 0 0 1 0 1 1 1 0 1 0 1 0 1 0 1 0 1 0 1 0 1 0 1 0 1 0 1 0 1 0 1 0 0 1 0 1 0 1 1 1 0 1 0 0 1 0 1 0 1 1 1 1 1 1 0 1 0 1 1 1 0 1 0 0 1 0 0 1 0 0 1 0 1 1 1 0 0 1 0 0 0 1 0 0 0 1 0 0 0 1 0 0 0 1 0 0 1 1 1 0 1 1 1 1 1 1 1 1 1 1 1 1 0 1 0 1 0 1 0 1 1 1 1 1 1 1 1 1 1 0 1 1 1 0 1 1 1 0 1 0 0 1 0 0 0 1 0 0 0 1 0 0 0 1 0 0 0 1 0 0 0 1 0 1 0 0 0 1 0 0 1 0 1 0 1 0 1 0 0 1 0 0 0 1 0 0 0 1 0 1 0 0 0 1 0 1 1 1 0 1 0 1 0 1 1 1 0 0 1 0 0 0 0 0 0 0 1 0 0 0 0 0 0 0 0 0 0 0 0 0 1 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 1 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 1 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 1 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 1 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 1 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 1 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 1 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 1 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 1 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 1 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 1 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 1 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 1 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 1 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 1 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 1 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 1 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 1 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 1 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 1 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 1 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 1 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 1 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 1 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 1 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 1 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 1 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 1 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 1 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 1 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 1 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 1 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 1 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 1 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 1 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 1 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 1 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 1 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 1 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 1 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 1 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 1 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 1 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 1 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 1 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 1 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 1 0 0 0 0 0 0 0 0 0 0 0 0 0 0 1 0 0 0 0 0 0 0 0 1 0 0 0 0 1 1 0 1 0 0 1 0 0 1 0 1 0 0 1 0 0 1 0 0 1 0 0 0 1 0 0 1 0 0 1 0 1 0 1 1 1 1 0 1 0 0 1 0 0 1 0 0 1 0 1 1 1 0 1 0 0 1 0 0 0 0 1 0 0 0 0 0 1 0 0 0 0 1 0 0 0 1 0 0 0 1 0 0 0 1 0 0 0 1 0 0 1 1 1 1 0 1 0 1 0 1 0 1 1 1 0 1 0 1 0 1 0 1 0 1 0 1 0 1 0 1 0 1 0 1 0 1 0 1 0 0 1 0 0 1 0 0 0 1 0 0 0 0 0 1 0 0 0 0 0 0 1 0 0 0 0 1 0 0 0 0 0 1 0 0 0 0 0 1 0 0 0 0 0 1 0 0 0 0 0 1 0 0 0 0 1 0 1 1 1 0 1 0 1 0 1 0 1 0 1 1 1 0 1 0 0 1 0 0 1 0 0 1 0 0 0 1 0 0 1 0 0 0 1 0 0 1 0 0 1 0 0 1 0 0 0 1 0 0 0 1 0 0 0 1 0 0 1 0 1 1 1 1 1 0 1 0 1 0 1 0 1 0 1 1 1 0 0 0 1 0 0 0 0 0 1 0 0 0 0 1 0 0 0 0 0 1 0 0 0 0 0 1 0 0 0 0 0 0 0 1 0 0 0 0 0 0 1 0 0 0 0 0 1 0 0 0 0 0 1 0 0 0 0 0 0 1 0 0 0 0 0 0 0 1 0 0 0 0 0 0 0 1 0 0 0 0 0 0 1 0 0 0 0 1 0 0 1 1 1 1 1 1 1 0 1 1 1 1 1 1 1 1 1 1 0 1 0 0 1 0 0 1 0 0 1 0 0 1 0 0 1 0 0 1 0 0 1 0 0 1 0 1 1 1 1 1 1 0 1 0 0 1 0 0 1 0 0 0 0 1 0 0 0 0 0 1 0 0 0 0 1 0 0 0 0 1 0 1 1 1 0 1 0 1 0 1 0 1 0 1 1 1 1 1 1 1 1 1 1 1 1 0 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 0 1 0 1 0 1 0 1 0 1 0 0 1 0 0 0 1 0 0 0 1 0 0 1 0 0 1 0 0 1 0 0 0 1 0 0 0 1 0 0 0 1 0 0 1 0 1 1 1 1 1 1 1 1 1 1 0 1 0 0 0 0 1 0 0 0 0 0 0 0 1 0 0 0 0 0 0 0 0 0 0 0 0 0 1 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 1 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 1 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 1 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 1 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 1 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 1 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 1 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 1 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 1 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 1 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 1 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 1 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 1 0 0 0 0 0 0 0 0 0 0 0 0 0 1 0 0 0 0 0 0 0 1 0 0 0 0 1 0 1 1 1 0 0 1 0 0 0 0 0 1 0 0 0 0 0 0 0 0 1 0 0 0 0 0 0 0 0 0 0 0 1 0 0 0 0 0 0 0 0 0 0 0 0 0 0 1 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 1 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 1 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 1 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 1 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 1 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 1 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 1 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 1 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 1 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 1 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 1 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 1 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 1 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 1 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 1 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 1 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 1 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 1 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 1 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 1 0 0 0 0 0 0 0 0 0 0 0 0 1 0 0 0 0 1 1 1 0 1 0 0 1 0 0 1 0 0 1 0 0 1 0 0 1 0 0 1 0 1 1 1 1 1 0 0 1 0 0 0 1 0 0 0 1 0 0 0 1 0 0 0 1 0 0 0 1 0 0 0 1 0 0 0 1 0 0 0 1 0 0 1 1 1 0 1 0 1 0 1 1 1 0 1 0 1 0 1 1 1 0 1 0 0 1 0 0 1 0 0 1 0 1 0 1 1 1 1 1 1 1 0 0 1 0 0 0 0 0 0 0 1 0 0 0 0 0 0 0 0 0 1 0 0 0 0 0 0 0 0 0 0 0 0 0 0 1 0 0 0 0 0 0 0 0 0 0 0 0 0 0 1 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 1 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 1 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 1 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 1 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 1 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 1 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 1 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 1 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 1 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 1 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 1 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 1 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 1 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 1 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 1 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 1 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 1 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 1 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 1 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 1 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 1 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 1 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 1 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 1 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 1 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 1 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 1 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 1 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 1 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 1 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 1 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 1 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 1 0 0 0 0 0 0 0 0 0 0 0 0 0 0 1 0 0 0 0 0 0 0 0 0 0 0 1 0 0 0 0 0 0 0 0 1 0 0 0 0 1 1 1 1 1 1 0 0 1 0 0 1 0 0 1 0 0 1 0 0 1 0 0 0 1 0 0 1 0 0 1 0 0 1 0 0 1 0 0 1 0 1 0 1 1 1 1 0 1 0 0 1 0 0 0 1 0 0 0 1 0 0 1 0 1 1 1 0 0 0 1 0 0 0 0 1 0 0 0 0 1 0 0 0 0 1 0 0 1 1 1 1 1 1 0 1 0 0 1 0 0 0 0 1 0 0 0 0 0 0 1 0 0 0 0 0 0 0 1 0 0 0 0 0 0 1 0 0 0 0 1 0 0 1 1 1 0 0 1 0 0 0 0 1 0 0 0 0 0 1 0 0 0 0 0 1 0 0 0 0 0 1 0 0 0 0 0 0 1 0 0 0 0 0 0 0 1 0 0 0 0 0 0 1 0 0 0 0 0 1 0 0 0 0 0 1 0 0 0 0 0 0 1 0 0 0 0 0 0 0 1 0 0 0 0 0 0 1 0 0 0 0 1 0 0 0 1 0 0 1 1 1 0 1 0 1 0 1 0 1 0 1 0 0 1 0 0 0 1 0 0 0 1 0 0 0 1 0 0 1 0 1 0 1 0 1 0 1 0 0 1 0 1 0 1 0 0 1 0 1 0 0 0 1 0 1 1 1 0 1 0 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 0 0 1 0 0 0 0 0 1 0 0 0 0 0 0 1 0 0 0 0 0 1 0 0 0 0 1 0 0 0 1 0 1 0 0 1 0 1 0 0 0 1 0 0 0 1 0 0 0 1 0 1 1 1 1 1 1 1 0 1 1 1 1 1 1 0 1 0 1 1 1 0 1 0 1 0 0 1 0 0 0 1 0 0 0 1 0 0 1 0 1 
+=== END DEBUG ===
+[LNS] Extracted paths for 63 agents
+[LNS] Adjusting collisions by start_t: 5
+[LNS] Found 60 vertex collisions and 12 edge collisions
+[LNS] Adding collision clauses and solving again...
+[LNS] Lazy solving iteration 2...
+DEBUG: CNF has 261461 clauses
+DEBUG: First clause: 1 
+DEBUG: Adding 261461 clauses to MiniSAT
+[LNS] Local problem is unsatisfiable after 2 iterations
+[LNS] No Solution found -> Safety run solving without assignment
+[LNS] Lazy solving iteration 3...
+DEBUG: CNF has 261461 clauses
+DEBUG: First clause: 1 
+DEBUG: Adding 261461 clauses to MiniSAT
+[LNS] Local problem is unsatisfiable after 3 iterations
+[LNS] No Solution found + Safety run failed -> UNSAT
+[LNS] Failed to find local solution after 10000 iterations
+[LNS] Local problem appears to be unsatisfiable in current zone
+[LNS] Expanded MDD did not resolve conflicts, trying next agent...
+[LNS] Current conflicts: 72
+[LNS] Updated collision tracking: 119 vertex collisions, 17 edge collisions
+[LNS] Waiting time attempt 2...
+[LNS] Will expand MDD for 23 chosen agents involved in 72 conflicts
+  Agent 7 used 1 waiting timesteps, 55 remaining
+[LNS] Expanding MDD for agent 7 by 1 timestep
+[LNS] Updated agent 7 entry/exit time: [33, 62]
+  Agent 11 used 1 waiting timesteps, 55 remaining
+[LNS] Expanding MDD for agent 11 by 1 timestep
+[LNS] Updated agent 11 entry/exit time: [28, 40]
+  Agent 15 used 1 waiting timesteps, 59 remaining
+[LNS] Expanding MDD for agent 15 by 1 timestep
+[LNS] Updated agent 15 entry/exit time: [7, 19]
+  Agent 27 used 1 waiting timesteps, 94 remaining
+[LNS] Expanding MDD for agent 27 by 1 timestep
+[LNS] Updated agent 27 entry/exit time: [7, 62]
+  Agent 37 used 1 waiting timesteps, 6 remaining
+[LNS] Expanding MDD for agent 37 by 1 timestep
+[LNS] Updated agent 37 entry/exit time: [43, 58]
+  Agent 47 used 1 waiting timesteps, 76 remaining
+[LNS] Expanding MDD for agent 47 by 1 timestep
+[LNS] Updated agent 47 entry/exit time: [16, 23]
+  Agent 59 used 1 waiting timesteps, 38 remaining
+[LNS] Expanding MDD for agent 59 by 1 timestep
+[LNS] Updated agent 59 entry/exit time: [22, 42]
+  Agent 62 used 1 waiting timesteps, 23 remaining
+[LNS] Expanding MDD for agent 62 by 1 timestep
+[LNS] Updated agent 62 entry/exit time: [54, 62]
+  Agent 73 used 1 waiting timesteps, 74 remaining
+[LNS] Expanding MDD for agent 73 by 1 timestep
+[LNS] Updated agent 73 entry/exit time: [5, 10]
+  Agent 79 used 1 waiting timesteps, 33 remaining
+[LNS] Expanding MDD for agent 79 by 1 timestep
+[LNS] Updated agent 79 entry/exit time: [23, 30]
+  Agent 81 used 1 waiting timesteps, 82 remaining
+[LNS] Expanding MDD for agent 81 by 1 timestep
+[LNS] Updated agent 81 entry/exit time: [18, 62]
+  Agent 87 used 1 waiting timesteps, 69 remaining
+[LNS] Expanding MDD for agent 87 by 1 timestep
+[LNS] Updated agent 87 entry/exit time: [5, 13]
+  Agent 90 used 1 waiting timesteps, 62 remaining
+[LNS] Expanding MDD for agent 90 by 1 timestep
+[LNS] Updated agent 90 entry/exit time: [22, 32]
+  Agent 91 used 1 waiting timesteps, 35 remaining
+[LNS] Expanding MDD for agent 91 by 1 timestep
+[LNS] Updated agent 91 entry/exit time: [26, 44]
+  Agent 93 used 1 waiting timesteps, 58 remaining
+[LNS] Expanding MDD for agent 93 by 1 timestep
+[LNS] Updated agent 93 entry/exit time: [18, 41]
+  Agent 110 used 1 waiting timesteps, 49 remaining
+[LNS] Expanding MDD for agent 110 by 1 timestep
+[LNS] Updated agent 110 entry/exit time: [30, 34]
+  Agent 137 used 1 waiting timesteps, 23 remaining
+[LNS] Expanding MDD for agent 137 by 1 timestep
+[LNS] Updated agent 137 entry/exit time: [53, 62]
+  Agent 146 used 1 waiting timesteps, 47 remaining
+[LNS] Expanding MDD for agent 146 by 1 timestep
+[LNS] Updated agent 146 entry/exit time: [19, 26]
+  Agent 164 used 1 waiting timesteps, 30 remaining
+[LNS] Expanding MDD for agent 164 by 1 timestep
+[LNS] Updated agent 164 entry/exit time: [46, 53]
+  Agent 165 used 1 waiting timesteps, 32 remaining
+[LNS] Expanding MDD for agent 165 by 1 timestep
+[LNS] Updated agent 165 entry/exit time: [31, 40]
+  Agent 177 used 1 waiting timesteps, 40 remaining
+[LNS] Expanding MDD for agent 177 by 1 timestep
+[LNS] Updated agent 177 entry/exit time: [40, 47]
+  Agent 180 used 1 waiting timesteps, 68 remaining
+[LNS] Expanding MDD for agent 180 by 1 timestep
+[LNS] Updated agent 180 entry/exit time: [18, 24]
+  Agent 183 used 1 waiting timesteps, 42 remaining
+[LNS] Expanding MDD for agent 183 by 1 timestep
+[LNS] Updated agent 183 entry/exit time: [35, 60]
+[LNS] Time window extended: [5, 60] -> [5, 62]
+[LNS] Found 11 new agents in extended time window: 5 7 14 27 62 81 137 158 175 181 186 
+[LNS] Local zone agents: 158 27 197 78 137 74 15 68 67 115 79 48 107 47 165 0 186 59 50 177 13 26 3 62 121 53 180 4 63 122 181 17 1 178 30 89 148 5 7 66 11 73 171 44 162 81 82 84 87 146 88 90 91 93 100 105 37 164 110 114 173 56 183 
+[LNS] New agents already in local zone: 5 7 27 62 81 137 158 181 186 
+[LNS] New agent 5 was present at the previous last timestep
+[LNS] New agent 5 is a continuing agent
+[LNS] New agent 5 local segment t=[39,62] len=24
+[LNS] Created MDD for new agent 5
+  Added new agent 14 local segment t=[62,62] len=1
+  Created MDD for new agent 14
+[LNS] New agent 158 was present at the previous last timestep
+[LNS] New agent 158 is a continuing agent
+[LNS] New agent 158 local segment t=[61,62] len=2
+[LNS] Created MDD for new agent 158
+  Added new agent 175 local segment t=[62,62] len=1
+  Created MDD for new agent 175
+[LNS] New agent 181 was present at the previous last timestep
+[LNS] New agent 181 is a continuing agent
+[LNS] New agent 181 local segment t=[46,62] len=17
+[LNS] Created MDD for new agent 181
+[LNS] New agent 186 was present at the previous last timestep
+[LNS] New agent 186 is a continuing agent
+[LNS] New agent 186 local segment t=[61,62] len=2
+[LNS] Created MDD for new agent 186
+[LNS] Recreating local CNF with expanded MDDs
+[LNS] Attempting lazy solving with expanded MDD...
+[LNS] Starting lazy solving of conflict zone...
+[LNS] Adding 119 pre-discovered vertex collisions...
+[LNS] Adding 17 pre-discovered edge collisions...
+[LNS] Discovered edge collisions: 
+[LNS] Lazy solving iteration 1...
+DEBUG: CNF has 280523 clauses
+DEBUG: First clause: 1 
+DEBUG: Adding 280523 clauses to MiniSAT
+[LNS] Local problem is unsatisfiable after 1 iterations
+[LNS] No Solution found -> Safety run solving without assignment
+[LNS] Lazy solving iteration 2...
+DEBUG: CNF has 280523 clauses
+DEBUG: First clause: 1 
+DEBUG: Adding 280523 clauses to MiniSAT
+[LNS] Local problem is unsatisfiable after 2 iterations
+[LNS] No Solution found + Safety run failed -> UNSAT
+[LNS] Failed to find local solution after 10000 iterations
+[LNS] Local problem appears to be unsatisfiable in current zone
+[LNS] Expanded MDD did not resolve conflicts, trying next agent...
+[LNS] Current conflicts: 72
+[LNS] Updated collision tracking: 119 vertex collisions, 17 edge collisions
+[LNS] Waiting time attempt 3...
+[LNS] Will expand MDD for 23 chosen agents involved in 72 conflicts
+  Agent 7 used 3 waiting timesteps, 52 remaining
+[LNS] Expanding MDD for agent 7 by 3 timestep
+[LNS] Updated agent 7 entry/exit time: [33, 65]
+  Agent 11 used 3 waiting timesteps, 52 remaining
+[LNS] Expanding MDD for agent 11 by 3 timestep
+[LNS] Updated agent 11 entry/exit time: [28, 43]
+  Agent 15 used 3 waiting timesteps, 56 remaining
+[LNS] Expanding MDD for agent 15 by 3 timestep
+[LNS] Updated agent 15 entry/exit time: [7, 22]
+  Agent 27 used 3 waiting timesteps, 91 remaining
+[LNS] Expanding MDD for agent 27 by 3 timestep
+[LNS] Updated agent 27 entry/exit time: [7, 65]
+  Agent 47 used 3 waiting timesteps, 73 remaining
+[LNS] Expanding MDD for agent 47 by 3 timestep
+[LNS] Updated agent 47 entry/exit time: [16, 26]
+  Agent 59 used 3 waiting timesteps, 35 remaining
+[LNS] Expanding MDD for agent 59 by 3 timestep
+[LNS] Updated agent 59 entry/exit time: [22, 45]
+  Agent 73 used 3 waiting timesteps, 71 remaining
+[LNS] Expanding MDD for agent 73 by 3 timestep
+[LNS] Updated agent 73 entry/exit time: [5, 13]
+  Agent 79 used 3 waiting timesteps, 30 remaining
+[LNS] Expanding MDD for agent 79 by 3 timestep
+[LNS] Updated agent 79 entry/exit time: [23, 33]
+  Agent 81 used 3 waiting timesteps, 79 remaining
+[LNS] Expanding MDD for agent 81 by 3 timestep
+[LNS] Updated agent 81 entry/exit time: [18, 65]
+  Agent 87 used 3 waiting timesteps, 66 remaining
+[LNS] Expanding MDD for agent 87 by 3 timestep
+[LNS] Updated agent 87 entry/exit time: [5, 16]
+  Agent 90 used 3 waiting timesteps, 59 remaining
+[LNS] Expanding MDD for agent 90 by 3 timestep
+[LNS] Updated agent 90 entry/exit time: [22, 35]
+  Agent 91 used 3 waiting timesteps, 32 remaining
+[LNS] Expanding MDD for agent 91 by 3 timestep
+[LNS] Updated agent 91 entry/exit time: [26, 47]
+  Agent 93 used 3 waiting timesteps, 55 remaining
+[LNS] Expanding MDD for agent 93 by 3 timestep
+[LNS] Updated agent 93 entry/exit time: [18, 44]
+  Agent 110 used 3 waiting timesteps, 46 remaining
+[LNS] Expanding MDD for agent 110 by 3 timestep
+[LNS] Updated agent 110 entry/exit time: [30, 37]
+  Agent 137 used 3 waiting timesteps, 20 remaining
+[LNS] Expanding MDD for agent 137 by 3 timestep
+[LNS] Updated agent 137 entry/exit time: [53, 65]
+  Agent 146 used 3 waiting timesteps, 44 remaining
+[LNS] Expanding MDD for agent 146 by 3 timestep
+[LNS] Updated agent 146 entry/exit time: [19, 29]
+  Agent 164 used 3 waiting timesteps, 27 remaining
+[LNS] Expanding MDD for agent 164 by 3 timestep
+[LNS] Updated agent 164 entry/exit time: [46, 56]
+  Agent 165 used 3 waiting timesteps, 29 remaining
+[LNS] Expanding MDD for agent 165 by 3 timestep
+[LNS] Updated agent 165 entry/exit time: [31, 43]
+  Agent 173 used 3 waiting timesteps, 4 remaining
+[LNS] Expanding MDD for agent 173 by 3 timestep
+[LNS] Updated agent 173 entry/exit time: [47, 62]
+  Agent 177 used 3 waiting timesteps, 37 remaining
+[LNS] Expanding MDD for agent 177 by 3 timestep
+[LNS] Updated agent 177 entry/exit time: [40, 50]
+  Agent 180 used 3 waiting timesteps, 65 remaining
+[LNS] Expanding MDD for agent 180 by 3 timestep
+[LNS] Updated agent 180 entry/exit time: [18, 27]
+  Agent 181 used 3 waiting timesteps, 9 remaining
+[LNS] Expanding MDD for agent 181 by 3 timestep
+[LNS] Updated agent 181 entry/exit time: [46, 65]
+  Agent 183 used 3 waiting timesteps, 39 remaining
+[LNS] Expanding MDD for agent 183 by 3 timestep
+[LNS] Updated agent 183 entry/exit time: [35, 63]
+[LNS] Time window extended: [5, 60] -> [5, 65]
+[LNS] Found 10 new agents in extended time window: 5 7 27 62 81 158 175 181 186 187 
+[LNS] Local zone agents: 14 158 27 197 78 137 74 15 68 67 115 79 175 48 107 47 165 0 186 59 50 177 13 26 3 62 121 53 180 4 63 122 181 17 1 178 30 89 148 5 7 66 11 73 171 44 162 81 82 84 87 146 88 90 91 93 100 105 37 164 110 114 173 56 183 
+[LNS] New agents already in local zone: 5 7 27 62 81 158 175 181 186 
+[LNS] New agent 5 was not present at the previous last timestep
+[LNS] New agent 5 is a returning agent
+[LNS] New agent 5 entry/exit time: [39,62]
+[LNS] New agent 5 end time is not the same as new_end_t - 1
+[LNS] New agent 5 new_end_t: 65
+will relay on the agent path to stay in the zone until new_end_t
+[LNS] Expanded time window for agent 5 to [39, 65]
+[LNS] Expanded MDD for agent 5 to timestep 65
+[LNS] New agent 62 was not present at the previous last timestep
+[LNS] New agent 62 is a returning agent
+[LNS] New agent 62 entry/exit time: [54,62]
+[LNS] New agent 62 end time is not the same as new_end_t - 1
+[LNS] New agent 62 new_end_t: 65
+will relay on the agent path to stay in the zone until new_end_t
+[LNS] Expanded time window for agent 62 to [54, 65]
+[LNS] Expanded MDD for agent 62 to timestep 65
+[LNS] New agent 158 was not present at the previous last timestep
+[LNS] New agent 158 is a returning agent
+[LNS] New agent 158 entry/exit time: [61,62]
+[LNS] New agent 158 end time is not the same as new_end_t - 1
+[LNS] New agent 158 new_end_t: 65
+will relay on the agent path to stay in the zone until new_end_t
+[LNS] Expanded time window for agent 158 to [61, 65]
+[LNS] Expanded MDD for agent 158 to timestep 65
+[LNS] New agent 175 was not present at the previous last timestep
+[LNS] New agent 175 is a returning agent
+[LNS] New agent 175 entry/exit time: [62,62]
+[LNS] New agent 175 end time is not the same as new_end_t - 1
+[LNS] New agent 175 new_end_t: 65
+will relay on the agent path to stay in the zone until new_end_t
+[LNS] Expanded time window for agent 175 to [62, 65]
+[LNS] Expanded MDD for agent 175 to timestep 65
+[LNS] New agent 186 was not present at the previous last timestep
+[LNS] New agent 186 is a returning agent
+[LNS] New agent 186 entry/exit time: [61,62]
+[LNS] New agent 186 end time is not the same as new_end_t - 1
+[LNS] New agent 186 new_end_t: 65
+will relay on the agent path to stay in the zone until new_end_t
+[LNS] Expanded time window for agent 186 to [61, 65]
+[LNS] Expanded MDD for agent 186 to timestep 65
+  Added new agent 187 local segment t=[65,65] len=1
+  Created MDD for new agent 187
+[LNS] Recreating local CNF with expanded MDDs
+[LNS] Attempting lazy solving with expanded MDD...
+[LNS] Starting lazy solving of conflict zone...
+[LNS] Adding 119 pre-discovered vertex collisions...
+[LNS] Adding 17 pre-discovered edge collisions...
+[LNS] Discovered edge collisions: 
+[LNS] Lazy solving iteration 1...
+DEBUG: CNF has 355721 clauses
+DEBUG: First clause: 1 
+DEBUG: Adding 355721 clauses to MiniSAT
+[LNS] Local problem is unsatisfiable after 1 iterations
+[LNS] No Solution found -> Safety run solving without assignment
+[LNS] Lazy solving iteration 2...
+DEBUG: CNF has 355721 clauses
+DEBUG: First clause: 1 
+DEBUG: Adding 355721 clauses to MiniSAT
+[LNS] Local problem is unsatisfiable after 2 iterations
+[LNS] No Solution found + Safety run failed -> UNSAT
+[LNS] Failed to find local solution after 10000 iterations
+[LNS] Local problem appears to be unsatisfiable in current zone
+[LNS] Expanded MDD did not resolve conflicts, trying next agent...
+[LNS] Current conflicts: 72
+[LNS] Updated collision tracking: 119 vertex collisions, 17 edge collisions
+[LNS] Waiting time attempt 4...
+[LNS] Will expand MDD for 23 chosen agents involved in 72 conflicts
+  Agent 7 used 5 waiting timesteps, 47 remaining
+[LNS] Expanding MDD for agent 7 by 5 timestep
+[LNS] Updated agent 7 entry/exit time: [33, 70]
+  Agent 11 used 5 waiting timesteps, 47 remaining
+[LNS] Expanding MDD for agent 11 by 5 timestep
+[LNS] Updated agent 11 entry/exit time: [28, 48]
+  Agent 15 used 5 waiting timesteps, 51 remaining
+[LNS] Expanding MDD for agent 15 by 5 timestep
+[LNS] Updated agent 15 entry/exit time: [7, 27]
+  Agent 27 used 5 waiting timesteps, 86 remaining
+[LNS] Expanding MDD for agent 27 by 5 timestep
+[LNS] Updated agent 27 entry/exit time: [7, 70]
+  Agent 37 used 5 waiting timesteps, 1 remaining
+[LNS] Expanding MDD for agent 37 by 5 timestep
+[LNS] Updated agent 37 entry/exit time: [43, 63]
+  Agent 47 used 5 waiting timesteps, 68 remaining
+[LNS] Expanding MDD for agent 47 by 5 timestep
+[LNS] Updated agent 47 entry/exit time: [16, 31]
+  Agent 59 used 5 waiting timesteps, 30 remaining
+[LNS] Expanding MDD for agent 59 by 5 timestep
+[LNS] Updated agent 59 entry/exit time: [22, 50]
+  Agent 62 used 5 waiting timesteps, 18 remaining
+[LNS] Expanding MDD for agent 62 by 5 timestep
+[LNS] Updated agent 62 entry/exit time: [54, 70]
+  Agent 73 used 5 waiting timesteps, 66 remaining
+[LNS] Expanding MDD for agent 73 by 5 timestep
+[LNS] Updated agent 73 entry/exit time: [5, 18]
+  Agent 79 used 5 waiting timesteps, 25 remaining
+[LNS] Expanding MDD for agent 79 by 5 timestep
+[LNS] Updated agent 79 entry/exit time: [23, 38]
+  Agent 81 used 5 waiting timesteps, 74 remaining
+[LNS] Expanding MDD for agent 81 by 5 timestep
+[LNS] Updated agent 81 entry/exit time: [18, 70]
+  Agent 87 used 5 waiting timesteps, 61 remaining
+[LNS] Expanding MDD for agent 87 by 5 timestep
+[LNS] Updated agent 87 entry/exit time: [5, 21]
+  Agent 90 used 5 waiting timesteps, 54 remaining
+[LNS] Expanding MDD for agent 90 by 5 timestep
+[LNS] Updated agent 90 entry/exit time: [22, 40]
+  Agent 91 used 5 waiting timesteps, 27 remaining
+[LNS] Expanding MDD for agent 91 by 5 timestep
+[LNS] Updated agent 91 entry/exit time: [26, 52]
+  Agent 93 used 5 waiting timesteps, 50 remaining
+[LNS] Expanding MDD for agent 93 by 5 timestep
+[LNS] Updated agent 93 entry/exit time: [18, 49]
+  Agent 110 used 5 waiting timesteps, 41 remaining
+[LNS] Expanding MDD for agent 110 by 5 timestep
+[LNS] Updated agent 110 entry/exit time: [30, 42]
+  Agent 137 used 5 waiting timesteps, 15 remaining
+[LNS] Expanding MDD for agent 137 by 5 timestep
+[LNS] Updated agent 137 entry/exit time: [53, 70]
+  Agent 146 used 5 waiting timesteps, 39 remaining
+[LNS] Expanding MDD for agent 146 by 5 timestep
+[LNS] Updated agent 146 entry/exit time: [19, 34]
+  Agent 164 used 5 waiting timesteps, 22 remaining
+[LNS] Expanding MDD for agent 164 by 5 timestep
+[LNS] Updated agent 164 entry/exit time: [46, 61]
+  Agent 165 used 5 waiting timesteps, 24 remaining
+[LNS] Expanding MDD for agent 165 by 5 timestep
+[LNS] Updated agent 165 entry/exit time: [31, 48]
+  Agent 177 used 5 waiting timesteps, 32 remaining
+[LNS] Expanding MDD for agent 177 by 5 timestep
+[LNS] Updated agent 177 entry/exit time: [40, 55]
+  Agent 180 used 5 waiting timesteps, 60 remaining
+[LNS] Expanding MDD for agent 180 by 5 timestep
+[LNS] Updated agent 180 entry/exit time: [18, 32]
+  Agent 183 used 5 waiting timesteps, 34 remaining
+[LNS] Expanding MDD for agent 183 by 5 timestep
+[LNS] Updated agent 183 entry/exit time: [35, 68]
+[LNS] Time window extended: [5, 60] -> [5, 70]
+[LNS] Found 8 new agents in extended time window: 5 7 27 42 62 81 175 186 
+[LNS] Local zone agents: 187 14 158 27 197 78 137 74 15 68 67 115 79 175 48 107 47 165 0 186 59 50 177 13 26 3 62 121 53 180 4 63 122 181 17 1 178 30 89 148 5 7 66 11 73 171 44 162 81 82 84 87 146 88 90 91 93 100 105 37 164 110 114 173 56 183 
+[LNS] New agents already in local zone: 5 7 27 62 81 175 186 
+[LNS] New agent 5 was not present at the previous last timestep
+[LNS] New agent 5 is a returning agent
+[LNS] New agent 5 entry/exit time: [39,65]
+[LNS] New agent 5 end time is not the same as new_end_t - 1
+[LNS] New agent 5 new_end_t: 70
+will relay on the agent path to stay in the zone until new_end_t
+[LNS] Expanded time window for agent 5 to [39, 70]
+[LNS] Expanded MDD for agent 5 to timestep 70
+  Added new agent 42 local segment t=[70,70] len=1
+  Created MDD for new agent 42
+[LNS] New agent 175 was not present at the previous last timestep
+[LNS] New agent 175 is a returning agent
+[LNS] New agent 175 entry/exit time: [62,65]
+[LNS] New agent 175 end time is not the same as new_end_t - 1
+[LNS] New agent 175 new_end_t: 70
+will relay on the agent path to stay in the zone until new_end_t
+[LNS] Expanded time window for agent 175 to [62, 70]
+[LNS] Expanded MDD for agent 175 to timestep 70
+[LNS] New agent 186 was not present at the previous last timestep
+[LNS] New agent 186 is a returning agent
+[LNS] New agent 186 entry/exit time: [61,65]
+[LNS] New agent 186 end time is not the same as new_end_t - 1
+[LNS] New agent 186 new_end_t: 70
+will relay on the agent path to stay in the zone until new_end_t
+[LNS] Expanded time window for agent 186 to [61, 70]
+[LNS] Expanded MDD for agent 186 to timestep 70
+[LNS] Recreating local CNF with expanded MDDs
+[LNS] Attempting lazy solving with expanded MDD...
+[LNS] Starting lazy solving of conflict zone...
+[LNS] Adding 119 pre-discovered vertex collisions...
+[LNS] Adding 17 pre-discovered edge collisions...
+[LNS] Discovered edge collisions: 
+[LNS] Lazy solving iteration 1...
+DEBUG: CNF has 562810 clauses
+DEBUG: First clause: 1 
+DEBUG: Adding 562810 clauses to MiniSAT
+[LNS] Local problem is unsatisfiable after 1 iterations
+[LNS] No Solution found -> Safety run solving without assignment
+[LNS] Lazy solving iteration 2...
+DEBUG: CNF has 562810 clauses
+DEBUG: First clause: 1 
+DEBUG: Adding 562810 clauses to MiniSAT
+[LNS] Local problem is unsatisfiable after 2 iterations
+[LNS] No Solution found + Safety run failed -> UNSAT
+[LNS] Failed to find local solution after 10000 iterations
+[LNS] Local problem appears to be unsatisfiable in current zone
+[LNS] Expanded MDD did not resolve conflicts, trying next agent...
+[LNS] Current conflicts: 72
+[LNS] Updated collision tracking: 119 vertex collisions, 17 edge collisions
+[LNS] Waiting time attempt 5...
+[LNS] Will expand MDD for 23 chosen agents involved in 72 conflicts
+  Agent 7 used 7 waiting timesteps, 40 remaining
+[LNS] Expanding MDD for agent 7 by 7 timestep
+[LNS] Updated agent 7 entry/exit time: [33, 77]
+  Agent 11 used 7 waiting timesteps, 40 remaining
+[LNS] Expanding MDD for agent 11 by 7 timestep
+[LNS] Updated agent 11 entry/exit time: [28, 55]
+  Agent 15 used 7 waiting timesteps, 44 remaining
+[LNS] Expanding MDD for agent 15 by 7 timestep
+[LNS] Updated agent 15 entry/exit time: [7, 34]
+  Agent 27 used 7 waiting timesteps, 79 remaining
+[LNS] Expanding MDD for agent 27 by 7 timestep
+[LNS] Updated agent 27 entry/exit time: [7, 77]
+  Agent 47 used 7 waiting timesteps, 61 remaining
+[LNS] Expanding MDD for agent 47 by 7 timestep
+[LNS] Updated agent 47 entry/exit time: [16, 38]
+  Agent 59 used 7 waiting timesteps, 23 remaining
+[LNS] Expanding MDD for agent 59 by 7 timestep
+[LNS] Updated agent 59 entry/exit time: [22, 57]
+  Agent 73 used 7 waiting timesteps, 59 remaining
+[LNS] Expanding MDD for agent 73 by 7 timestep
+[LNS] Updated agent 73 entry/exit time: [5, 25]
+  Agent 79 used 7 waiting timesteps, 18 remaining
+[LNS] Expanding MDD for agent 79 by 7 timestep
+[LNS] Updated agent 79 entry/exit time: [23, 45]
+  Agent 81 used 7 waiting timesteps, 67 remaining
+[LNS] Expanding MDD for agent 81 by 7 timestep
+[LNS] Updated agent 81 entry/exit time: [18, 77]
+  Agent 87 used 7 waiting timesteps, 54 remaining
+[LNS] Expanding MDD for agent 87 by 7 timestep
+[LNS] Updated agent 87 entry/exit time: [5, 28]
+  Agent 90 used 7 waiting timesteps, 47 remaining
+[LNS] Expanding MDD for agent 90 by 7 timestep
+[LNS] Updated agent 90 entry/exit time: [22, 47]
+  Agent 91 used 7 waiting timesteps, 20 remaining
+[LNS] Expanding MDD for agent 91 by 7 timestep
+[LNS] Updated agent 91 entry/exit time: [26, 59]
+  Agent 93 used 7 waiting timesteps, 43 remaining
+[LNS] Expanding MDD for agent 93 by 7 timestep
+[LNS] Updated agent 93 entry/exit time: [18, 56]
+  Agent 110 used 7 waiting timesteps, 34 remaining
+[LNS] Expanding MDD for agent 110 by 7 timestep
+[LNS] Updated agent 110 entry/exit time: [30, 49]
+  Agent 137 used 7 waiting timesteps, 8 remaining
+[LNS] Expanding MDD for agent 137 by 7 timestep
+[LNS] Updated agent 137 entry/exit time: [53, 77]
+  Agent 146 used 7 waiting timesteps, 32 remaining
+[LNS] Expanding MDD for agent 146 by 7 timestep
+[LNS] Updated agent 146 entry/exit time: [19, 41]
+  Agent 164 used 7 waiting timesteps, 15 remaining
+[LNS] Expanding MDD for agent 164 by 7 timestep
+[LNS] Updated agent 164 entry/exit time: [46, 68]
+  Agent 165 used 7 waiting timesteps, 17 remaining
+[LNS] Expanding MDD for agent 165 by 7 timestep
+[LNS] Updated agent 165 entry/exit time: [31, 55]
+  Agent 173 used 7 waiting timesteps, 0 remaining
+[LNS] Expanding MDD for agent 173 by 7 timestep
+[LNS] Updated agent 173 entry/exit time: [47, 69]
+  Agent 177 used 7 waiting timesteps, 25 remaining
+[LNS] Expanding MDD for agent 177 by 7 timestep
+[LNS] Updated agent 177 entry/exit time: [40, 62]
+  Agent 180 used 7 waiting timesteps, 53 remaining
+[LNS] Expanding MDD for agent 180 by 7 timestep
+[LNS] Updated agent 180 entry/exit time: [18, 39]
+  Agent 181 used 7 waiting timesteps, 2 remaining
+[LNS] Expanding MDD for agent 181 by 7 timestep
+[LNS] Updated agent 181 entry/exit time: [46, 72]
+  Agent 183 used 7 waiting timesteps, 27 remaining
+[LNS] Expanding MDD for agent 183 by 7 timestep
+[LNS] Updated agent 183 entry/exit time: [35, 75]
+[LNS] Time window extended: [5, 60] -> [5, 77]
+[LNS] Found 6 new agents in extended time window: 5 7 27 46 81 175 
+[LNS] Local zone agents: 42 187 14 158 27 197 78 137 74 15 68 67 115 79 175 48 107 47 165 0 186 59 50 177 13 26 3 62 121 53 180 4 63 122 181 17 1 178 30 89 148 5 7 66 11 73 171 44 162 81 82 84 87 146 88 90 91 93 100 105 37 164 110 114 173 56 183 
+[LNS] New agents already in local zone: 5 7 27 81 175 
+[LNS] New agent 5 was not present at the previous last timestep
+[LNS] New agent 5 is a returning agent
+[LNS] New agent 5 entry/exit time: [39,70]
+[LNS] New agent 5 end time is not the same as new_end_t - 1
+[LNS] New agent 5 new_end_t: 77
+will relay on the agent path to stay in the zone until new_end_t
+[LNS] Expanded time window for agent 5 to [39, 77]
+[LNS] Expanded MDD for agent 5 to timestep 77
+  Added new agent 46 local segment t=[77,77] len=1
+  Created MDD for new agent 46
+[LNS] New agent 175 was not present at the previous last timestep
+[LNS] New agent 175 is a returning agent
+[LNS] New agent 175 entry/exit time: [62,70]
+[LNS] New agent 175 end time is not the same as new_end_t - 1
+[LNS] New agent 175 new_end_t: 77
+will relay on the agent path to stay in the zone until new_end_t
+[LNS] Expanded time window for agent 175 to [62, 77]
+[LNS] Expanded MDD for agent 175 to timestep 77
+[LNS] Recreating local CNF with expanded MDDs
+[LNS] Attempting lazy solving with expanded MDD...
+[LNS] Starting lazy solving of conflict zone...
+[LNS] Adding 119 pre-discovered vertex collisions...
+[LNS] Adding 17 pre-discovered edge collisions...
+[LNS] Discovered edge collisions: 
+[LNS] Lazy solving iteration 1...
+DEBUG: CNF has 1032777 clauses
+DEBUG: First clause: 1 
+DEBUG: Adding 1032777 clauses to MiniSAT
+[LNS] Local problem is unsatisfiable after 1 iterations
+[LNS] No Solution found -> Safety run solving without assignment
+[LNS] Lazy solving iteration 2...
+DEBUG: CNF has 1032777 clauses
+DEBUG: First clause: 1 
+DEBUG: Adding 1032777 clauses to MiniSAT
+[LNS] Local problem is unsatisfiable after 2 iterations
+[LNS] No Solution found + Safety run failed -> UNSAT
+[LNS] Failed to find local solution after 10000 iterations
+[LNS] Local problem appears to be unsatisfiable in current zone
+[LNS] Expanded MDD did not resolve conflicts, trying next agent...
+[LNS] Current conflicts: 72
+[LNS] Updated collision tracking: 119 vertex collisions, 17 edge collisions
+[LNS] Waiting time attempt 6...
+[LNS] Will expand MDD for 23 chosen agents involved in 72 conflicts
+  Agent 7 used 9 waiting timesteps, 31 remaining
+[LNS] Expanding MDD for agent 7 by 9 timestep
+[LNS] Updated agent 7 entry/exit time: [33, 86]
+  Agent 11 used 9 waiting timesteps, 31 remaining
+[LNS] Expanding MDD for agent 11 by 9 timestep
+[LNS] Updated agent 11 entry/exit time: [28, 64]
+  Agent 15 used 9 waiting timesteps, 35 remaining
+[LNS] Expanding MDD for agent 15 by 9 timestep
+[LNS] Updated agent 15 entry/exit time: [7, 43]
+  Agent 17 used 9 waiting timesteps, 15 remaining
+[LNS] Expanding MDD for agent 17 by 9 timestep
+[LNS] Updated agent 17 entry/exit time: [28, 42]
+  Agent 27 used 9 waiting timesteps, 70 remaining
+[LNS] Expanding MDD for agent 27 by 9 timestep
+[LNS] Updated agent 27 entry/exit time: [7, 86]
+  Agent 37 used 9 waiting timesteps, 0 remaining
+[LNS] Expanding MDD for agent 37 by 9 timestep
+[LNS] Updated agent 37 entry/exit time: [43, 72]
+  Agent 47 used 9 waiting timesteps, 52 remaining
+[LNS] Expanding MDD for agent 47 by 9 timestep
+[LNS] Updated agent 47 entry/exit time: [16, 47]
+  Agent 59 used 9 waiting timesteps, 14 remaining
+[LNS] Expanding MDD for agent 59 by 9 timestep
+[LNS] Updated agent 59 entry/exit time: [22, 66]
+  Agent 62 used 9 waiting timesteps, 9 remaining
+[LNS] Expanding MDD for agent 62 by 9 timestep
+[LNS] Updated agent 62 entry/exit time: [54, 79]
+  Agent 67 used 9 waiting timesteps, 20 remaining
+[LNS] Expanding MDD for agent 67 by 9 timestep
+[LNS] Updated agent 67 entry/exit time: [34, 67]
+  Agent 73 used 9 waiting timesteps, 50 remaining
+[LNS] Expanding MDD for agent 73 by 9 timestep
+[LNS] Updated agent 73 entry/exit time: [5, 34]
+  Agent 79 used 9 waiting timesteps, 9 remaining
+[LNS] Expanding MDD for agent 79 by 9 timestep
+[LNS] Updated agent 79 entry/exit time: [23, 54]
+  Agent 81 used 9 waiting timesteps, 58 remaining
+[LNS] Expanding MDD for agent 81 by 9 timestep
+[LNS] Updated agent 81 entry/exit time: [18, 86]
+  Agent 87 used 9 waiting timesteps, 45 remaining
+[LNS] Expanding MDD for agent 87 by 9 timestep
+[LNS] Updated agent 87 entry/exit time: [5, 37]
+  Agent 90 used 9 waiting timesteps, 38 remaining
+[LNS] Expanding MDD for agent 90 by 9 timestep
+[LNS] Updated agent 90 entry/exit time: [22, 56]
+  Agent 93 used 9 waiting timesteps, 34 remaining
+[LNS] Expanding MDD for agent 93 by 9 timestep
+[LNS] Updated agent 93 entry/exit time: [18, 65]
+  Agent 110 used 9 waiting timesteps, 25 remaining
+[LNS] Expanding MDD for agent 110 by 9 timestep
+[LNS] Updated agent 110 entry/exit time: [30, 58]
+  Agent 137 used 9 waiting timesteps, 0 remaining
+[LNS] Expanding MDD for agent 137 by 9 timestep
+[LNS] Updated agent 137 entry/exit time: [53, 86]
+  Agent 146 used 9 waiting timesteps, 23 remaining
+[LNS] Expanding MDD for agent 146 by 9 timestep
+[LNS] Updated agent 146 entry/exit time: [19, 50]
+  Agent 164 used 9 waiting timesteps, 6 remaining
+[LNS] Expanding MDD for agent 164 by 9 timestep
+[LNS] Updated agent 164 entry/exit time: [46, 77]
+  Agent 177 used 9 waiting timesteps, 16 remaining
+[LNS] Expanding MDD for agent 177 by 9 timestep
+[LNS] Updated agent 177 entry/exit time: [40, 71]
+  Agent 180 used 9 waiting timesteps, 44 remaining
+[LNS] Expanding MDD for agent 180 by 9 timestep
+[LNS] Updated agent 180 entry/exit time: [18, 48]
+  Agent 197 used 9 waiting timesteps, 14 remaining
+[LNS] Expanding MDD for agent 197 by 9 timestep
+[LNS] Updated agent 197 entry/exit time: [14, 36]
+[LNS] Time window extended: [5, 60] -> [5, 86]
+[LNS] Found 5 new agents in extended time window: 5 7 27 81 175 
+[LNS] Local zone agents: 42 187 14 158 27 197 78 137 74 15 68 67 115 79 175 48 107 47 165 0 186 59 50 177 13 26 3 62 121 53 180 4 63 122 181 17 1 178 30 89 148 5 7 66 11 73 171 44 162 81 82 84 87 146 88 90 91 93 100 105 37 164 110 114 46 173 56 183 
+[LNS] New agents already in local zone: 5 7 27 81 175 
+[LNS] New agent 5 was not present at the previous last timestep
+[LNS] New agent 5 is a returning agent
+[LNS] New agent 5 entry/exit time: [39,77]
+[LNS] New agent 5 end time is not the same as new_end_t - 1
+[LNS] New agent 5 new_end_t: 86
+will relay on the agent path to stay in the zone until new_end_t
+[LNS] Expanded time window for agent 5 to [39, 86]
+[LNS] Expanded MDD for agent 5 to timestep 86
+[LNS] New agent 175 was not present at the previous last timestep
+[LNS] New agent 175 is a returning agent
+[LNS] New agent 175 entry/exit time: [62,77]
+[LNS] New agent 175 end time is not the same as new_end_t - 1
+[LNS] New agent 175 new_end_t: 86
+will relay on the agent path to stay in the zone until new_end_t
+[LNS] Expanded time window for agent 175 to [62, 86]
+[LNS] Expanded MDD for agent 175 to timestep 86
+[LNS] Recreating local CNF with expanded MDDs
+[LNS] Attempting lazy solving with expanded MDD...
+[LNS] Starting lazy solving of conflict zone...
+[LNS] Adding 119 pre-discovered vertex collisions...
+[LNS] Adding 17 pre-discovered edge collisions...
+[LNS] Discovered edge collisions: 
+[LNS] Lazy solving iteration 1...
+DEBUG: CNF has 1788498 clauses
+DEBUG: First clause: 1 
+DEBUG: Adding 1788498 clauses to MiniSAT
+[LNS] Local problem is unsatisfiable after 1 iterations
+[LNS] No Solution found -> Safety run solving without assignment
+[LNS] Lazy solving iteration 2...
+DEBUG: CNF has 1788498 clauses
+DEBUG: First clause: 1 
+DEBUG: Adding 1788498 clauses to MiniSAT
+[LNS] Local problem is unsatisfiable after 2 iterations
+[LNS] No Solution found + Safety run failed -> UNSAT
+[LNS] Failed to find local solution after 10000 iterations
+[LNS] Local problem appears to be unsatisfiable in current zone
+[LNS] Expanded MDD did not resolve conflicts, trying next agent...
+[LNS] Current conflicts: 72
+[LNS] Updated collision tracking: 119 vertex collisions, 17 edge collisions
+[LNS] Waiting time attempt 7...
+[LNS] No more waiting time available for conflict resolution
+[LNS] Waiting time strategies exhausted, restoring backup...
+[LNS] Restored waiting times from backup
+[LNS] Waiting time strategy failed, checking bucket size...
+[LNS] Original bucket coverage: 1.75781% of map (72/4096 cells)
+[LNS] Original bucket coverage is 1.75781%, can still expand. Will try expansion factor 1
+[LNS] Attempting resolution with expansion factor 1...
+[LNS] ERROR: not an error but HERE STARTS THE EXPANSION STRATEGY
+[LNS] Expanding bucket with expansion factor 1...
+[LNS] Restoring original waiting times...
+[LNS] Restored waiting times from backup
+[LNS] Creating expanded bucket with offset 2 (original: 1)
+[LNS] Expanded bucket contains 135 positions (original: 72)
+[LNS] Checking 63 new positions for conflicts (efficient approach)
+  Found newly touched conflict 60 at position (36,34)
+[LNS] ERROR: Conflict in new zone 397 was already in the original bucket/previous zone
+  Found newly touched conflict 333 at position (39,27)
+  Found newly touched conflict 212 at position (39,28)
+  Found newly touched conflict 292 at position (39,28)
+  Found newly touched conflict 341 at position (39,28)
+  Found newly touched conflict 387 at position (39,32)
+  Found newly touched conflict 18 at position (39,38)
+  Found newly touched conflict 23 at position (39,38)
+  Found newly touched conflict 24 at position (39,38)
+  Found newly touched conflict 206 at position (40,45)
+  Found newly touched conflict 79 at position (43,33)
+  Found newly touched conflict 145 at position (43,33)
+  Found newly touched conflict 487 at position (43,34)
+  Found newly touched conflict 43 at position (44,40)
+  Found newly touched conflict 77 at position (44,40)
+  Found newly touched conflict 152 at position (44,40)
+  Found newly touched conflict 303 at position (44,40)
+[LNS] ERROR: Conflict in new zone 381 was already in the original bucket/previous zone
+[LNS] Merging 17 newly touched conflicts into expanded bucket
+[LNS] After merging new conflicts, expanded bucket contains 164 positions
+[LNS] Iteration 1: Checking 29 new positions from merged conflicts
+  Found additional conflict 282 at position (37,28)
+  Found additional conflict 352 at position (37,28)
+  Found additional conflict 31 at position (38,45)
+  Found additional conflict 184 at position (38,45)
+  Found additional conflict 188 at position (38,45)
+  Found additional conflict 189 at position (38,45)
+  Found additional conflict 273 at position (38,45)
+  Found additional conflict 197 at position (39,45)
+  Found additional conflict 488 at position (44,34)
+  Found additional conflict 511 at position (45,34)
+[LNS] Found 0 additional conflicts in iteration 1
+[LNS] Iteration 2: Checking 25 new positions from merged conflicts
+  Found additional conflict 165 at position (36,45)
+  Found additional conflict 253 at position (36,45)
+  Found additional conflict 159 at position (37,26)
+  Found additional conflict 177 at position (37,45)
+  Found additional conflict 260 at position (37,45)
+  Found additional conflict 512 at position (46,34)
+  Found additional conflict 137 at position (47,34)
+[LNS] Found 0 additional conflicts in iteration 2
+[LNS] Iteration 3: Checking 26 new positions from merged conflicts
+  Found additional conflict 53 at position (34,45)
+  Found additional conflict 142 at position (34,45)
+  Found additional conflict 568 at position (34,45)
+  Found additional conflict 149 at position (35,45)
+  Found additional conflict 567 at position (35,45)
+  Found additional conflict 383 at position (36,26)
+  Found additional conflict 402 at position (36,47)
+  Found additional conflict 369 at position (37,24)
+  Found additional conflict 543 at position (37,24)
+  Found additional conflict 602 at position (37,24)
+  Found additional conflict 601 at position (37,25)
+  Found additional conflict 366 at position (38,25)
+  Found additional conflict 448 at position (38,25)
+  Found additional conflict 297 at position (47,32)
+  Found additional conflict 441 at position (47,32)
+[LNS] Found 0 additional conflicts in iteration 3
+[LNS] Iteration 4: Checking 31 new positions from merged conflicts
+  Found additional conflict 128 at position (32,45)
+  Found additional conflict 256 at position (32,45)
+  Found additional conflict 135 at position (33,45)
+  Found additional conflict 509 at position (33,46)
+  Found additional conflict 230 at position (34,26)
+  Found additional conflict 146 at position (34,43)
+  Found additional conflict 63 at position (34,44)
+  Found additional conflict 162 at position (34,44)
+  Found additional conflict 386 at position (34,44)
+  Found additional conflict 510 at position (34,46)
+  Found additional conflict 604 at position (35,24)
+  Found additional conflict 603 at position (35,25)
+  Found additional conflict 271 at position (35,27)
+  Found additional conflict 360 at position (35,27)
+  Found additional conflict 395 at position (35,27)
+  Found additional conflict 417 at position (35,27)
+  Found additional conflict 544 at position (36,24)
+  Found additional conflict 182 at position (47,30)
+  Found additional conflict 204 at position (48,32)
+  Found additional conflict 290 at position (48,32)
+[LNS] Found 0 additional conflicts in iteration 4
+[LNS] Iteration 5: Checking 41 new positions from merged conflicts
+  Found additional conflict 104 at position (30,45)
+  Found additional conflict 115 at position (31,45)
+  Found additional conflict 222 at position (32,26)
+  Found additional conflict 589 at position (32,26)
+  Found additional conflict 215 at position (33,26)
+  Found additional conflict 237 at position (33,26)
+  Found additional conflict 600 at position (34,23)
+  Found additional conflict 392 at position (34,25)
+  Found additional conflict 393 at position (34,25)
+  Found additional conflict 394 at position (34,25)
+  Found additional conflict 422 at position (34,25)
+  Found additional conflict 599 at position (35,23)
+  Found additional conflict 334 at position (36,22)
+  Found additional conflict 549 at position (47,28)
+[LNS] Found 0 additional conflicts in iteration 5
+[LNS] Iteration 6: Checking 37 new positions from merged conflicts
+  Found additional conflict 193 at position (28,45)
+  Found additional conflict 153 at position (29,44)
+  Found additional conflict 270 at position (30,26)
+  Found additional conflict 596 at position (30,26)
+  Found additional conflict 330 at position (31,25)
+  Found additional conflict 319 at position (32,25)
+  Found additional conflict 590 at position (32,25)
+  Found additional conflict 342 at position (36,21)
+  Found additional conflict 350 at position (37,21)
+  Found additional conflict 229 at position (46,27)
+  Found additional conflict 317 at position (46,27)
+  Found additional conflict 438 at position (46,27)
+  Found additional conflict 550 at position (47,27)
+[LNS] Found 0 additional conflicts in iteration 6
+[LNS] Iteration 7: Checking 35 new positions from merged conflicts
+  Found additional conflict 560 at position (28,43)
+  Found additional conflict 228 at position (28,47)
+  Found additional conflict 349 at position (28,47)
+  Found additional conflict 160 at position (29,42)
+  Found additional conflict 174 at position (29,42)
+  Found additional conflict 310 at position (29,42)
+  Found additional conflict 343 at position (30,24)
+  Found additional conflict 335 at position (30,25)
+  Found additional conflict 595 at position (30,25)
+  Found additional conflict 613 at position (30,28)
+  Found additional conflict 309 at position (37,20)
+  Found additional conflict 59 at position (48,26)
+[LNS] Found 0 additional conflicts in iteration 7
+[LNS] Iteration 8: Checking 38 new positions from merged conflicts
+  Found additional conflict 180 at position (28,42)
+  Found additional conflict 559 at position (28,42)
+  Found additional conflict 614 at position (29,28)
+  Found additional conflict 611 at position (29,29)
+  Found additional conflict 211 at position (29,40)
+  Found additional conflict 339 at position (29,40)
+  Found additional conflict 287 at position (30,22)
+  Found additional conflict 353 at position (30,22)
+  Found additional conflict 358 at position (30,22)
+  Found additional conflict 359 at position (30,22)
+  Found additional conflict 347 at position (30,23)
+  Found additional conflict 284 at position (30,29)
+  Found additional conflict 44 at position (49,25)
+[LNS] Found 0 additional conflicts in iteration 8
+[LNS] Iteration 9: Checking 34 new positions from merged conflicts
+  Found additional conflict 299 at position (27,29)
+  Found additional conflict 136 at position (28,22)
+  Found additional conflict 200 at position (28,40)
+  Found additional conflict 612 at position (29,30)
+  Found additional conflict 306 at position (30,20)
+  Found additional conflict 227 at position (30,40)
+  Found additional conflict 585 at position (31,22)
+  Found additional conflict 242 at position (31,40)
+  Found additional conflict 586 at position (32,22)
+  Found additional conflict 34 at position (49,24)
+[LNS] Found 0 additional conflicts in iteration 9
+[LNS] Iteration 10: Checking 40 new positions from merged conflicts
+  Found additional conflict 380 at position (25,29)
+  Found additional conflict 430 at position (25,29)
+  Found additional conflict 620 at position (26,22)
+  Found additional conflict 119 at position (28,20)
+  Found additional conflict 591 at position (30,18)
+  Found additional conflict 340 at position (30,19)
+  Found additional conflict 446 at position (31,20)
+  Found additional conflict 66 at position (32,20)
+  Found additional conflict 251 at position (32,40)
+  Found additional conflict 112 at position (48,23)
+  Found additional conflict 231 at position (48,23)
+[LNS] Found 0 additional conflicts in iteration 10
+[LNS] Iteration 11: Checking 41 new positions from merged conflicts
+  Found additional conflict 574 at position (25,22)
+  Found additional conflict 619 at position (25,22)
+  Found additional conflict 573 at position (25,23)
+  Found additional conflict 108 at position (27,20)
+  Found additional conflict 301 at position (28,18)
+  Found additional conflict 592 at position (30,17)
+[LNS] Found 0 additional conflicts in iteration 11
+[LNS] Iteration 12: Checking 18 new positions from merged conflicts
+  Found additional conflict 617 at position (23,23)
+  Found additional conflict 618 at position (24,23)
+  Found additional conflict 274 at position (26,18)
+  Found additional conflict 542 at position (26,18)
+[LNS] Found 0 additional conflicts in iteration 12
+[LNS] Iteration 13: Checking 14 new positions from merged conflicts
+  Found additional conflict 541 at position (26,17)
+[LNS] Found 0 additional conflicts in iteration 13
+[LNS] Iteration 14: Checking 4 new positions from merged conflicts
+  Found additional conflict 516 at position (25,16)
+  Found additional conflict 107 at position (26,15)
+  Found additional conflict 109 at position (26,15)
+  Found additional conflict 161 at position (26,15)
+  Found additional conflict 220 at position (26,15)
+  Found additional conflict 244 at position (26,15)
+  Found additional conflict 316 at position (26,15)
+  Found additional conflict 327 at position (26,15)
+  Found additional conflict 427 at position (26,15)
+  Found additional conflict 467 at position (26,15)
+  Found additional conflict 534 at position (26,15)
+[LNS] Found 0 additional conflicts in iteration 14
+[LNS] Iteration 15: Checking 10 new positions from merged conflicts
+  Found additional conflict 524 at position (23,16)
+  Found additional conflict 515 at position (24,16)
+  Found additional conflict 533 at position (27,15)
+[LNS] Found 0 additional conflicts in iteration 15
+[LNS] Iteration 16: Checking 12 new positions from merged conflicts
+  Found additional conflict 523 at position (22,16)
+[LNS] Found 0 additional conflicts in iteration 16
+[LNS] Iteration 17: Checking 5 new positions from merged conflicts
+[LNS] Final expanded bucket contains 575 positions with 237 conflicts (original: 69)
+[LNS] creating zone with expanded bucket...
+[LNS] previous time window: [5, 60]
+[LNS] Expanded zone time window: [0, 85]
+[LNS] Found 134 agents in expanded zone (original: 68)
+[LNS] Zone contains Agent 0 local segment t=[0,36] len=37
+[LNS] Zone contains Agent 1 local segment t=[8,26] len=19
+[LNS] Zone contains Agent 3 local segment t=[28,69] len=42
+[LNS] Zone contains Agent 4 local segment t=[29,73] len=45
+[LNS] Zone contains Agent 5 local segment t=[28,85] len=58
+[LNS] Zone contains Agent 6 local segment t=[6,27] len=22
+[LNS] Zone contains Agent 7 local segment t=[32,85] len=54
+[LNS] Zone contains Agent 9 local segment t=[0,85] len=86
+[LNS] Zone contains Agent 11 local segment t=[7,39] len=33
+[LNS] Zone contains Agent 12 local segment t=[24,85] len=62
+[LNS] Zone contains Agent 13 local segment t=[22,40] len=19
+[LNS] Zone contains Agent 14 local segment t=[34,77] len=44
+[LNS] Zone contains Agent 15 local segment t=[0,18] len=19
+[LNS] Zone contains Agent 17 local segment t=[27,47] len=21
+[LNS] Zone contains Agent 18 local segment t=[7,23] len=17
+[LNS] Zone contains Agent 19 local segment t=[8,45] len=38
+[LNS] Zone contains Agent 20 local segment t=[44,57] len=14
+[LNS] Zone contains Agent 21 local segment t=[31,85] len=55
+[LNS] Zone contains Agent 22 local segment t=[10,33] len=24
+[LNS] Zone contains Agent 25 local segment t=[10,27] len=18
+[LNS] Zone contains Agent 26 local segment t=[0,85] len=86
+[LNS] Zone contains Agent 27 local segment t=[0,85] len=86
+[LNS] Zone contains Agent 28 local segment t=[20,32] len=13
+[LNS] Zone contains Agent 30 local segment t=[4,48] len=45
+[LNS] Zone contains Agent 32 local segment t=[53,75] len=23
+[LNS] Zone contains Agent 33 local segment t=[0,4] len=5
+[LNS] Zone contains Agent 34 local segment t=[12,85] len=74
+[LNS] Zone contains Agent 35 local segment t=[22,85] len=64
+[LNS] Zone contains Agent 36 local segment t=[41,65] len=25
+[LNS] Zone contains Agent 37 local segment t=[21,67] len=47
+[LNS] Zone contains Agent 41 local segment t=[12,23] len=12
+[LNS] Zone contains Agent 42 local segment t=[62,82] len=21
+[LNS] Zone contains Agent 44 local segment t=[11,22] len=12
+[LNS] Zone contains Agent 46 local segment t=[46,79] len=34
+[LNS] Zone contains Agent 47 local segment t=[0,22] len=23
+[LNS] Zone contains Agent 48 local segment t=[4,14] len=11
+[LNS] Zone contains Agent 49 local segment t=[38,59] len=22
+[LNS] Zone contains Agent 50 local segment t=[23,56] len=34
+[LNS] Zone contains Agent 51 local segment t=[6,27] len=22
+[LNS] Zone contains Agent 52 local segment t=[2,16] len=15
+[LNS] Zone contains Agent 53 local segment t=[0,40] len=41
+[LNS] Zone contains Agent 56 local segment t=[31,76] len=46
+[LNS] Zone contains Agent 59 local segment t=[17,41] len=25
+[LNS] Zone contains Agent 61 local segment t=[0,2] len=3
+[LNS] Zone contains Agent 62 local segment t=[29,74] len=46
+[LNS] Zone contains Agent 63 local segment t=[10,33] len=24
+[LNS] Zone contains Agent 64 local segment t=[38,46] len=9
+[LNS] Zone contains Agent 65 local segment t=[8,13] len=6
+[LNS] Zone contains Agent 66 local segment t=[38,85] len=48
+[LNS] Zone contains Agent 67 local segment t=[33,57] len=25
+[LNS] Zone contains Agent 68 local segment t=[25,46] len=22
+[LNS] Zone contains Agent 73 local segment t=[0,15] len=16
+[LNS] Zone contains Agent 74 local segment t=[22,44] len=23
+[LNS] Zone contains Agent 77 local segment t=[36,44] len=9
+[LNS] Zone contains Agent 78 local segment t=[28,77] len=50
+[LNS] Zone contains Agent 79 local segment t=[2,50] len=49
+[LNS] Zone contains Agent 81 local segment t=[7,85] len=79
+[LNS] Zone contains Agent 82 local segment t=[21,85] len=65
+[LNS] Zone contains Agent 83 local segment t=[18,32] len=15
+[LNS] Zone contains Agent 84 local segment t=[17,62] len=46
+[LNS] Zone contains Agent 85 local segment t=[55,68] len=14
+[LNS] Zone contains Agent 87 local segment t=[0,23] len=24
+[LNS] Zone contains Agent 88 local segment t=[26,65] len=40
+[LNS] Zone contains Agent 89 local segment t=[2,85] len=84
+[LNS] Zone contains Agent 90 local segment t=[9,85] len=77
+[LNS] Zone contains Agent 91 local segment t=[25,85] len=61
+[LNS] Zone contains Agent 93 local segment t=[17,85] len=69
+[LNS] Zone contains Agent 95 local segment t=[36,50] len=15
+[LNS] Zone contains Agent 96 local segment t=[0,6] len=7
+[LNS] Zone contains Agent 98 local segment t=[70,82] len=13
+[LNS] Zone contains Agent 99 local segment t=[18,32] len=15
+[LNS] Zone contains Agent 100 local segment t=[12,30] len=19
+[LNS] Zone contains Agent 103 local segment t=[23,60] len=38
+[LNS] Zone contains Agent 105 local segment t=[8,28] len=21
+[LNS] Zone contains Agent 107 local segment t=[2,51] len=50
+[LNS] Zone contains Agent 108 local segment t=[24,27] len=4
+[LNS] Zone contains Agent 109 local segment t=[6,30] len=25
+[LNS] Zone contains Agent 110 local segment t=[15,33] len=19
+[LNS] Zone contains Agent 114 local segment t=[16,63] len=48
+[LNS] Zone contains Agent 115 local segment t=[12,40] len=29
+[LNS] Zone contains Agent 116 local segment t=[15,22] len=8
+[LNS] Zone contains Agent 120 local segment t=[16,85] len=70
+[LNS] Zone contains Agent 121 local segment t=[4,85] len=82
+[LNS] Zone contains Agent 122 local segment t=[0,45] len=46
+[LNS] Zone contains Agent 123 local segment t=[0,6] len=7
+[LNS] Zone contains Agent 125 local segment t=[20,26] len=7
+[LNS] Zone contains Agent 126 local segment t=[19,54] len=36
+[LNS] Zone contains Agent 127 local segment t=[52,59] len=8
+[LNS] Zone contains Agent 129 local segment t=[0,16] len=17
+[LNS] Zone contains Agent 131 local segment t=[28,34] len=7
+[LNS] Zone contains Agent 132 local segment t=[53,69] len=17
+[LNS] Zone contains Agent 133 local segment t=[0,85] len=86
+[LNS] Zone contains Agent 135 local segment t=[23,32] len=10
+[LNS] Zone contains Agent 136 local segment t=[20,39] len=20
+[LNS] Zone contains Agent 137 local segment t=[24,69] len=46
+[LNS] Zone contains Agent 138 local segment t=[60,76] len=17
+[LNS] Zone contains Agent 140 local segment t=[54,84] len=31
+[LNS] Zone contains Agent 141 local segment t=[6,12] len=7
+[LNS] Zone contains Agent 144 local segment t=[16,59] len=44
+[LNS] Zone contains Agent 146 local segment t=[18,39] len=22
+[LNS] Zone contains Agent 147 local segment t=[0,3] len=4
+[LNS] Zone contains Agent 148 local segment t=[23,50] len=28
+[LNS] Zone contains Agent 151 local segment t=[35,64] len=30
+[LNS] Zone contains Agent 152 local segment t=[24,42] len=19
+[LNS] Zone contains Agent 155 local segment t=[15,85] len=71
+[LNS] Zone contains Agent 158 local segment t=[58,85] len=28
+[LNS] Zone contains Agent 159 local segment t=[32,63] len=32
+[LNS] Zone contains Agent 160 local segment t=[3,41] len=39
+[LNS] Zone contains Agent 162 local segment t=[15,47] len=33
+[LNS] Zone contains Agent 163 local segment t=[19,35] len=17
+[LNS] Zone contains Agent 164 local segment t=[28,53] len=26
+[LNS] Zone contains Agent 165 local segment t=[12,49] len=38
+[LNS] Zone contains Agent 166 local segment t=[28,48] len=21
+[LNS] Zone contains Agent 167 local segment t=[6,30] len=25
+[LNS] Zone contains Agent 168 local segment t=[44,77] len=34
+[LNS] Zone contains Agent 169 local segment t=[16,37] len=22
+[LNS] Zone contains Agent 170 local segment t=[38,38] len=1
+[LNS] Zone contains Agent 171 local segment t=[9,55] len=47
+[LNS] Zone contains Agent 173 local segment t=[34,61] len=28
+[LNS] Zone contains Agent 174 local segment t=[14,23] len=10
+[LNS] Zone contains Agent 175 local segment t=[24,85] len=62
+[LNS] Zone contains Agent 177 local segment t=[26,46] len=21
+[LNS] Zone contains Agent 178 local segment t=[0,15] len=16
+[LNS] Zone contains Agent 180 local segment t=[4,85] len=82
+[LNS] Zone contains Agent 181 local segment t=[19,69] len=51
+[LNS] Zone contains Agent 183 local segment t=[34,58] len=25
+[LNS] Zone contains Agent 186 local segment t=[27,76] len=50
+[LNS] Zone contains Agent 187 local segment t=[47,76] len=30
+[LNS] Zone contains Agent 189 local segment t=[5,9] len=5
+[LNS] Zone contains Agent 190 local segment t=[0,29] len=30
+[LNS] Zone contains Agent 191 local segment t=[41,62] len=22
+[LNS] Zone contains Agent 192 local segment t=[28,42] len=15
+[LNS] Zone contains Agent 197 local segment t=[13,45] len=33
+[LNS] Zone contains Agent 199 local segment t=[19,26] len=8
+[LNS] Trying waiting time strategy with expanded zone...
+[LNS] Added 122 new vertex collisions and 46 new edge collisions to bucket tracking
+[LNS] Using 237 conflict indices (original: 69, newly touched: 168)
+[LNS] Starting waiting time strategy...
+[LNS] Chosen agents involved in conflicts: 4 5 7 9 11 12 13 15 18 19 21 22 25 26 27 28 30 32 34 35 37 41 47 50 59 62 63 67 73 78 79 81 82 83 88 89 90 91 93 105 109 114 115 120 121 126 133 135 137 138 144 146 155 162 165 166 177 180 181 183 190 191 192 
+[LNS] Found 63 agents in conflicts with, all with waiting time:
+[LNS] Waiting time attempt 1...
+[LNS] Will expand MDD for 63 chosen agents involved in 232 conflicts
+  Agent 4 used 0 waiting timesteps, 10 remaining
+[LNS] Expanding MDD for agent 4 by 0 timestep
+[LNS] Updated agent 4 entry/exit time: [29, 73]
+  Agent 5 used 1 waiting timesteps, 63 remaining
+[LNS] Expanding MDD for agent 5 by 1 timestep
+[LNS] Updated agent 5 entry/exit time: [28, 86]
+  Agent 7 used 1 waiting timesteps, 56 remaining
+[LNS] Expanding MDD for agent 7 by 1 timestep
+[LNS] Updated agent 7 entry/exit time: [32, 86]
+  Agent 9 used 1 waiting timesteps, 99 remaining
+[LNS] Expanding MDD for agent 9 by 1 timestep
+[LNS] Updated agent 9 entry/exit time: [0, 86]
+  Agent 11 used 1 waiting timesteps, 56 remaining
+[LNS] Expanding MDD for agent 11 by 1 timestep
+[LNS] Updated agent 11 entry/exit time: [7, 40]
+  Agent 12 used 1 waiting timesteps, 70 remaining
+[LNS] Expanding MDD for agent 12 by 1 timestep
+[LNS] Updated agent 12 entry/exit time: [24, 86]
+  Agent 13 used 1 waiting timesteps, 47 remaining
+[LNS] Expanding MDD for agent 13 by 1 timestep
+[LNS] Updated agent 13 entry/exit time: [22, 41]
+  Agent 15 used 1 waiting timesteps, 60 remaining
+[LNS] Expanding MDD for agent 15 by 1 timestep
+[LNS] Updated agent 15 entry/exit time: [0, 19]
+  Agent 18 used 1 waiting timesteps, 36 remaining
+[LNS] Expanding MDD for agent 18 by 1 timestep
+[LNS] Updated agent 18 entry/exit time: [7, 24]
+  Agent 19 used 1 waiting timesteps, 49 remaining
+[LNS] Expanding MDD for agent 19 by 1 timestep
+[LNS] Updated agent 19 entry/exit time: [8, 46]
+  Agent 21 used 1 waiting timesteps, 56 remaining
+[LNS] Expanding MDD for agent 21 by 1 timestep
+[LNS] Updated agent 21 entry/exit time: [31, 86]
+  Agent 22 used 1 waiting timesteps, 67 remaining
+[LNS] Expanding MDD for agent 22 by 1 timestep
+[LNS] Updated agent 22 entry/exit time: [10, 34]
+  Agent 25 used 1 waiting timesteps, 51 remaining
+[LNS] Expanding MDD for agent 25 by 1 timestep
+[LNS] Updated agent 25 entry/exit time: [10, 28]
+  Agent 26 used 1 waiting timesteps, 81 remaining
+[LNS] Expanding MDD for agent 26 by 1 timestep
+[LNS] Updated agent 26 entry/exit time: [0, 86]
+  Agent 27 used 1 waiting timesteps, 94 remaining
+[LNS] Expanding MDD for agent 27 by 1 timestep
+[LNS] Updated agent 27 entry/exit time: [0, 86]
+  Agent 28 used 1 waiting timesteps, 63 remaining
+[LNS] Expanding MDD for agent 28 by 1 timestep
+[LNS] Updated agent 28 entry/exit time: [20, 33]
+  Agent 30 used 1 waiting timesteps, 51 remaining
+[LNS] Expanding MDD for agent 30 by 1 timestep
+[LNS] Updated agent 30 entry/exit time: [4, 49]
+  Agent 32 used 1 waiting timesteps, 11 remaining
+[LNS] Expanding MDD for agent 32 by 1 timestep
+[LNS] Updated agent 32 entry/exit time: [53, 76]
+  Agent 34 used 1 waiting timesteps, 76 remaining
+[LNS] Expanding MDD for agent 34 by 1 timestep
+[LNS] Updated agent 34 entry/exit time: [12, 86]
+  Agent 35 used 1 waiting timesteps, 78 remaining
+[LNS] Expanding MDD for agent 35 by 1 timestep
+[LNS] Updated agent 35 entry/exit time: [22, 86]
+  Agent 37 used 1 waiting timesteps, 7 remaining
+[LNS] Expanding MDD for agent 37 by 1 timestep
+[LNS] Updated agent 37 entry/exit time: [21, 68]
+  Agent 41 used 1 waiting timesteps, 40 remaining
+[LNS] Expanding MDD for agent 41 by 1 timestep
+[LNS] Updated agent 41 entry/exit time: [12, 24]
+  Agent 47 used 1 waiting timesteps, 77 remaining
+[LNS] Expanding MDD for agent 47 by 1 timestep
+[LNS] Updated agent 47 entry/exit time: [0, 23]
+  Agent 50 used 1 waiting timesteps, 22 remaining
+[LNS] Expanding MDD for agent 50 by 1 timestep
+[LNS] Updated agent 50 entry/exit time: [23, 57]
+  Agent 59 used 1 waiting timesteps, 39 remaining
+[LNS] Expanding MDD for agent 59 by 1 timestep
+[LNS] Updated agent 59 entry/exit time: [17, 42]
+  Agent 62 used 1 waiting timesteps, 24 remaining
+[LNS] Expanding MDD for agent 62 by 1 timestep
+[LNS] Updated agent 62 entry/exit time: [29, 75]
+  Agent 63 used 1 waiting timesteps, 66 remaining
+[LNS] Expanding MDD for agent 63 by 1 timestep
+[LNS] Updated agent 63 entry/exit time: [10, 34]
+  Agent 67 used 1 waiting timesteps, 29 remaining
+[LNS] Expanding MDD for agent 67 by 1 timestep
+[LNS] Updated agent 67 entry/exit time: [33, 58]
+  Agent 73 used 1 waiting timesteps, 75 remaining
+[LNS] Expanding MDD for agent 73 by 1 timestep
+[LNS] Updated agent 73 entry/exit time: [0, 16]
+  Agent 78 used 1 waiting timesteps, 9 remaining
+[LNS] Expanding MDD for agent 78 by 1 timestep
+[LNS] Updated agent 78 entry/exit time: [28, 78]
+  Agent 79 used 1 waiting timesteps, 33 remaining
+[LNS] Expanding MDD for agent 79 by 1 timestep
+[LNS] Updated agent 79 entry/exit time: [2, 51]
+  Agent 81 used 1 waiting timesteps, 83 remaining
+[LNS] Expanding MDD for agent 81 by 1 timestep
+[LNS] Updated agent 81 entry/exit time: [7, 86]
+  Agent 82 used 1 waiting timesteps, 60 remaining
+[LNS] Expanding MDD for agent 82 by 1 timestep
+[LNS] Updated agent 82 entry/exit time: [21, 86]
+  Agent 83 used 1 waiting timesteps, 64 remaining
+[LNS] Expanding MDD for agent 83 by 1 timestep
+[LNS] Updated agent 83 entry/exit time: [18, 33]
+  Agent 88 used 1 waiting timesteps, 13 remaining
+[LNS] Expanding MDD for agent 88 by 1 timestep
+[LNS] Updated agent 88 entry/exit time: [26, 66]
+  Agent 89 used 1 waiting timesteps, 89 remaining
+[LNS] Expanding MDD for agent 89 by 1 timestep
+[LNS] Updated agent 89 entry/exit time: [2, 86]
+  Agent 90 used 1 waiting timesteps, 63 remaining
+[LNS] Expanding MDD for agent 90 by 1 timestep
+[LNS] Updated agent 90 entry/exit time: [9, 86]
+  Agent 91 used 1 waiting timesteps, 36 remaining
+[LNS] Expanding MDD for agent 91 by 1 timestep
+[LNS] Updated agent 91 entry/exit time: [25, 86]
+  Agent 93 used 1 waiting timesteps, 59 remaining
+[LNS] Expanding MDD for agent 93 by 1 timestep
+[LNS] Updated agent 93 entry/exit time: [17, 86]
+  Agent 105 used 1 waiting timesteps, 49 remaining
+[LNS] Expanding MDD for agent 105 by 1 timestep
+[LNS] Updated agent 105 entry/exit time: [8, 29]
+  Agent 109 used 1 waiting timesteps, 64 remaining
+[LNS] Expanding MDD for agent 109 by 1 timestep
+[LNS] Updated agent 109 entry/exit time: [6, 31]
+  Agent 114 used 1 waiting timesteps, 25 remaining
+[LNS] Expanding MDD for agent 114 by 1 timestep
+[LNS] Updated agent 114 entry/exit time: [16, 64]
+  Agent 115 used 1 waiting timesteps, 52 remaining
+[LNS] Expanding MDD for agent 115 by 1 timestep
+[LNS] Updated agent 115 entry/exit time: [12, 41]
+  Agent 120 used 1 waiting timesteps, 58 remaining
+[LNS] Expanding MDD for agent 120 by 1 timestep
+[LNS] Updated agent 120 entry/exit time: [16, 86]
+  Agent 121 used 1 waiting timesteps, 78 remaining
+[LNS] Expanding MDD for agent 121 by 1 timestep
+[LNS] Updated agent 121 entry/exit time: [4, 86]
+  Agent 126 used 1 waiting timesteps, 42 remaining
+[LNS] Expanding MDD for agent 126 by 1 timestep
+[LNS] Updated agent 126 entry/exit time: [19, 55]
+  Agent 133 used 1 waiting timesteps, 83 remaining
+[LNS] Expanding MDD for agent 133 by 1 timestep
+[LNS] Updated agent 133 entry/exit time: [0, 86]
+  Agent 135 used 1 waiting timesteps, 46 remaining
+[LNS] Expanding MDD for agent 135 by 1 timestep
+[LNS] Updated agent 135 entry/exit time: [23, 33]
+  Agent 137 used 1 waiting timesteps, 23 remaining
+[LNS] Expanding MDD for agent 137 by 1 timestep
+[LNS] Updated agent 137 entry/exit time: [24, 70]
+  Agent 138 used 1 waiting timesteps, 1 remaining
+[LNS] Expanding MDD for agent 138 by 1 timestep
+[LNS] Updated agent 138 entry/exit time: [60, 77]
+  Agent 144 used 1 waiting timesteps, 22 remaining
+[LNS] Expanding MDD for agent 144 by 1 timestep
+[LNS] Updated agent 144 entry/exit time: [16, 60]
+  Agent 146 used 1 waiting timesteps, 48 remaining
+[LNS] Expanding MDD for agent 146 by 1 timestep
+[LNS] Updated agent 146 entry/exit time: [18, 40]
+  Agent 155 used 1 waiting timesteps, 83 remaining
+[LNS] Expanding MDD for agent 155 by 1 timestep
+[LNS] Updated agent 155 entry/exit time: [15, 86]
+  Agent 162 used 1 waiting timesteps, 47 remaining
+[LNS] Expanding MDD for agent 162 by 1 timestep
+[LNS] Updated agent 162 entry/exit time: [15, 48]
+  Agent 165 used 1 waiting timesteps, 33 remaining
+[LNS] Expanding MDD for agent 165 by 1 timestep
+[LNS] Updated agent 165 entry/exit time: [12, 50]
+  Agent 166 used 1 waiting timesteps, 43 remaining
+[LNS] Expanding MDD for agent 166 by 1 timestep
+[LNS] Updated agent 166 entry/exit time: [28, 49]
+  Agent 177 used 1 waiting timesteps, 41 remaining
+[LNS] Expanding MDD for agent 177 by 1 timestep
+[LNS] Updated agent 177 entry/exit time: [26, 47]
+  Agent 180 used 1 waiting timesteps, 68 remaining
+[LNS] Expanding MDD for agent 180 by 1 timestep
+[LNS] Updated agent 180 entry/exit time: [4, 86]
+  Agent 181 used 1 waiting timesteps, 12 remaining
+[LNS] Expanding MDD for agent 181 by 1 timestep
+[LNS] Updated agent 181 entry/exit time: [19, 70]
+  Agent 183 used 1 waiting timesteps, 43 remaining
+[LNS] Expanding MDD for agent 183 by 1 timestep
+[LNS] Updated agent 183 entry/exit time: [34, 59]
+  Agent 190 used 1 waiting timesteps, 71 remaining
+[LNS] Expanding MDD for agent 190 by 1 timestep
+[LNS] Updated agent 190 entry/exit time: [0, 30]
+  Agent 191 used 1 waiting timesteps, 35 remaining
+[LNS] Expanding MDD for agent 191 by 1 timestep
+[LNS] Updated agent 191 entry/exit time: [41, 63]
+  Agent 192 used 1 waiting timesteps, 29 remaining
+[LNS] Expanding MDD for agent 192 by 1 timestep
+[LNS] Updated agent 192 entry/exit time: [28, 43]
+[LNS] Time window extended: [0, 85] -> [0, 86]
+[LNS] Found 22 new agents in extended time window: 5 7 9 12 21 26 27 34 35 81 82 89 90 91 93 120 121 133 155 158 175 180 
+[LNS] Local zone agents: 199 197 192 191 190 189 187 83 82 67 61 56 183 53 180 52 51 178 50 177 49 48 175 47 174 46 173 44 171 42 169 41 168 37 164 74 15 12 11 138 68 9 136 66 7 36 163 65 6 133 35 162 64 5 132 34 63 4 131 33 160 62 3 32 159 73 14 141 1 30 13 140 59 186 0 127 17 144 77 18 78 19 146 79 20 147 21 148 81 22 25 152 26 27 28 155 84 85 87 88 89 90 91 93 95 96 98 99 100 103 105 107 108 109 110 114 115 116 120 121 122 123 125 126 129 135 137 151 158 165 166 167 170 181 
+[LNS] New agents already in local zone: 5 7 9 12 21 26 27 34 35 81 82 89 90 91 93 120 121 133 155 158 175 180 
+[LNS] New agent 158 was present at the previous last timestep
+[LNS] New agent 158 is a continuing agent
+[LNS] New agent 158 local segment t=[58,86] len=29
+[LNS] Created MDD for new agent 158
+[LNS] New agent 175 was present at the previous last timestep
+[LNS] New agent 175 is a continuing agent
+[LNS] New agent 175 local segment t=[24,86] len=63
+[LNS] Created MDD for new agent 175
+[LNS] Recreating local CNF with expanded MDDs

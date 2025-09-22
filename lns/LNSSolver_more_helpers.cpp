@@ -176,10 +176,28 @@ static void collect_conflicts_meta(
     }
 }
 
+static DiamondBucket merge_diamond_buckets(
+    const DiamondBucket& diamond_bucket,
+    DiamondBucket& diamond_bucket_to_merge) {
+    //add positions from diamond_bucket into diamond_bucket_to_merge (set supports two-iterator range insert)
+    diamond_bucket_to_merge.positions.insert(diamond_bucket.positions.begin(), diamond_bucket.positions.end());
+    //add indices from diamond_bucket into diamond_bucket_to_merge
+    diamond_bucket_to_merge.indices.insert(diamond_bucket_to_merge.indices.end(), diamond_bucket.indices.begin(), diamond_bucket.indices.end());
+    //add earliest_t from diamond_bucket into diamond_bucket_to_merge
+    diamond_bucket_to_merge.earliest_t = std::min(diamond_bucket_to_merge.earliest_t, diamond_bucket.earliest_t);
+    //add latest_t from diamond_bucket into diamond_bucket_to_merge
+    diamond_bucket_to_merge.latest_t = std::max(diamond_bucket_to_merge.latest_t, diamond_bucket.latest_t);
+
+    return diamond_bucket_to_merge;
+}
+
+
+
+
 // Helper: form diamond shaped buckets around conflicts.  Each conflict belongs
 // to exactly one bucket.  The algorithm incrementally grows a diamond around a
 // seed conflict, merging nearby conflicts that fall into the diamond.
-static std::vector<DiamondBucket> build_diamond_buckets(
+static std::vector<DiamondBucket> build_diamond_buckets_with_merging(
     const std::vector<std::pair<int,int>>& conflict_points,
     const std::vector<std::vector<std::vector<int>>>& conflict_map,
     const std::vector<std::vector<char>>& map,
@@ -188,7 +206,7 @@ static std::vector<DiamondBucket> build_diamond_buckets(
     int offset) {
 
     std::vector<DiamondBucket> diamond_buckets;
-    std::vector<char> diamond_used(conflict_points.size(), 0);
+    std::vector<bool> diamond_used(conflict_points.size(), false);
     // Dimensions for safe conflict_map access
     const int rows = (int)conflict_map.size();
     const int cols = rows > 0 ? (int)conflict_map[0].size() : 0;
@@ -238,22 +256,64 @@ static std::vector<DiamondBucket> build_diamond_buckets(
                         std::cerr << "[ERROR] Found invalid conflict index " << conflict_idx << std::endl;
                         continue;
                     }
+                    if (conflict_meta[conflict_idx].timestep < start_t || conflict_meta[conflict_idx].timestep > end_t) {
+                        continue; //only include conflicts that are in the time window
+                    }
                     if (diamond_used[conflict_idx]) {
-                        if (!changed_time_window) {
-                            if (conflict_meta[conflict_idx].timestep < start_t || conflict_meta[conflict_idx].timestep > end_t) {
-                                std::cerr << "[ERROR] Found already used conflict " << conflict_idx
-                                        << " at position (" << r << "," << c
-                                        << ") in new positions of diamond bucket." << std::endl;
-                            }
+                        //if time was changed and the conflict is not part index set, it is a bug
+                        
+                        if (!changed_time_window && index_set.count(conflict_idx)==0) {
+                            std::cerr << "[ERROR] Found already used conflict " << conflict_idx
+                                    << " at position (" << r << "," << c
+                                    << ") in new positions of diamond bucket." << std::endl;
+                                    //check which bucket it is from
+                                    for (auto it = diamond_buckets.begin(); it != diamond_buckets.end(); ++it) {
+                                        const auto& bucket = *it;
+                                        if (std::find(bucket.indices.begin(), bucket.indices.end(), conflict_idx) != bucket.indices.end()) {
+                                            //get that buckets first conflict index
+                                            int first_conflict_idx = bucket.indices[0];
+                                            std::cerr << "[ERROR] Conflict " << conflict_idx
+                                                    << " is part of bucket build on " << first_conflict_idx << std::endl;
+                                            //merging buckets
+                                            DiamondBucket merged_bucket;
+                                            DiamondBucket bucket_to_merge;
+                                            bucket_to_merge.positions = std::move(current_shape);
+                                            bucket_to_merge.indices.assign(index_set.begin(), index_set.end());
+                                            bucket_to_merge.earliest_t = bucket_earliest_t;
+                                            bucket_to_merge.latest_t = bucket_latest_t;
+                                            merged_bucket = merge_diamond_buckets(bucket, bucket_to_merge);
+                                            //set running parameters to the merged bucket
+                                            current_shape = std::move(merged_bucket.positions);
+                                            index_set.clear();
+                                            index_set.insert(merged_bucket.indices.begin(), merged_bucket.indices.end());
+                                            bucket_conflicts.clear();
+                                            for (int idx : merged_bucket.indices) {
+                                                if (idx >= 0 && idx < (int)conflict_points.size()) {
+                                                    bucket_conflicts.push_back(conflict_points[idx]);
+                                                }
+                                            }
+                                            bucket_earliest_t = merged_bucket.earliest_t;
+                                            bucket_latest_t = merged_bucket.latest_t;
+                                            start_t = bucket_earliest_t - offset;
+                                            end_t = bucket_latest_t + offset;
+                                            changed_time_window = true;
+                                            found_new_conflicts = true;
+
+                                            //print merged bucket
+                                            std::cout << "[LNS] Merged bucket bucket build on " << first_conflict_idx << " will delete it"<< std::endl;
+                                            //delete found bucket
+                                            diamond_buckets.erase(it);
+                                            break;
+                                        }
+                                    }
+                        
                         }
                         continue;
                     }
                     if (!solved_conflict_indices.count(conflict_idx)) {
-                        if (conflict_meta[conflict_idx].timestep < start_t || conflict_meta[conflict_idx].timestep > end_t) {
-                            continue; //only include conflicts that are in the time window
-                        }
+                        
                         bucket_conflicts.push_back(conflict_points[conflict_idx]);
-                        diamond_used[conflict_idx] = 1;
+                        diamond_used[conflict_idx] = true;
                         found_new_conflicts = true;
                         index_set.insert(conflict_idx);
                         if (conflict_idx >= 0 && conflict_idx < (int)conflict_meta.size()) {
@@ -286,6 +346,105 @@ static std::vector<DiamondBucket> build_diamond_buckets(
         
         diamond_bucket.indices.assign(index_set.begin(), index_set.end());
         diamond_bucket.earliest_t = bucket_earliest_t;
+        diamond_bucket.latest_t = bucket_latest_t;
+
+        diamond_buckets.push_back(std::move(diamond_bucket));
+    }
+
+    return diamond_buckets;
+}
+
+
+// Helper: form diamond shaped buckets around conflicts.  Each conflict belongs
+// to exactly one bucket.  The algorithm incrementally grows a diamond around a
+// seed conflict, merging nearby conflicts that fall into the diamond.
+static std::vector<DiamondBucket> build_diamond_buckets(
+    const std::vector<std::pair<int,int>>& conflict_points,
+    const std::vector<std::vector<std::vector<int>>>& conflict_map,
+    const std::vector<std::vector<char>>& map,
+    const std::set<int>& solved_conflict_indices,
+    const std::vector<ConflictMeta>& conflict_meta,
+    int offset) {
+
+    std::vector<DiamondBucket> diamond_buckets;
+    std::vector<char> diamond_used(conflict_points.size(), 0);
+    // Dimensions for safe conflict_map access
+    const int rows = (int)conflict_map.size();
+    const int cols = rows > 0 ? (int)conflict_map[0].size() : 0;
+
+    for (size_t i = 0; i < conflict_points.size(); ++i) {
+        if (diamond_used[i] || solved_conflict_indices.count(i)) continue;
+        std::cout << "[LNS] Building diamond bucket for conflict " << i << std::endl;
+        std::vector<std::pair<int,int>> bucket_conflicts;
+        bucket_conflicts.push_back(conflict_points[i]);
+        // Collect conflict indices as we grow the bucket to ensure buckets always carry conflicts
+        std::set<int> index_set;
+        index_set.insert((int)i);
+        // Track earliest timestep incrementally
+        int bucket_earliest_t = conflict_meta[i].timestep; //set to timestep of first conflict
+        int bucket_latest_t = conflict_meta[i].timestep;
+        //set time window relvant for this conflict
+
+
+
+        std::set<std::pair<int,int>> previous_shape;
+        bool found_new_conflicts = true;
+        while (found_new_conflicts) {
+            found_new_conflicts = false;
+            // Use conflict_map dimensions implicitly via map overloads
+            auto current_shape = create_shape_from_conflicts(bucket_conflicts, offset, map);
+            std::set<std::pair<int,int>> check_shape;
+
+            auto new_positions = find_new_positions(current_shape, previous_shape, map);
+
+            
+            
+
+            for (const auto& pos : new_positions) {
+                auto [r, c] = pos;
+                // Bounds guard to avoid OOB access
+                if (r < 0 || r >= rows || c < 0 || c >= cols) {
+                    std::cerr << "[ERROR] Found position (" << r << "," << c << ") outside of map bounds" << std::endl;
+                    continue;
+                }
+                if (conflict_map[r][c].empty()) continue;
+                for (int conflict_idx : conflict_map[r][c]) {
+                    // Index validity guard
+                    if (conflict_idx < 0 || conflict_idx >= (int)conflict_points.size()) {
+                        std::cerr << "[ERROR] Found invalid conflict index " << conflict_idx << std::endl;
+                        continue;
+                    }
+                    if (diamond_used[conflict_idx]) {
+                        if (index_set.count(conflict_idx)==0) {
+                                std::cerr << "[ERROR] Found already used conflict " << conflict_idx
+                                            << " at position (" << r << "," << c
+                                            << ") in new positions of diamond bucket." << std::endl;
+                        }
+                        continue;
+                    }
+                    if (!solved_conflict_indices.count(conflict_idx)) {
+                        bucket_conflicts.push_back(conflict_points[conflict_idx]);
+                        diamond_used[conflict_idx] = 1;
+                        found_new_conflicts = true;
+                        index_set.insert(conflict_idx);
+                        if (conflict_idx >= 0 && conflict_idx < (int)conflict_meta.size()) {
+                            bucket_earliest_t = std::min(bucket_earliest_t, conflict_meta[conflict_idx].timestep); //update earliest timestep of the bucket
+                            bucket_latest_t = std::max(bucket_latest_t, conflict_meta[conflict_idx].timestep);                         
+                        }
+                    }
+                }
+            }
+
+            previous_shape = std::move(current_shape);
+        }
+
+        auto diamond_positions = create_shape_from_conflicts(bucket_conflicts, offset, map);
+        DiamondBucket diamond_bucket;
+        diamond_bucket.positions = std::move(diamond_positions);
+        
+        diamond_bucket.indices.assign(index_set.begin(), index_set.end());
+        diamond_bucket.earliest_t = bucket_earliest_t;
+        diamond_bucket.latest_t = bucket_latest_t;
 
         diamond_buckets.push_back(std::move(diamond_bucket));
     }

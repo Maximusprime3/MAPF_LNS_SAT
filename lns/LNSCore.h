@@ -31,6 +31,7 @@ struct DiamondBucket {
     std::vector<int> indices;
     std::vector<std::vector<char>> masked_map;
     int earliest_t; // earliest timestep among conflicts in this bucket
+    int latest_t; // latest timestep among conflicts in this bucket
 };
 
 

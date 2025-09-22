@@ -285,228 +285,93 @@
 [LNS] Building diamond bucket for conflict 12
 [LNS] Building diamond bucket for conflict 17
 [LNS] Building diamond bucket for conflict 45
-[LNS] Building diamond bucket for conflict 49
 [LNS] Building diamond bucket for conflict 58
 [LNS] Building diamond bucket for conflict 61
 [LNS] Building diamond bucket for conflict 64
 [LNS] Building diamond bucket for conflict 66
-[LNS] Building diamond bucket for conflict 70
 [LNS] Building diamond bucket for conflict 80
 [LNS] Building diamond bucket for conflict 113
 [LNS] Building diamond bucket for conflict 117
 [LNS] Building diamond bucket for conflict 118
-[LNS] Building diamond bucket for conflict 137
-[LNS] Building diamond bucket for conflict 138
-[ERROR] Found already used conflict 129 at position (31,7) in new positions of diamond bucket.
-[ERROR] Conflict 129 is part of bucket build on 70
-[LNS] Merged bucket bucket build on 70 will delete it
-[LNS] Building diamond bucket for conflict 147
-[LNS] Building diamond bucket for conflict 151
-[LNS] Building diamond bucket for conflict 156
-[ERROR] Found already used conflict 1331 at position (18,43) in new positions of diamond bucket.
-[ERROR] Conflict 1331 is part of bucket build on 137
-[LNS] Merged bucket bucket build on 137 will delete it
-[LNS] Building diamond bucket for conflict 165
-[LNS] Building diamond bucket for conflict 174
-[LNS] Building diamond bucket for conflict 199
-[LNS] Building diamond bucket for conflict 207
-[LNS] Building diamond bucket for conflict 220
-[LNS] Building diamond bucket for conflict 222
-[LNS] Building diamond bucket for conflict 256
 [LNS] Building diamond bucket for conflict 344
-[LNS] Building diamond bucket for conflict 402
-[LNS] Building diamond bucket for conflict 462
-[ERROR] Found already used conflict 492 at position (30,7) in new positions of diamond bucket.
-[ERROR] Conflict 492 is part of bucket build on 70
-[LNS] Merged bucket bucket build on 70 will delete it
-[LNS] Building diamond bucket for conflict 502
-[LNS] Building diamond bucket for conflict 525
-[LNS] Building diamond bucket for conflict 548
-[LNS] Building diamond bucket for conflict 558
-[LNS] Building diamond bucket for conflict 584
 [LNS] Building diamond bucket for conflict 589
-[LNS] Building diamond bucket for conflict 591
 [LNS] Building diamond bucket for conflict 601
-[LNS] Building diamond bucket for conflict 605
-[LNS] Building diamond bucket for conflict 620
-[LNS] Building diamond bucket for conflict 637
-[LNS] Building diamond bucket for conflict 657
 [LNS] Building diamond bucket for conflict 724
 [LNS] Building diamond bucket for conflict 761
-[LNS] Building diamond bucket for conflict 803
 [LNS] Building diamond bucket for conflict 827
-[LNS] Building diamond bucket for conflict 855
-[ERROR] Found already used conflict 842 at position (11,18) in new positions of diamond bucket.
-[ERROR] Conflict 842 is part of bucket build on 45
-[LNS] Merged bucket bucket build on 45 will delete it
-[LNS] Building diamond bucket for conflict 862
 [LNS] Building diamond bucket for conflict 871
-[LNS] Building diamond bucket for conflict 893
-[ERROR] Found already used conflict 887 at position (11,23) in new positions of diamond bucket.
-[ERROR] Conflict 887 is part of bucket build on 45
-[LNS] Merged bucket bucket build on 45 will delete it
-[ERROR] Found already used conflict 624 at position (13,12) in new positions of diamond bucket.
-[ERROR] Conflict 624 is part of bucket build on 605
-[LNS] Merged bucket bucket build on 605 will delete it
-[ERROR] Found already used conflict 1347 at position (17,41) in new positions of diamond bucket.
-[ERROR] Conflict 1347 is part of bucket build on 222
-[LNS] Merged bucket bucket build on 222 will delete it
-[ERROR] Found already used conflict 1338 at position (15,41) in new positions of diamond bucket.
-[ERROR] Conflict 1338 is part of bucket build on 174
-[LNS] Merged bucket bucket build on 174 will delete it
-[ERROR] Found already used conflict 1331 at position (18,43) in new positions of diamond bucket.
-[ERROR] Conflict 1331 is part of bucket build on 137
-[LNS] Merged bucket bucket build on 137 will delete it
-[ERROR] Found already used conflict 803 at position (19,41) in new positions of diamond bucket.
-[ERROR] Conflict 803 is part of bucket build on 803
-[LNS] Merged bucket bucket build on 803 will delete it
-[ERROR] Found already used conflict 862 at position (20,44) in new positions of diamond bucket.
-[ERROR] Conflict 862 is part of bucket build on 862
-[LNS] Merged bucket bucket build on 862 will delete it
-[ERROR] Found already used conflict 1340 at position (31,44) in new positions of diamond bucket.
-[ERROR] Conflict 1340 is part of bucket build on 165
-[LNS] Merged bucket bucket build on 165 will delete it
-[ERROR] Found already used conflict 548 at position (28,43) in new positions of diamond bucket.
-[ERROR] Conflict 548 is part of bucket build on 548
-[LNS] Merged bucket bucket build on 548 will delete it
-[ERROR] Found already used conflict 502 at position (30,44) in new positions of diamond bucket.
-[ERROR] Conflict 502 is part of bucket build on 502
-[LNS] Merged bucket bucket build on 502 will delete it
 [LNS] Building diamond bucket for conflict 900
 [LNS] Building diamond bucket for conflict 972
 [LNS] Building diamond bucket for conflict 973
 [LNS] Building diamond bucket for conflict 1031
 [LNS] Building diamond bucket for conflict 1065
-[LNS] Building diamond bucket for conflict 1081
-[LNS] Building diamond bucket for conflict 1084
 [LNS] Building diamond bucket for conflict 1089
 [LNS] Building diamond bucket for conflict 1163
-[LNS] Building diamond bucket for conflict 1164
 [LNS] Building diamond bucket for conflict 1171
 [LNS] Building diamond bucket for conflict 1173
-[LNS] Building diamond bucket for conflict 1177
-[LNS] Building diamond bucket for conflict 1182
-[LNS] Building diamond bucket for conflict 1195
-[LNS] Building diamond bucket for conflict 1197
-[LNS] Building diamond bucket for conflict 1213
-[LNS] Building diamond bucket for conflict 1220
-[LNS] Building diamond bucket for conflict 1229
-[LNS] Building diamond bucket for conflict 1234
-[LNS] Building diamond bucket for conflict 1244
 [LNS] Building diamond bucket for conflict 1257
 [LNS] Building diamond bucket for conflict 1264
 [LNS] Building diamond bucket for conflict 1274
 [LNS] Building diamond bucket for conflict 1276
-[LNS] Building diamond bucket for conflict 1278
-[LNS] Building diamond bucket for conflict 1289
 [LNS] Building diamond bucket for conflict 1294
-[LNS] Building diamond bucket for conflict 1296
 [LNS] Building diamond bucket for conflict 1306
 [LNS] Building diamond bucket for conflict 1307
-[LNS] Building diamond bucket for conflict 1308
 [LNS] Building diamond bucket for conflict 1309
-[LNS] Building diamond bucket for conflict 1310
-[LNS] Building diamond bucket for conflict 1311
-[LNS] Building diamond bucket for conflict 1312
-[LNS] Building diamond bucket for conflict 1313
-[LNS] Building diamond bucket for conflict 1317
-[LNS] Building diamond bucket for conflict 1319
-[LNS] Building diamond bucket for conflict 1323
-[LNS] Building diamond bucket for conflict 1327
 [LNS] Building diamond bucket for conflict 1357
 [LNS] Building diamond bucket for conflict 1373
-[LNS] Building diamond bucket for conflict 1403
-[LNS] Formed 83 diamond-shaped conflict bucket(s).
-  Diamond Bucket 0: positions=8, conflicts=2
+[LNS] Formed 42 diamond-shaped conflict bucket(s).
+  Diamond Bucket 0: positions=10, conflicts=3
   Diamond Bucket 1: positions=8, conflicts=2
   Diamond Bucket 2: positions=18, conflicts=6
-  Diamond Bucket 3: positions=32, conflicts=11
+  Diamond Bucket 3: positions=40, conflicts=18
   Diamond Bucket 4: positions=11, conflicts=4
-  Diamond Bucket 5: positions=27, conflicts=25
+  Diamond Bucket 5: positions=28, conflicts=31
   Diamond Bucket 6: positions=33, conflicts=12
-  Diamond Bucket 7: positions=5, conflicts=1
-  Diamond Bucket 8: positions=18, conflicts=7
+  Diamond Bucket 7: positions=383, conflicts=1242
+  Diamond Bucket 8: positions=109, conflicts=208
   Diamond Bucket 9: positions=15, conflicts=5
   Diamond Bucket 10: positions=12, conflicts=4
   Diamond Bucket 11: positions=5, conflicts=1
   Diamond Bucket 12: positions=10, conflicts=3
-  Diamond Bucket 13: positions=11, conflicts=3
-  Diamond Bucket 14: positions=4, conflicts=1
-  Diamond Bucket 15: positions=8, conflicts=2
-  Diamond Bucket 16: positions=5, conflicts=1
+  Diamond Bucket 13: positions=14, conflicts=7
+  Diamond Bucket 14: positions=20, conflicts=10
+  Diamond Bucket 15: positions=12, conflicts=4
+  Diamond Bucket 16: positions=4, conflicts=1
   Diamond Bucket 17: positions=8, conflicts=2
   Diamond Bucket 18: positions=5, conflicts=1
-  Diamond Bucket 19: positions=5, conflicts=1
+  Diamond Bucket 19: positions=5, conflicts=2
   Diamond Bucket 20: positions=5, conflicts=1
-  Diamond Bucket 21: positions=20, conflicts=9
-  Diamond Bucket 22: positions=4, conflicts=1
-  Diamond Bucket 23: positions=5, conflicts=1
-  Diamond Bucket 24: positions=88, conflicts=149
-  Diamond Bucket 25: positions=8, conflicts=2
+  Diamond Bucket 21: positions=5, conflicts=1
+  Diamond Bucket 22: positions=5, conflicts=1
+  Diamond Bucket 23: positions=8, conflicts=2
+  Diamond Bucket 24: positions=14, conflicts=6
+  Diamond Bucket 25: positions=5, conflicts=1
   Diamond Bucket 26: positions=5, conflicts=1
   Diamond Bucket 27: positions=5, conflicts=1
-  Diamond Bucket 28: positions=8, conflicts=2
-  Diamond Bucket 29: positions=5, conflicts=1
+  Diamond Bucket 28: positions=5, conflicts=1
+  Diamond Bucket 29: positions=5, conflicts=3
   Diamond Bucket 30: positions=5, conflicts=1
   Diamond Bucket 31: positions=5, conflicts=1
-  Diamond Bucket 32: positions=10, conflicts=3
-  Diamond Bucket 33: positions=5, conflicts=1
-  Diamond Bucket 34: positions=5, conflicts=1
+  Diamond Bucket 32: positions=4, conflicts=2
+  Diamond Bucket 33: positions=4, conflicts=1
+  Diamond Bucket 34: positions=10, conflicts=3
   Diamond Bucket 35: positions=5, conflicts=1
   Diamond Bucket 36: positions=5, conflicts=1
   Diamond Bucket 37: positions=5, conflicts=1
-  Diamond Bucket 38: positions=383, conflicts=1226
-  Diamond Bucket 39: positions=8, conflicts=2
-  Diamond Bucket 40: positions=5, conflicts=1
-  Diamond Bucket 41: positions=5, conflicts=1
-  Diamond Bucket 42: positions=5, conflicts=1
-  Diamond Bucket 43: positions=5, conflicts=1
-  Diamond Bucket 44: positions=27, conflicts=9
-  Diamond Bucket 45: positions=5, conflicts=1
-  Diamond Bucket 46: positions=5, conflicts=1
-  Diamond Bucket 47: positions=5, conflicts=1
-  Diamond Bucket 48: positions=5, conflicts=1
-  Diamond Bucket 49: positions=5, conflicts=1
-  Diamond Bucket 50: positions=5, conflicts=1
-  Diamond Bucket 51: positions=8, conflicts=2
-  Diamond Bucket 52: positions=5, conflicts=1
-  Diamond Bucket 53: positions=5, conflicts=1
-  Diamond Bucket 54: positions=5, conflicts=1
-  Diamond Bucket 55: positions=5, conflicts=1
-  Diamond Bucket 56: positions=5, conflicts=2
-  Diamond Bucket 57: positions=5, conflicts=1
-  Diamond Bucket 58: positions=8, conflicts=2
-  Diamond Bucket 59: positions=80, conflicts=31
-  Diamond Bucket 60: positions=4, conflicts=1
-  Diamond Bucket 61: positions=4, conflicts=1
-  Diamond Bucket 62: positions=5, conflicts=1
-  Diamond Bucket 63: positions=5, conflicts=1
-  Diamond Bucket 64: positions=5, conflicts=2
-  Diamond Bucket 65: positions=5, conflicts=1
-  Diamond Bucket 66: positions=5, conflicts=1
-  Diamond Bucket 67: positions=18, conflicts=7
-  Diamond Bucket 68: positions=5, conflicts=1
-  Diamond Bucket 69: positions=5, conflicts=1
-  Diamond Bucket 70: positions=5, conflicts=1
-  Diamond Bucket 71: positions=5, conflicts=1
-  Diamond Bucket 72: positions=5, conflicts=1
-  Diamond Bucket 73: positions=4, conflicts=1
-  Diamond Bucket 74: positions=5, conflicts=1
-  Diamond Bucket 75: positions=11, conflicts=4
-  Diamond Bucket 76: positions=8, conflicts=2
-  Diamond Bucket 77: positions=9, conflicts=4
-  Diamond Bucket 78: positions=8, conflicts=2
-  Diamond Bucket 79: positions=8, conflicts=2
-  Diamond Bucket 80: positions=8, conflicts=2
-  Diamond Bucket 81: positions=8, conflicts=2
-  Diamond Bucket 82: positions=8, conflicts=2
+  Diamond Bucket 38: positions=5, conflicts=1
+  Diamond Bucket 39: positions=5, conflicts=1
+  Diamond Bucket 40: positions=8, conflicts=2
+  Diamond Bucket 41: positions=12, conflicts=4
 [LNS] Step 4: Selecting most relevant bucket...
-[LNS] Selected most relevant diamond bucket 38 with 1226 conflicts and 383 positions.
+[LNS] Selected most relevant diamond bucket 7 with 1242 conflicts and 383 positions.
 [LNS] Step 5: Creating map crop for selected bucket...
 [LNS] Step 6: Computing conflict time window and extracting local paths...
 [LNS] Conflict 45 agents: 14 and 2
 [LNS] Conflict 45 timestep: 10
 [LNS] Conflict 45 positions: 18,2
+[LNS] Conflict 49 agents: 28 and 4
+[LNS] Conflict 49 timestep: 11
+[LNS] Conflict 49 positions: 33,44
 [LNS] Conflict 50 agents: 77 and 2
 [LNS] Conflict 50 timestep: 11
 [LNS] Conflict 50 positions: 17,2
@@ -633,6 +498,9 @@
 [LNS] Conflict 146 agents: 42 and 11
 [LNS] Conflict 146 timestep: 24
 [LNS] Conflict 146 positions: 15,4
+[LNS] Conflict 147 agents: 49 and 4
+[LNS] Conflict 147 timestep: 24
+[LNS] Conflict 147 positions: 33,44
 [LNS] Conflict 148 agents: 77 and 2
 [LNS] Conflict 148 timestep: 24
 [LNS] Conflict 148 positions: 11,7
@@ -735,6 +603,9 @@
 [LNS] Conflict 198 agents: 23 and 22
 [LNS] Conflict 198 timestep: 28
 [LNS] Conflict 198 positions: 33,42
+[LNS] Conflict 199 agents: 82 and 19
+[LNS] Conflict 199 timestep: 28
+[LNS] Conflict 199 positions: 23,44
 [LNS] Conflict 200 agents: 42 and 11
 [LNS] Conflict 200 timestep: 28
 [LNS] Conflict 200 positions: 16,1
@@ -783,6 +654,9 @@
 [LNS] Conflict 219 agents: 96 and 76
 [LNS] Conflict 219 timestep: 30
 [LNS] Conflict 219 positions: 20,1
+[LNS] Conflict 220 agents: 82 and 65
+[LNS] Conflict 220 timestep: 30
+[LNS] Conflict 220 positions: 23,44
 [LNS] Conflict 221 agents: 97 and 59
 [LNS] Conflict 221 timestep: 30
 [LNS] Conflict 221 positions: 33,44
@@ -1167,6 +1041,9 @@
 [LNS] Conflict 400 agents: 92 and 64
 [LNS] Conflict 400 timestep: 39
 [LNS] Conflict 400 positions: 20,1
+[LNS] Conflict 402 agents: 82 and 57
+[LNS] Conflict 402 timestep: 39
+[LNS] Conflict 402 positions: 23,44
 [LNS] Conflict 406 agents: 59 and 30
 [LNS] Conflict 406 timestep: 39
 [LNS] Conflict 406 positions: 26,42
@@ -1470,6 +1347,9 @@
 [LNS] Conflict 556 agents: 23 and 22
 [LNS] Conflict 556 timestep: 49
 [LNS] Conflict 556 positions: 21,37
+[LNS] Conflict 558 agents: 57 and 4
+[LNS] Conflict 558 timestep: 49
+[LNS] Conflict 558 positions: 33,44
 [LNS] Conflict 560 agents: 41 and 2
 [LNS] Conflict 560 timestep: 49
 [LNS] Conflict 560 positions: 14,29
@@ -1530,6 +1410,9 @@
 [LNS] Conflict 582 agents: 23 and 22
 [LNS] Conflict 582 timestep: 51
 [LNS] Conflict 582 positions: 19,37
+[LNS] Conflict 584 agents: 10 and 4
+[LNS] Conflict 584 timestep: 51
+[LNS] Conflict 584 positions: 33,44
 [LNS] Conflict 585 agents: 41 and 2
 [LNS] Conflict 585 timestep: 51
 [LNS] Conflict 585 positions: 14,31
@@ -1545,6 +1428,9 @@
 [LNS] Conflict 590 agents: 98 and 37
 [LNS] Conflict 590 timestep: 52
 [LNS] Conflict 590 positions: 11,22
+[LNS] Conflict 591 agents: 82 and 32
+[LNS] Conflict 591 timestep: 52
+[LNS] Conflict 591 positions: 23,44
 [LNS] Conflict 592 agents: 97 and 30
 [LNS] Conflict 592 timestep: 52
 [LNS] Conflict 592 positions: 18,37
@@ -1617,6 +1503,9 @@
 [LNS] Conflict 618 agents: 23 and 22
 [LNS] Conflict 618 timestep: 53
 [LNS] Conflict 618 positions: 17,37
+[LNS] Conflict 620 agents: 61 and 10
+[LNS] Conflict 620 timestep: 53
+[LNS] Conflict 620 positions: 31,44
 [LNS] Conflict 621 agents: 41 and 2
 [LNS] Conflict 621 timestep: 53
 [LNS] Conflict 621 positions: 14,33
@@ -1719,6 +1608,9 @@
 [LNS] Conflict 656 agents: 23 and 22
 [LNS] Conflict 656 timestep: 55
 [LNS] Conflict 656 positions: 15,37
+[LNS] Conflict 657 agents: 61 and 4
+[LNS] Conflict 657 timestep: 55
+[LNS] Conflict 657 positions: 33,44
 [LNS] Conflict 658 agents: 41 and 2
 [LNS] Conflict 658 timestep: 55
 [LNS] Conflict 658 positions: 15,34
@@ -3414,6 +3306,24 @@
 [LNS] Conflict 1272 agents: 80 and 3
 [LNS] Conflict 1272 timestep: 144
 [LNS] Conflict 1272 positions: 36,40
+[LNS] Conflict 1278 agents: 38 and 4
+[LNS] Conflict 1278 timestep: 147
+[LNS] Conflict 1278 positions: 33,44
+[LNS] Conflict 1280 agents: 31 and 4
+[LNS] Conflict 1280 timestep: 148
+[LNS] Conflict 1280 positions: 33,44
+[LNS] Conflict 1317 agents: 57 and 11
+[LNS] Conflict 1317 timestep: 3
+[LNS] Conflict 1317 positions: 11,20 and 12,20
+[LNS] Conflict 1318 agents: 57 and 11
+[LNS] Conflict 1318 timestep: 3
+[LNS] Conflict 1318 positions: 11,20 and 12,20
+[LNS] Conflict 1323 agents: 61 and 11
+[LNS] Conflict 1323 timestep: 6
+[LNS] Conflict 1323 positions: 11,17 and 11,18
+[LNS] Conflict 1324 agents: 61 and 11
+[LNS] Conflict 1324 timestep: 6
+[LNS] Conflict 1324 positions: 11,17 and 11,18
 [LNS] Conflict 1325 agents: 87 and 42
 [LNS] Conflict 1325 timestep: 11
 [LNS] Conflict 1325 positions: 11,12 and 11,13
@@ -4182,8 +4092,8 @@
 [LNS] Conflict 1602 agents: 31 and 10
 [LNS] Conflict 1602 timestep: 99
 [LNS] Conflict 1602 positions: 11,17 and 11,18
-[LNS] Conflict time window: [9, 145]
-[LNS] Agents in zone within window: 85
+[LNS] Conflict time window: [2, 149]
+[LNS] Agents in zone within window: 86
 [LNS] Agent 0 entered the zone at timestep 13
 [LNS] Agent 0 exited the zone at timestep 38
 [LNS] Agent 0 entered the zone at timestep 41
@@ -4198,34 +4108,39 @@
 [LNS] Agent 1 exited the zone at timestep 89
 [LNS] Agent 1 returned to the zone 1 times within time window
   Agent 1 local segment t=[16,89] len=74
-[LNS] Agent 2 entered the zone at timestep 9
+[LNS] Agent 2 entered the zone at timestep 7
 [LNS] Agent 2 exited the zone at timestep 37
 [LNS] Agent 2 entered the zone at timestep 39
 [LNS] Agent 2 exited the zone at timestep 74
 [LNS] Agent 2 exited the zone at timestep 73
 [LNS] Agent 2 returned to the zone 1 times within time window
-  Agent 2 local segment t=[9,73] len=65
+  Agent 2 local segment t=[7,73] len=67
 [LNS] Agent 3 entered the zone at timestep 57
+[LNS] Agent 3 exited the zone at timestep 146
 [LNS] Agent 3 exited the zone at timestep 145
   Agent 3 local segment t=[57,145] len=89
-[LNS] Agent 4 entered the zone at timestep 9
-[LNS] Agent 4 exited the zone at timestep 145
-  Agent 4 local segment t=[9,145] len=137
-[LNS] Agent 5 entered the zone at timestep 9
-[LNS] Agent 5 exited the zone at timestep 145
-  Agent 5 local segment t=[9,145] len=137
+[LNS] Agent 4 entered the zone at timestep 8
+[LNS] Agent 4 exited the zone at timestep 149
+  Agent 4 local segment t=[8,149] len=142
+[LNS] Agent 5 entered the zone at timestep 4
+[LNS] Agent 5 exited the zone at timestep 149
+  Agent 5 local segment t=[4,149] len=146
 [LNS] Agent 6 entered the zone at timestep 23
 [LNS] Agent 6 exited the zone at timestep 36
 [LNS] Agent 6 entered the zone at timestep 42
-[LNS] Agent 6 exited the zone at timestep 145
+[LNS] Agent 6 exited the zone at timestep 149
 [LNS] Agent 6 returned to the zone 1 times within time window
-  Agent 6 local segment t=[23,145] len=123
+  Agent 6 local segment t=[23,149] len=127
+[LNS] Agent 7 entered the zone at timestep 2
+[LNS] Agent 7 exited the zone at timestep 5
+[LNS] Agent 7 entered the zone at timestep 7
+[LNS] Agent 7 exited the zone at timestep 8
 [LNS] Agent 7 entered the zone at timestep 9
 [LNS] Agent 7 exited the zone at timestep 12
 [LNS] Agent 7 entered the zone at timestep 13
-[LNS] Agent 7 exited the zone at timestep 145
-[LNS] Agent 7 returned to the zone 1 times within time window
-  Agent 7 local segment t=[9,145] len=137
+[LNS] Agent 7 exited the zone at timestep 149
+[LNS] Agent 7 returned to the zone 3 times within time window
+  Agent 7 local segment t=[2,149] len=148
 [LNS] Agent 8 entered the zone at timestep 24
 [LNS] Agent 8 exited the zone at timestep 34
 [LNS] Agent 8 entered the zone at timestep 41
@@ -4251,7 +4166,7 @@
 [LNS] Agent 10 exited the zone at timestep 127
 [LNS] Agent 10 returned to the zone 2 times within time window
   Agent 10 local segment t=[43,127] len=85
-[LNS] Agent 11 entered the zone at timestep 9
+[LNS] Agent 11 entered the zone at timestep 2
 [LNS] Agent 11 exited the zone at timestep 35
 [LNS] Agent 11 entered the zone at timestep 36
 [LNS] Agent 11 exited the zone at timestep 37
@@ -4259,7 +4174,7 @@
 [LNS] Agent 11 exited the zone at timestep 40
 [LNS] Agent 11 exited the zone at timestep 39
 [LNS] Agent 11 returned to the zone 2 times within time window
-  Agent 11 local segment t=[9,39] len=31
+  Agent 11 local segment t=[2,39] len=38
 [LNS] Agent 12 entered the zone at timestep 10
 [LNS] Agent 12 exited the zone at timestep 38
 [LNS] Agent 12 exited the zone at timestep 37
@@ -4275,13 +4190,17 @@
 [LNS] Agent 13 exited the zone at timestep 130
 [LNS] Agent 13 returned to the zone 3 times within time window
   Agent 13 local segment t=[54,130] len=77
-[LNS] Agent 14 entered the zone at timestep 9
+[LNS] Agent 14 entered the zone at timestep 2
 [LNS] Agent 14 exited the zone at timestep 14
 [LNS] Agent 14 entered the zone at timestep 15
 [LNS] Agent 14 exited the zone at timestep 17
 [LNS] Agent 14 exited the zone at timestep 16
 [LNS] Agent 14 returned to the zone 1 times within time window
-  Agent 14 local segment t=[9,16] len=8
+  Agent 14 local segment t=[2,16] len=15
+[LNS] Agent 15 entered the zone at timestep 2
+[LNS] Agent 15 exited the zone at timestep 4
+[LNS] Agent 15 exited the zone at timestep 3
+  Agent 15 local segment t=[2,3] len=2
 [LNS] Agent 18 entered the zone at timestep 23
 [LNS] Agent 18 exited the zone at timestep 48
 [LNS] Agent 18 exited the zone at timestep 47
@@ -4296,19 +4215,17 @@
   Agent 20 local segment t=[55,142] len=88
 [LNS] Agent 21 entered the zone at timestep 26
 [LNS] Agent 21 exited the zone at timestep 87
-[LNS] Agent 21 entered the zone at timestep 91
-[LNS] Agent 21 exited the zone at timestep 92
-[LNS] Agent 21 entered the zone at timestep 93
+[LNS] Agent 21 entered the zone at timestep 90
 [LNS] Agent 21 exited the zone at timestep 96
 [LNS] Agent 21 exited the zone at timestep 95
-[LNS] Agent 21 returned to the zone 2 times within time window
+[LNS] Agent 21 returned to the zone 1 times within time window
   Agent 21 local segment t=[26,95] len=70
 [LNS] Agent 22 entered the zone at timestep 25
 [LNS] Agent 22 exited the zone at timestep 37
 [LNS] Agent 22 entered the zone at timestep 41
-[LNS] Agent 22 exited the zone at timestep 145
+[LNS] Agent 22 exited the zone at timestep 149
 [LNS] Agent 22 returned to the zone 1 times within time window
-  Agent 22 local segment t=[25,145] len=121
+  Agent 22 local segment t=[25,149] len=125
 [LNS] Agent 23 entered the zone at timestep 23
 [LNS] Agent 23 exited the zone at timestep 24
 [LNS] Agent 23 entered the zone at timestep 25
@@ -4317,8 +4234,8 @@
 [LNS] Agent 23 returned to the zone 1 times within time window
   Agent 23 local segment t=[23,69] len=47
 [LNS] Agent 24 entered the zone at timestep 51
-[LNS] Agent 24 exited the zone at timestep 145
-  Agent 24 local segment t=[51,145] len=95
+[LNS] Agent 24 exited the zone at timestep 149
+  Agent 24 local segment t=[51,149] len=99
 [LNS] Agent 26 entered the zone at timestep 34
 [LNS] Agent 26 exited the zone at timestep 84
 [LNS] Agent 26 exited the zone at timestep 83
@@ -4331,10 +4248,10 @@
 [LNS] Agent 28 exited the zone at timestep 50
 [LNS] Agent 28 exited the zone at timestep 49
   Agent 28 local segment t=[9,49] len=41
-[LNS] Agent 29 entered the zone at timestep 9
+[LNS] Agent 29 entered the zone at timestep 2
 [LNS] Agent 29 exited the zone at timestep 76
 [LNS] Agent 29 exited the zone at timestep 75
-  Agent 29 local segment t=[9,75] len=67
+  Agent 29 local segment t=[2,75] len=74
 [LNS] Agent 30 entered the zone at timestep 22
 [LNS] Agent 30 exited the zone at timestep 43
 [LNS] Agent 30 entered the zone at timestep 48
@@ -4347,18 +4264,18 @@
 [LNS] New conflict 1373 at position (23,41)
   Agent 30 local segment t=[22,107] len=86
 [LNS] Agent 31 entered the zone at timestep 67
-[LNS] Agent 31 exited the zone at timestep 145
-  Agent 31 local segment t=[67,145] len=79
+[LNS] Agent 31 exited the zone at timestep 149
+  Agent 31 local segment t=[67,149] len=83
 [LNS] Agent 32 entered the zone at timestep 43
 [LNS] Agent 32 exited the zone at timestep 55
-[LNS] Agent 32 entered the zone at timestep 57
-[LNS] Agent 32 exited the zone at timestep 145
+[LNS] Agent 32 entered the zone at timestep 56
+[LNS] Agent 32 exited the zone at timestep 149
 [LNS] Agent 32 returned to the zone 1 times within time window
-  Agent 32 local segment t=[43,145] len=103
-[LNS] Agent 33 entered the zone at timestep 9
+  Agent 32 local segment t=[43,149] len=107
+[LNS] Agent 33 entered the zone at timestep 4
 [LNS] Agent 33 exited the zone at timestep 55
 [LNS] Agent 33 exited the zone at timestep 54
-  Agent 33 local segment t=[9,54] len=46
+  Agent 33 local segment t=[4,54] len=51
 [LNS] Agent 34 entered the zone at timestep 45
 [LNS] Agent 34 exited the zone at timestep 118
 [LNS] Agent 34 exited the zone at timestep 117
@@ -4374,9 +4291,9 @@
 [LNS] Agent 38 entered the zone at timestep 66
 [LNS] Agent 38 exited the zone at timestep 131
 [LNS] Agent 38 entered the zone at timestep 132
-[LNS] Agent 38 exited the zone at timestep 145
+[LNS] Agent 38 exited the zone at timestep 149
 [LNS] Agent 38 returned to the zone 1 times within time window
-  Agent 38 local segment t=[66,145] len=80
+  Agent 38 local segment t=[66,149] len=84
 [LNS] Agent 39 entered the zone at timestep 43
 [LNS] Agent 39 exited the zone at timestep 108
 [LNS] Agent 39 entered the zone at timestep 109
@@ -4388,9 +4305,9 @@
 [LNS] Agent 40 exited the zone at timestep 86
 [LNS] Agent 40 exited the zone at timestep 85
   Agent 40 local segment t=[16,85] len=70
-[LNS] Agent 41 entered the zone at timestep 9
-[LNS] Agent 41 exited the zone at timestep 145
-  Agent 41 local segment t=[9,145] len=137
+[LNS] Agent 41 entered the zone at timestep 3
+[LNS] Agent 41 exited the zone at timestep 149
+  Agent 41 local segment t=[3,149] len=147
 [LNS] Agent 42 entered the zone at timestep 9
 [LNS] Agent 42 exited the zone at timestep 16
 [LNS] Agent 42 entered the zone at timestep 17
@@ -4398,17 +4315,17 @@
 [LNS] Agent 42 exited the zone at timestep 35
 [LNS] Agent 42 returned to the zone 1 times within time window
   Agent 42 local segment t=[9,35] len=27
-[LNS] Agent 43 entered the zone at timestep 9
+[LNS] Agent 43 entered the zone at timestep 6
 [LNS] Agent 43 exited the zone at timestep 44
 [LNS] Agent 43 exited the zone at timestep 43
-  Agent 43 local segment t=[9,43] len=35
+  Agent 43 local segment t=[6,43] len=38
 [LNS] Agent 45 entered the zone at timestep 43
 [LNS] Agent 45 exited the zone at timestep 124
 [LNS] Agent 45 exited the zone at timestep 123
   Agent 45 local segment t=[43,123] len=81
 [LNS] Agent 46 entered the zone at timestep 54
-[LNS] Agent 46 exited the zone at timestep 145
-  Agent 46 local segment t=[54,145] len=92
+[LNS] Agent 46 exited the zone at timestep 149
+  Agent 46 local segment t=[54,149] len=96
 [LNS] Agent 47 entered the zone at timestep 56
 [LNS] Agent 47 exited the zone at timestep 144
 [LNS] Agent 47 exited the zone at timestep 143
@@ -4421,10 +4338,10 @@
 [LNS] Agent 50 exited the zone at timestep 95
 [LNS] Agent 50 exited the zone at timestep 94
   Agent 50 local segment t=[18,94] len=77
-[LNS] Agent 52 entered the zone at timestep 9
+[LNS] Agent 52 entered the zone at timestep 2
 [LNS] Agent 52 exited the zone at timestep 36
 [LNS] Agent 52 exited the zone at timestep 35
-  Agent 52 local segment t=[9,35] len=27
+  Agent 52 local segment t=[2,35] len=34
 [LNS] Agent 53 entered the zone at timestep 49
 [LNS] Agent 53 exited the zone at timestep 84
 [LNS] Agent 53 entered the zone at timestep 85
@@ -4432,31 +4349,31 @@
 [LNS] Agent 53 exited the zone at timestep 138
 [LNS] Agent 53 returned to the zone 1 times within time window
   Agent 53 local segment t=[49,138] len=90
-[LNS] Agent 54 entered the zone at timestep 9
+[LNS] Agent 54 entered the zone at timestep 8
 [LNS] Agent 54 exited the zone at timestep 40
 [LNS] Agent 54 exited the zone at timestep 39
-  Agent 54 local segment t=[9,39] len=31
+  Agent 54 local segment t=[8,39] len=32
 [LNS] Agent 56 entered the zone at timestep 40
 [LNS] Agent 56 exited the zone at timestep 119
 [LNS] Agent 56 exited the zone at timestep 118
   Agent 56 local segment t=[40,118] len=79
-[LNS] Agent 57 entered the zone at timestep 9
+[LNS] Agent 57 entered the zone at timestep 2
 [LNS] Agent 57 exited the zone at timestep 58
 [LNS] Agent 57 exited the zone at timestep 57
-  Agent 57 local segment t=[9,57] len=49
+  Agent 57 local segment t=[2,57] len=56
 [LNS] Agent 58 entered the zone at timestep 55
-[LNS] Agent 58 exited the zone at timestep 145
-  Agent 58 local segment t=[55,145] len=91
+[LNS] Agent 58 exited the zone at timestep 149
+  Agent 58 local segment t=[55,149] len=95
 [LNS] Agent 59 entered the zone at timestep 28
-[LNS] Agent 59 exited the zone at timestep 145
-  Agent 59 local segment t=[28,145] len=118
+[LNS] Agent 59 exited the zone at timestep 149
+  Agent 59 local segment t=[28,149] len=122
 [LNS] Agent 60 entered the zone at timestep 52
-[LNS] Agent 60 exited the zone at timestep 145
-  Agent 60 local segment t=[52,145] len=94
-[LNS] Agent 61 entered the zone at timestep 9
+[LNS] Agent 60 exited the zone at timestep 149
+  Agent 60 local segment t=[52,149] len=98
+[LNS] Agent 61 entered the zone at timestep 2
 [LNS] Agent 61 exited the zone at timestep 58
 [LNS] Agent 61 exited the zone at timestep 57
-  Agent 61 local segment t=[9,57] len=49
+  Agent 61 local segment t=[2,57] len=56
 [LNS] Agent 63 entered the zone at timestep 35
 [LNS] Agent 63 exited the zone at timestep 47
 [LNS] Agent 63 exited the zone at timestep 46
@@ -4514,15 +4431,16 @@
 [LNS] Agent 79 exited the zone at timestep 120
   Agent 79 local segment t=[41,120] len=80
 [LNS] Agent 80 entered the zone at timestep 56
+[LNS] Agent 80 exited the zone at timestep 146
 [LNS] Agent 80 exited the zone at timestep 145
   Agent 80 local segment t=[56,145] len=90
-[LNS] Agent 81 entered the zone at timestep 9
+[LNS] Agent 81 entered the zone at timestep 5
 [LNS] Agent 81 exited the zone at timestep 32
 [LNS] Agent 81 exited the zone at timestep 31
-  Agent 81 local segment t=[9,31] len=23
-[LNS] Agent 82 entered the zone at timestep 9
-[LNS] Agent 82 exited the zone at timestep 145
-  Agent 82 local segment t=[9,145] len=137
+  Agent 81 local segment t=[5,31] len=27
+[LNS] Agent 82 entered the zone at timestep 2
+[LNS] Agent 82 exited the zone at timestep 149
+  Agent 82 local segment t=[2,149] len=148
 [LNS] Agent 83 entered the zone at timestep 49
 [LNS] Agent 83 exited the zone at timestep 118
 [LNS] Agent 83 exited the zone at timestep 117
@@ -4535,29 +4453,32 @@
 [LNS] Agent 85 exited the zone at timestep 48
 [LNS] Agent 85 exited the zone at timestep 47
   Agent 85 local segment t=[24,47] len=24
-[LNS] Agent 86 entered the zone at timestep 9
+[LNS] Agent 86 entered the zone at timestep 2
 [LNS] Agent 86 exited the zone at timestep 32
 [LNS] Agent 86 exited the zone at timestep 31
-  Agent 86 local segment t=[9,31] len=23
-[LNS] Agent 87 entered the zone at timestep 9
+  Agent 86 local segment t=[2,31] len=30
+[LNS] Agent 87 entered the zone at timestep 2
 [LNS] Agent 87 exited the zone at timestep 62
 [LNS] Agent 87 exited the zone at timestep 61
-  Agent 87 local segment t=[9,61] len=53
-[LNS] Agent 88 entered the zone at timestep 9
+  Agent 87 local segment t=[2,61] len=60
+[LNS] Agent 88 entered the zone at timestep 4
 [LNS] Agent 88 exited the zone at timestep 55
 [LNS] Agent 88 exited the zone at timestep 54
-  Agent 88 local segment t=[9,54] len=46
+  Agent 88 local segment t=[4,54] len=51
+[LNS] Agent 89 entered the zone at timestep 2
+[LNS] Agent 89 exited the zone at timestep 8
 [LNS] Agent 89 entered the zone at timestep 9
 [LNS] Agent 89 exited the zone at timestep 58
 [LNS] Agent 89 exited the zone at timestep 57
-  Agent 89 local segment t=[9,57] len=49
-[LNS] Agent 90 entered the zone at timestep 9
+[LNS] Agent 89 returned to the zone 1 times within time window
+  Agent 89 local segment t=[2,57] len=56
+[LNS] Agent 90 entered the zone at timestep 2
 [LNS] Agent 90 exited the zone at timestep 69
 [LNS] Agent 90 exited the zone at timestep 68
-  Agent 90 local segment t=[9,68] len=60
+  Agent 90 local segment t=[2,68] len=67
 [LNS] Agent 92 entered the zone at timestep 33
-[LNS] Agent 92 exited the zone at timestep 145
-  Agent 92 local segment t=[33,145] len=113
+[LNS] Agent 92 exited the zone at timestep 149
+  Agent 92 local segment t=[33,149] len=117
 [LNS] Agent 94 entered the zone at timestep 33
 [LNS] Agent 94 exited the zone at timestep 110
 [LNS] Agent 94 exited the zone at timestep 109
@@ -4575,107 +4496,105 @@
 [LNS] Agent 97 exited the zone at timestep 110
   Agent 97 local segment t=[23,110] len=88
 [LNS] Agent 98 entered the zone at timestep 22
-[LNS] Agent 98 exited the zone at timestep 36
-[LNS] Agent 98 entered the zone at timestep 37
 [LNS] Agent 98 exited the zone at timestep 86
 [LNS] Agent 98 exited the zone at timestep 85
-[LNS] Agent 98 returned to the zone 1 times within time window
   Agent 98 local segment t=[22,85] len=64
 [LNS] Agent 99 entered the zone at timestep 55
 [LNS] Agent 99 exited the zone at timestep 106
 [LNS] Agent 99 exited the zone at timestep 105
   Agent 99 local segment t=[55,105] len=51
 [LNS] Processing Agent 61 again
-[LNS] Agent 61 entered the zone at timestep 9
+[LNS] Agent 61 entered the zone at timestep 2
 [LNS] Agent 61 exited the zone at timestep 58
 [LNS] Agent 61 exited the zone at timestep 57
-  Agent 61 local segment t=[9,57] len=49
+  Agent 61 local segment t=[2,57] len=56
 [LNS] Step 8: Creating aligned MDDs for local problem...
-[LNS] Zone MDD length: 137 (from t=9 to t=145)
-  Agent 99 MDD: start=(24,4) goal=(10,34) path_length=51 active levels=[46,96] of 137
-  Agent 98 MDD: start=(18,45) goal=(20,4) path_length=64 active levels=[13,76] of 137
-  Agent 97 MDD: start=(37,41) goal=(23,4) path_length=88 active levels=[14,101] of 137
-  Agent 96 MDD: start=(25,3) goal=(10,35) path_length=52 active levels=[14,65] of 137
-  Agent 95 MDD: start=(33,39) goal=(33,46) path_length=8 active levels=[19,26] of 137
-  Agent 94 MDD: start=(33,46) goal=(17,4) path_length=77 active levels=[24,100] of 137
-  Agent 92 MDD: start=(26,1) goal=(11,18) path_length=113 active levels=[24,136] of 137
-  Agent 90 MDD: start=(20,37) goal=(22,4) path_length=60 active levels=[0,59] of 137
-  Agent 89 MDD: start=(11,37) goal=(20,4) path_length=49 active levels=[0,48] of 137
-  Agent 88 MDD: start=(11,30) goal=(25,3) path_length=46 active levels=[0,45] of 137
-  Agent 87 MDD: start=(11,10) goal=(28,45) path_length=53 active levels=[0,52] of 137
-  Agent 86 MDD: start=(29,40) goal=(11,36) path_length=23 active levels=[0,22] of 137
-  Agent 85 MDD: start=(19,45) goal=(10,31) path_length=24 active levels=[15,38] of 137
-  Agent 84 MDD: start=(11,38) goal=(19,4) path_length=49 active levels=[17,65] of 137
-  Agent 83 MDD: start=(26,1) goal=(20,45) path_length=69 active levels=[40,108] of 137
-  Agent 82 MDD: start=(24,44) goal=(23,44) path_length=137 active levels=[0,136] of 137
-  Agent 81 MDD: start=(12,23) goal=(19,36) path_length=23 active levels=[0,22] of 137
-  Agent 80 MDD: start=(25,3) goal=(37,40) path_length=90 active levels=[47,136] of 137
-  Agent 79 MDD: start=(33,46) goal=(20,4) path_length=80 active levels=[32,111] of 137
-  Agent 78 MDD: start=(11,38) goal=(20,4) path_length=50 active levels=[6,55] of 137
-  Agent 77 MDD: start=(17,4) goal=(10,35) path_length=45 active levels=[0,44] of 137
-  Agent 76 MDD: start=(26,1) goal=(28,45) path_length=77 active levels=[15,91] of 137
-  Agent 75 MDD: start=(26,45) goal=(19,4) path_length=71 active levels=[22,92] of 137
-  Agent 72 MDD: start=(33,39) goal=(24,4) path_length=87 active levels=[14,100] of 137
-  Agent 71 MDD: start=(18,36) goal=(18,4) path_length=55 active levels=[10,64] of 137
-  Agent 69 MDD: start=(33,39) goal=(20,4) path_length=83 active levels=[22,104] of 137
-  Agent 28 MDD: start=(33,46) goal=(10,29) path_length=41 active levels=[0,40] of 137
-  Agent 27 MDD: start=(33,39) goal=(19,4) path_length=82 active levels=[13,94] of 137
-  Agent 26 MDD: start=(25,3) goal=(10,33) path_length=50 active levels=[25,74] of 137
-  Agent 24 MDD: start=(25,3) goal=(13,8) path_length=95 active levels=[42,136] of 137
-  Agent 23 MDD: start=(35,39) goal=(10,28) path_length=47 active levels=[14,60] of 137
-  Agent 22 MDD: start=(33,39) goal=(12,23) path_length=121 active levels=[16,136] of 137
-  Agent 21 MDD: start=(25,3) goal=(20,45) path_length=70 active levels=[17,86] of 137
-  Agent 20 MDD: start=(26,1) goal=(37,41) path_length=88 active levels=[46,133] of 137
-  Agent 19 MDD: start=(14,41) goal=(36,39) path_length=31 active levels=[7,37] of 137
-  Agent 18 MDD: start=(24,36) goal=(38,42) path_length=25 active levels=[14,38] of 137
-  Agent 14 MDD: start=(18,1) goal=(22,4) path_length=8 active levels=[0,7] of 137
-  Agent 13 MDD: start=(29,45) goal=(22,4) path_length=77 active levels=[45,121] of 137
-  Agent 29 MDD: start=(18,44) goal=(24,4) path_length=67 active levels=[0,66] of 137
-  Agent 0 MDD: start=(11,36) goal=(19,4) path_length=47 active levels=[4,50] of 137
-  Agent 59 MDD: start=(33,46) goal=(12,11) path_length=118 active levels=[19,136] of 137
-  Agent 30 MDD: start=(36,39) goal=(20,4) path_length=86 active levels=[13,98] of 137
-  Agent 1 MDD: start=(29,45) goal=(20,3) path_length=74 active levels=[7,80] of 137
-  Agent 60 MDD: start=(25,3) goal=(13,27) path_length=94 active levels=[43,136] of 137
-  Agent 31 MDD: start=(25,3) goal=(30,44) path_length=79 active levels=[58,136] of 137
-  Agent 2 MDD: start=(19,2) goal=(22,45) path_length=65 active levels=[0,64] of 137
-  Agent 61 MDD: start=(11,20) goal=(35,44) path_length=49 active levels=[0,48] of 137
-  Agent 32 MDD: start=(31,45) goal=(10,20) path_length=103 active levels=[34,136] of 137
-  Agent 3 MDD: start=(26,1) goal=(36,39) path_length=89 active levels=[48,136] of 137
-  Agent 4 MDD: start=(33,45) goal=(33,44) path_length=137 active levels=[0,136] of 137
-  Agent 63 MDD: start=(31,45) goal=(37,40) path_length=12 active levels=[26,37] of 137
-  Agent 5 MDD: start=(14,31) goal=(20,44) path_length=137 active levels=[0,136] of 137
-  Agent 64 MDD: start=(25,3) goal=(10,3) path_length=20 active levels=[23,42] of 137
-  Agent 6 MDD: start=(21,45) goal=(26,1) path_length=123 active levels=[14,136] of 137
-  Agent 65 MDD: start=(24,45) goal=(19,4) path_length=69 active levels=[19,87] of 137
-  Agent 7 MDD: start=(19,40) goal=(15,20) path_length=137 active levels=[0,136] of 137
-  Agent 66 MDD: start=(26,1) goal=(10,8) path_length=24 active levels=[35,58] of 137
-  Agent 8 MDD: start=(33,39) goal=(20,3) path_length=82 active levels=[15,96] of 137
-  Agent 67 MDD: start=(26,1) goal=(36,39) path_length=89 active levels=[37,125] of 137
-  Agent 9 MDD: start=(35,44) goal=(19,4) path_length=79 active levels=[29,107] of 137
-  Agent 68 MDD: start=(25,3) goal=(19,36) path_length=62 active levels=[27,88] of 137
-  Agent 10 MDD: start=(37,40) goal=(19,4) path_length=85 active levels=[34,118] of 137
-  Agent 11 MDD: start=(11,15) goal=(24,4) path_length=31 active levels=[0,30] of 137
-  Agent 12 MDD: start=(21,36) goal=(37,41) path_length=28 active levels=[1,28] of 137
-  Agent 33 MDD: start=(11,31) goal=(25,2) path_length=46 active levels=[0,45] of 137
-  Agent 34 MDD: start=(26,1) goal=(24,45) path_length=73 active levels=[36,108] of 137
-  Agent 36 MDD: start=(21,4) goal=(20,36) path_length=60 active levels=[48,107] of 137
-  Agent 37 MDD: start=(22,45) goal=(22,4) path_length=70 active levels=[9,78] of 137
-  Agent 38 MDD: start=(25,3) goal=(31,44) path_length=80 active levels=[57,136] of 137
-  Agent 39 MDD: start=(26,1) goal=(38,42) path_length=88 active levels=[34,121] of 137
-  Agent 40 MDD: start=(22,45) goal=(22,4) path_length=70 active levels=[7,76] of 137
-  Agent 41 MDD: start=(20,1) goal=(26,41) path_length=137 active levels=[0,136] of 137
-  Agent 42 MDD: start=(10,14) goal=(20,4) path_length=27 active levels=[0,26] of 137
-  Agent 43 MDD: start=(11,22) goal=(22,45) path_length=35 active levels=[0,34] of 137
-  Agent 45 MDD: start=(33,46) goal=(21,4) path_length=81 active levels=[34,114] of 137
-  Agent 46 MDD: start=(26,1) goal=(14,8) path_length=92 active levels=[45,136] of 137
-  Agent 47 MDD: start=(26,1) goal=(37,41) path_length=88 active levels=[47,134] of 137
-  Agent 49 MDD: start=(33,39) goal=(23,4) path_length=86 active levels=[10,95] of 137
-  Agent 50 MDD: start=(31,45) goal=(20,4) path_length=77 active levels=[9,85] of 137
-  Agent 52 MDD: start=(14,26) goal=(21,45) path_length=27 active levels=[0,26] of 137
-  Agent 53 MDD: start=(25,3) goal=(37,40) path_length=90 active levels=[40,129] of 137
-  Agent 54 MDD: start=(11,14) goal=(17,36) path_length=31 active levels=[0,30] of 137
-  Agent 56 MDD: start=(33,46) goal=(19,4) path_length=79 active levels=[31,109] of 137
-  Agent 57 MDD: start=(14,23) goal=(37,40) path_length=49 active levels=[0,48] of 137
-  Agent 58 MDD: start=(25,3) goal=(38,42) path_length=91 active levels=[46,136] of 137
-[LNS] Created 85 local MDDs
+[LNS] Zone MDD length: 148 (from t=2 to t=149)
+  Agent 99 MDD: start=(24,4) goal=(10,34) path_length=51 active levels=[53,103] of 148
+  Agent 98 MDD: start=(18,45) goal=(20,4) path_length=64 active levels=[20,83] of 148
+  Agent 97 MDD: start=(37,41) goal=(23,4) path_length=88 active levels=[21,108] of 148
+  Agent 96 MDD: start=(25,3) goal=(10,35) path_length=52 active levels=[21,72] of 148
+  Agent 95 MDD: start=(33,39) goal=(33,46) path_length=8 active levels=[26,33] of 148
+  Agent 94 MDD: start=(33,46) goal=(17,4) path_length=77 active levels=[31,107] of 148
+  Agent 92 MDD: start=(26,1) goal=(11,18) path_length=117 active levels=[31,147] of 148
+  Agent 90 MDD: start=(27,37) goal=(22,4) path_length=67 active levels=[0,66] of 148
+  Agent 89 MDD: start=(17,36) goal=(20,4) path_length=56 active levels=[0,55] of 148
+  Agent 88 MDD: start=(10,34) goal=(25,3) path_length=51 active levels=[2,52] of 148
+  Agent 87 MDD: start=(10,4) goal=(28,45) path_length=60 active levels=[0,59] of 148
+  Agent 86 MDD: start=(32,44) goal=(11,36) path_length=30 active levels=[0,29] of 148
+  Agent 85 MDD: start=(19,45) goal=(10,31) path_length=24 active levels=[22,45] of 148
+  Agent 84 MDD: start=(11,38) goal=(19,4) path_length=49 active levels=[24,72] of 148
+  Agent 83 MDD: start=(26,1) goal=(20,45) path_length=69 active levels=[47,115] of 148
+  Agent 82 MDD: start=(28,41) goal=(23,44) path_length=148 active levels=[0,147] of 148
+  Agent 81 MDD: start=(10,21) goal=(19,36) path_length=27 active levels=[3,29] of 148
+  Agent 80 MDD: start=(25,3) goal=(37,40) path_length=90 active levels=[54,143] of 148
+  Agent 79 MDD: start=(33,46) goal=(20,4) path_length=80 active levels=[39,118] of 148
+  Agent 78 MDD: start=(11,38) goal=(20,4) path_length=50 active levels=[13,62] of 148
+  Agent 77 MDD: start=(17,4) goal=(10,35) path_length=45 active levels=[7,51] of 148
+  Agent 76 MDD: start=(26,1) goal=(28,45) path_length=77 active levels=[22,98] of 148
+  Agent 75 MDD: start=(26,45) goal=(19,4) path_length=71 active levels=[29,99] of 148
+  Agent 72 MDD: start=(33,39) goal=(24,4) path_length=87 active levels=[21,107] of 148
+  Agent 71 MDD: start=(18,36) goal=(18,4) path_length=55 active levels=[17,71] of 148
+  Agent 69 MDD: start=(33,39) goal=(20,4) path_length=83 active levels=[29,111] of 148
+  Agent 68 MDD: start=(25,3) goal=(19,36) path_length=62 active levels=[34,95] of 148
+  Agent 28 MDD: start=(33,46) goal=(10,29) path_length=41 active levels=[7,47] of 148
+  Agent 27 MDD: start=(33,39) goal=(19,4) path_length=82 active levels=[20,101] of 148
+  Agent 26 MDD: start=(25,3) goal=(10,33) path_length=50 active levels=[32,81] of 148
+  Agent 24 MDD: start=(25,3) goal=(13,8) path_length=99 active levels=[49,147] of 148
+  Agent 23 MDD: start=(35,39) goal=(10,28) path_length=47 active levels=[21,67] of 148
+  Agent 22 MDD: start=(33,39) goal=(12,23) path_length=125 active levels=[23,147] of 148
+  Agent 21 MDD: start=(25,3) goal=(20,45) path_length=70 active levels=[24,93] of 148
+  Agent 20 MDD: start=(26,1) goal=(37,41) path_length=88 active levels=[53,140] of 148
+  Agent 19 MDD: start=(14,41) goal=(36,39) path_length=31 active levels=[14,44] of 148
+  Agent 18 MDD: start=(24,36) goal=(38,42) path_length=25 active levels=[21,45] of 148
+  Agent 15 MDD: start=(21,44) goal=(21,45) path_length=2 active levels=[0,1] of 148
+  Agent 14 MDD: start=(13,3) goal=(22,4) path_length=15 active levels=[0,14] of 148
+  Agent 13 MDD: start=(29,45) goal=(22,4) path_length=77 active levels=[52,128] of 148
+  Agent 29 MDD: start=(24,45) goal=(24,4) path_length=74 active levels=[0,73] of 148
+  Agent 0 MDD: start=(11,36) goal=(19,4) path_length=47 active levels=[11,57] of 148
+  Agent 59 MDD: start=(33,46) goal=(12,11) path_length=122 active levels=[26,147] of 148
+  Agent 30 MDD: start=(36,39) goal=(20,4) path_length=86 active levels=[20,105] of 148
+  Agent 1 MDD: start=(29,45) goal=(20,3) path_length=74 active levels=[14,87] of 148
+  Agent 60 MDD: start=(25,3) goal=(13,27) path_length=98 active levels=[50,147] of 148
+  Agent 31 MDD: start=(25,3) goal=(34,44) path_length=83 active levels=[65,147] of 148
+  Agent 2 MDD: start=(20,3) goal=(22,45) path_length=67 active levels=[5,71] of 148
+  Agent 61 MDD: start=(13,15) goal=(35,44) path_length=56 active levels=[0,55] of 148
+  Agent 3 MDD: start=(26,1) goal=(36,39) path_length=89 active levels=[55,143] of 148
+  Agent 4 MDD: start=(33,46) goal=(33,44) path_length=142 active levels=[6,147] of 148
+  Agent 63 MDD: start=(31,45) goal=(37,40) path_length=12 active levels=[33,44] of 148
+  Agent 5 MDD: start=(10,30) goal=(20,44) path_length=146 active levels=[2,147] of 148
+  Agent 64 MDD: start=(25,3) goal=(10,3) path_length=20 active levels=[30,49] of 148
+  Agent 6 MDD: start=(21,45) goal=(26,1) path_length=127 active levels=[21,147] of 148
+  Agent 65 MDD: start=(24,45) goal=(19,4) path_length=69 active levels=[26,94] of 148
+  Agent 7 MDD: start=(22,44) goal=(15,20) path_length=148 active levels=[0,147] of 148
+  Agent 66 MDD: start=(26,1) goal=(10,8) path_length=24 active levels=[42,65] of 148
+  Agent 8 MDD: start=(33,39) goal=(20,3) path_length=82 active levels=[22,103] of 148
+  Agent 67 MDD: start=(26,1) goal=(36,39) path_length=89 active levels=[44,132] of 148
+  Agent 9 MDD: start=(35,44) goal=(19,4) path_length=79 active levels=[36,114] of 148
+  Agent 10 MDD: start=(37,40) goal=(19,4) path_length=85 active levels=[41,125] of 148
+  Agent 11 MDD: start=(12,21) goal=(24,4) path_length=38 active levels=[0,37] of 148
+  Agent 12 MDD: start=(21,36) goal=(37,41) path_length=28 active levels=[8,35] of 148
+  Agent 32 MDD: start=(31,45) goal=(10,20) path_length=107 active levels=[41,147] of 148
+  Agent 33 MDD: start=(10,35) goal=(25,2) path_length=51 active levels=[2,52] of 148
+  Agent 34 MDD: start=(26,1) goal=(24,45) path_length=73 active levels=[43,115] of 148
+  Agent 36 MDD: start=(21,4) goal=(20,36) path_length=60 active levels=[55,114] of 148
+  Agent 37 MDD: start=(22,45) goal=(22,4) path_length=70 active levels=[16,85] of 148
+  Agent 38 MDD: start=(25,3) goal=(35,44) path_length=84 active levels=[64,147] of 148
+  Agent 39 MDD: start=(26,1) goal=(38,42) path_length=88 active levels=[41,128] of 148
+  Agent 40 MDD: start=(22,45) goal=(22,4) path_length=70 active levels=[14,83] of 148
+  Agent 41 MDD: start=(26,1) goal=(26,41) path_length=147 active levels=[1,147] of 148
+  Agent 42 MDD: start=(10,14) goal=(20,4) path_length=27 active levels=[7,33] of 148
+  Agent 43 MDD: start=(10,20) goal=(22,45) path_length=38 active levels=[4,41] of 148
+  Agent 45 MDD: start=(33,46) goal=(21,4) path_length=81 active levels=[41,121] of 148
+  Agent 46 MDD: start=(26,1) goal=(14,8) path_length=96 active levels=[52,147] of 148
+  Agent 47 MDD: start=(26,1) goal=(37,41) path_length=88 active levels=[54,141] of 148
+  Agent 49 MDD: start=(33,39) goal=(23,4) path_length=86 active levels=[17,102] of 148
+  Agent 50 MDD: start=(31,45) goal=(20,4) path_length=77 active levels=[16,92] of 148
+  Agent 52 MDD: start=(10,23) goal=(21,45) path_length=34 active levels=[0,33] of 148
+  Agent 53 MDD: start=(25,3) goal=(37,40) path_length=90 active levels=[47,136] of 148
+  Agent 54 MDD: start=(10,14) goal=(17,36) path_length=32 active levels=[6,37] of 148
+  Agent 56 MDD: start=(33,46) goal=(19,4) path_length=79 active levels=[38,116] of 148
+  Agent 57 MDD: start=(10,20) goal=(37,40) path_length=56 active levels=[0,55] of 148
+  Agent 58 MDD: start=(25,3) goal=(38,42) path_length=95 active levels=[53,147] of 148
+[LNS] Created 86 local MDDs
 [LNS] Step 9: Creating CNF for local problem...
