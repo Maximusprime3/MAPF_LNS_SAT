@@ -6,10 +6,14 @@ MAP_FILE="mapf-map/random-64-64-10.map"
 SCENARIO_FILE="mapf-scen-even/scen-even/random-64-64-10-even-1.scen"
 
 # Experiment parameters
-NUM_AGENTS=200
+NUM_AGENTS=100
 SCENARIO_INDEX=0
 SOLVER="minisat"
 SEED=42
 
 # Output
-LOG_FILE="random6464-10_200.log"
+LOG_FILE="random6464-10_100.log"
+
+
+
+
