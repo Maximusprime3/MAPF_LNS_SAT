@@ -78,6 +78,11 @@ public:
     
     // Add edge collision clauses to prevent agents from swapping positions
     void add_edge_collision_clauses();
+
+    // Add edge collision clauses (bulk) directly to an existing CNF
+    void add_edge_collision_clauses_to_cnf(
+        CNF& existing_cnf,
+        const std::vector<std::tuple<int, int, MDDNode::Position, MDDNode::Position, int>>& edge_collisions);
     
     // Add a single edge collision clause for two agents swapping positions (internal use)
     std::vector<int> add_single_edge_collision_clause(int agent1_id, int agent2_id, 
@@ -108,6 +113,9 @@ public:
     const std::unordered_map<std::tuple<int, MDDNode::Position, int>, int>& get_variable_map() const { return variable_map; }
     const std::unordered_map<int, std::tuple<int, MDDNode::Position, int>>& get_reverse_variable_map() const { return reverse_variable_map; }
     int get_next_variable_id() const { return next_variable_id; }
+
+    // Debug helper to print all variable mappings for a given agent
+    void print_agent_vars(int agent);
 
 protected:
     // Helper method to get the maximum number of timesteps across all MDDs

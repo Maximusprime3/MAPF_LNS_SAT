@@ -1100,9 +1100,9 @@ lazy_solve_conflict_zone(CNF& local_cnf,
         }
     }
 
-        if (!local_solution_found) {
-            std::cout << "[LNS] Failed to find local solution after " << max_iterations << " iterations" << std::endl;
-            std::cout << "[LNS] Local problem appears to be unsatisfiable in current zone" << std::endl;
+    if (!local_solution_found) {
+        std::cout << "[LNS] Failed to find local solution after " << max_iterations << " iterations" << std::endl;
+        std::cout << "[LNS] Local problem appears to be unsatisfiable in current zone" << std::endl;
     }
     //latest_discovered_vertex_collisions and latest_discovered_edge_collisions are the new collisions that were discovered before the last run of minisat 
     return {local_solution_found, final_local_paths, discovered_vertex_collisions, discovered_edge_collisions, latest_discovered_vertex_collisions, latest_discovered_edge_collisions};
