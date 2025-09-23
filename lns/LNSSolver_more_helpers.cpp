@@ -1422,9 +1422,9 @@ ZoneExpansionResult handle_zone_expansion(
 
 // Main helper function to process agent paths and handle zone expansion
 struct AgentProcessingResult {
-    std::vector<std::pair<int,int>> agent_zone_path;
-    int entry_t;
-    int exit_t;
+    std::vector<std::vector<std::pair<int,int>>> zone_paths; // paths for the zone (can be more than one if the agent returns to the zone)
+    std::vector<int> entry_t;
+    std::vector<int> exit_t;
     std::set<std::pair<int,int>> expanded_zone_positions;
     std::vector<int> additional_agents;
     std::vector<ConflictMeta> additional_conflicts;
@@ -1452,40 +1452,43 @@ AgentProcessingResult process_agent_in_zone(
     auto segment_info = extract_agent_path_segment(agent_id, path, zone_positions_set, start_t, end_t);
     
     if (!segment_info.contiguous_intervals.empty()) {
-        result.entry_t = segment_info.contiguous_intervals.front().first;
-        result.exit_t = segment_info.contiguous_intervals.back().second;
         
         if (segment_info.contiguous_intervals.size() > 1) {
             std::cout << "[LNS] Agent " << agent_id << " returned to the zone "
                       << (segment_info.contiguous_intervals.size() - 1) << " times within time window" << std::endl;
             std::cout << "[LNS] NEED TO HANDLE RETURNING AGENTS AS PSEUDO AGENTS" << std::endl;
         }
-
-
-        // Create local path segment
-        result.agent_zone_path = std::vector<std::pair<int,int>>(
-            path.begin() + result.entry_t,
-            path.begin() + result.exit_t + 1
-        );
+        //create seperate paths for the returning agents
+        for (const auto& interval : segment_info.contiguous_intervals) {
+            result.zone_paths.push_back(std::vector<std::pair<int,int>>(
+                path.begin() + interval.first,
+                path.begin() + interval.second + 1
+            ));
+            result.entry_t.push_back(interval.first);
+            result.exit_t.push_back(interval.second);
+        }
         
+        // no zone expansion needed with pseudo agents
         // Handle zone expansion if agent re-enters
-        auto expansion_result = handle_zone_expansion(
-            agent_id, path, segment_info.contiguous_intervals, zone_positions_set,
-            conflict_map, conflict_meta, offset, grid);
+        //auto expansion_result = handle_zone_expansion(
+        //    agent_id, path, segment_info.contiguous_intervals, zone_positions_set,
+        //    conflict_map, conflict_meta, offset, grid);
         
-        result.expanded_zone_positions = expansion_result.expanded_zone_positions;
-        result.extended_zone = expansion_result.extended_zone;
-        result.additional_conflicts = expansion_result.conflicts_meta_at_new_positions;
+        //result.expanded_zone_positions = expansion_result.expanded_zone_positions;
+        //result.extended_zone = expansion_result.extended_zone; //bool
+        //result.additional_conflicts = expansion_result.conflicts_meta_at_new_positions;
         
         // Add additional agents and conflicts from expansion
-        for (const auto& conflict : expansion_result.conflicts_meta_at_new_positions) {
-            if (agent_id != conflict.agent1) {
-                result.additional_agents.push_back(conflict.agent1);
-            }
-            if (agent_id != conflict.agent2) {
-                result.additional_agents.push_back(conflict.agent2);
-            }
-        }
+        //for (const auto& conflict : expansion_result.conflicts_meta_at_new_positions) {
+        //    if (agent_id != conflict.agent1) {
+        //        result.additional_agents.push_back(conflict.agent1);
+        //    }
+        //    if (agent_id != conflict.agent2) {
+        //        result.additional_agents.push_back(conflict.agent2);
+        //    }
+        //}
+    }else{
+        std::cout << "ERROR: Agent " << agent_id << " has no path in the zone" << std::endl;
     }
     
     return result;
@@ -1497,6 +1500,7 @@ struct LocalZoneState {
     std::unordered_map<int, std::vector<std::pair<int,int>>> local_zone_paths;
     std::unordered_map<int, std::pair<int,int>> local_entry_exit_time;
     std::unordered_map<int, std::shared_ptr<MDD>> local_mdds;
+    std::unordered_map<int, int> original_agent_id; //remember original agent id for pseudo agents (fake id, real id)
 };
 
 static LocalZoneState build_local_problem_for_zone(
@@ -1514,16 +1518,39 @@ static LocalZoneState build_local_problem_for_zone(
     // Find agents present in the zone within time window
     auto agents_in_window = get_agents_in_zone_within_time_window(current_solution, zone_positions_set, start_t, end_t);
     // Extract segments and compute entry/exit using existing processor
+    int number_of_pseudo_agents = 0;
     for (int agent_id : agents_in_window) {
         const auto& path = current_solution.agent_paths.at(agent_id);
         auto result = process_agent_in_zone(agent_id, path, zone_positions_set, conflict_map, conflict_meta, start_t, end_t, offset, grid);
-        if (!result.agent_zone_path.empty()) {
-            state.local_zone_paths[agent_id] = std::move(result.agent_zone_path);
-            state.local_entry_exit_time[agent_id] = std::make_pair(result.entry_t, result.exit_t);
+        if (!result.zone_paths.empty()) {
+            //check if only one path
+            if (result.zone_paths.size() == 1) {
+                state.local_zone_paths[agent_id] = std::move(result.zone_paths[0]);
+                state.local_entry_exit_time[agent_id] = std::make_pair(result.entry_t[0], result.exit_t[0]);
+            } else if (result.zone_paths.size() > 1) {
+                std::cout << "[LNS] Agent " << agent_id << " has multiple paths in the zone" << std::endl;
+                std::cout << "[LNS] Need to handle returning agents as PSEUDO AGENTS" << std::endl;
+                //need new ids for pseudo agents and create seperate paths for them
+                //need to remember who the original agent is 
+                global_number_of_agents = current_solution.agent_paths.size();
+                for (int i = 1; i < result.zone_paths.size(); i++) { //for each returning path (after the first exit)
+                    //create fake id for pseudo agent
+                    int pseudo_id = global_number_of_agents + number_of_pseudo_agents;
+                    number_of_pseudo_agents++;
+                    state.original_agent_id[pseudo_id] = agent_id;
+                    state.local_zone_paths[pseudo_id] = std::move(result.zone_paths[i]);
+                    state.local_entry_exit_time[pseudo_id] = std::make_pair(result.entry_t[i], result.exit_t[i]);               
+                }
+            } else {
+                std::cout << "[LNS] ERROR: Agent " << agent_id << " has no paths in the zone" << std::endl;
+            }
         }
     }
     // Build MDDs and align to window
     for (const auto& [agent_id, local_path] : state.local_zone_paths) {
+        if (agent_id > global_number_of_agents) {
+            std::cout << "[LNS] Creating pseudo Agent " << agent_id << " is a pseudo agent of Agent " << state.original_agent_id[agent_id] << std::endl;
+        }
         auto [entry_t, exit_t] = state.local_entry_exit_time[agent_id];
         auto zone_start_pos = local_path.front();
         auto zone_goal_pos = local_path.back();
@@ -1609,7 +1636,9 @@ lazy_solve_with_waiting_time(CurrentSolution& current_solution,
                             const std::vector<int>& best_bucket_indices,
                             int start_t, int end_t, 
                             int offset,
-                            int initial_waiting_time_amount = 0) {
+                            int initial_waiting_time_amount = 0,
+                            int global_number_of_agents = 0, // to check for pseudo agents
+                            const std::unordered_map<int, int>& original_agent_id = {}) { //og id for pseudo agents
     
     std::cout << "[LNS] Starting waiting time strategy..." << std::endl;
     
@@ -2678,10 +2707,14 @@ select_bucket:
                     auto& expanded_local_zone_paths = expanded_local.local_zone_paths;
                     auto& expanded_local_entry_exit_time = expanded_local.local_entry_exit_time;
                     auto& expanded_local_mdds = expanded_local.local_mdds;
+                    auto& expanded_local_original_agent_id = expanded_local.original_agent_id;
 
                     //agents in the zone
                     for (const auto& [agent_id, path] : expanded_local_zone_paths) {
                         std::cout << "Agent " << agent_id << ": ";
+                        if (agent_id > global_number_of_agents) {
+                            std::cout << "is a pseudo agent of Agent " << expanded_local_original_agent_id[agent_id] << std::endl;
+                        }
                         for (const auto& pos : path) {
                             std::cout << "(" << pos.first << "," << pos.second << ") ";
                         }
