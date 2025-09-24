@@ -2428,7 +2428,6 @@ select_bucket:
         std::cout << "[LNS] Agents in zone within window: " << agents_in_window.size() << std::endl;
         //set pending agent queue
         std::vector<int> pending_agents(agents_in_window.begin(), agents_in_window.end());
-        const size_t initial_agents_in_window = pending_agents.size();
 
 
         // Step 7: For each agent, extract its subpath inside (zone × [start_t,end_t])

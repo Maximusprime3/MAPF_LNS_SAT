@@ -14,7 +14,7 @@
 // Helper: Check for vertex collisions for local paths that are within the conflict zone and have different entry and exit times
 // Takes local paths with timestep information 
 // Returns vector of (agent1, agent2, position, global_timestep) tuples
-static std::vector<std::tuple<int, int, std::pair<int,int>, int>> check_vertex_collisions_local(
+std::vector<std::tuple<int, int, std::pair<int,int>, int>> check_vertex_collisions_local(
     const std::unordered_map<int, std::vector<std::pair<int,int>>>& local_paths,
     const std::unordered_map<int, std::pair<int,int>>& local_entry_exit_time,
     int start_t, int end_t) {
@@ -65,7 +65,7 @@ static std::vector<std::tuple<int, int, std::pair<int,int>, int>> check_vertex_c
 // Helper: Check for edge collisions using SATSolverManager approach
 // Takes local paths with timestep information 
 // Returns vector of (agent1, agent2, pos1, pos2, global_timestep) tuples
-static std::vector<std::tuple<int, int, std::pair<int,int>, std::pair<int,int>, int>> check_edge_collisions_local(
+std::vector<std::tuple<int, int, std::pair<int,int>, std::pair<int,int>, int>> check_edge_collisions_local(
     const std::unordered_map<int, std::vector<std::pair<int,int>>>& local_paths,
     const std::unordered_map<int, std::pair<int,int>>& local_entry_exit_time,
     int start_t, int end_t) {
@@ -123,6 +123,54 @@ static std::vector<std::tuple<int, int, std::pair<int,int>, std::pair<int,int>, 
     }
     
     return edge_collisions;
+}
+
+// Helper: Create MDDs with shortest paths + waiting time at goal
+// This creates MDDs where agents go to their goal as fast as possible, then wait there
+std::vector<std::shared_ptr<MDD>> create_mdds_with_waiting_time(
+    const std::vector<std::vector<char>>& grid,
+    const std::vector<std::pair<int,int>>& starts,
+    const std::vector<std::pair<int,int>>& goals,
+    int makespan,
+    const std::vector<std::map<std::pair<int,int>, int>>& distance_matrices) {
+    
+    std::cout << "[SAT] Creating MDDs with shortest paths + waiting time..." << std::endl;
+    
+    std::vector<std::shared_ptr<MDD>> mdds;
+    mdds.reserve(starts.size());
+    
+    for (size_t agent_id = 0; agent_id < starts.size(); ++agent_id) {
+        auto start = starts[agent_id];
+        auto goal = goals[agent_id];
+        
+        // Calculate shortest path length using distance map for this agent
+        int shortest_path_length = -1;
+        const auto& dist_map = distance_matrices[agent_id];
+        auto it = dist_map.find({start.first, start.second});
+        if (it != dist_map.end()) {
+            shortest_path_length = it->second;
+        }
+        
+        if (shortest_path_length == -1) {
+            std::cerr << "[SAT] ERROR: No path found for Agent " << agent_id << std::endl;
+            continue;
+        }
+        
+        // Create MDD with shortest path length (inclusive depth)
+        // Note: use shortest_path_length directly to ensure sampled paths can reach the goal
+        MDDConstructor constructor(grid, start, goal, shortest_path_length);
+        auto mdd = constructor.construct_mdd();
+        
+        if (!mdd) {
+            std::cerr << "[SAT] ERROR: Failed to create MDD for Agent " << agent_id << std::endl;
+            continue;
+        }
+        
+        mdds.push_back(mdd);
+    }
+    
+    std::cout << "[SAT] Created " << mdds.size() << " MDDs with waiting time structure" << std::endl;
+    return mdds;
 }
 
 

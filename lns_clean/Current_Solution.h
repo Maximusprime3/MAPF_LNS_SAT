@@ -6,6 +6,8 @@
 #include <optional>
 #include <algorithm>
 #include <iostream>
+#include <tuple>
+#include <utility>
 
 // Shared LNS core structures used across solver and helpers
 
@@ -21,19 +23,6 @@ struct ConflictMeta {
     std::pair<int,int> pos1;      // vertex position or first edge endpoint
     std::pair<int,int> pos2;      // second edge endpoint if edge conflict
 };
-
-// Represents a diamond shaped conflict bucket.  Each bucket stores the set of
-// grid positions that belong to the diamond as well as the indices of the
-// conflicts contained within the bucket.  Buckets are used to isolate regions
-// of the map for local solving.
-struct DiamondBucket {
-    std::set<std::pair<int,int>> positions;
-    std::vector<int> indices;
-    std::vector<std::vector<char>> masked_map;
-    int earliest_t; // earliest timestep among conflicts in this bucket
-    int latest_t; // latest timestep among conflicts in this bucket
-};
-
 
 
 struct CurrentSolution {
@@ -345,3 +334,27 @@ struct CurrentSolution {
         return agents_with_waiting;
     }
 };
+
+/**
+ * @brief Collect conflict points and metadata from vertex and edge collisions.
+ *
+ * Vertex collisions add one point and one `ConflictMeta`. Edge collisions add
+ * both endpoints as points and two times the same `ConflictMeta` entries to aid spatial clustering.
+ *
+ * @param vertex_collisions (agent1, agent2, pos, t) tuples
+ * @param edge_collisions (agent1, agent2, pos1, pos2, t) tuples
+ * @return [conflict_points, conflict_meta]
+ */
+std::pair<std::vector<std::pair<int,int>>, std::vector<ConflictMeta>> collect_conflicts(
+    const std::vector<std::tuple<int, int, std::pair<int,int>, int>>& vertex_collisions,
+    const std::vector<std::tuple<int, int, std::pair<int,int>, std::pair<int,int>, int>>& edge_collisions);
+
+/**
+ * @brief Collect only metadata for conflicts; omit explicit conflict points.
+ * @param vertex_collisions (agent1, agent2, pos, t) tuples
+ * @param edge_collisions (agent1, agent2, pos1, pos2, t) tuples
+ * @return `conflict_meta`
+ */
+std::vector<ConflictMeta> collect_conflicts_meta(
+    const std::vector<std::tuple<int, int, std::pair<int,int>, int>>& vertex_collisions,
+    const std::vector<std::tuple<int, int, std::pair<int,int>, std::pair<int,int>, int>>& edge_collisions);
