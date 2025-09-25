@@ -51,6 +51,8 @@ LocalZoneResult solve_local_zone(
     }
     std::set<std::pair<int,int>> local_zone_positions = best_bucket.positions;
     std::vector<int> local_zone_conflict_indices = best_bucket.indices;
+    int earliest_conflict_t = best_bucket.earliest_t;
+    int latest_conflict_t = best_bucket.latest_t;
 
     int expansion_factor = 0;
     //loop until solution found or the local zone reached the size of the map and still no solution found
@@ -62,18 +64,17 @@ LocalZoneResult solve_local_zone(
         //Step 1: create local problem
         auto local_masked_map = mask_map_outside_shape(map, local_zone_positions);//all positions outside the local zone are not walkable
         //set start and end time for the local zone
-        int start_t = std::max(0, local_zone_conflict_indices[0] - offset);
-        int end_t = std::min(current_max_timesteps, local_zone_conflict_indices[local_zone_conflict_indices.size() - 1] + offset);
+
+        int start_t = std::max(0, earliest_conflict_t - offset);
+        int end_t = std::min(current_max_timesteps, latest_conflict_t + offset);
         std::cout << "[Solve_local_zone] Local zone time window: [" << start_t << ", " << end_t << "]" << std::endl;
-        //zone positions
-        std::set<std::pair<int,int>> zone_positions_set(local_zone_positions.begin(), local_zone_positions.end());
         
         //Step 2: solve the local problem
         auto local_zone_result = lazy_solve_with_waiting_time(
             current_solution,
             map,
             local_masked_map,
-            zone_positions_set,
+            local_zone_positions,
             conflict_meta,
             local_zone_conflict_indices,
             conflict_map,
@@ -98,19 +99,26 @@ LocalZoneResult solve_local_zone(
         // Recreate the bucket conflicts from the original bucket indices
         // Use helper to expand zone and gather expanded conflict indices
         //todo:no more conflict points? all conflict meta
-        auto [expanded_zone_positions_set, expanded_conflict_indices, new_time_window] = expand_bucket_zone(
-            conflict_points,
+        auto [expanded_zone_positions_set, expanded_conflict_indices] = expand_bucket_zone(
+            conflict_meta,
             conflict_map,
             map,
-            conflict_meta,
             local_zone_conflict_indices,
             local_zone_positions,
             expanded_offset);
         
         local_zone_positions = expanded_zone_positions_set;
         local_zone_conflict_indices = expanded_conflict_indices; //todo: no more conflict indices? all conflict meta
-        start_t = new_time_window.first;
-        end_t = new_time_window.second;
+        //find earliest and latest conflict times in the expanded zone
+        for (int conflict_idx : expanded_conflict_indices) {
+            if (conflict_idx >= 0 && conflict_idx < (int)conflict_meta.size()) {
+                int t = conflict_meta[conflict_idx].timestep;
+                if (t < earliest_conflict_t) earliest_conflict_t = t;
+                if (t > latest_conflict_t) latest_conflict_t = t;
+            }else{
+                std::cout << "[Solve_local_zone] ERROR: Invalid conflict index " << conflict_idx << std::endl;
+            }
+        }
 
         std::cout << "[Solve_local_zone] Final expanded zone contains " << expanded_zone_positions_set.size() 
                   << " positions with " << expanded_conflict_indices.size() << " conflicts << std::endl;" << std::endl; 
@@ -118,10 +126,6 @@ LocalZoneResult solve_local_zone(
         
 
     }
-
-    
-
-
-    
+   
     return local_zone_result;
 }

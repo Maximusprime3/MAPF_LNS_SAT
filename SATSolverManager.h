@@ -144,7 +144,6 @@ public:
         const std::pair<int,int>& center,
         int offset);
 
-
     // Reads a scenario file and returns a vector of ScenarioEntry structs, one per line (excluding header)
     static std::vector<ScenarioEntry> create_dataframe_from_file(const std::string& file_path);
 

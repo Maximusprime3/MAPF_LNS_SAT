@@ -62,54 +62,51 @@ std::set<std::pair<int,int>> find_new_positions(
 
 /**
  * @brief Group conflicts into disjoint diamond buckets via iterative growth.
- * @param conflict_points  Conflict coordinates by index.
+ * @param building_conflicts_meta  Per-conflict metadata (timestep, agents, position(s)).
+ * @param original_building_conflict_indices  Global indices of the building conflicts.
  * @param conflict_map  (r,c) -> list of conflict indices.
  * @param map  Used for bounds/walkability of shapes.
- * @param conflict_meta  Per-conflict metadata (timestep, agents, etc.).
+ * @param all_conflict_meta  Per-conflict metadata (timestep, agents, etc.).
  * @param offset  Diamond radius used during grouping.
  * @param solved_conflict_indices  Conflicts to exclude (default empty set).
  * @return Vector of buckets with positions, indices, and time window.
  */
 std::vector<DiamondBucket> build_diamond_buckets(
-    const std::vector<std::pair<int,int>>& conflict_points,
+    const std::vector<ConflictMeta>& building_conflicts_meta,
+    const std::set<int>& original_building_conflict_indices,
     const std::vector<std::vector<std::vector<int>>>& conflict_map,
     const std::vector<std::vector<char>>& map,
-    const std::vector<ConflictMeta>& conflict_meta,
+    const std::vector<ConflictMeta>& all_conflict_meta,
     int offset,
     const std::set<int>& solved_conflict_indices = std::set<int>());
 /**
  * @brief Group conflicts into disjoint diamond buckets via iterative growth for earliest conflicts.
- * @param conflict_points  Conflict coordinates by index.
+ * @param all_conflict_meta  Per-conflict metadata (timestep, agents, etc.).
  * @param conflict_map  (r,c) -> list of conflict indices.
- * @param map  Used for bounds/walkability of shapes.
- * @param conflict_meta  Per-conflict metadata (timestep, agents, etc.).
+ * @param map  grid map used for bounds/walkability of shapes.
  * @param offset  Diamond radius used during grouping.
  * @return Vector of buckets with positions, indices, and time window for earliest conflicts.
  */
 std::vector<DiamondBucket> build_diamond_buckets_for_earliest_conflicts(
-    const std::vector<std::pair<int,int>>& conflict_points,
+    const std::vector<ConflictMeta>& all_conflict_meta,
     const std::vector<std::vector<std::vector<int>>>& conflict_map,
     const std::vector<std::vector<char>>& map,
-    const std::vector<ConflictMeta>& conflict_meta,
     int offset);
 
 /**
  * @brief Expand a bucket's zone with a larger offset and absorb new conflicts.
- * @param conflict_points  Conflict coordinates by index.
+ * @param conflict_meta  Per-conflict metadata.
  * @param conflict_map  (r,c) -> list of conflict indices.
  * @param map  Used for bounds/walkability of shapes.
- * @param conflict_meta  Per-conflict metadata.
- * @param solved_conflict_indices  Conflicts to ignore.
- * @param original_bucket_indices  Indices in the original bucket.
+ * @param original_bucket_indices  Global indices of the original bucket.
  * @param original_bucket_positions Positions of the original bucket.
  * @param expanded_offset  New diamond radius.
  * @return {expanded positions set, full list of conflict indices}.
  */
 std::pair<std::set<std::pair<int,int>>, std::vector<int>> expand_bucket_zone(
-    const std::vector<std::pair<int,int>>& conflict_points,
+    const std::vector<ConflictMeta>& conflict_meta,
     const std::vector<std::vector<std::vector<int>>>& conflict_map,
     const std::vector<std::vector<char>>& map,
-    const std::vector<ConflictMeta>& conflict_meta,
     const std::vector<int>& original_bucket_indices,
     const std::set<std::pair<int,int>>& original_bucket_positions,
     int expanded_offset);

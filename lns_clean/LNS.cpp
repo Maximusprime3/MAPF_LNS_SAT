@@ -110,15 +110,15 @@ std::vector<std::vector<int,int>> LNS(
                 continue;
             }
             //otherwise, update metadata from detected collisions
-            auto [conflict_points, conflict_meta] = collect_conflicts(vertex_collisions, edge_collisions);
-            auto conflict_map = create_conflict_map_2D(conflict_points, problem.grid.size(), problem.grid[0].size());
+            auto conflict_meta = collect_conflicts_meta(vertex_collisions, edge_collisions);
+            auto conflict_map = create_conflict_map_2D(conflict_meta, problem.grid);
             
 
             //Step 6: create conflict buckets for the earliest conflict(s)
             const int offset = 1; // half the standard conflict zone size
             std::cout << "[LNS] Creating conflict buckets..." << std::endl;
             auto diamond_buckets = build_diamond_buckets_for_earliest_conflicts(
-                conflict_points, conflict_map, problem.grid, conflict_meta, offset);
+                conflict_meta, conflict_map, problem.grid, offset);
             //if multiple buckets, select the most relevant one
             DiamondBucket best_bucket = select_most_relevant_bucket(diamond_buckets);
             if (best_bucket.indices.empty()) {
@@ -126,17 +126,16 @@ std::vector<std::vector<int,int>> LNS(
                 break;
             }
             std::cout << "[LNS] Selected most relevant bucket " << best_bucket.indices[0] 
-                    << " with " << best_bucket.indices.size() << " conflict positions and " 
+                    << " with time window: " << best_bucket.earliest_t << " - " << best_bucket.latest_t << ", " 
+                    << best_bucket.indices.size() << " conflicts and " 
                     << best_bucket.positions.size() << " positions." << std::endl;
 
 
             //Step 7: Solve the best buckets Local Zone
             std::cout << "[LNS] Solving the best bucket Local Zone..." << std::endl;
-            //create conflict meta without duplicate edge conflicts
-            std::vector<ConflictMeta> Local_Zone_conflictmeta = collect_conflicts_meta(vertex_collisions, edge_collisions);
             //solve the local zone
             LocalZoneResult local_zone_result = solve_local_zone(
-                problem.grid, best_bucket, Local_Zone_conflictmeta, conflict_map, current_solution, current_max_timesteps, offset);
+                problem.grid, best_bucket, conflict_meta, conflict_map, current_solution, current_max_timesteps, offset);
             
 
             //Step 8: Update the current solution with the local zone result if found

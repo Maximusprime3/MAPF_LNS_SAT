@@ -358,3 +358,15 @@ std::pair<std::vector<std::pair<int,int>>, std::vector<ConflictMeta>> collect_co
 std::vector<ConflictMeta> collect_conflicts_meta(
     const std::vector<std::tuple<int, int, std::pair<int,int>, int>>& vertex_collisions,
     const std::vector<std::tuple<int, int, std::pair<int,int>, std::pair<int,int>, int>>& edge_collisions);
+
+/**
+ * @brief Build a spatial index of conflicts for quick queries by cell.
+ * @param conflict_meta List of conflicts with positions and types
+ * @param map Grid
+ * @return 2D vector conflict_map[r][c] = indices of conflicts at (r,c)
+ */
+std::vector<std::vector<std::vector<int>>> create_conflict_map_2D(
+    const std::vector<ConflictMeta>& conflict_meta,
+    const std::vector<std::vector<char>>& map);
+
+

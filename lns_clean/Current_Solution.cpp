@@ -32,7 +32,7 @@ std::pair<std::vector<std::pair<int,int>>, std::vector<ConflictMeta>> collect_co
         conflict_points.push_back(pos2);
         conflict_meta.push_back(ConflictMeta{a1, a2, t, true, pos1, pos2});
     }
-    return [conflict_points, conflict_meta];
+    return {conflict_points, conflict_meta};
 }
 
 //used locallywithout conflict points
@@ -67,16 +67,37 @@ std::vector<ConflictMeta> collect_conflicts_meta(
 // Helper: create a spatial conflict map for efficient conflict queries
 // Returns a 2D array where conflict_map[r][c] = conflict_index if there's a conflict at (r,c), -1 otherwise
 std::vector<std::vector<std::vector<int>>> create_conflict_map_2D(
-    const std::vector<std::pair<int,int>>& conflict_points,
-    int rows, int cols) {
+    const std::vector<ConflictMeta>& conflict_meta,
+    const std::vector<std::vector<char>>& map) {
+    int rows = map.size();
+    int cols = map[0].size();
     std::vector<std::vector<std::vector<int>>> conflict_map(rows, std::vector<std::vector<int>>(cols));
     
-    for (size_t i = 0; i < conflict_points.size(); ++i) {
-        auto [r, c] = conflict_points[i];
-        if (r >= 0 && r < rows && c >= 0 && c < cols) {
-            conflict_map[r][c].push_back(static_cast<int>(i));
+    for (size_t i = 0; i < conflict_meta.size(); ++i) {
+        ConflictMeta conflict = conflict_meta[i];
+        if (!conflict.is_edge) {
+            auto [r, c] = conflict.pos1;
+            if (r >= 0 && r < rows && c >= 0 && c < cols) {
+                conflict_map[r][c].push_back(static_cast<int>(i));
+            } else {
+                std::cout << "[Create_conflict_map_2D] ERROR: conflict position out of bounds" << std::endl;
+            }
+        }
+        if (conflict.is_edge) {
+            auto [r, c] = conflict.pos1;
+            if (r >= 0 && r < rows && c >= 0 && c < cols) {
+                conflict_map[r][c].push_back(static_cast<int>(i));
+            } else {
+                std::cout << "[Create_conflict_map_2D] ERROR: conflict position out of bounds" << std::endl;
+            }
+            auto [r, c] = conflict.pos2;
+            if (r >= 0 && r < rows && c >= 0 && c < cols) {
+                conflict_map[r][c].push_back(static_cast<int>(i));
+            } else {
+                std::cout << "[Create_conflict_map_2D] ERROR: conflict position out of bounds" << std::endl;
+            }
         }
     }
-    
+
     return conflict_map;
 }
