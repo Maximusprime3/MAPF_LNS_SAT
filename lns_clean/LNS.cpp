@@ -1,5 +1,5 @@
 #include "Load_LNSProblem.h" 
-#include "Current_Solution.h" //collect_conflicts, create_conflict_map_2D
+#include "Current_Solution.h" //collect_conflicts_meta, create_conflict_map_2D
 #include "Local_Zone.h" //build_diamond_buckets
 #include "../SATSolverManager.h" //find_all_collisions, print_agent_paths
 
