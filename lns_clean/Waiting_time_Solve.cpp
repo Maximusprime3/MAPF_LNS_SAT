@@ -56,10 +56,10 @@ LazySolveResult lazy_solve_with_waiting_time(
     
     
 
-    //Step 1: assert waiting time and make a backup so we can restore it if waiting time solve fails
+    //assert waiting time and make a backup so we can restore it if waiting time solve fails
     auto waiting_time_backup = current_solution.backup_waiting_times();
 
-    int using_waiting_time = initial_waiting_time_amount;
+    int using_waiting_time = initial_waiting_time_amount; 
 
     std::vector<ConflictMeta> current_conflicts;
     for (int conflict_idx : local_zone_conflict_indices) {
@@ -68,11 +68,11 @@ LazySolveResult lazy_solve_with_waiting_time(
         }
     }
     
-    //Step 2: choose agents to use waiting time and check if we can use waiting time
+    //Choose agents from initial conflicts to use waiting time and check if we can use waiting time
     auto [agents_to_use_waiting_time, can_use_waiting_time] = choose_agents_to_use_waiting_time(current_conflicts, current_solution);
 
-    //initialize start and end time
-    const int zone_start_t = start_t;
+    //initialize start and end time, old_end_t is the end time of the previous iteration
+    const int zone_start_t = start_t; //zone start time never changes
     int old_end_t = end_t;
     int new_end_t = end_t;
 
@@ -80,7 +80,7 @@ LazySolveResult lazy_solve_with_waiting_time(
     while(!solution_found && can_use_waiting_time){
         
         //zone positions
-        //Step 2: create the local problem
+        //Step 2: create the local problem 
         LocalZoneState local_zone_state = build_local_problem_for_zone(
             current_solution,
             local_zone_positions,
@@ -92,16 +92,62 @@ LazySolveResult lazy_solve_with_waiting_time(
 
 
         std::vector<std::pair<int,int>> local_zone_paths;
-
         std::unordered_map<int, std::pair<int,int>> local_entry_exit_time;
         std::unordered_map<int, std::shared_ptr<MDD>> local_mdds;
         std::unordered_map<int, int> original_agent_id; //remember original agent id for pseudo agents (fake id, real id)
 
+        //build cnf 
+        CNFConstructor cnf_constructor(local_zone_state.local_mdds, true);
+        CNF local_cnf = cnf_constructor.construct_cnf();
+
+        //add collision clauses to cnf  
+        //WHAT ABOUT PSEUDO AGENTS? -> shoulc be ok since we keep the same ones until we have solution
+        //when recreating the local zone we need to make sure the pseudo agents of an agent get the same pseudo agent id as before
+        //then we can keep track of all collisions
+        //otherwise we can only use the initial collisions
+        cnf_constructor.add_collision_clauses_to_cnf(local_cnf, );
+        cnf_constructor.add_edge_collision_clauses_to_cnf(local_cnf, );
+
+        //Try lazy SAT solve the local zone
+        auto lazy_sat_result = lazy_SAT_solve(
+            local_zone_state.local_cnf,
+            local_zone_state.cnf_constructor,
+            local_zone_state.local_entry_exit_time,
+            zone_start_t, new_end_t,
+            10000, // max_iterations
+            local_zone_state.initial_vertex_collisions,
+            local_zone_state.initial_edge_collisions);
+
+        if (lazy_sat_result.solution_found) {
+            solution_found = true;
+            std::cout << "[Waiting_time_Solve] Successfully solved local zone with waiting time" << std::endl;
+            
+        }
+
         std::cout << "[Waiting_time_Solve] Local zone state: " << local_zone_state.local_zone_paths.size() << " agents" << std::endl;
         std::cout << "[Waiting_time_Solve] number of pseudo agents: " << local_zone_state.original_agent_id.size() << std::endl;
 
-        //update agents_to_use_waiting_time
+        //update local_zone_paths
+        local_zone_paths = local_zone_state.local_zone_paths;
+        local_entry_exit_time = local_zone_state.local_entry_exit_time;
+        local_mdds = local_zone_state.local_mdds;
+        original_agent_id = local_zone_state.original_agent_id;
+
+
+        //update current conflicts -> latest discovered collisions
+        // handle pseudo agents conflicts
+
+        //update which agents to use waiting time for the next iteration
         [agents_to_use_waiting_time, can_use_waiting_time] = choose_agents_to_use_waiting_time(current_conflicts, current_solution);
+        //increase waiting time amount
+        using_waiting_time += 1;
+        // use that waiting time
+        current_solution.use_waiting_time(agents_to_use_waiting_time, using_waiting_time);
+        //increase exit time for the agents that use waiting time
+
+        //if new exit time of an agent is greater than new_end_t, update new_end_t
+
+        //
 
     //handle pseudo agents
     //if fail restore waiting time

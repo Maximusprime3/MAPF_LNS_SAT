@@ -42,7 +42,7 @@ protected:
 public:
     // Constructor: initializes with MDDs and optional parameters
     CNFConstructor(const std::unordered_map<int, std::shared_ptr<MDD>>& mdds, 
-                   bool lazy_encoding = false,
+                   bool lazy_encoding = true,
                    const CNF& existing_cnf = CNF(),
                    const std::unordered_map<std::tuple<int, MDDNode::Position, int>, int>& existing_variable_map = {},
                    int start_variable_id = 1);

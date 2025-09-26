@@ -132,12 +132,13 @@ LocalZoneState build_local_problem_for_zone(
     const std::vector<ConflictMeta>& conflict_meta,
     int offset,
     int start_t,
-    int end_t)
+    int end_t,
+    const std::unordered_map<int, int>& agent_to_pseudo_agent_id)
 {
     LocalZoneState state;
     // Find agents present in the zone within time window
     auto agents_in_window = get_agents_in_zone_within_time_window(current_solution, zone_positions_set, start_t, end_t);
-    // Extract segments and compute entry/exit using existing processor
+    // Extract segments and compute entry/exit
     int number_of_pseudo_agents = 0;
     for (int agent_id : agents_in_window) {
         const auto& path = current_solution.agent_paths.at(agent_id);
@@ -154,6 +155,13 @@ LocalZoneState build_local_problem_for_zone(
                 //need to remember who the original agent is 
                 global_number_of_agents = current_solution.agent_paths.size();
                 for (int i = 1; i < result.zone_paths.size(); i++) { //for each returning path (after the first exit)
+
+                    //better efficiency if we can use collisions for pseudo agents
+                    //need to check if pseud agents already existed to recreate them?
+                    //problem more than one pseudo agent and possibly different extended path
+                    //or maybe make them more stable to last beyond on solve
+                    
+
                     //create fake id for pseudo agent
                     int pseudo_id = global_number_of_agents + number_of_pseudo_agents;
                     number_of_pseudo_agents++;
@@ -161,9 +169,9 @@ LocalZoneState build_local_problem_for_zone(
                     state.local_zone_paths[pseudo_id] = std::move(result.zone_paths[i]);
                     state.local_entry_exit_time[pseudo_id] = std::make_pair(result.entry_t[i], result.exit_t[i]);               
                 }
-            } else {//Agent has no paths in the zone like a very bad agent
-                std::cout << "[Create_Local_problem] ERROR: Agent " << agent_id << " has no paths in the zone" << std::endl;
-            }
+            } 
+        }else {//Agent has no paths in the zone like a very bad agent
+            std::cout << "[Create_Local_problem] ERROR: Agent " << agent_id << " has no paths in the zone" << std::endl;
         }
     }
     // Build MDDs and align to window
