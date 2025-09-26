@@ -1,3 +1,102 @@
+#include <iostream>
+#include <map>
+#include <memory>
+#include <set>
+#include <unordered_map>
+#include <utility>
+#include <vector>
+
+#include "Current_Solution.h"
+#include "MDDConstructor.h"
+#include "MDD.h"
+
+
+
+
+void void align_mdd_to_time_window(std::shared_ptr<MDD> mdd,
+    int entry_t, int exit_t, //agent's entry and exit times
+    int start_t, int end_t) { //time window of problem zone start and end
+
+    std::cout << "[LNS] Starting to align MDD to the time window: [" << start_t << ", " << end_t << "]" << std::endl;
+    if (!mdd) { // do we have an mdd?
+        std::cout << "[LNS] ERROR: No MDD to align" << std::endl;
+        return;
+    }
+
+    std::cout << "[LNS] MDD levels: " << mdd->levels.size() << std::endl;
+    //is it empty?
+    if (mdd->levels.empty()) {
+        std::cout << "[LNS] ERROR: MDD is empty" << std::endl;
+        return;
+    }
+
+    if (end_t < start_t) { // does start and end make sense?
+        std::cerr << "[LNS] ERROR: Invalid time window for MDD alignment (end_t < start_t)." << std::endl;
+        mdd->levels.clear();
+        return;
+    }
+
+    int zone_mdd_length = end_t - start_t + 1;
+    // Calculate relative timesteps within the time window
+    int relative_entry = entry_t - start_t;  // 0-based within the time window
+    int relative_exit = exit_t - start_t;    // 0-based within the time window
+
+    relative_entry = std::max(0, std::min(relative_entry, zone_mdd_length - 1));
+    //relative_exit = std::max(relative_entry, std::min(relative_exit, zone_mdd_length - 1)); //we don't need to do this as we don't add empty levels after the agent's exit
+
+    auto original_levels = mdd->levels;
+    std::map<int, std::vector<std::shared_ptr<MDDNode>>> aligned_levels;
+
+    //check if already aligned to the time window 
+    //if first MDD level matches entry
+    std::cout << "[LNS] Checking if MDD start is already aligned to the time window" << std::endl;
+    bool mdd_start_aligned = false;
+    if (original_levels.begin()->first == relative_entry + start_t) {
+        std::cout << "[LNS] MDD start " << original_levels.begin()->first << " already at relative entry: " << relative_entry + start_t << std::endl;
+        mdd_start_aligned = true;
+    }
+
+    //if last MDD level matches exit
+    std::cout << "[LNS] Checking if MDD end already at relative exit: " << relative_exit + start_t << std::endl;
+    bool mdd_end_aligned = false;
+    // get last MDD level 
+    if (original_levels.rbegin()->first == relative_exit + start_t) {
+        std::cout << "[LNS] MDD end " << original_levels.rbegin()->first << " already aligned to the time window: " << relative_exit + start_t << std::endl;
+        mdd_end_aligned = true;
+    }
+
+    std::cout << "checked if MDD start and end are aligned" << std::endl;
+    if (mdd_start_aligned && mdd_end_aligned) {
+        std::cout << "[LNS] MDD already aligned to the time window" << std::endl;
+        return;
+    }
+
+    // Shift the agent's MDD levels to the correct position
+    std::cout << "[LNS] Aligning now" << std::endl;
+    for (const auto& [level, nodes] : original_levels) {
+
+        int new_level = level + relative_entry + start_t; //shift the level to the correct position in the window
+
+        if (new_level >= zone_mdd_length + start_t) {
+            std::cerr << "[LNS] WARNING: MDD level " << new_level
+                      << " exceeds time window length " << zone_mdd_length + start_t
+                      << "; truncating." << std::endl;
+            continue;
+        }
+
+        auto& target_nodes = aligned_levels[new_level]; //get the target nodes
+        target_nodes = nodes;
+        for (auto& node : target_nodes) {
+            node->time_step = new_level; //MDD is now in absolute time scale similar to collision metadata and update logic 
+        }
+    }
+
+    std::cout << "[LNS] Aligned MDD to the time window" << std::endl;
+    mdd->levels = std::move(aligned_levels);
+}
+
+
+
 // Helper function to extract agent path segments within a zone
 struct AgentPathSegment {
     std::vector<std::pair<int,int>> contiguous_intervals;
@@ -81,8 +180,8 @@ AgentProcessingResult process_agent_in_zone(
     const std::vector<std::vector<char>>& grid) {
     
     AgentProcessingResult result;
-    result.entry_t = -1;
-    result.exit_t = -1;
+    result.entry_t = std::vector<int>();
+    result.exit_t = std::vector<int>();
     result.expanded_zone_positions = zone_positions_set;
     
     // Extract agent path segment
@@ -133,13 +232,15 @@ LocalZoneState build_local_problem_for_zone(
     int offset,
     int start_t,
     int end_t,
-    const std::unordered_map<int, int>& agent_to_pseudo_agent_id)
+    const std::unordered_map<int, int,int,std::vector<std::pair<int,int>>,int>& agent_to_pseudo_agent_id) // (og_id, segment_entry_t, segment_exit_t, segment_path, pseudo_id)
 {
     LocalZoneState state;
     // Find agents present in the zone within time window
     auto agents_in_window = get_agents_in_zone_within_time_window(current_solution, zone_positions_set, start_t, end_t);
+    //check how many pseudo agents we have already
+    int number_of_pseudo_agents = agent_to_pseudo_agent_id.size();
+    const int global_number_of_agents = current_solution.agent_paths.size();
     // Extract segments and compute entry/exit
-    int number_of_pseudo_agents = 0;
     for (int agent_id : agents_in_window) {
         const auto& path = current_solution.agent_paths.at(agent_id);
         auto result = process_agent_in_zone(agent_id, path, zone_positions_set, conflict_map, conflict_meta, start_t, end_t, offset, grid);
@@ -153,15 +254,8 @@ LocalZoneState build_local_problem_for_zone(
                 std::cout << "[Create_Local_problem] Need to handle returning agents as PSEUDO AGENTS" << std::endl;
                 //need new ids for pseudo agents and create seperate paths for them
                 //need to remember who the original agent is 
-                global_number_of_agents = current_solution.agent_paths.size();
                 for (int i = 1; i < result.zone_paths.size(); i++) { //for each returning path (after the first exit)
-
-                    //better efficiency if we can use collisions for pseudo agents
-                    //need to check if pseud agents already existed to recreate them?
-                    //problem more than one pseudo agent and possibly different extended path
-                    //or maybe make them more stable to last beyond on solve
                     
-
                     //create fake id for pseudo agent
                     int pseudo_id = global_number_of_agents + number_of_pseudo_agents;
                     number_of_pseudo_agents++;

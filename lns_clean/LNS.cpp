@@ -19,7 +19,7 @@
 //takes map path, scenario path, number of agents, scenario index, use minisat, seed
 //returns paths of agents
 
-std::vector<std::vector<int,int>> LNS(
+std::unordered_map<int, std::vector<std::vector<int,int>>> LNS(
     const std::string& map_path, 
     const std::string& scenario_path, 
     int num_agents, 
@@ -28,12 +28,12 @@ std::vector<std::vector<int,int>> LNS(
     int seed) {
     
     //Step 1: Load problem and print basic info
-    auto problem = load_problem(map_path, scenario_path, num_agents, scenario_index);
-    if (!problem.has_value()) {
+    auto problem_loaded = load_problem(map_path, scenario_path, num_agents, scenario_index);
+    if (!problem_loaded.has_value()) {
         std::cerr << "[LNS] Failed to load problem" << std::endl;
-        return std::vector<std::vector<int,int>>();
+        return std::unordered_map<int, std::vector<std::vector<int,int>>>();
     }
-    const auto& problem = problem_opt.value();
+    const auto& problem = problem_loaded.value();
 
     std::cout << "[LNS] Loaded map " << problem.grid.size() << "x"
               << (problem.grid.empty() ? 0 : (int)problem.grid[0].size())

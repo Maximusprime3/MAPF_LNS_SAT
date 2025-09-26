@@ -43,22 +43,15 @@ std::vector<ConflictMeta> collect_conflicts_meta(
     conflict_meta.reserve(vertex_collisions.size() + edge_collisions.size());
 
     // Vertex conflicts contribute a single metadata entry.
-    for (const auto& v : vertex_collisions) {
-        int a1 = std::get<0>(v);
-        int a2 = std::get<1>(v);
-        auto pos = std::get<2>(v);
-        int t = std::get<3>(v);
-        conflict_meta.push_back(ConflictMeta{a1, a2, t, false, pos, {-1, -1}});
+    for (const auto& [agent1, agent2, pos, t] : vertex_collisions) {
+
+        conflict_meta.push_back(ConflictMeta{agent1, agent2, t, false, pos, {-1, -1}});
     }
 
     // Edge conflicts contribute a single metadata entry.
-    for (const auto& e : edge_collisions) {
-        int a1 = std::get<0>(e);
-        int a2 = std::get<1>(e);
-        auto pos1 = std::get<2>(e);
-        auto pos2 = std::get<3>(e);
-        int t = std::get<4>(e);
-        conflict_meta.push_back(ConflictMeta{a1, a2, t, true, pos1, pos2});
+    for (const auto& [agent1, agent2, pos1, pos2, t] : edge_collisions) {
+
+        conflict_meta.push_back(ConflictMeta{agent1, agent2, t, true, pos1, pos2});
     }
     return conflict_meta;
 }

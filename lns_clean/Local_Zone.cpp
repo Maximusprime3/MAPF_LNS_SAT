@@ -210,12 +210,14 @@ std::vector<DiamondBucket> build_diamond_buckets(
         //set time window relvant for this conflict
 
         std::set<std::pair<int,int>> previous_shape;
+        std::set<std::pair<int,int>> current_shape;
+        std::set<std::pair<int,int>> new_positions;
         bool found_new_conflicts = true;
         while (found_new_conflicts) {
             found_new_conflicts = false;
             //create the current shape from the conflicts meta
-            auto current_shape = create_shape_from_conflicts_meta(bucket_conflicts_meta, offset, map);
-            auto new_positions = find_new_positions(current_shape, previous_shape, map);
+            current_shape = create_shape_from_conflicts_meta(bucket_conflicts_meta, offset, map);
+            new_positions = find_new_positions(current_shape, previous_shape, map);
             //check the new positions for conflicts 
             for (const auto& pos : new_positions) {
                 auto [r, c] = pos;
@@ -255,15 +257,15 @@ std::vector<DiamondBucket> build_diamond_buckets(
                 }
             }
 
-            previous_shape = std::move(current_shape);
+            previous_shape = current_shape;
         }
         //build the diamond bucket from all collected conflicts meta
         DiamondBucket diamond_bucket;
-        diamond_bucket.positions = std::move(current_shape);
+        diamond_bucket.positions = current_shape;
         diamond_bucket.indices.assign(index_set.begin(), index_set.end());
         diamond_bucket.earliest_t = bucket_earliest_t;
         diamond_bucket.latest_t = bucket_latest_t;
-        diamond_bucket.masked_map = mask_map_outside_shape(map, current_shape);
+        diamond_bucket.masked_map = mask_map_outside_shape(map, diamond_bucket.positions);
         diamond_buckets.push_back(std::move(diamond_bucket));
         std::cout << "[LOCAL ZONE] Built diamond bucket for conflict " << conlfict_idx << " with " 
                   << diamond_bucket.positions.size() << " positions, " << diamond_bucket.indices.size() << " conflicts, " 
@@ -310,7 +312,7 @@ std::vector<DiamondBucket> build_diamond_buckets_for_earliest_conflicts(
             offset);   
     } else {
         std::cout << "[LOCAL ZONE] ERROR: No earliest conflicts found" << std::endl;
-        return std::vector<DiamondBucket>();
+        return {};
     }
 
     return earliest_diamond_buckets;   
@@ -423,12 +425,12 @@ std::pair<std::set<std::pair<int,int>>, std::vector<int>> expand_bucket_zone(
                     }
                 }
             }
-            previous_bucket_shape = std::set<std::pair<int,int>>(current_expanded_shape.begin(), current_expanded_shape.end());
+            previous_bucket_shape = current_expanded_shape;
         }
     }
 
-    auto expanded_zone_positions_set = create_shape_from_conflicts(expanded_bucket_conflicts, expanded_offset, map);
-    return {expanded_zone_positions_set, expanded_conflict_indices};
+    auto expanded_zone_positions_set = create_shape_from_conflicts_meta(expanded_bucket_conflicts_meta, expanded_offset, map);
+    return {expanded_zone_positions_set, expanded_bucket_conflict_indices};
 }
 
 /**
