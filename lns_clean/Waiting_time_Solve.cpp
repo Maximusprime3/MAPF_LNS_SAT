@@ -1,5 +1,113 @@
+#include "Waiting_time_Solve.h"
 
+#include "Create_Local_Problem.h"
+#include "lazy_SAT_Solve.h"
+#include "../cnf/CNFConstructor.h"
 
+#include <algorithm>
+#include <iostream>
+#include <set>
+#include <tuple>
+#include <unordered_map>
+
+namespace {
+
+std::vector<std::tuple<int, int, std::pair<int,int>, int>> gather_vertex_collisions(
+    const LocalZoneState& state) {
+    std::set<std::tuple<int, int, std::pair<int,int>, int>> unique;
+    for (const auto& segment : state.segments) {
+        for (const auto& collision : segment.vertex_collisions) {
+            unique.insert(collision);
+        }
+    }
+    return {unique.begin(), unique.end()};
+}
+std::vector<std::tuple<int, int, std::pair<int,int>, std::pair<int,int>, int>> gather_edge_collisions(
+    const LocalZoneState& state) {
+    std::set<std::tuple<int, int, std::pair<int,int>, std::pair<int,int>, int>> unique;
+    for (const auto& segment : state.segments) {
+        for (const auto& collision : segment.edge_collisions) {
+            unique.insert(collision);
+        }
+    }
+    return {unique.begin(), unique.end()};
+}
+
+void record_collision(LocalZoneState& state,
+    const std::tuple<int, int, std::pair<int,int>, int>& collision) {
+    int a1 = std::get<0>(collision);
+    int a2 = std::get<1>(collision);
+    auto add_to_segment = [&](int seg_id) {
+        auto it = state.segment_index_by_id.find(seg_id);
+        if (it == state.segment_index_by_id.end()) return;
+        auto& list = state.segments[it->second].vertex_collisions;
+        if (std::find(list.begin(), list.end(), collision) == list.end()) {
+            list.push_back(collision);
+        }
+    };
+    add_to_segment(a1);
+    add_to_segment(a2);
+}
+void record_collision(LocalZoneState& state,
+    const std::tuple<int, int, std::pair<int,int>, std::pair<int,int>, int>& collision) {
+    int a1 = std::get<0>(collision);
+    int a2 = std::get<1>(collision);
+    auto add_to_segment = [&](int seg_id) {
+        auto it = state.segment_index_by_id.find(seg_id);
+        if (it == state.segment_index_by_id.end()) return;
+        auto& list = state.segments[it->second].edge_collisions;
+        if (std::find(list.begin(), list.end(), collision) == list.end()) {
+            list.push_back(collision);
+        }
+    };
+    add_to_segment(a1);
+    add_to_segment(a2);
+}
+
+void filter_collisions(LocalSegment segment){
+    segment.vertex_collisions.erase(
+        std::remove_if(segment.vertex_collisions.begin(), segment.vertex_collisions.end(),
+            [&](const auto& collision) {
+                int t = std::get<3>(collision);
+                return t < segment.entry_t || t > segment.exit_t;
+            }),
+        segment.vertex_collisions.end());
+    segment.edge_collisions.erase(
+        std::remove_if(segment.edge_collisions.begin(), segment.edge_collisions.end(),
+            [&](const auto& collision) {
+                int t = std::get<4>(collision);
+                return t < segment.entry_t || t > segment.exit_t;
+            }),
+        segment.edge_collisions.end());
+}
+
+std::unordered_map<int, std::pair<int,int>> build_original_entry_exit_time_map(
+    const LocalZoneState& state) {
+    std::unordered_map<int, std::pair<int,int>> result;
+    for (const auto& segment : state.segments) {
+        auto it = result.find(segment.original_id);
+        if (it == result.end()) {
+            result[segment.original_id] = {segment.original_entry_t, segment.original_exit_t};
+        } else {
+            it->second.first = std::min(it->second.first, segment.original_entry_t);
+            it->second.second = std::max(it->second.second, segment.original_exit_t);
+        }
+    }
+    return result;
+}
+
+void merge_collisions(LocalZoneState& state,
+    const std::vector<std::tuple<int, int, std::pair<int,int>, int>>& vertex_collisions,
+    const std::vector<std::tuple<int, int, std::pair<int,int>, std::pair<int,int>, int>>& edge_collisions) {
+    for (const auto& collision : vertex_collisions) {
+        record_collision(state, collision);
+    }
+    for (const auto& collision : edge_collisions) {
+        record_collision(state, collision);
+    }
+}
+
+}//namespace
 
 std::pair<std::set<int>, bool> choose_agents_to_use_waiting_time(
     const std::vector<ConflictMeta>& current_conflicts, 
@@ -85,60 +193,178 @@ std::pair<std::set<int,int>, bool> choose_agents_to_wait(
 
 
 
-LazySolveResult lazy_result;
-    lazy_result.solution_found = false;
-    lazy_result.local_paths = local_zone_paths;
-    lazy_result.discovered_vertex_collisions = initial_vertex_collisions;
-    lazy_result.discovered_edge_collisions = initial_edge_collisions;
 
 LazySolveResult lazy_solve_with_waiting_time(
     CurrentSolution& current_solution,
     const std::vector<std::vector<char>>& map,
-    const std::vector<std::vector<char>>& masked_map,                           
+    const std::vector<std::vector<char>>& masked_map,
     const std::set<std::pair<int,int>>& local_zone_positions,
     const std::vector<ConflictMeta>& conflict_meta,
     const std::vector<int>& local_zone_conflict_indices,
     const std::vector<std::vector<std::vector<int>>>& conflict_map,
-    int start_t, int end_t, 
+    int start_t,
+    int end_t,
     int offset,
-    int initial_waiting_time_amount = 0) {
+    int initial_waiting_time_amount) {
 
-    
-    
+    (void)map;
+    (void)local_zone_conflict_indices;
 
+    LazySolveResult result;
+    result.solution_found = false;
+    
     //assert waiting time and make a backup so we can restore it if waiting time solve fails
     auto waiting_time_backup = current_solution.backup_waiting_times();
 
     int using_waiting_time = initial_waiting_time_amount; 
 
-    std::vector<ConflictMeta> current_conflicts;
-    for (int conflict_idx : local_zone_conflict_indices) {
-        if (conflict_idx >= 0 && conflict_idx < (int)conflict_meta.size()) {
-            current_conflicts.push_back(conflict_meta[conflict_idx]);
-        }
-    }
+    //std::vector<ConflictMeta> current_conflicts;
+    //for (int conflict_idx : local_zone_conflict_indices) {
+    //    if (conflict_idx >= 0 && conflict_idx < (int)conflict_meta.size()) {
+    //        current_conflicts.push_back(conflict_meta[conflict_idx]);
+    //    }
+    //}
     
     //Choose agents from initial conflicts to use waiting time and check if we can use waiting time
-    auto [agents_to_use_waiting_time, can_use_waiting_time] = choose_agents_to_use_waiting_time(current_conflicts, current_solution);
-
+    //auto [agents_to_use_waiting_time, can_use_waiting_time] = choose_agents_to_use_waiting_time(current_conflicts, current_solution);
 
     //create the local problem 
-    LocalZoneState local_zone_state = build_local_problem_for_zone(
+    LocalZoneState state = build_local_problem_for_zone(
         current_solution,
         local_zone_positions,
-        masked_map, 
-        map, 
-        conflict_map, 
+        masked_map,
+        map,
+        conflict_map,
         conflict_meta,
-        offset, start_t, end_t);
-    //RETURNS
-    std::unordered_map<int, std::vector<std::pair<int,int>>> local_zone_paths;
-    std::unordered_map<int, std::pair<int,int>> local_entry_exit_time;
-    std::unordered_map<int, std::shared_ptr<MDD>> local_mdds;
-    std::unordered_map<int, int> original_agent_id; //remember original agent id for pseudo agents (fake id, real id)
+        offset,
+        start_t,
+        end_t);
+   
+
+    std::unordered_map<int, std::vector<std::pair<int,int>>> agent_path_backup;
+    for (const auto& [original_id, _] : state.original_to_segments) {
+        auto it = current_solution.agent_paths.find(original_id);
+        if (it != current_solution.agent_paths.end()) {
+            agent_path_backup[original_id] = it->second;
+        }
+    }
+    auto original_entry_exit = build_original_entry_exit_time_map(state);
+
+    //TODO:what if first iteration should be 0 waiting time?
+    int waiting_delta = std::max(1, initial_waiting_time_amount>0? initial_waiting_time_amount : 1);
 
     
+    const int max_iterations = 10;
+    for (int iter = 0; iter < max_iterations; iter++) {
+        std::cout << "[Waiting_time_Solve] Iteration " << iter << "..." << std::endl;
 
+        auto mdd_map = build_segment_mdd_map(state);
+        CNFConstructor cnf_constructor(mdd_map, true);
+        CNF local_cnf = cnf_constructor.construct_cnf();
+
+        //add collision clauses to cnf
+        auto cached_vertex_collisions = gather_vertex_collisions(state);
+        auto cached_edge_collisions = gather_edge_collisions(state);
+        if (!cached_vertex_collisions.empty()) {
+            cnf_constructor.add_collision_clauses_to_cnf(local_cnf, cached_vertex_collisions);
+        }
+        if (!cached_edge_collisions.empty()) {
+            cnf_constructor.add_edge_collision_clauses_to_cnf(local_cnf, cached_edge_collisions);
+        }
+
+        auto entry_exit_map = build_segment_entry_exit_time_map(state);
+
+        //try lazy sat solve
+        auto lazy_result = lazy_SAT_solve(
+            local_cnf,
+            cnf_constructor,
+            entry_exit_map,
+            state.zone_start_t,
+            state.zone_end_t,
+            1000, // max_iterations
+            cached_vertex_collisions,
+            cached_edge_collisions);
+        
+        merge_collisions(state, lazy_sat_result.discovered_vertex_collisions, lazy_sat_result.discovered_edge_collisions);
+        
+        if (lazy_sat_result.solution_found) {
+            std::unordered_map<int, std::vector<std::pair<int,int>>> original_paths;
+            std::unordered_map<int, std::pair<int,int>> new_entry_exit_time;
+            for (const auto& segment : state.segments) {
+                auto it_path = lazy_result.local_paths.find(segment.segment_id);
+                if (it_path != lazy_result.local_paths.end()) continue;
+                original_paths[segment.original_id] = it_path->second;
+                new_entry_exit_time[segment.original_id] = {segment.entry_t, segment.exit_t};
+            }
+            current_solution.update_with_local_paths_waiting(original_paths, original_entry_exit, new_entry_exit_time);
+
+            result = lazy_result;
+            result.local_paths = std::move(original_paths);
+            result.local_entry_exit_time = std::move(new_entry_exit_time);
+            result.solution_found = true;
+            return result;
+        }
+
+        auto pending_vertex_collisions = lazy_result.latest_discovered_vertex_collisions;
+        auto pending_edge_collisions = lazy_result.latest_discovered_edge_collisions;
+
+        bool applied_wait = false;
+        //adjust them if we use waiting time
+        auto try_apply_wait = [&](int segment_id) {
+            auto idx_it = state.segment_index_by_id.find(segment_id);
+            if (idx_it == state.segment_index_by_id.end()) return false;
+            const LocalSegment& segment = state.segments[idx_it->second];
+            int original_id = segment.original_id;
+            if (current_solution.get_waiting_time(original_id) <= waiting_delta) {
+                return false;
+            }
+            current_solution.use_waiting_time(original_id, waiting_delta);
+            apply_waiting_time_delta(state, segment_id, waiting_delta, masked_map);
+
+            std::cout << "[Waiting_time_Solve] Applied waiting time to segment " << segment_id << " for agent " << original_id << std::endl;
+
+            std::unordered_map<int, std::vector<std::pair<int,int>>> local_paths{{original_id, state.segments[idx_it->second].path}};
+            std::unordered_map<int, std::pair<int,int>> old_times{{original_id, original_entry_exit[original_id]}};
+            std::unordered_map<int, std::pair<int,int>> new_times{{original_id, {state.segments[idx_it->second].entry_t, state.segments[idx_it->second].exit_t}}};
+
+            current_solution.update_with_local_paths_waiting(local_paths, old_times, new_times);
+            original_entry_exit[original_id] = new_times[original_id];
+
+            applied_wait = true;
+
+            return true;
+        };
+
+        for (const auto& collision : pending_vertex_collisions) {
+            if (try_apply_wait(std::get<0>(collision))) break;
+            if (try_apply_wait(std::get<1>(collision))) break;
+        }
+        for (const auto& collision : pending_edge_collisions) {
+            if (try_apply_wait(std::get<0>(collision))) break;
+            if (try_apply_wait(std::get<1>(collision))) break;
+        }
+        
+        if (!applied_wait) {
+            std::cout << "[Waiting_time_Solve] No waiting time applied" << std::endl;
+            break;
+        }
+    }
+
+    if (!result.solution_found) {
+        std::cout << "[Waiting_time_Solve] No solution found" << std::endl;
+        for (const auto& [agent_id, path] : agent_path_backup) {
+            current_solution.agent_paths[agent_id] = path;
+        }
+    }
+    current_solution.restore_waiting_times(waiting_time_backup);
+    return result;
+}
+
+
+
+//BELOW ORIGINAL CODE
+
+    //this was at line 245
     //initialize start and end time, old_end_t is the end time of the previous iteration
     const int zone_start_t = start_t; //zone start time never changes
     int old_end_t = end_t;
@@ -167,8 +393,8 @@ LazySolveResult lazy_solve_with_waiting_time(
 
         //Try lazy SAT solve the local zone
         auto lazy_sat_result = lazy_SAT_solve(
-            local_zone_state.local_cnf,
-            local_zone_state.cnf_constructor,
+            local_cnf,
+            cnf_constructor,
             local_zone_state.local_entry_exit_time,
             zone_start_t, new_end_t,
             10000, // max_iterations

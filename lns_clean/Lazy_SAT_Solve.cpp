@@ -278,6 +278,7 @@ LazySolveResult lazy_SAT_solve(
     
     return {solution_found,
             final_local_paths,
+            local_entry_exit_time,
             set_to_vector_vertex(discovered_vertex_collisions_set),
             set_to_vector_edge(discovered_edge_collisions_set),
             set_to_vector_vertex(latest_discovered_vertex_collisions),

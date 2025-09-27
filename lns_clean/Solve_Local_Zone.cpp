@@ -1,8 +1,8 @@
 #include "Local_Zone.h" //expand_bucket_zone
 #include "Current_Solution.h"
 #include "DiamondBucket.h"
-#include "ConflictMeta.h"
-#include "LazySolveResult.h"
+#include "Waiting_time_Solve.h"
+#include "Solve_Local_Zone.h"
 
 
 // Helper function to find agents present in a zone within a time window
@@ -35,9 +35,6 @@ LocalZoneResult solve_local_zone(
     int current_max_timesteps) {
         
     LocalZoneResult local_zone_result;
-    local_zone_result.solution_found = false;
-    local_zone_result.local_paths = std::unordered_map<int, std::vector<std::pair<int,int>>>();
-    local_zone_result.local_entry_exit_time = std::vector<int>();
     
 
     //get number of all walkable positions in the map
@@ -70,7 +67,7 @@ LocalZoneResult solve_local_zone(
         std::cout << "[Solve_local_zone] Local zone time window: [" << start_t << ", " << end_t << "]" << std::endl;
         
         //Step 2: solve the local problem
-        auto local_zone_result = lazy_solve_with_waiting_time(
+        auto waiting_result = lazy_solve_with_waiting_time(
             current_solution,
             map,
             local_masked_map,
@@ -82,10 +79,13 @@ LocalZoneResult solve_local_zone(
             offset);
         
         //if solution found, update the current solution
-        if (local_zone_result.solution_found) {
+        if (waiting_result.solution_found) {
             std::cout << "[Solve_local_zone] Successfully solved local zone" << std::endl;
             //integrate local zone result into current solution
-            current_solution.update_with_local_paths(local_zone_result.local_paths, local_zone_result.local_entry_exit_time);
+            current_solution.update_with_local_paths(waiting_result.local_paths, waiting_result.local_entry_exit_time);
+            local_zone_result.solution_found = true;
+            local_zone_result.local_paths = waiting_result.local_paths;
+            local_zone_result.local_entry_exit_time = waiting_result.local_entry_exit_time;
             break;
         }
 

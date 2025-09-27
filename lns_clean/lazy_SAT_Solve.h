@@ -25,6 +25,7 @@ class MDDConstructor;
 struct LazySolveResult {
     bool solution_found;
     std::unordered_map<int, std::vector<std::pair<int,int>>> local_paths;
+    std::unordered_map<int, std::pair<int,int>> local_entry_exit_time;
     std::vector<std::tuple<int, int, std::pair<int,int>, int>> discovered_vertex_collisions;
     std::vector<std::tuple<int, int, std::pair<int,int>, std::pair<int,int>, int>> discovered_edge_collisions;
     // latest collisions that were discovered before UNSAT
