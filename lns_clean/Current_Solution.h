@@ -24,6 +24,7 @@ struct ConflictMeta {
     std::pair<int,int> pos2;      // second edge endpoint if edge conflict
 };
 
+struct LocalZoneState; //Forward declaration for local-zone integration helpers
 
 struct CurrentSolution {
     std::unordered_map<int, std::vector<std::pair<int,int>>> agent_paths;  // agent_id -> path
@@ -236,8 +237,20 @@ struct CurrentSolution {
 
         // Rebuild occupancy map
         create_path_map();
-        std::cout << "[LNS] Successfully updated global solution with waiting-time local paths!" << std::endl;
+        std::cout << "[Current_Solution] Successfully updated global solution with waiting-time local paths!" << std::endl;
     }
+  
+    // Update global solution with local zone data that may include pseudo agents.
+    // The supplied LocalZoneState already tracks the chronological segment order
+    // for every real agent, their original entry/exit times and the updated ones
+    // after waiting-time adjustments. `solved_segment_paths` can override the paths
+    // stored in the state (e.g. solver output) before the integration takes place.
+    void update_with_local_paths_and_pseudo_agents(const LocalZoneState& local_zone_state,
+        const std::unordered_map<int, std::vector<std::pair<int,int>>>& solved_segment_paths);
+
+
+
+
     
     // Calculate waiting time for each agent based on their shortest path vs makespan
     // This should be called after initial path sampling to track available extra actions

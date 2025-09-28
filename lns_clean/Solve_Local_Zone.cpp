@@ -1,6 +1,5 @@
 #include "Local_Zone.h" //expand_bucket_zone
 #include "Current_Solution.h"
-#include "DiamondBucket.h"
 #include "Waiting_time_Solve.h"
 #include "Solve_Local_Zone.h"
 
@@ -81,8 +80,7 @@ LocalZoneResult solve_local_zone(
         //if solution found, update the current solution
         if (waiting_result.solution_found) {
             std::cout << "[Solve_local_zone] Successfully solved local zone" << std::endl;
-            //integrate local zone result into current solution
-            current_solution.update_with_local_paths(waiting_result.local_paths, waiting_result.local_entry_exit_time);
+            //integration of local zone result into current solution happens in waiting time solve
             local_zone_result.solution_found = true;
             local_zone_result.local_paths = waiting_result.local_paths;
             local_zone_result.local_entry_exit_time = waiting_result.local_entry_exit_time;

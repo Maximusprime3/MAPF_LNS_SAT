@@ -6,11 +6,86 @@
 
 #include <algorithm>
 #include <iostream>
+#include <iterator>
 #include <set>
 #include <tuple>
 #include <unordered_map>
 
 namespace {
+
+void apply_waiting_time_delta(LocalZoneState& state,
+    int segment_id,
+    int original_id,
+    int waiting_time_delta) {
+    if (waiting_time_delta <= 0) {
+        return;
+    }
+
+    auto idx_it = state.segment_index_by_id.find(segment_id);
+    if (idx_it == state.segment_index_by_id.end()) {
+        std::cerr << "[Waiting_time_Solve] ERROR: Segment " << segment_id
+                  << " not found while applying waiting time" << std::endl;
+        return;
+    }
+
+    size_t seg_index = idx_it->second;
+    if (seg_index >= state.segments.size()) {
+        std::cerr << "[Waiting_time_Solve] ERROR: Segment index " << seg_index
+                  << " out of bounds for segment " << segment_id << std::endl;
+        return;
+    }
+
+    LocalSegment& segment = state.segments[seg_index];
+    if (segment.original_id != original_id) {
+        std::cerr << "[Waiting_time_Solve] WARNING: Segment " << segment_id
+                  << " original agent mismatch (expected " << original_id
+                  << ", got " << segment.original_id << ")" << std::endl;
+    }
+
+    const int old_exit = segment.exit_t;
+    segment.exit_t += waiting_time_delta;
+
+    if (!segment.path.empty()) {
+        const auto last_position = segment.path.back();
+        for (int i = 0; i < waiting_time_delta; ++i) {
+            segment.path.push_back(last_position);
+        }
+    }
+
+    state.zone_end_t = std::max(state.zone_end_t, segment.exit_t);
+
+    auto original_it = state.original_to_segments.find(segment.original_id);
+    if (original_it == state.original_to_segments.end()) {
+        std::cerr << "[Waiting_time_Solve] WARNING: No ordering information for agent "
+                  << segment.original_id << " when shifting subsequent segments" << std::endl;
+        return;
+    }
+    const auto& indices = original_it->second;
+    auto pos_it = std::find(indices.begin(), indices.end(), seg_index);
+    if (pos_it == indices.end()) {
+        std::cerr << "[Waiting_time_Solve] WARNING: Segment index " << seg_index
+                  << " missing from ordering for agent " << segment.original_id << std::endl;
+        return;
+    }
+
+    for (auto follow_it = std::next(pos_it); follow_it != indices.end(); ++follow_it) {
+        size_t follow_index = *follow_it;
+        if (follow_index >= state.segments.size()) {
+            std::cerr << "[Waiting_time_Solve] WARNING: Segment index " << follow_index
+                      << " out of range while shifting agent " << segment.original_id << std::endl;
+            continue;
+        }
+        following.entry_t += waiting_time_delta;
+        following.exit_t += waiting_time_delta;
+        state.zone_end_t = std::max(state.zone_end_t, following.exit_t);
+    }
+
+    if (segment.exit_t != old_exit + waiting_time_delta) {
+        std::cerr << "[Waiting_time_Solve] WARNING: Segment " << segment_id
+                  << " exit time mismatch after waiting adjustment" << std::endl;
+    }
+}
+
 
 std::vector<std::tuple<int, int, std::pair<int,int>, int>> gather_vertex_collisions(
     const LocalZoneState& state) {
@@ -290,16 +365,18 @@ LazySolveResult lazy_solve_with_waiting_time(
         if (lazy_sat_result.solution_found) {
             std::unordered_map<int, std::vector<std::pair<int,int>>> original_paths;
             std::unordered_map<int, std::pair<int,int>> new_entry_exit_time;
+
+            //update local zone state segments paths
             for (const auto& segment : state.segments) {
                 auto it_path = lazy_result.local_paths.find(segment.segment_id);
                 if (it_path != lazy_result.local_paths.end()) continue;
-                original_paths[segment.original_id] = it_path->second;
-                new_entry_exit_time[segment.original_id] = {segment.entry_t, segment.exit_t};
+                segment.path = it_path->second;   
             }
-            current_solution.update_with_local_paths_waiting(original_paths, original_entry_exit, new_entry_exit_time);
+            //update global solution
+            current_solution.update_with_local_paths_and_pseudo_agents(state, lazy_result.local_paths);
 
             result = lazy_result;
-            result.local_paths = std::move(original_paths);
+            result.local_paths = std::move(lazy_result.local_paths);
             result.local_entry_exit_time = std::move(new_entry_exit_time);
             result.solution_found = true;
             return result;
@@ -309,6 +386,8 @@ LazySolveResult lazy_solve_with_waiting_time(
         auto pending_edge_collisions = lazy_result.latest_discovered_edge_collisions;
 
         bool applied_wait = false;
+        bool extended_time_window = false;
+        int previous_zone_end_t = state.zone_end_t;
         //adjust them if we use waiting time
         auto try_apply_wait = [&](int segment_id) {
             auto idx_it = state.segment_index_by_id.find(segment_id);
@@ -319,44 +398,96 @@ LazySolveResult lazy_solve_with_waiting_time(
                 return false;
             }
             current_solution.use_waiting_time(original_id, waiting_delta);
-            apply_waiting_time_delta(state, segment_id, waiting_delta, masked_map);
+            //update local zone state segments associated with the agent            
+           
+            apply_waiting_time_delta(state, segment_id, original_id, waiting_delta);
+            //check if we extended the time window
+            if (state.zone_end_t > previous_zone_end_t) {
+                extended_time_window = true;
+            }
 
             std::cout << "[Waiting_time_Solve] Applied waiting time to segment " << segment_id << " for agent " << original_id << std::endl;
-
-            std::unordered_map<int, std::vector<std::pair<int,int>>> local_paths{{original_id, state.segments[idx_it->second].path}};
-            std::unordered_map<int, std::pair<int,int>> old_times{{original_id, original_entry_exit[original_id]}};
-            std::unordered_map<int, std::pair<int,int>> new_times{{original_id, {state.segments[idx_it->second].entry_t, state.segments[idx_it->second].exit_t}}};
-
-            current_solution.update_with_local_paths_waiting(local_paths, old_times, new_times);
-            original_entry_exit[original_id] = new_times[original_id];
 
             applied_wait = true;
 
             return true;
         };
 
+        //use waiting time for the agents with unresolved conflicts
+        std::set<int> agents_already_used_waiting_time; //to avoid using waiting time for the same agent twice
+        bool out_of_waiting_time = false;
         for (const auto& collision : pending_vertex_collisions) {
-            if (try_apply_wait(std::get<0>(collision))) break;
-            if (try_apply_wait(std::get<1>(collision))) break;
+            agent1 = std::get<0>(collision);
+            agent2 = std::get<1>(collision);
+            //check if we already used waiting time for one of the agents 
+            if (agents_already_used_waiting_time.count(agent1) > 0 ||
+                agents_already_used_waiting_time.count(agent2) > 0) {
+                continue;
+            }
+            //check which agent has more waiting time and use it
+            if (current_solution.get_waiting_time(agent1) >= current_solution.get_waiting_time(agent2)) {
+                if (try_apply_wait(agent1)){
+                    agents_already_used_waiting_time.insert(agent1);
+                } else {
+                    out_of_waiting_time = true;
+                    break; //impossible to use waiting time
+                }
+            } else {
+                if (try_apply_wait(agent2)){
+                    agents_already_used_waiting_time.insert(agent2);
+                } else {
+                    out_of_waiting_time = true;
+                    break; //impossible to use waiting time
+                }
+            }
         }
         for (const auto& collision : pending_edge_collisions) {
-            if (try_apply_wait(std::get<0>(collision))) break;
-            if (try_apply_wait(std::get<1>(collision))) break;
+            agent1 = std::get<0>(collision);
+            agent2 = std::get<1>(collision);
+            //check if we already used waiting time for one of the agents 
+            if (agents_already_used_waiting_time.count(agent1) > 0 ||
+                agents_already_used_waiting_time.count(agent2) > 0) {
+                continue;
+            }
+            if (try_apply_wait(agent1)){
+                agents_already_used_waiting_time.insert(agent1);
+            } else {
+                out_of_waiting_time = true;
+                break; //impossible to use waiting time
+            }
+            if (try_apply_wait(agent2)){
+                agents_already_used_waiting_time.insert(agent2);
+            } else {
+                out_of_waiting_time = true;
+                break; //impossible to use waiting time
+            }
         }
         
         if (!applied_wait) {
             std::cout << "[Waiting_time_Solve] No waiting time applied" << std::endl;
             break;
         }
+        if (out_of_waiting_time) {
+            std::cout << "[Waiting_time_Solve] Out of waiting time" << std::endl;
+            break;
+        }
+        if (extended_time_window) {
+            std::cout << "[Waiting_time_Solve] Extended Zone end time from " << previous_zone_end_t << " to " << state.zone_end_t << std::endl;
+            //check for new agents that enter the zone at the new timestep
+            //TODO: scan all positions in the zone and check for new agents at new timesteps
+        }
     }
 
     if (!result.solution_found) {
         std::cout << "[Waiting_time_Solve] No solution found" << std::endl;
+        std::cout << "[Waiting_time_Solve] Restoring original paths" << std::endl;
         for (const auto& [agent_id, path] : agent_path_backup) {
             current_solution.agent_paths[agent_id] = path;
         }
     }
+    std::cout << "[Waiting_time_Solve] Restoring waiting times" << std::endl;
     current_solution.restore_waiting_times(waiting_time_backup);
+    
     return result;
 }
 

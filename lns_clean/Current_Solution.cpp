@@ -1,4 +1,6 @@
 #include "Current_Solution.h"
+#include "Create_Local_Problem.h"
+#include <set>
 
 //used globally
 //adds edges twice for incex consistency, bc they have two conflictpoints
@@ -77,15 +79,15 @@ std::vector<std::vector<std::vector<int>>> create_conflict_map_2D(
             }
         }
         if (conflict.is_edge) {
-            auto [r, c] = conflict.pos1;
-            if (r >= 0 && r < rows && c >= 0 && c < cols) {
-                conflict_map[r][c].push_back(static_cast<int>(i));
+            auto [r1, c1] = conflict.pos1;
+            if (r1 >= 0 && r1 < rows && c1 >= 0 && c1 < cols) {
+                conflict_map[r1][c1].push_back(static_cast<int>(i));
             } else {
                 std::cout << "[Create_conflict_map_2D] ERROR: conflict position out of bounds" << std::endl;
             }
-            auto [r, c] = conflict.pos2;
-            if (r >= 0 && r < rows && c >= 0 && c < cols) {
-                conflict_map[r][c].push_back(static_cast<int>(i));
+            auto [r2, c2] = conflict.pos2;
+            if (r2 >= 0 && r2 < rows && c2 >= 0 && c2 < cols) {
+                conflict_map[r2][c2].push_back(static_cast<int>(i));
             } else {
                 std::cout << "[Create_conflict_map_2D] ERROR: conflict position out of bounds" << std::endl;
             }
@@ -94,3 +96,149 @@ std::vector<std::vector<std::vector<int>>> create_conflict_map_2D(
 
     return conflict_map;
 }
+
+
+
+void CurrentSolution::update_with_local_paths_and_pseudo_agents(
+    const LocalZoneState& local_zone_state,
+    const std::unordered_map<int, std::vector<std::pair<int,int>>>& solved_segment_paths) {
+
+    std::cout << "[LNS] Updating global solution with pseudo-agent local paths..." << std::endl;
+
+    std::set<int> processed_segments;
+    std::unordered_map<int, int> segment_to_agent;
+    segment_to_agent.reserve(local_zone_state.segments.size());
+    for (const auto& segment : local_zone_state.segments) {
+        segment_to_agent[segment.segment_id] = segment.original_id;
+    }
+
+    for (const auto& [agent_id, segment_indices] : local_zone_state.original_to_segments) {
+        auto global_it = agent_paths.find(agent_id);
+        if (global_it == agent_paths.end()) {
+            std::cerr << "[ERROR] Missing global path for Agent " << agent_id
+                      << " when applying pseudo-agent update" << std::endl;
+            continue;
+        }
+        auto& global_path = global_it->second;
+        if (global_path.empty()) {
+            std::cerr << "[WARNING] Agent " << agent_id
+                      << " has empty global path; skipping pseudo-agent update" << std::endl;
+            continue;
+        }
+
+        // Ensure chronological processing of all segments for this agent.
+        std::vector<size_t> ordered_indices = segment_indices;
+        std::sort(ordered_indices.begin(), ordered_indices.end(), [&](size_t a, size_t b) {
+            if (a >= local_zone_state.segments.size() || b >= local_zone_state.segments.size()) {
+                return a < b;
+            }
+            return local_zone_state.segments[a].entry_t < local_zone_state.segments[b].entry_t;
+        });
+
+        int cumulative_shift = 0;
+        const int path_length = static_cast<int>(global_path.size());
+
+        for (size_t idx : ordered_indices) {
+            if (idx >= local_zone_state.segments.size()) {
+                std::cerr << "[ERROR] Segment index " << idx
+                          << " out of range for agent " << agent_id << std::endl;
+                continue;
+            }
+
+            const LocalSegment& segment = local_zone_state.segments[idx];
+            processed_segments.insert(segment.segment_id);
+
+            int original_entry = segment.original_entry_t >= 0 ? segment.original_entry_t : segment.entry_t;
+            int original_exit = segment.original_exit_t >= 0 ? segment.original_exit_t : segment.exit_t;
+            if (original_entry > original_exit) {
+                std::cerr << "[ERROR] Segment " << segment.segment_id
+                          << " has invalid original bounds [" << original_entry
+                          << ", " << original_exit << "]" << std::endl;
+                continue;
+            }
+            int new_entry = segment.entry_t;
+            int new_exit = segment.exit_t;
+            if (new_entry < 0 || new_exit < new_entry) {
+                std::cerr << "[ERROR] Segment " << segment.segment_id
+                          << " has invalid new bounds [" << new_entry
+                          << ", " << new_exit << "]" << std::endl;
+                continue;
+            }
+
+            if (new_exit >= path_length) {
+                std::cerr << "[ERROR] Segment " << segment.segment_id
+                          << " new exit timestep " << new_exit
+                          << " exceeds global path bounds (size " << path_length
+                          << ") for agent " << agent_id << std::endl;
+                continue;
+            }
+
+            int shifted_entry = original_entry + cumulative_shift;
+            int shifted_exit = original_exit + cumulative_shift;
+            if (shifted_entry != new_entry) {
+                std::cerr << "[WARNING] Segment " << segment.segment_id
+                          << " entry mismatch after cumulative shift (expected "
+                          << shifted_entry << " got " << new_entry << ")" << std::endl;
+                shifted_entry = new_entry;
+            }
+            if (shifted_exit != new_exit) {
+                std::cerr << "[INFO] Segment " << segment.segment_id
+                          << " exit adjusted from " << shifted_exit
+                          << " to " << new_exit << " due to waiting time" << std::endl;
+            }
+
+            int delta = new_exit - shifted_exit;
+            if (delta < 0) {
+                std::cerr << "[WARNING] Segment " << segment.segment_id
+                          << " shortened by " << -delta
+                          << " timesteps; shrinking not supported yet" << std::endl;
+                continue;
+            }
+            if (delta > 0) {
+                for (int t = path_length - 1; t >= new_exit + 1; --t) {
+                    int src = t - delta;
+                    if (src >= shifted_exit + 1 && src < path_length) {
+                        global_path[t] = global_path[src];
+                    }
+                }
+            }
+
+            const std::vector<std::pair<int,int>>* local_path_ptr = &segment.path;
+            auto solved_it = solved_segment_paths.find(segment.segment_id);
+            if (solved_it != solved_segment_paths.end()) {
+                local_path_ptr = &solved_it->second;
+            }
+
+            int expected_length = new_exit - new_entry + 1;
+            if (static_cast<int>(local_path_ptr->size()) != expected_length) {
+                std::cerr << "[ERROR] Segment " << segment.segment_id
+                          << " local path length (" << local_path_ptr->size()
+                          << ") does not match expected length (" << expected_length
+                          << ")" << std::endl;
+                continue;
+            }
+            if (new_entry < 0 || new_entry + expected_length > path_length) {
+                std::cerr << "[ERROR] Segment " << segment.segment_id
+                          << " replacement range [" << new_entry << ", " << new_exit
+                          << "] exceeds path bounds for agent " << agent_id << std::endl;
+                continue;
+            }
+
+            //update global path
+            for (int i = 0; i < expected_length; ++i) {
+                global_path[new_entry + i] = (*local_path_ptr)[i];
+            }
+
+            cumulative_shift += delta;
+        }
+
+        std::cout << "[LNS] Successfully updated global solution with pseudo-agent local paths!" << std::endl;
+    }
+
+    // Update the path map to reflect the new paths
+    std::cout << "[LNS] Updating path map with new local paths..." << std::endl;
+    create_path_map();
+
+    std::cout << "[LNS] Successfully updated global solution with local paths and pseudo agents!" << std::endl;
+}
+

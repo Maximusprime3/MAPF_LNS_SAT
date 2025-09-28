@@ -284,26 +284,26 @@ std::vector<DiamondBucket> build_diamond_buckets_for_earliest_conflicts(
     int offset) {
     
     //detect earliest conflicts
-    std::set<ConflictMeta> earliest_conflicts_meta;
-    std::set<int> original_earliest_conflict_indices;
+    std::vector<ConflictMeta> earliest_conflicts_meta;
+    std::vector<int> original_earliest_conflict_indices;
     int earliest_t = INT_MAX;
     for (ConflictMeta conflict : all_conflict_meta) {
         if (conflict.timestep < earliest_t) {
             earliest_t = conflict.timestep;
             earliest_conflicts_meta.clear();
-            earliest_conflicts_meta.insert(conflict);
+            earliest_conflicts_meta.push_back(conflict);
             original_earliest_conflict_indices.clear();
-            original_earliest_conflict_indices.insert(conflict.idx);
+            original_earliest_conflict_indices.push_back(conflict.idx);
 
         } else if (conflict.timestep == earliest_t) {
-            earliest_conflicts_meta.insert(conflict);
-            original_earliest_conflict_indices.insert(conflict.idx);
+            earliest_conflicts_meta.push_back(conflict);
+            original_earliest_conflict_indices.push_back(conflict.idx);
         }
     }
    
     //build the diamond buckets for the earliest conflicts
     if (!earliest_conflicts_meta.empty()) {
-        earliest_diamond_buckets = build_diamond_buckets(
+        auto earliest_diamond_buckets = build_diamond_buckets(
             earliest_conflicts_meta, 
             original_earliest_conflict_indices, 
             conflict_map, 

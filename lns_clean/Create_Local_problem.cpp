@@ -1,7 +1,6 @@
 #include "Create_Local_problem.h"
 
 #include "MDDConstructor.h"
-#include "ConflictMeta.h"
 
 #include <algorithm>
 #include <iostream>
@@ -143,7 +142,7 @@ namespace {
 
 
 
-void void align_mdd_to_time_window(std::shared_ptr<MDD> mdd,
+void align_mdd_to_time_window(std::shared_ptr<MDD> mdd,
     int entry_t, int exit_t, //agent's entry and exit times
     int start_t, int end_t) { //time window of problem zone start and end
 
@@ -257,16 +256,18 @@ LocalZoneState build_local_problem_for_zone(
     // Extract segments and compute entry/exit
     for (int agent_id : agents_in_window) {
         const auto& path = current_solution.agent_paths.at(agent_id);
-        auto result = process_agent_in_zone(agent_id, path, zone_positions_set, conflict_map, conflict_meta, start_t, end_t, offset, grid);
-        if (result.zone_paths.empty()) {
+        auto agent_result = process_agent_in_zone(agent_id, path, zone_positions_set, conflict_map, conflict_meta, start_t, end_t, offset, grid);
+        if (agent_result.zone_paths.empty()) {
             std::cout << "[Create_Local_problem] ERROR: Agent " << agent_id << " has no paths in the zone" << std::endl;
         }
 
         auto& pseudo_list = state.original_to_pseudo_ids[agent_id];
         size_t pseudo_cursor = 0;
 
-        for ( size_t seg_idx = 0; seg_idx < result.zone_paths.size(); ++seg_idx) {
-            segment_id = agent_id;
+        //go through all agents segments
+        for ( size_t seg_idx = 0; seg_idx < agent_result.zone_paths.size(); ++seg_idx) {
+            auto segment_id = agent_id;
+            //expands the list of pseudo agents for the original agent if needed
             if (seg_idx > 0) {
                 if (pseudo_cursor < pseudo_list.size()) {
                     segment_id = pseudo_list[pseudo_cursor++];
@@ -280,9 +281,9 @@ LocalZoneState build_local_problem_for_zone(
             LocalSegment segment;
             segment.segment_id = segment_id;
             segment.original_id = agent_id;
-            segment.entry_t = result.entry_t[seg_idx];
-            segment.exit_t = result.exit_t[seg_idx];
-            segment.path = std::move(result.zone_paths[seg_idx]);
+            segment.entry_t = agent_result.entry_t[seg_idx];
+            segment.exit_t = agent_result.exit_t[seg_idx];
+            segment.path = std::move(agent_result.zone_paths[seg_idx]);
 
             const auto& segment_path = segment.path;
             if (!segment_path.empty()) {
@@ -298,7 +299,7 @@ LocalZoneState build_local_problem_for_zone(
             }
 
             size_t new_index = state.segments.size();
-            state.segment_inex_by_id[segment.segment_id] = new_index;
+            state.segment_index_by_id[segment.segment_id] = new_index;
             state.original_to_segments[segment.original_id].push_back(new_index);
             state.zone_end_t = std::max(state.zone_end_t, segment.exit_t);
             state.segments.push_back(std::move(segment));
