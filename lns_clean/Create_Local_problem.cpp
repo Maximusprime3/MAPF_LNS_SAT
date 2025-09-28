@@ -283,6 +283,8 @@ LocalZoneState build_local_problem_for_zone(
             segment.original_id = agent_id;
             segment.entry_t = agent_result.entry_t[seg_idx];
             segment.exit_t = agent_result.exit_t[seg_idx];
+            segment.original_entry_t = agent_result.entry_t[seg_idx];
+            segment.original_exit_t = agent_result.exit_t[seg_idx];
             segment.path = std::move(agent_result.zone_paths[seg_idx]);
 
             const auto& segment_path = segment.path;
@@ -296,6 +298,7 @@ LocalZoneState build_local_problem_for_zone(
                 MDDConstructor constructor(masked_map, start_pos, goal_pos, std::max(0, segment_length - 1));
                 auto segment_mdd = constructor.construct_mdd();
                 align_mdd_to_time_window(segment_mdd, segment.entry_t, segment.exit_t, start_t, end_t);
+                segment.mdd = segment_mdd;
             }
 
             size_t new_index = state.segments.size();

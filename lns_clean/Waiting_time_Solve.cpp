@@ -3,6 +3,7 @@
 #include "Create_Local_Problem.h"
 #include "lazy_SAT_Solve.h"
 #include "../cnf/CNFConstructor.h"
+#include "../mdd/MDDConstructor.h"
 
 #include <algorithm>
 #include <iostream>
@@ -155,7 +156,8 @@ RemovedCollisions filter_collisions(LocalZoneState& state, LocalSegment& segment
 void apply_waiting_time_delta(LocalZoneState& state,
     int segment_id,
     int original_id,
-    int waiting_time_delta) {
+    int waiting_time_delta,
+    const std::vector<std::vector<char>>& masked_map) {
     if (waiting_time_delta <= 0) {
         return;
     }
@@ -204,16 +206,28 @@ void apply_waiting_time_delta(LocalZoneState& state,
 
     const int old_exit = segment.exit_t;
     segment.exit_t += waiting_time_delta;
+    state.zone_end_t = std::max(state.zone_end_t, segment.exit_t);
 
     if (!segment.path.empty()) {
         const auto last_position = segment.path.back();
         for (int i = 0; i < waiting_time_delta; ++i) {
             segment.path.push_back(last_position);
         }
+        const auto& start_pos = segment.path.front();
+        const auto& goal_pos = segment.path.back();
+        int segment_length = segment.exit_t - segment.entry_t + 1;
+        if (segment_length <= 0) {
+            std::cerr << "[Waiting_time_Solve] ERROR: Segment " << segment_id
+                      << " has 0 length path" << std::endl;
+            segment_length = static_cast<int>(segment.path.size());
+        } 
+        MDDConstructor constructor(masked_map, start_pos, goal_pos, std::max(0, segment_length - 1));
+        segment.mdd = constructor.construct_mdd();
+    } else {
+        std::cerr << "[Waiting_time_Solve] ERROR: Segment " << segment_id
+                  << " has no path" << std::endl;
+        segment.mdd.reset();
     }
-
-    state.zone_end_t = std::max(state.zone_end_t, segment.exit_t);
-    align_segment_mdd(segment);
 
     auto original_it = state.original_to_segments.find(segment.original_id);
     if (original_it == state.original_to_segments.end()) {
@@ -241,7 +255,18 @@ void apply_waiting_time_delta(LocalZoneState& state,
         following.exit_t += waiting_time_delta;
         filter_collisions(state, following);
         state.zone_end_t = std::max(state.zone_end_t, following.exit_t);
-        align_segment_mdd(following);
+    }
+
+    //allign mdds for segment and all following segments
+    align_segment_mdd(segment);
+    for (auto follow_it = std::next(pos_it); follow_it != indices.end(); ++follow_it) {
+        size_t follow_index = *follow_it;
+        if (follow_index >= state.segments.size()) {
+            std::cerr << "[Waiting_time_Solve] WARNING: Segment index " << follow_index
+                      << " out of range while shifting agent " << segment.original_id << std::endl;
+            continue;
+        }
+        align_segment_mdd(state.segments[follow_index]);
     }
 
     if (segment.exit_t != old_exit + waiting_time_delta) {
@@ -495,7 +520,7 @@ LazySolveResult lazy_solve_with_waiting_time(
             current_solution.use_waiting_time(original_id, waiting_delta);
             //update local zone state segments associated with the agent            
             //TODO updating mdds
-            apply_waiting_time_delta(state, segment_id, original_id, waiting_delta);
+            apply_waiting_time_delta(state, segment_id, original_id, waiting_delta, masked_map);
             //check if we extended the time window
             if (state.zone_end_t > previous_zone_end_t) {
                 extended_time_window = true;

@@ -11,7 +11,8 @@ void apply_waiting_time_delta(
     LocalZoneState& state,
     int segment_id,
     int original_id,
-    int waiting_time_delta);
+    int waiting_time_delta,
+    const std::vector<std::vector<char>>& masked_map);
 
 LazySolveResult lazy_solve_with_waiting_time(
     CurrentSolution& current_solution,
