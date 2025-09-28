@@ -13,6 +13,136 @@
 
 namespace {
 
+using VertexCollision = std::tuple<int, int, std::pair<int,int>, int>;
+using EdgeCollision = std::tuple<int, int, std::pair<int,int>, std::pair<int,int>, int>;
+
+struct RemovedCollisions {
+    std::vector<VertexCollision> vertex;
+    std::vector<EdgeCollision> edge;
+
+    bool empty() const { return vertex.empty() && edge.empty(); }
+};
+
+
+
+
+std::vector<std::tuple<int, int, std::pair<int,int>, int>> gather_vertex_collisions(
+    const LocalZoneState& state) {
+    std::set<std::tuple<int, int, std::pair<int,int>, int>> unique;
+    for (const auto& segment : state.segments) {
+        for (const auto& collision : segment.vertex_collisions) {
+            unique.insert(collision);
+        }
+    }
+    return {unique.begin(), unique.end()};
+}
+std::vector<std::tuple<int, int, std::pair<int,int>, std::pair<int,int>, int>> gather_edge_collisions(
+    const LocalZoneState& state) {
+    std::set<std::tuple<int, int, std::pair<int,int>, std::pair<int,int>, int>> unique;
+    for (const auto& segment : state.segments) {
+        for (const auto& collision : segment.edge_collisions) {
+            unique.insert(collision);
+        }
+    }
+    return {unique.begin(), unique.end()};
+}
+
+void record_collision(LocalZoneState& state,
+    const std::tuple<int, int, std::pair<int,int>, int>& collision) {
+    int a1 = std::get<0>(collision);
+    int a2 = std::get<1>(collision);
+    auto add_to_segment = [&](int seg_id) {
+        auto it = state.segment_index_by_id.find(seg_id);
+        if (it == state.segment_index_by_id.end()) return;
+        auto& list = state.segments[it->second].vertex_collisions;
+        if (std::find(list.begin(), list.end(), collision) == list.end()) {
+            list.push_back(collision);
+        }
+    };
+    add_to_segment(a1);
+    add_to_segment(a2);
+}
+void record_collision(LocalZoneState& state,
+    const std::tuple<int, int, std::pair<int,int>, std::pair<int,int>, int>& collision) {
+    int a1 = std::get<0>(collision);
+    int a2 = std::get<1>(collision);
+    auto add_to_segment = [&](int seg_id) {
+        auto it = state.segment_index_by_id.find(seg_id);
+        if (it == state.segment_index_by_id.end()) return;
+        auto& list = state.segments[it->second].edge_collisions;
+        if (std::find(list.begin(), list.end(), collision) == list.end()) {
+            list.push_back(collision);
+        }
+    };
+    add_to_segment(a1);
+    add_to_segment(a2);
+}
+
+bool remove_collision_from_segment(LocalZoneState& state, const VertexCollision& collision) {
+    bool removed = false;
+    auto remove_from = [&](int seg_id) {
+        auto idx_it = state.segment_index_by_id.find(seg_id);
+        if (idx_it == state.segment_index_by_id.end()) {
+            return;
+        }
+        auto& list = state.segments[idx_it->second].vertex_collisions;
+        auto it = std::find(list.begin(), list.end(), collision);
+        if (it != list.end()) {
+            list.erase(it);
+            removed = true;
+        }
+    };
+    remove_from(std::get<0>(collision));
+    remove_from(std::get<1>(collision));
+    return removed;
+}
+
+bool remove_collision_from_segment(LocalZoneState& state, const EdgeCollision& collision) {
+    bool removed = false;
+    auto remove_from = [&](int seg_id) {
+        auto idx_it = state.segment_index_by_id.find(seg_id);
+        if (idx_it == state.segment_index_by_id.end()) {
+            return;
+        }
+        auto& list = state.segments[idx_it->second].edge_collisions;
+        auto it = std::find(list.begin(), list.end(), collision);
+        if (it != list.end()) {
+            list.erase(it);
+            removed = true;
+        }
+    };
+    remove_from(std::get<0>(collision));
+    remove_from(std::get<1>(collision));
+    return removed;
+}
+
+RemovedCollisions filter_collisions(LocalZoneState& state, LocalSegment& segment) {
+    RemovedCollisions removed;
+
+    for (const auto& collision : segment.vertex_collisions) {
+        int t = std::get<3>(collision);
+        if (t < segment.entry_t || t > segment.exit_t) {
+            removed.vertex.push_back(collision);
+        }
+    }
+    for (const auto& collision : segment.edge_collisions) {
+        int t = std::get<4>(collision);
+        if (t < segment.entry_t || t > segment.exit_t) {
+            removed.edge.push_back(collision);
+        }
+    }
+
+    for (const auto& collision : removed.vertex) {
+        remove_collision_from_segment(state, collision);
+    }
+    for (const auto& collision : removed.edge) {
+        remove_collision_from_segment(state, collision);
+    }
+
+    return removed;
+}
+
+
 void apply_waiting_time_delta(LocalZoneState& state,
     int segment_id,
     int original_id,
@@ -75,8 +205,10 @@ void apply_waiting_time_delta(LocalZoneState& state,
                       << " out of range while shifting agent " << segment.original_id << std::endl;
             continue;
         }
+        LocalSegment& following = state.segments[follow_index];
         following.entry_t += waiting_time_delta;
         following.exit_t += waiting_time_delta;
+        filter_collisions(state, following);
         state.zone_end_t = std::max(state.zone_end_t, following.exit_t);
     }
 
@@ -86,75 +218,6 @@ void apply_waiting_time_delta(LocalZoneState& state,
     }
 }
 
-
-std::vector<std::tuple<int, int, std::pair<int,int>, int>> gather_vertex_collisions(
-    const LocalZoneState& state) {
-    std::set<std::tuple<int, int, std::pair<int,int>, int>> unique;
-    for (const auto& segment : state.segments) {
-        for (const auto& collision : segment.vertex_collisions) {
-            unique.insert(collision);
-        }
-    }
-    return {unique.begin(), unique.end()};
-}
-std::vector<std::tuple<int, int, std::pair<int,int>, std::pair<int,int>, int>> gather_edge_collisions(
-    const LocalZoneState& state) {
-    std::set<std::tuple<int, int, std::pair<int,int>, std::pair<int,int>, int>> unique;
-    for (const auto& segment : state.segments) {
-        for (const auto& collision : segment.edge_collisions) {
-            unique.insert(collision);
-        }
-    }
-    return {unique.begin(), unique.end()};
-}
-
-void record_collision(LocalZoneState& state,
-    const std::tuple<int, int, std::pair<int,int>, int>& collision) {
-    int a1 = std::get<0>(collision);
-    int a2 = std::get<1>(collision);
-    auto add_to_segment = [&](int seg_id) {
-        auto it = state.segment_index_by_id.find(seg_id);
-        if (it == state.segment_index_by_id.end()) return;
-        auto& list = state.segments[it->second].vertex_collisions;
-        if (std::find(list.begin(), list.end(), collision) == list.end()) {
-            list.push_back(collision);
-        }
-    };
-    add_to_segment(a1);
-    add_to_segment(a2);
-}
-void record_collision(LocalZoneState& state,
-    const std::tuple<int, int, std::pair<int,int>, std::pair<int,int>, int>& collision) {
-    int a1 = std::get<0>(collision);
-    int a2 = std::get<1>(collision);
-    auto add_to_segment = [&](int seg_id) {
-        auto it = state.segment_index_by_id.find(seg_id);
-        if (it == state.segment_index_by_id.end()) return;
-        auto& list = state.segments[it->second].edge_collisions;
-        if (std::find(list.begin(), list.end(), collision) == list.end()) {
-            list.push_back(collision);
-        }
-    };
-    add_to_segment(a1);
-    add_to_segment(a2);
-}
-
-void filter_collisions(LocalSegment segment){
-    segment.vertex_collisions.erase(
-        std::remove_if(segment.vertex_collisions.begin(), segment.vertex_collisions.end(),
-            [&](const auto& collision) {
-                int t = std::get<3>(collision);
-                return t < segment.entry_t || t > segment.exit_t;
-            }),
-        segment.vertex_collisions.end());
-    segment.edge_collisions.erase(
-        std::remove_if(segment.edge_collisions.begin(), segment.edge_collisions.end(),
-            [&](const auto& collision) {
-                int t = std::get<4>(collision);
-                return t < segment.entry_t || t > segment.exit_t;
-            }),
-        segment.edge_collisions.end());
-}
 
 std::unordered_map<int, std::pair<int,int>> build_original_entry_exit_time_map(
     const LocalZoneState& state) {
@@ -399,7 +462,7 @@ LazySolveResult lazy_solve_with_waiting_time(
             }
             current_solution.use_waiting_time(original_id, waiting_delta);
             //update local zone state segments associated with the agent            
-            //TODO: update MDDs
+            //TODO updating mdds
             apply_waiting_time_delta(state, segment_id, original_id, waiting_delta);
             //check if we extended the time window
             if (state.zone_end_t > previous_zone_end_t) {
