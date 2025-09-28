@@ -11,6 +11,15 @@
 #include <tuple>
 #include <unordered_map>
 
+
+//todos:
+//time window extension
+//collision validity checking 
+// when using waiting time -> rebuild mdd
+// when using waiting time -> update following agents mdds to fit the delay
+
+
+
 namespace {
 
 using VertexCollision = std::tuple<int, int, std::pair<int,int>, int>;
@@ -165,6 +174,27 @@ void apply_waiting_time_delta(LocalZoneState& state,
         return;
     }
 
+
+
+    auto align_segment_mdd = [&](LocalSegment& target) {
+        if (!target.mdd) {
+            std::cerr << "[Waiting_time_Solve] WARNING: Segment " << target.segment_id
+                      << " missing MDD; skipping alignment after waiting adjustment" << std::endl;
+            return;
+        }
+        if (target.mdd->levels.empty()) {
+            std::cerr << "[Waiting_time_Solve] WARNING: Segment " << target.segment_id
+                      << " has empty MDD; skipping alignment after waiting adjustment" << std::endl;
+            return;
+        }
+        align_mdd_to_time_window(
+            target.mdd,
+            target.entry_t,
+            target.exit_t,
+            state.zone_start_t,
+            state.zone_end_t);
+    };
+
     LocalSegment& segment = state.segments[seg_index];
     if (segment.original_id != original_id) {
         std::cerr << "[Waiting_time_Solve] WARNING: Segment " << segment_id
@@ -183,6 +213,7 @@ void apply_waiting_time_delta(LocalZoneState& state,
     }
 
     state.zone_end_t = std::max(state.zone_end_t, segment.exit_t);
+    align_segment_mdd(segment);
 
     auto original_it = state.original_to_segments.find(segment.original_id);
     if (original_it == state.original_to_segments.end()) {
@@ -210,6 +241,7 @@ void apply_waiting_time_delta(LocalZoneState& state,
         following.exit_t += waiting_time_delta;
         filter_collisions(state, following);
         state.zone_end_t = std::max(state.zone_end_t, following.exit_t);
+        align_segment_mdd(following);
     }
 
     if (segment.exit_t != old_exit + waiting_time_delta) {
