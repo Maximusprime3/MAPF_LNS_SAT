@@ -19,6 +19,8 @@
 // when using waiting time -> rebuild mdd
 // when using waiting time -> update following agents mdds to fit the delay
 
+//introduce mdd timed positions to check collision validity -> have segment timed positions --> collision validity checking with timed positions
+
 
 
 namespace {
@@ -34,7 +36,26 @@ struct RemovedCollisions {
 };
 
 
+using TimedPosition = std::tuple<int, int, int>;
+using TimedPositionSet = std::set<TimedPosition>;
 
+TimedPositionSet gather_mdd_timed_positions(const std::shared_ptr<MDD>& mdd) {
+    TimedPositionSet result;
+    if (!mdd) {
+        return result;
+    }
+
+    for (const auto& [time, nodes] : mdd->levels) {
+        for (const auto& node : nodes) {
+            if (!node) {
+                continue;
+            }
+            result.emplace(time, node->position.first, node->position.second);
+        }
+    }
+
+    return result;
+}
 
 std::vector<std::tuple<int, int, std::pair<int,int>, int>> gather_vertex_collisions(
     const LocalZoneState& state) {
