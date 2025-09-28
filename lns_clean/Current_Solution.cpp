@@ -235,6 +235,22 @@ void CurrentSolution::update_with_local_paths_and_pseudo_agents(
         std::cout << "[LNS] Successfully updated global solution with pseudo-agent local paths!" << std::endl;
     }
 
+    //check if all segments were processed
+    for (const auto& [segment_id, path] : solved_segment_paths) {
+        (void)path;
+        if (processed_segments.count(segment_id) > 0) continue;
+
+        auto it = segment_to_agent.find(segment_id);
+        if (it != segment_to_agent.end()) {
+            std::cerr << "[WARNING] Skipping segment " << segment_id
+                      << " for Agent " << it->second
+                      << " because no ordering information was available" << std::endl;
+        } else {
+            std::cerr << "[WARNING] Skipping segment " << segment_id
+                      << " (segment not present in LocalZoneState)" << std::endl;
+        }
+    }
+
     // Update the path map to reflect the new paths
     std::cout << "[LNS] Updating path map with new local paths..." << std::endl;
     create_path_map();

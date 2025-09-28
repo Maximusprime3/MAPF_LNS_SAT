@@ -399,7 +399,7 @@ LazySolveResult lazy_solve_with_waiting_time(
             }
             current_solution.use_waiting_time(original_id, waiting_delta);
             //update local zone state segments associated with the agent            
-           
+            //TODO: update MDDs
             apply_waiting_time_delta(state, segment_id, original_id, waiting_delta);
             //check if we extended the time window
             if (state.zone_end_t > previous_zone_end_t) {
@@ -466,6 +466,10 @@ LazySolveResult lazy_solve_with_waiting_time(
         if (!applied_wait) {
             std::cout << "[Waiting_time_Solve] No waiting time applied" << std::endl;
             break;
+        } else {
+            std::cout << "[Waiting_time_Solve] Waiting time applied" << std::endl;
+            //TODO: if we moved any pseudo agents, we need to check the collisions, if they are still valid
+            // some agents might get their timewindow moved so they dont collide anymore --> remove those collisions from cnf creation
         }
         if (out_of_waiting_time) {
             std::cout << "[Waiting_time_Solve] Out of waiting time" << std::endl;
