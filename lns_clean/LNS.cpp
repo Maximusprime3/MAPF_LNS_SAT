@@ -3,6 +3,7 @@
 #include "Local_Zone.h" //build_diamond_buckets
 #include "Lazy_SAT_Solve.h" //create_mdds_with_waiting_time
 #include "../SATSolverManager.h" //find_all_collisions, print_agent_paths
+#include "VerificationHelpers.h" //verify_solution_consistency
 
 #include <iostream>
 #include <vector>
