@@ -572,7 +572,8 @@ LazySolveResult lazy_solve_with_waiting_time(
             //update local zone state segments paths
             for (auto& segment : state.segments) {
                 auto it_path = lazy_result.local_paths.find(segment.segment_id);
-                if (it_path != lazy_result.local_paths.end()) {
+                if (it_path == lazy_result.local_paths.end()) {
+                    std::cout << "[Waiting_time_Solve] ERROR: Missing path for segment " << segment.segment_id << std::endl;
                     continue;
                 }
                 segment.path = it_path->second;   

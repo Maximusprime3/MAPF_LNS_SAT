@@ -67,6 +67,8 @@ std::unordered_map<int, std::vector<std::pair<int,int>>> LNS(
     //Step 3: Outer loop: increase max timesteps if no solution is found
     const int max_timestep_increase = 10; // crude limit for now
     std::mt19937 rng(static_cast<unsigned int>(seed));
+    std::optional<CurrentSolution> successfull_solution;
+    int successful_max_timesteps = -1;
     
     for (int inc = 0; inc <= max_timestep_increase; ++inc) {
         int current_max_timesteps = base_makespan + inc;
@@ -155,22 +157,29 @@ std::unordered_map<int, std::vector<std::pair<int,int>>> LNS(
         }
         if (!conflicts_remain) {
             std::cout << "[LNS] All conflicts resolved" << std::endl;
+            successfull_solution = std::move(current_solution);
+            successful_max_timesteps = current_max_timesteps;
             break;
         } else {
             std::cout << "[LNS] Increasing makespan..." << std::endl;
         }
     }
     //Step 9: validate agents paths and return Solution if valid
-    bool Valid_Solution = verify_solution_consistency(current_solution.agent_paths, problem.starts, problem.goals, problem.grid);
+
+    if (!successfull_solution.has_value()) {
+        std::cout << "[LNS] ERROR: No successful solution found" << std::endl;
+        return {};
+    }
+    bool Valid_Solution = verify_solution_consistency(successfull_solution->agent_paths, problem.starts, problem.goals, problem.grid);
 
     if (Valid_Solution) {
-        std::cout << "[LNS] Collision-free solution found at makespan " << current_max_timesteps << std::endl;
+        std::cout << "[LNS] Collision-free solution found at makespan " << successful_max_timesteps << std::endl;
         std::cout << "[LNS] Final agent paths:" << std::endl;
-        SATSolverManager::print_agent_paths(current_solution.agent_paths);
+        SATSolverManager::print_agent_paths(successfull_solution->agent_paths);
     }else{
         std::cout << "[LNS] ERROR:Solution is not valid" << std::endl;
-        SATSolverManager::print_agent_paths(current_solution.agent_paths);
+        SATSolverManager::print_agent_paths(successfull_solution->agent_paths);
         std::cout << "[LNS] ERROR: Solution is not valid" << std::endl;
     }
-    return current_solution.agent_paths;
+    return successfull_solution->agent_paths;
 }
