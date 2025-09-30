@@ -3,6 +3,7 @@
 
 #include <cmath>
 #include <algorithm>  // for std::set_difference
+#include <climits>
 #include <iterator>   // for std::inserter
 
 /**
@@ -181,7 +182,7 @@ std::set<std::pair<int,int>> find_new_positions(
  */
 std::vector<DiamondBucket> build_diamond_buckets(
     const std::vector<ConflictMeta>& building_conflicts_meta,
-    const std::set<int>& original_building_conflict_indices,
+    const std::vector<int>& original_building_conflict_indices,
     const std::vector<std::vector<std::vector<int>>>& conflict_map,
     const std::vector<std::vector<char>>& map,
     const std::vector<ConflictMeta>& all_conflict_meta,
@@ -196,6 +197,10 @@ std::vector<DiamondBucket> build_diamond_buckets(
 
     for (size_t i = 0; i < building_conflicts_meta.size(); ++i) {
         int conlfict_idx = original_building_conflict_indices.at(i); //get the original global conflict index
+        if (conlfict_idx < 0 || conlfict_idx >= (int)all_conflict_meta.size()) {
+            std::cerr << "[LOCAL ZONE] ERROR: Found invalid conflict index " << conlfict_idx << std::endl;
+            continue;
+        }
         if (diamond_used[conlfict_idx] || solved_conflict_indices.count(conlfict_idx)) continue; //skip if already used or solved
 
         std::cout << "[LOCAL ZONE] Building diamond bucket for conflict " << conlfict_idx << std::endl;
@@ -287,35 +292,37 @@ std::vector<DiamondBucket> build_diamond_buckets_for_earliest_conflicts(
     std::vector<ConflictMeta> earliest_conflicts_meta;
     std::vector<int> original_earliest_conflict_indices;
     int earliest_t = INT_MAX;
-    for (ConflictMeta conflict : all_conflict_meta) {
+    for (size_t i = 0; i < all_conflict_meta.size(); ++i) {
+        ConflictMeta conflict = all_conflict_meta[i];
         if (conflict.timestep < earliest_t) {
             earliest_t = conflict.timestep;
             earliest_conflicts_meta.clear();
             earliest_conflicts_meta.push_back(conflict);
             original_earliest_conflict_indices.clear();
-            original_earliest_conflict_indices.push_back(conflict.idx);
+            original_earliest_conflict_indices.push_back(i);
 
         } else if (conflict.timestep == earliest_t) {
             earliest_conflicts_meta.push_back(conflict);
-            original_earliest_conflict_indices.push_back(conflict.idx);
+            original_earliest_conflict_indices.push_back(i);
         }
     }
    
     //build the diamond buckets for the earliest conflicts
+    std::vector<DiamondBucket> earliest_diamond_buckets;
     if (!earliest_conflicts_meta.empty()) {
-        auto earliest_diamond_buckets = build_diamond_buckets(
-            earliest_conflicts_meta, 
-            original_earliest_conflict_indices, 
-            conflict_map, 
-            map, 
-            all_conflict_meta, 
-            offset);   
+        earliest_diamond_buckets = build_diamond_buckets(
+            earliest_conflicts_meta,
+            original_earliest_conflict_indices,
+            conflict_map,
+            map,
+            all_conflict_meta,
+            offset);
     } else {
         std::cout << "[LOCAL ZONE] ERROR: No earliest conflicts found" << std::endl;
         return {};
     }
 
-    return earliest_diamond_buckets;   
+    return earliest_diamond_buckets;
 }
 
 /**

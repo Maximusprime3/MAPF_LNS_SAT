@@ -392,13 +392,21 @@ std::pair<std::set<int>, bool> choose_agents_to_use_waiting_time(
     return {agents_to_use_waiting_time, can_use_waiting_time};
 }
 
-std::pair<std::set<int,int>, bool> choose_agents_to_wait(
+std::pair<std::set<std::pair<int,int>>, bool> choose_agents_to_wait(
     const std::vector<ConflictMeta>& current_conflicts, 
     const CurrentSolution& current_solution,
-    std::unordered_map<int, int> original_agent_id) {
+    std::unordered_map<std::pair<int,int>, int> original_agent_id) {
 
     std::set<std::pair<int,int>> agents_to_use_waiting_time_with_pseudo_agents;
     bool can_use_waiting_time = true;
+    auto is_agent_already_selected = [&](int original_id, int pseudo_id) {
+        return std::any_of(
+            agents_to_use_waiting_time_with_pseudo_agents.begin(),
+            agents_to_use_waiting_time_with_pseudo_agents.end(),
+            [&](const auto& entry) {
+                return entry.first == original_id || entry.second == pseudo_id;
+            });
+    };
     //iterate through all current conflicts -> skip if one of the agents is already chosen, otherwise add the one with more waiting time
     for (const auto& conflict : current_conflicts) {
         int agent_1 = conflict.agent1;
@@ -408,12 +416,12 @@ std::pair<std::set<int,int>, bool> choose_agents_to_wait(
         bool agent_1_is_pseudo = false;
         bool agent_2_is_pseudo = false;
         //check if agent is a pseudo agent
-        if (original_agent_id.count(agent_1) > 0) {
-            agent_1 = original_agent_id.at(agent_1);
+        if (auto it = original_agent_id.find(agent_1); it != original_agent_id.end()) {
+            agent_1 = it->second;
             agent_1_is_pseudo = true;
         }
-        if (original_agent_id.count(agent_2) > 0) {
-            agent_2 = original_agent_id.at(agent_2);
+        if (auto it = original_agent_id.find(agent_2); it != original_agent_id.end()) {
+            agent_2 = it->second;
             agent_2_is_pseudo = true;
         }
         int agent_1_waiting_time = current_solution.get_waiting_time(agent_1);
@@ -421,20 +429,40 @@ std::pair<std::set<int,int>, bool> choose_agents_to_wait(
         //does one have waiting time?
         if (agent_1_waiting_time > 0 || agent_2_waiting_time > 0) {
             //if one of the agent is alerady chosen, skip
-            if (agents_to_use_waiting_time_with_pseudo_agents.count(agent_1,agent_1_pseudo) > 0 || 
-                agents_to_use_waiting_time_with_pseudo_agents.count(agent_2,agent_2_pseudo) > 0) {
+            if (is_agent_already_selected(agent_1, agent_1_pseudo) ||
+                is_agent_already_selected(agent_2, agent_2_pseudo)) {
                 continue;
             }
             //add the one with more waiting time
             if (agent_1_waiting_time >= agent_2_waiting_time) {
-                agents_to_use_waiting_time_with_pseudo_agents.insert(agent_1,agent_1_pseudo);
+                auto selected = std::make_pair(agent_1, agent_1_pseudo);
+                agents_to_use_waiting_time_with_pseudo_agents.insert(selected);
+                if (agent_1_is_pseudo) {
+                    std::cout << "[Waiting_time_Solve] Selected pseudo agent " << agent_1_pseudo
+                              << " representing Agent " << agent_1 << " for waiting time" << std::endl;
+                }
             } else {
-                agents_to_use_waiting_time_with_pseudo_agents.insert(agent_2,agent_2_pseudo);
+                auto selected = std::make_pair(agent_2, agent_2_pseudo);
+                agents_to_use_waiting_time_with_pseudo_agents.insert(selected);
+                if (agent_2_is_pseudo) {
+                    std::cout << "[Waiting_time_Solve] Selected pseudo agent " << agent_2_pseudo
+                              << " representing Agent " << agent_2 << " for waiting time" << std::endl;
+                }
             }
         }else{
             //if both agents have no waiting time, we can't use waiting time
             can_use_waiting_time = false;
             break; // no need to check other agents
+        }
+    }
+    if (!agents_to_use_waiting_time_with_pseudo_agents.empty()) {
+        std::cout << "[Waiting_time_Solve] Agents selected for waiting time:" << std::endl;
+        for (const auto& [original_id, pseudo_id] : agents_to_use_waiting_time_with_pseudo_agents) {
+            if (original_id == pseudo_id) {
+                std::cout << "  - Agent " << original_id << std::endl;
+            } else {
+                std::cout << "  - Agent " << original_id << " (pseudo agent " << pseudo_id << ")" << std::endl;
+            }
         }
     }
     return {agents_to_use_waiting_time_with_pseudo_agents, can_use_waiting_time};
@@ -535,16 +563,18 @@ LazySolveResult lazy_solve_with_waiting_time(
             cached_vertex_collisions,
             cached_edge_collisions);
         
-        merge_collisions(state, lazy_sat_result.discovered_vertex_collisions, lazy_sat_result.discovered_edge_collisions);
+        merge_collisions(state, lazy_result.discovered_vertex_collisions, lazy_result.discovered_edge_collisions);
         
-        if (lazy_sat_result.solution_found) {
+        if (lazy_result.solution_found) {
             std::unordered_map<int, std::vector<std::pair<int,int>>> original_paths;
             std::unordered_map<int, std::pair<int,int>> new_entry_exit_time;
 
             //update local zone state segments paths
-            for (const auto& segment : state.segments) {
+            for (auto& segment : state.segments) {
                 auto it_path = lazy_result.local_paths.find(segment.segment_id);
-                if (it_path != lazy_result.local_paths.end()) continue;
+                if (it_path != lazy_result.local_paths.end()) {
+                    continue;
+                }
                 segment.path = it_path->second;   
             }
             //update global solution

@@ -1,6 +1,7 @@
-#include "Load_LNSProblem.h" 
+#include "Load_LNSProblem.h"
 #include "Current_Solution.h" //collect_conflicts_meta, create_conflict_map_2D
 #include "Local_Zone.h" //build_diamond_buckets
+#include "Lazy_SAT_Solve.h" //create_mdds_with_waiting_time
 #include "../SATSolverManager.h" //find_all_collisions, print_agent_paths
 
 #include <iostream>
@@ -19,7 +20,7 @@
 //takes map path, scenario path, number of agents, scenario index, use minisat, seed
 //returns paths of agents
 
-std::unordered_map<int, std::vector<std::vector<int,int>>> LNS(
+std::unordered_map<int, std::vector<std::pair<int,int>>> LNS(
     const std::string& map_path, 
     const std::string& scenario_path, 
     int num_agents, 
@@ -31,7 +32,7 @@ std::unordered_map<int, std::vector<std::vector<int,int>>> LNS(
     auto problem_loaded = load_problem(map_path, scenario_path, num_agents, scenario_index);
     if (!problem_loaded.has_value()) {
         std::cerr << "[LNS] Failed to load problem" << std::endl;
-        return std::unordered_map<int, std::vector<std::vector<int,int>>>();
+        return std::unordered_map<int, std::vector<std::pair<int,int>>>();
     }
     const auto& problem = problem_loaded.value();
 
@@ -135,7 +136,7 @@ std::unordered_map<int, std::vector<std::vector<int,int>>> LNS(
             std::cout << "[LNS] Solving the best bucket Local Zone..." << std::endl;
             //solve the local zone
             LocalZoneResult local_zone_result = solve_local_zone(
-                problem.grid, best_bucket, conflict_meta, conflict_map, current_solution, current_max_timesteps, offset);
+                problem.grid, best_bucket, conflict_meta, conflict_map, current_solution, offset, current_max_timesteps);
             
 
             //Step 8: Update the current solution with the local zone result if found

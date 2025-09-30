@@ -73,7 +73,7 @@ std::set<std::pair<int,int>> find_new_positions(
  */
 std::vector<DiamondBucket> build_diamond_buckets(
     const std::vector<ConflictMeta>& building_conflicts_meta,
-    const std::set<int>& original_building_conflict_indices,
+    const std::vector<int>& original_building_conflict_indices,
     const std::vector<std::vector<std::vector<int>>>& conflict_map,
     const std::vector<std::vector<char>>& map,
     const std::vector<ConflictMeta>& all_conflict_meta,
