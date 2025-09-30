@@ -57,6 +57,27 @@ TimedPositionSet gather_mdd_timed_positions(const std::shared_ptr<MDD>& mdd) {
     return result;
 }
 
+
+bool segment_allows_position_at_time(
+    const LocalSegment& segment,
+    const std::pair<int,int>& position,
+    int absolute_t) {
+    if (!segment.mdd) {
+        return false;
+    }
+
+    auto level_it = segment.mdd->levels.find(absolute_t);
+    if (level_it == segment.mdd->levels.end()) {
+        return false;
+    }
+
+    const auto& nodes = level_it->second;
+    return std::any_of(nodes.begin(), nodes.end(), [&](const std::shared_ptr<MDDNode>& node) {
+        return node && node->position == position;
+    });
+}
+
+
 std::vector<std::tuple<int, int, std::pair<int,int>, int>> gather_vertex_collisions(
     const LocalZoneState& state) {
     std::set<std::tuple<int, int, std::pair<int,int>, int>> unique;
@@ -152,13 +173,26 @@ RemovedCollisions filter_collisions(LocalZoneState& state, LocalSegment& segment
 
     for (const auto& collision : segment.vertex_collisions) {
         int t = std::get<3>(collision);
-        if (t < segment.entry_t || t > segment.exit_t) {
+        const auto& position = std::get<2>(collision);
+        bool in_time_window = t >= segment.entry_t && t <= segment.exit_t;
+        bool in_mdd = in_time_window && segment_allows_position_at_time(segment, position, t);
+        if (!in_mdd) {
             removed.vertex.push_back(collision);
         }
     }
     for (const auto& collision : segment.edge_collisions) {
         int t = std::get<4>(collision);
-        if (t < segment.entry_t || t > segment.exit_t) {
+        const auto& position = std::get<2>(collision);
+        const auto& next_position = std::get<3>(collision);
+        bool in_time_window = t >= segment.entry_t && (t + 1) <= segment.exit_t;
+        bool in_mdd = false;
+
+        if (segment.segment_id == std::get<0>(collision)) {
+            in_mdd = in_time_window && segment_allows_position_at_time(segment, position, t) && segment_allows_position_at_time(segment, next_position, t + 1);
+        } else {
+            in_mdd = in_time_window && segment_allows_position_at_time(segment, next_position, t) && segment_allows_position_at_time(segment, position, t + 1);
+        }
+        if (!in_mdd) {
             removed.edge.push_back(collision);
         }
     }
