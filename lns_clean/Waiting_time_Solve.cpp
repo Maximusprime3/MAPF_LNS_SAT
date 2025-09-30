@@ -1,7 +1,7 @@
 #include "Waiting_time_Solve.h"
 
 #include "Create_Local_Problem.h"
-#include "lazy_SAT_Solve.h"
+#include "Lazy_SAT_Solve.h"
 #include "../cnf/CNFConstructor.h"
 #include "../mdd/MDDConstructor.h"
 

@@ -82,6 +82,8 @@ std::set<std::pair<int,int>> create_shape_from_conflicts(
                     char cell = map[r][c];
                     if (cell == '.' || cell == 'G') {
                         shape_positions.insert({r, c});
+                    } else if (cell != '@') {
+                        std::cout << "[LOCAL ZONE] ERROR: Found non-walkable cell " << cell << " at position (" << r << "," << c << ")" << std::endl;
                     }
                 }
             }

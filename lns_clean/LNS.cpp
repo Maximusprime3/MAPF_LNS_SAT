@@ -17,6 +17,18 @@
 #include <string>
 #include <iostream>
 
+
+//TODO:
+//very initial solution //traffic avoidance sampling from mdds
+//final check before makespan increase
+//bucket creation, we look for other conflicts in the immediate neighbourhood. Limit that searchto relevant timesteps around the og conflict
+//maybe some collisions are reusable to kickstart the zone solve after zone expansion
+//Slack allocation strategy too rigid, find a better way to allocate slack
+//zone expansion by radius is kinda blind, gives more room but is not targetted
+
+
+
+
 //main function for LNS
 //takes map path, scenario path, number of agents, scenario index, use minisat, seed
 //returns paths of agents
