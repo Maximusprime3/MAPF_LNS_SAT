@@ -2,7 +2,7 @@
 
 #include <iostream>
 
-namespace {
+
 
 bool verify_path_consistency(
     const std::vector<std::pair<int, int>>& path,
@@ -47,7 +47,7 @@ bool verify_path_consistency(
     return true;
 }
 
-} // namespace
+
 
 bool verify_solution_consistency(
     const std::unordered_map<int, std::vector<std::pair<int, int>>>& agent_paths,

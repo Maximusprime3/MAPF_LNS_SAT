@@ -159,7 +159,7 @@ std::unordered_map<int, std::vector<std::pair<int,int>>> LNS(
             std::cout << "[LNS] Solving the best bucket Local Zone..." << std::endl;
             //solve the local zone
             LocalZoneResult local_zone_result = solve_local_zone(
-                problem.grid, best_bucket, conflict_meta, conflict_map, current_solution, offset, current_max_timesteps);
+                problem.grid, best_bucket, conflict_meta, conflict_map, current_solution, offset, current_max_timesteps, rng);
             
 
             //Step 8: Update the current solution with the local zone result if found

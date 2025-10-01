@@ -2,6 +2,7 @@
 
 #include "Create_Local_Problem.h"
 #include "Lazy_SAT_Solve.h"
+#include "VerificationHelpers.h"
 #include "../cnf/CNFConstructor.h"
 #include "../mdd/MDDConstructor.h"
 
@@ -208,11 +209,16 @@ RemovedCollisions filter_collisions(LocalZoneState& state, LocalSegment& segment
 }
 
 
-void apply_waiting_time_delta(LocalZoneState& state,
+//also updates the global solution with the new path
+void apply_waiting_time_delta(
+    LocalZoneState& state,
     int segment_id,
     int original_id,
     int waiting_time_delta,
-    const std::vector<std::vector<char>>& masked_map) {
+    const std::vector<std::vector<char>>& masked_map,
+    const std::vector<std::vector<char>>& map,
+    CurrentSolution& current_solution,
+    std::mt19937& rng) {
     if (waiting_time_delta <= 0) {
         return;
     }
@@ -276,6 +282,7 @@ void apply_waiting_time_delta(LocalZoneState& state,
         } 
         MDDConstructor constructor(masked_map, start_pos, goal_pos, std::max(0, segment_length - 1));
         segment.mdd = constructor.construct_mdd();
+        segment.path = segment.mdd->sample_random_path(rng); //initial place holder path
     } else {
         std::cerr << "[Waiting_time_Solve] ERROR: Segment " << segment_id
                   << " has no path" << std::endl;
@@ -327,6 +334,51 @@ void apply_waiting_time_delta(LocalZoneState& state,
         align_segment_mdd(state.segments[follow_index]);
     }
 
+    //update global solution with the stretched and displaced paths
+    //have the stretched segment longer than before need to shift the suffix first
+    auto& new_path = current_solution.agent_paths.at(segment.original_id);
+    //before the segment entry time, the path is the same
+    //after the segment exit time, the path is the same but delayed by the waiting time delta
+    for (int i = segment.exit_t + 1; i < new_path.size(); ++i) {
+        new_path[i] = new_path[i - waiting_time_delta];
+    }    
+    //during the segment the path is the segment path
+    for (int i = segment.entry_t; i <= segment.exit_t; ++i) {
+        new_path[i] = segment.path[i - segment.entry_t];
+    }
+    //now place all following segments into the new path, they do not come with extra delays and can replaced one to one
+    for (auto follow_it = std::next(pos_it); follow_it != indices.end(); ++follow_it) {
+        size_t follow_index = *follow_it;
+        if (follow_index >= state.segments.size()) {
+            std::cerr << "[Waiting_time_Solve] WARNING: Segment index " << follow_index
+                      << " out of range while shifting agent " << segment.original_id << std::endl;
+            continue;
+        }
+        LocalSegment& following = state.segments[follow_index];
+        for (int i = following.entry_t; i <= following.exit_t; ++i) {
+            new_path[i] = following.path[i - following.entry_t];
+        }
+    }
+    //verify path validity
+    if (!verify_path_consistency(new_path, map)) {
+        std::cerr << "[Waiting_time_Solve] ERROR: Path is not consistent after updating with waiting time" << std::endl;
+        return;
+    }
+    //verify start and goal
+    if (new_path.front() != current_solution.starts[segment.original_id]) {
+        std::cerr << "[Waiting_time_Solve] ERROR: Path does not start at the start position" << std::endl;
+        return;
+    }
+    if (new_path.back() != current_solution.goals[segment.original_id]) {
+        std::cerr << "[Waiting_time_Solve] ERROR: Path does not end at the goal position" << std::endl;
+        return;
+    }
+    //puth new path into current solution
+    current_solution.agent_paths[segment.original_id] = new_path;
+    //Now current solution is updated with the new path
+    //we can update the path map
+    current_solution.create_path_map();
+
     if (segment.exit_t != old_exit + waiting_time_delta) {
         std::cerr << "[Waiting_time_Solve] WARNING: Segment " << segment_id
                   << " exit time mismatch after waiting adjustment" << std::endl;
@@ -371,52 +423,34 @@ void refresh_zone_after_extension(
     CurrentSolution& current_solution,
     const std::set<std::pair<int,int>>& local_zone_positions,
     int previous_zone_end_t,
-    const std::vector<std::vector<char>>& masked_map,
-    std::vector<std::tuple<int, int, std::pair<int,int>, int>>& cached_vertex_collisions,
-    std::vector<std::tuple<int, int, std::pair<int,int>, std::pair<int,int>, int>>& cached_edge_collisions) {
+    const std::vector<std::vector<char>>& masked_map) {
 
     if (state.zone_end_t <= previous_zone_end_t) {
         return;
     }
-
+    //the window we need to check for new agents starts after the previous zone end time
     int new_window_start = previous_zone_end_t + 1;
 
-    //create accurate deleayed current solution
-    CurrentSolution delayed_current_solution = current_solution;
-    //every agent in the zone that used waiting time needs its global path delayed by the waiting time delta
-    for (int agent_id : state.original_to_segments) {
-        auto path_it = current_solution.agent_paths.find(agent_id);
-        if (path_it == current_solution.agent_paths.end()) {
-            std::cout << "[Waiting_time_Solve] WARNING: Missing global path for agent " << agent_id << std::endl;
-            continue;
-        }
-        auto& global_path = path_it->second;
-        if (global_path.empty()) {
-            continue;
-        }
-        
-    }
-
+    //get the agents that are in the new window
     auto newly_relevant_agents = current_solution.get_agents_in_zone(
         local_zone_positions,
         new_window_start,
         state.zone_end_t);
 
     if (newly_relevant_agents.empty()) {
-        cached_vertex_collisions = gather_vertex_collisions(state);
-        cached_edge_collisions = gather_edge_collisions(state);
         return;
     }
 
     std::set<int> agents_to_resort;
 
+    //returns value between min and max
     auto clamp_time = [](int value, int min_value, int max_value) {
         return std::max(min_value, std::min(value, max_value));
     };
 
-
+    //iterate through all agents that are in the new window
     for (int agent_id : newly_relevant_agents) {
-        //this path is out of sync if we applied waiting time to this agent or one of its pseudo agents
+        //get that agents global path
         auto path_it = current_solution.agent_paths.find(agent_id);
         if (path_it == current_solution.agent_paths.end()) {
             std::cout << "[Waiting_time_Solve] WARNING: Missing global path for agent " << agent_id << std::endl;
@@ -426,54 +460,138 @@ void refresh_zone_after_extension(
         if (global_path.empty()) {
             continue;
         }
+        //get the max time of the path
+        int path_length = static_cast<int>(global_path.size()) - 1; //should be makespan
+        //check if its makespan
+        if (path_length == current_solution.max_timestep) {
+            std::cout << "[Waiting_time_Solve] ERROR: no error just test Agent " << agent_id << " has makespan path" << std::endl;
+            continue;
+        } else {
+            std::cout << "[Waiting_time_Solve] ERROR: Agent " << agent_id << " has path length " << path_length << " instead of makespan " << current_solution.max_timestep << std::endl;
+        }
 
-        int max_time_in_path = static_cast<int>(global_path.size()) - 1; //should be makespan
-        int scan_start = clamp_time(new_window_start, 0, max_time_in_path);
-        int scan_end = clamp_time(state.zone_end_t, 0, max_time_in_path);
+        //clamp the start and end of the scan, cannot be negative or greater than the path length
+        int scan_start = clamp_time(new_window_start, 0, path_length);
+        int scan_end = clamp_time(state.zone_end_t, 0, path_length);
         if (scan_start > scan_end) {
             continue;
         }
-
+        //get the agents segments in the extended zone window
+        AgentProcessingResult segment_info = process_agent_in_zone(
+            agent_id, global_path, local_zone_positions, conflict_map, conflict_meta, scan_start, scan_end, offset, map);
+        //find out if the agent was in the zone, if so, also check at the last timestep
+        // -> returning agent, if there at last timestep -> continueing agent
+        // otherwise new agent
         bool was_in_the_zone = state.original_to_segments.find(agent_id) != state.original_to_segments.end();
         bool was_in_the_zone_at_last_timestep = false;
         LocalSegment segment_to_continue;
+        //if the agent was in the zone, get the last segment that was in the zone
         if (was_in_the_zone) {
             int last_segment_idx = state.original_to_segments.at(agent_id).back();
             LocalSegment& last_segment = state.segments[last_segment_idx];
             was_in_the_zone_at_last_timestep = last_segment.exit_t >= previous_zone_end_t;
+            //continueing agent
             if (was_in_the_zone_at_last_timestep) {
                 segment_to_continue = last_segment;
-            }
-            //check if waiting time was used for this agent or one of its pseudo agents
-            int waiting_time_delta = 0;
-            //compare current available waiting time with the backup waiting time
-            int current_waiting_time = current_solution.get_waiting_time(agent_id);
-            int backup_waiting_time = waiting_time_backup.at(agent_id);
-            if (current_waiting_time < backup_waiting_time) {
-                waiting_time_delta = backup_waiting_time - current_waiting_time;
-            }
-            //if waiting time was used, we need to recheck where and when the path is in the zone
-            auto path_to_recheck = current_solution.agent_paths.at(agent_id);
-            if (waiting_time_delta > 0) {
-                //recheck where and when the path is in the zone
-                int last_position_idx = last_segment.path.back();
-                int last_position_global_idx = path_to_recheck.find(last_segment.path.back());
-                if (last_position_global_idx != global_path.end()) {
-                    //delay the path by the waiting time delta
-
-                    waiting_time_delta = last_position_global_idx - last_position_idx;
+                if (segment_to_continue.exit_t == state.zone_end_t) {
+                    std::cout << "[Waiting_time_Solve] Agent " << agent_id << "already extended to the end of the zone" << std::endl;
+                    continue;
+                } else {
+                    std::cout << "[Waiting_time_Solve] Agent " << agent_id << " is continuing in the zone" << std::endl;
+                    //extend the segment to the end of the first segment in the new window
+                    old_exit = segment_to_continue.exit_t;
+                    segment_to_continue.exit_t = segment_info.entry_t[0];
+                    //extend the segment path to the end of the zone by pushing the global path
+                    for (int i = old_exit + 1; i < segment_to_continue.exit_t + 1; ++i) {
+                        segment_to_continue.path[i-segment_to_continue.entry_t] = global_path[i];
+                        if (global_path[i] != segment_info.zone_paths[0][i-segment_to_continue.entry_t]) {
+                            std::cout << "[Waiting_time_Solve] ERROR: Global path and segment path do not match at time " << i << std::endl;
+                        }
+                    }
+                    //update the segment accordingly
+                    //make new mdd
+                    MDDConstructor constructor(masked_map, segment_to_continue.path.front(), segment_to_continue.path.back(), segment_to_continue.exit_t - segment_to_continue.entry_t);
+                    segment_to_continue.mdd = constructor.construct_mdd();
+                    segment_to_continue.mdd->align_to_time_window(segment_to_continue.entry_t, segment_to_continue.exit_t, state.zone_start_t, state.zone_end_t);
+                    //check if there are any new conflicts in the segment?
+                    // -> no we already have all conflicts in the zone
                 }
-            }
+            } else {
+                //agent returns
+                std::cout << "[Waiting_time_Solve] Agent " << agent_id << " is returning to the zone" << std::endl;
+                //create new pseudo agent
+                int pseudo_agent_id = state.next_pseudo_id++;
+                //get new agents path in the zone
+                //create new segment
+                LocalSegment new_segment;
+                new_segment.segment_id = pseudo_agent_id;
+                new_segment.original_id = agent_id;
+                new_segment.entry_t = segment_info.entry_t[0];
+                new_segment.exit_t = segment_info.exit_t[0];
+                new_segment.original_entry_t = segment_info.entry_t[0];
+                new_segment.original_exit_t = segment_info.exit_t[0];
+                new_segment.path = std::move(segment_info.zone_paths[0]);
+                //make new mdd
+                MDDConstructor constructor(masked_map, new_segment.path.front(), new_segment.path.back(), new_segment.exit_t - new_segment.entry_t);
+                new_segment.mdd = constructor.construct_mdd();
+                new_segment.mdd->align_to_time_window(new_segment.entry_t, new_segment.exit_t, state.zone_start_t, state.zone_end_t);
+                //check if there are any new conflicts in the segment?
+                // -> no we already have all conflicts in the zone
+
+                state.original_to_pseudo_ids[agent_id].push_back(pseudo_agent_id);
+                state.segment_index_by_id[pseudo_agent_id] = state.segments.size();
+                state.original_to_segments[agent_id].push_back(state.segments.size());
+                state.segments.push_back(new_segment);
+
+            }   
+        } else {
+            //new agent
+            std::cout << "[Waiting_time_Solve] Agent " << agent_id << " is new in the zone" << std::endl;
+            //create new segment
+            LocalSegment new_segment;
+            new_segment.segment_id = agent_id;
+            new_segment.original_id = agent_id;
+            new_segment.entry_t = segment_info.entry_t[0];
+            new_segment.exit_t = segment_info.exit_t[0];
+            new_segment.original_entry_t = segment_info.entry_t[0];
+            new_segment.original_exit_t = segment_info.exit_t[0];
+            new_segment.path = std::move(segment_info.zone_paths[0]);
+            //make new mdd
+            MDDConstructor constructor(masked_map, new_segment.path.front(), new_segment.path.back(), new_segment.exit_t - new_segment.entry_t);
+            new_segment.mdd = constructor.construct_mdd();
+            new_segment.mdd->align_to_time_window(new_segment.entry_t, new_segment.exit_t, state.zone_start_t, state.zone_end_t);
+
+            state.original_to_segments[agent_id].push_back(state.segments.size());
+            state.segment_index_by_id[agent_id] = state.segments.size();
+            state.segments.push_back(new_segment);
         }
-        //check if waiting time was used for this agent or one of its pseudo agents
-        int waiting_time_delta = 0;
-        if (was_in_the_zone) {
-            //get the last segment that was in the zone
 
+        //now we took care of the agents first appearance in the extended zone window
+        //all subsequent appearances are added as new pseudo agents
+        for (int i = 1; i < segment_info.zone_paths.size(); ++i) {
+            //create new pseudo agent
+            int pseudo_agent_id = state.next_pseudo_id++;
+            //create new segment
+            LocalSegment new_segment;
+            new_segment.segment_id = pseudo_agent_id;
+            new_segment.original_id = agent_id;
+            new_segment.entry_t = segment_info.entry_t[i];
+            new_segment.exit_t = segment_info.exit_t[i];
+            new_segment.original_entry_t = segment_info.entry_t[i];
+            new_segment.original_exit_t = segment_info.exit_t[i];
+            new_segment.path = std::move(segment_info.zone_paths[i]);
+            //make new mdd
+            MDDConstructor constructor(masked_map, new_segment.path.front(), new_segment.path.back(), new_segment.exit_t - new_segment.entry_t);
+            new_segment.mdd = constructor.construct_mdd();
+            new_segment.mdd->align_to_time_window(new_segment.entry_t, new_segment.exit_t, state.zone_start_t, state.zone_end_t);
+
+            state.original_to_pseudo_ids[agent_id].push_back(pseudo_agent_id);
+            state.segment_index_by_id[pseudo_agent_id] = state.segments.size();
+            state.original_to_segments[agent_id].push_back(state.segments.size());
+            state.segments.push_back(new_segment);
         }
 
-
-        if (was_in_the_zone_at_last_timestep) {
+    
 }
 
 
@@ -604,7 +722,8 @@ LazySolveResult lazy_solve_with_waiting_time(
     int start_t,
     int end_t,
     int offset,
-    int initial_waiting_time_amount) {
+    int initial_waiting_time_amount,
+    std::mt19937& rng) {
 
     (void)map;
     (void)local_zone_conflict_indices;
@@ -614,6 +733,7 @@ LazySolveResult lazy_solve_with_waiting_time(
     
     //assert waiting time and make a backup so we can restore it if waiting time solve fails
     auto waiting_time_backup = current_solution.backup_waiting_times();
+    auto paths_backup = current_solution.backup_paths();
 
     int using_waiting_time = initial_waiting_time_amount; 
 
@@ -640,13 +760,7 @@ LazySolveResult lazy_solve_with_waiting_time(
         end_t);
    
 
-    std::unordered_map<int, std::vector<std::pair<int,int>>> agent_path_backup;
-    for (const auto& [original_id, _] : state.original_to_segments) {
-        auto it = current_solution.agent_paths.find(original_id);
-        if (it != current_solution.agent_paths.end()) {
-            agent_path_backup[original_id] = it->second;
-        }
-    }
+    
     auto original_entry_exit = build_original_entry_exit_time_map(state);
 
     //TODO:what if first iteration should be 0 waiting time?
@@ -700,6 +814,13 @@ LazySolveResult lazy_solve_with_waiting_time(
                 segment.path = it_path->second;   
             }
             //update global solution
+            //todo: update delayed current solution 
+            // when we extend paths in the current solution at the time we deploy waiting time 
+            //we need to pay attention on how the local solution is integrated into the global solution
+            //we need to make sure that the global solution is updated correctly
+            //todo: also check for the correct time adjustments of local segments when deploying waiting time
+
+            delayed_current_solution.update_with_local_paths_and_pseudo_agents(state, lazy_result.local_paths);
             current_solution.update_with_local_paths_and_pseudo_agents(state, lazy_result.local_paths);
 
             result = lazy_result;
@@ -727,7 +848,7 @@ LazySolveResult lazy_solve_with_waiting_time(
             current_solution.use_waiting_time(original_id, waiting_delta);
             //update local zone state segments associated with the agent            
             //TODO updating mdds
-            apply_waiting_time_delta(state, segment_id, original_id, waiting_delta, masked_map);
+            apply_waiting_time_delta(state, segment_id, original_id, waiting_delta, masked_map, map, current_solution, rng);
             //check if we extended the time window
             if (state.zone_end_t > previous_zone_end_t) {
                 extended_time_window = true;
@@ -802,8 +923,7 @@ LazySolveResult lazy_solve_with_waiting_time(
             break;
         } else {
             std::cout << "[Waiting_time_Solve] Waiting time applied" << std::endl;
-            //TODO: if we moved any pseudo agents, we need to check the collisions, if they are still valid
-            // some agents might get their timewindow moved so they dont collide anymore --> remove those collisions from cnf creation
+            
         }
         if (out_of_waiting_time) {
             std::cout << "[Waiting_time_Solve] Out of waiting time" << std::endl;
@@ -813,18 +933,23 @@ LazySolveResult lazy_solve_with_waiting_time(
             std::cout << "[Waiting_time_Solve] Extended Zone end time from " << previous_zone_end_t << " to " << state.zone_end_t << std::endl;
             //check for new agents that enter the zone at the new timestep
             //TODO: scan all positions in the zone and check for new agents at new timesteps
+            refresh_zone_after_extension(
+                state, 
+                current_solution, 
+                local_zone_positions, 
+                previous_zone_end_t, 
+                masked_map);
         }
     }
 
     if (!result.solution_found) {
         std::cout << "[Waiting_time_Solve] No solution found" << std::endl;
         std::cout << "[Waiting_time_Solve] Restoring original paths" << std::endl;
-        for (const auto& [agent_id, path] : agent_path_backup) {
-            current_solution.agent_paths[agent_id] = path;
-        }
+
     }
     std::cout << "[Waiting_time_Solve] Restoring waiting times" << std::endl;
     current_solution.restore_waiting_times(waiting_time_backup);
+    current_solution.restore_paths(paths_backup);
     
     return result;
 }

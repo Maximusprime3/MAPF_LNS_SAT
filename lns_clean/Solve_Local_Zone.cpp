@@ -31,7 +31,8 @@ LocalZoneResult solve_local_zone(
     const std::vector<std::vector<std::vector<int>>>& conflict_map, 
     CurrentSolution& current_solution, 
     int offset,
-    int current_max_timesteps) {
+    int current_max_timesteps,
+    std::mt19937& rng) {
         
     LocalZoneResult local_zone_result;
     
@@ -75,7 +76,8 @@ LocalZoneResult solve_local_zone(
             local_zone_conflict_indices,
             conflict_map,
             start_t, end_t,
-            offset);
+            offset,
+            rng);
         
         //if solution found, update the current solution
         if (waiting_result.solution_found) {

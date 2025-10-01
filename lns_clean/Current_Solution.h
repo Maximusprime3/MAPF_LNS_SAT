@@ -327,6 +327,18 @@ struct CurrentSolution {
         agent_waiting_time = backup;
         std::cout << "[LNS] Restored waiting times from backup" << std::endl;
     }
+
+    //backup current paths
+    std::unordered_map<int, std::vector<std::pair<int,int>>> backup_paths() const {
+        return agent_paths;
+    }
+
+    //restore paths from backup and redraw path map
+    void restore_paths(const std::unordered_map<int, std::vector<std::pair<int,int>>>& backup) {
+        agent_paths = backup;
+        create_path_map();
+        std::cout << "[LNS] Restored paths from backup" << std::endl;
+    }
     
     // Get waiting times for a set of agents, sorted by waiting time (descending)
     std::vector<std::pair<int, int>> get_agents_waiting_times(

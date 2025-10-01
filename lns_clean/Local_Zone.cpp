@@ -1,5 +1,6 @@
 #include "Local_Zone.h"
 #include "Current_Solution.h"
+#include "Local_Zone_Builder.h"
 
 #include <cmath>
 #include <algorithm>  // for std::set_difference
@@ -66,31 +67,8 @@ std::set<std::pair<int,int>> create_shape_from_conflicts(
     const std::vector<std::pair<int,int>>& conflict_points,
     int expansion_radius,
     const std::vector<std::vector<char>>& map) {
-    int rows = (int)map.size();
-    int cols = rows > 0 ? (int)map[0].size() : 0;
-    std::set<std::pair<int,int>> shape_positions;
-
-    for (const auto& conflict_point : conflict_points) {
-        int center_row = conflict_point.first;
-        int center_col = conflict_point.second;
-
-        for (int r = center_row - expansion_radius; r <= center_row + expansion_radius; ++r) {
-            for (int c = center_col - expansion_radius; c <= center_col + expansion_radius; ++c) {
-                if (r < 0 || r >= rows || c < 0 || c >= cols) continue;
-                if (std::abs(r - center_row) + std::abs(c - center_col) <= expansion_radius) {
-                    // Only include walkable ('.') or goal ('G') cells
-                    char cell = map[r][c];
-                    if (cell == '.' || cell == 'G') {
-                        shape_positions.insert({r, c});
-                    } else if (cell != '@') {
-                        std::cout << "[LOCAL ZONE] ERROR: Found non-walkable cell " << cell << " at position (" << r << "," << c << ")" << std::endl;
-                    }
-                }
-            }
-        }
-    }
-
-    return shape_positions;
+    ConflictZoneBuilder builder(map);
+    return builder.build_reachable_zone(conflict_points, expansion_radius);
 }
 
 

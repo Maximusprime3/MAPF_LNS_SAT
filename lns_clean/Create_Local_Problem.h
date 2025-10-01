@@ -32,9 +32,9 @@ struct LocalSegment {
 // ordering per original agent and helper indices for fast lookups.
 struct LocalZoneState {
     std::vector<LocalSegment> segments;
-    std::unordered_map<int, std::vector<size_t>> original_to_segments;
-    std::unordered_map<int, size_t> segment_index_by_id;
-    std::unordered_map<int, std::vector<int>> original_to_pseudo_ids;
+    std::unordered_map<int, std::vector<size_t>> original_to_segments; //original_id -> list of segment indices
+    std::unordered_map<int, size_t> segment_index_by_id; //segment_id (pseudo_agent_id)-> segment index
+    std::unordered_map<int, std::vector<int>> original_to_pseudo_ids; //original_id -> list of pseudo agent ids
     int next_pseudo_id = 0;
     int zone_start_t = 0;
     int zone_end_t = 0;
