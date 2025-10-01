@@ -20,11 +20,19 @@
 
 //TODO:
 //very initial solution //traffic avoidance sampling from mdds
+
 //final check before makespan increase
+
 //bucket creation, we look for other conflicts in the immediate neighbourhood. Limit that searchto relevant timesteps around the og conflict
-//maybe some collisions are reusable to kickstart the zone solve after zone expansion
-//Slack allocation strategy too rigid, find a better way to allocate slack
+//bucket selection, earliest -> most conflicts -> most involved agents -> most involved positions (currently not checking for agents)
 //zone expansion by radius is kinda blind, gives more room but is not targetted
+//zone expansion to only include actuall reachable positions, not all positions in the diamond shape
+
+//maybe some collisions are reusable to kickstart the zone solve after zone expansion
+
+//Slack allocation strategy too rigid, find a better way to allocate slack
+
+
 
 
 
