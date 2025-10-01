@@ -360,6 +360,124 @@ void merge_collisions(LocalZoneState& state,
     }
 }
 
+
+// When the local zone window is lengthened we need to rescan the agents that now
+// fall inside the extended portion. This helper grows existing segments,
+// creates pseudo segments for new/returning agents, rebuilds the required MDDs
+// and updates the cached collision information so the next SAT attempt has a
+// consistent view of the zone.
+void refresh_zone_after_extension(
+    LocalZoneState& state,
+    CurrentSolution& current_solution,
+    const std::set<std::pair<int,int>>& local_zone_positions,
+    int previous_zone_end_t,
+    const std::vector<std::vector<char>>& masked_map,
+    std::vector<std::tuple<int, int, std::pair<int,int>, int>>& cached_vertex_collisions,
+    std::vector<std::tuple<int, int, std::pair<int,int>, std::pair<int,int>, int>>& cached_edge_collisions) {
+
+    if (state.zone_end_t <= previous_zone_end_t) {
+        return;
+    }
+
+    int new_window_start = previous_zone_end_t + 1;
+
+    //create accurate deleayed current solution
+    CurrentSolution delayed_current_solution = current_solution;
+    //every agent in the zone that used waiting time needs its global path delayed by the waiting time delta
+    for (int agent_id : state.original_to_segments) {
+        auto path_it = current_solution.agent_paths.find(agent_id);
+        if (path_it == current_solution.agent_paths.end()) {
+            std::cout << "[Waiting_time_Solve] WARNING: Missing global path for agent " << agent_id << std::endl;
+            continue;
+        }
+        auto& global_path = path_it->second;
+        if (global_path.empty()) {
+            continue;
+        }
+        
+    }
+
+    auto newly_relevant_agents = current_solution.get_agents_in_zone(
+        local_zone_positions,
+        new_window_start,
+        state.zone_end_t);
+
+    if (newly_relevant_agents.empty()) {
+        cached_vertex_collisions = gather_vertex_collisions(state);
+        cached_edge_collisions = gather_edge_collisions(state);
+        return;
+    }
+
+    std::set<int> agents_to_resort;
+
+    auto clamp_time = [](int value, int min_value, int max_value) {
+        return std::max(min_value, std::min(value, max_value));
+    };
+
+
+    for (int agent_id : newly_relevant_agents) {
+        //this path is out of sync if we applied waiting time to this agent or one of its pseudo agents
+        auto path_it = current_solution.agent_paths.find(agent_id);
+        if (path_it == current_solution.agent_paths.end()) {
+            std::cout << "[Waiting_time_Solve] WARNING: Missing global path for agent " << agent_id << std::endl;
+            continue;
+        }
+        const auto& global_path = path_it->second;
+        if (global_path.empty()) {
+            continue;
+        }
+
+        int max_time_in_path = static_cast<int>(global_path.size()) - 1; //should be makespan
+        int scan_start = clamp_time(new_window_start, 0, max_time_in_path);
+        int scan_end = clamp_time(state.zone_end_t, 0, max_time_in_path);
+        if (scan_start > scan_end) {
+            continue;
+        }
+
+        bool was_in_the_zone = state.original_to_segments.find(agent_id) != state.original_to_segments.end();
+        bool was_in_the_zone_at_last_timestep = false;
+        LocalSegment segment_to_continue;
+        if (was_in_the_zone) {
+            int last_segment_idx = state.original_to_segments.at(agent_id).back();
+            LocalSegment& last_segment = state.segments[last_segment_idx];
+            was_in_the_zone_at_last_timestep = last_segment.exit_t >= previous_zone_end_t;
+            if (was_in_the_zone_at_last_timestep) {
+                segment_to_continue = last_segment;
+            }
+            //check if waiting time was used for this agent or one of its pseudo agents
+            int waiting_time_delta = 0;
+            //compare current available waiting time with the backup waiting time
+            int current_waiting_time = current_solution.get_waiting_time(agent_id);
+            int backup_waiting_time = waiting_time_backup.at(agent_id);
+            if (current_waiting_time < backup_waiting_time) {
+                waiting_time_delta = backup_waiting_time - current_waiting_time;
+            }
+            //if waiting time was used, we need to recheck where and when the path is in the zone
+            auto path_to_recheck = current_solution.agent_paths.at(agent_id);
+            if (waiting_time_delta > 0) {
+                //recheck where and when the path is in the zone
+                int last_position_idx = last_segment.path.back();
+                int last_position_global_idx = path_to_recheck.find(last_segment.path.back());
+                if (last_position_global_idx != global_path.end()) {
+                    //delay the path by the waiting time delta
+
+                    waiting_time_delta = last_position_global_idx - last_position_idx;
+                }
+            }
+        }
+        //check if waiting time was used for this agent or one of its pseudo agents
+        int waiting_time_delta = 0;
+        if (was_in_the_zone) {
+            //get the last segment that was in the zone
+
+        }
+
+
+        if (was_in_the_zone_at_last_timestep) {
+}
+
+
+
 }//namespace
 
 std::pair<std::set<int>, bool> choose_agents_to_use_waiting_time(
@@ -603,7 +721,7 @@ LazySolveResult lazy_solve_with_waiting_time(
             if (idx_it == state.segment_index_by_id.end()) return false;
             const LocalSegment& segment = state.segments[idx_it->second];
             int original_id = segment.original_id;
-            if (current_solution.get_waiting_time(original_id) <= waiting_delta) {
+            if (current_solution.get_waiting_time(original_id) < waiting_delta) {
                 return false;
             }
             current_solution.use_waiting_time(original_id, waiting_delta);
@@ -625,6 +743,8 @@ LazySolveResult lazy_solve_with_waiting_time(
         //use waiting time for the agents with unresolved conflicts
         std::set<int> agents_already_used_waiting_time; //to avoid using waiting time for the same agent twice
         bool out_of_waiting_time = false;
+        int agent1 = 0;
+        int agent2 = 0;
         for (const auto& collision : pending_vertex_collisions) {
             agent1 = std::get<0>(collision);
             agent2 = std::get<1>(collision);

@@ -1,6 +1,6 @@
 #include "Create_Local_Problem.h"
 
-#include "MDDConstructor.h"
+#include "../mdd/MDDConstructor.h"
 
 #include <algorithm>
 #include <iostream>

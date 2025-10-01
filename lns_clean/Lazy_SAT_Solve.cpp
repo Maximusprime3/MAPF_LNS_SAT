@@ -1,5 +1,5 @@
 #include "../SATSolverManager.h" //EdgeAgentMap
-#include "lazy_SAT_Solve.h"
+#include "Lazy_SAT_Solve.h"
 #include <unordered_map>
 #include <vector>
 #include <tuple>

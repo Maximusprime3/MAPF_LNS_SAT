@@ -2,7 +2,7 @@
 
 #include "Create_Local_Problem.h"
 #include "Current_Solution.h"
-#include "lazy_SAT_Solve.h"
+#include "Lazy_SAT_Solve.h"
 
 #include <set>
 #include <vector>

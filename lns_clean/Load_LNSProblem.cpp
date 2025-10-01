@@ -1,4 +1,4 @@
-#include "LNSProblemIO.h"
+#include "Load_LNSProblem.h"
 #include "../SATSolverManager.h"
 #include <iostream>
 

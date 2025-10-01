@@ -1,7 +1,7 @@
 #pragma once
 
 #include "Current_Solution.h"
-#include "MDD.h"
+#include "../mdd/MDD.h"
 
 #include <memory>
 #include <tuple>
