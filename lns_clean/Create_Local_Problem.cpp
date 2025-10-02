@@ -146,21 +146,21 @@ void align_mdd_to_time_window(std::shared_ptr<MDD> mdd,
     int entry_t, int exit_t, //agent's entry and exit times
     int start_t, int end_t) { //time window of problem zone start and end
 
-    std::cout << "[LNS] Starting to align MDD to the time window: [" << start_t << ", " << end_t << "]" << std::endl;
+    std::cout << "[Create_Local_Problem] Starting to align MDD to the time window: [" << start_t << ", " << end_t << "]" << std::endl;
     if (!mdd) { // do we have an mdd?
-        std::cout << "[LNS] ERROR: No MDD to align" << std::endl;
+        std::cout << "[Create_Local_Problem] ERROR: No MDD to align" << std::endl;
         return;
     }
 
-    std::cout << "[LNS] MDD levels: " << mdd->levels.size() << std::endl;
+    std::cout << "[Create_Local_Problem] MDD levels: " << mdd->levels.size() << std::endl;
     //is it empty?
     if (mdd->levels.empty()) {
-        std::cout << "[LNS] ERROR: MDD is empty" << std::endl;
+        std::cout << "[Create_Local_Problem] ERROR: MDD is empty" << std::endl;
         return;
     }
 
     if (end_t < start_t) { // does start and end make sense?
-        std::cerr << "[LNS] ERROR: Invalid time window for MDD alignment (end_t < start_t)." << std::endl;
+        std::cerr << "[Create_Local_Problem] ERROR: Invalid time window for MDD alignment (end_t < start_t)." << std::endl;
         mdd->levels.clear();
         return;
     }
@@ -178,36 +178,36 @@ void align_mdd_to_time_window(std::shared_ptr<MDD> mdd,
 
     //check if already aligned to the time window 
     //if first MDD level matches entry
-    std::cout << "[LNS] Checking if MDD start is already aligned to the time window" << std::endl;
+    std::cout << "[Create_Local_Problem] Checking if MDD start is already aligned to the time window" << std::endl;
     bool mdd_start_aligned = false;
     if (original_levels.begin()->first == relative_entry + start_t) {
-        std::cout << "[LNS] MDD start " << original_levels.begin()->first << " already at relative entry: " << relative_entry + start_t << std::endl;
+        std::cout << "[Create_Local_Problem] MDD start " << original_levels.begin()->first << " already at relative entry: " << relative_entry + start_t << std::endl;
         mdd_start_aligned = true;
     }
 
     //if last MDD level matches exit
-    std::cout << "[LNS] Checking if MDD end already at relative exit: " << relative_exit + start_t << std::endl;
+    std::cout << "[Create_Local_Problem] Checking if MDD end already at relative exit: " << relative_exit + start_t << std::endl;
     bool mdd_end_aligned = false;
     // get last MDD level 
     if (original_levels.rbegin()->first == relative_exit + start_t) {
-        std::cout << "[LNS] MDD end " << original_levels.rbegin()->first << " already aligned to the time window: " << relative_exit + start_t << std::endl;
+        std::cout << "[Create_Local_Problem] MDD end " << original_levels.rbegin()->first << " already aligned to the time window: " << relative_exit + start_t << std::endl;
         mdd_end_aligned = true;
     }
 
     std::cout << "checked if MDD start and end are aligned" << std::endl;
     if (mdd_start_aligned && mdd_end_aligned) {
-        std::cout << "[LNS] MDD already aligned to the time window" << std::endl;
+        std::cout << "[Create_Local_Problem] MDD already aligned to the time window" << std::endl;
         return;
     }
 
     // Shift the agent's MDD levels to the correct position
-    std::cout << "[LNS] Aligning now" << std::endl;
+    std::cout << "[Create_Local_Problem] Aligning now" << std::endl;
     for (const auto& [level, nodes] : original_levels) {
 
         int new_level = level + relative_entry + start_t; //shift the level to the correct position in the window
 
         if (new_level >= zone_mdd_length + start_t) {
-            std::cerr << "[LNS] WARNING: MDD level " << new_level
+            std::cerr << "[Create_Local_Problem] WARNING: MDD level " << new_level
                       << " exceeds time window length " << zone_mdd_length + start_t
                       << "; truncating." << std::endl;
             continue;
@@ -220,7 +220,7 @@ void align_mdd_to_time_window(std::shared_ptr<MDD> mdd,
         }
     }
 
-    std::cout << "[LNS] Aligned MDD to the time window" << std::endl;
+    std::cout << "[Create_Local_Problem] Aligned MDD to the time window" << std::endl;
     mdd->levels = std::move(aligned_levels);
 }
 
@@ -403,7 +403,7 @@ void refresh_zone_after_extension(
         int path_length = static_cast<int>(global_path.size()) - 1; //should be makespan
         //check if its makespan
         if (path_length == current_solution.max_timestep) {
-            std::cout << "[Create_Local_Problem] ERROR: no error just test Agent " << agent_id << " has makespan path" << std::endl;
+            std::cout << "[Create_Local_Problem] WARNING: no error just test Agent " << agent_id << " has makespan path" << std::endl;
             continue;
         } else {
             std::cout << "[Create_Local_Problem] ERROR: Agent " << agent_id << " has path length " << path_length << " instead of makespan " << current_solution.max_timestep << std::endl;

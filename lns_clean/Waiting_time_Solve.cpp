@@ -362,14 +362,19 @@ void apply_waiting_time_delta(
         }
         align_segment_mdd(state.segments[follow_index]);
     }
-    //safety check if the path ends at the goal
-    if (new_path.back() != current_solution.goals[segment.original_id]) {
-        std::cout << "[Waiting_time_Solve] ERROR: Path does not end at the goal" << std::endl;
-        return;
-    }
+    
     //update global solution with the stretched and displaced paths
     //have the stretched segment longer than before need to shift the suffix first
     auto& new_path = current_solution.agent_paths.at(segment.original_id);
+    //safety check if the path ends at the goal
+    if (!verify_path_consistency(new_path, map)) {
+        std::cout << "[Waiting_time_Solve] ERROR: Path is not consistent before updating with waiting time" << std::endl;
+        if (new_path.back() != current_solution.goals[segment.original_id]) {
+            std::cout << "[Waiting_time_Solve] ERROR: Path does not end at the goal before updating with waiting time" << std::endl;
+            return;
+        }
+    }
+    
     //before the segment entry time, the path is the same
     //after the segment exit time, the path is the same but delayed by the waiting time delta
     const int path_length = static_cast<int>(new_path.size());
@@ -519,7 +524,7 @@ LazySolveResult lazy_solve_with_waiting_time(
     auto original_entry_exit = build_original_entry_exit_time_map(state);
 
     // first iteration should be 0 waiting time
-    int waiting_delta = 0
+    int waiting_delta = 0;
     if (initial_waiting_time_amount > 0) {
         waiting_delta = initial_waiting_time_amount;
     }
@@ -691,8 +696,15 @@ LazySolveResult lazy_solve_with_waiting_time(
         }
         if (extended_time_window) {
             std::cout << "[Waiting_time_Solve] Extended Zone end time from " << previous_zone_end_t << " to " << state.zone_end_t << std::endl;
+
+            //verify that the global solution is consistent
+            for (const auto& [agent_id, path] : current_solution.agent_paths) {
+                if (!verify_path_consistency(path, map)) {
+                    std::cout << "[Waiting_time_Solve] ERROR: Global solution is not consistent before refreshing zone for agent " << agent_id << std::endl;
+                }
+            }
             //check for new agents that enter the zone at the new timesteps
-           
+            
             refresh_zone_after_extension(
                 state, 
                 current_solution, 
@@ -703,6 +715,13 @@ LazySolveResult lazy_solve_with_waiting_time(
                 conflict_map,
                 conflict_meta,
                 offset);
+
+            for (const auto& [agent_id, path] : current_solution.agent_paths) {
+                if (!verify_path_consistency(path, map)) {
+                    std::cout << "[Waiting_time_Solve] ERROR: Global solution is not consistent after refreshing zone for agent " << agent_id << std::endl;
+                }
+            }
+
         }
     }
 

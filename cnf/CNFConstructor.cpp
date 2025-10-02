@@ -357,8 +357,8 @@ std::unordered_map<int, std::vector<MDDNode::Position>> CNFConstructor::cnf_assi
     
     std::cout << "\n=== DEBUG: cnf_assignment_to_paths ===" << std::endl;
     std::cout << "Input assignment size: " << assignment.size() << std::endl;
-    std::cout << "Input assignment: ";
-    for (int v : assignment) std::cout << v << " ";
+    //std::cout << "Input assignment: ";
+    //for (int v : assignment) std::cout << v << " ";
     std::cout << std::endl;
     
     // Removed verbose listing of all variables in the variable map to declutter output
