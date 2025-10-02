@@ -26,7 +26,7 @@ std::vector<std::tuple<int, int, std::pair<int,int>, int>> check_vertex_collisio
     // For each timestep in the zone window, check for collisions
     for (int timestep = 0; timestep < max_timesteps; ++timestep) {
         // Map from position to list of agents at that position
-        std::unordered_map<std::pair<int,int>, std::vector<int>> position_agents;
+        PositionAgentMap position_agents;
         
         // Collect all agents at each position for this timestep
         for (const auto& [agent_id, path] : local_paths) {

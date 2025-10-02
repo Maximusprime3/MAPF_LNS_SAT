@@ -1,7 +1,8 @@
 #include "Load_LNSProblem.h"
 #include "Current_Solution.h" //collect_conflicts_meta, create_conflict_map_2D
-#include "Local_Zone.h" //build_diamond_buckets
+#include "Local_Zone.h" //build_diamond_buckets, select_most_relevant_bucket
 #include "Lazy_SAT_Solve.h" //create_mdds_with_waiting_time
+#include "Solve_Local_Zone.h" //solve_local_zone, local_zone_result
 #include "../SATSolverManager.h" //find_all_collisions, print_agent_paths
 #include "VerificationHelpers.h" //verify_solution_consistency
 
@@ -103,7 +104,13 @@ std::unordered_map<int, std::vector<std::pair<int,int>>> LNS(
                   << " agents at makespan " << current_max_timesteps << std::endl;
         
         //Step 4: create current solution by sampling paths from MDDs
-        CurrentSolution current_solution(problem.grid.size(), problem.grid[0].size(), current_max_timesteps);
+        CurrentSolution current_solution(
+            problem.grid.size(), 
+            problem.grid[0].size(), 
+            current_max_timesteps,
+            num_agents,
+            problem.starts,
+            problem.goals);
         for (size_t agent_id = 0; agent_id < mdds.size(); ++agent_id) {
             const auto& mdd = mdds[agent_id];
             auto path_positions = mdd->sample_random_path(rng);

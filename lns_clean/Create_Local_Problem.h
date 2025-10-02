@@ -58,7 +58,7 @@ LocalZoneState build_local_problem_for_zone(
     const std::unordered_map<int, std::vector<int>>& agent_to_pseudo_agent_id = {});
 
 std::unordered_map<int, std::shared_ptr<MDD>> build_segment_mdd_map(const LocalZoneState& state);
-std::unordered_map<int, std::pair<int,int>> build_segment_entry_exit_map(const LocalZoneState& state);
+std::unordered_map<int, std::pair<int,int>> build_segment_entry_exit_time_map(const LocalZoneState& state);
 std::unordered_map<int, std::vector<std::pair<int,int>>> build_segment_path_map(const LocalZoneState& state);
 
 

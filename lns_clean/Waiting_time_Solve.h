@@ -4,6 +4,7 @@
 #include "Current_Solution.h"
 #include "Lazy_SAT_Solve.h"
 
+#include <random>
 #include <set>
 #include <vector>
 
@@ -12,7 +13,10 @@ void apply_waiting_time_delta(
     int segment_id,
     int original_id,
     int waiting_time_delta,
-    const std::vector<std::vector<char>>& masked_map);
+    const std::vector<std::vector<char>>& masked_map,
+    const std::vector<std::vector<char>>& map,
+    CurrentSolution& current_solution,
+    std::mt19937& rng);
 
 LazySolveResult lazy_solve_with_waiting_time(
     CurrentSolution& current_solution,
@@ -25,5 +29,5 @@ LazySolveResult lazy_solve_with_waiting_time(
     int start_t,
     int end_t,
     int offset,
-    int initial_waiting_time_amount = 0,
-    std::mt19937& rng = std::mt19937(std::random_device()()));
+    int initial_waiting_time_amount,
+    std::mt19937& rng);

@@ -35,11 +35,23 @@ struct CurrentSolution {
     int rows, cols;  // Store dimensions for bounds checking
     // Waiting time tracking: agent_id -> number of timesteps spent waiting at goal
     std::unordered_map<int, int> agent_waiting_time;
+
+    std::vector<std::pair<int,int>> starts;
+    std::vector<std::pair<int,int>> goals;
     
-    CurrentSolution(int rows_, int cols_, int max_t, int num_agents = 50) 
-        : max_timestep(std::max(0, max_t)), rows(rows_), cols(cols_) {
+    CurrentSolution(int rows_, 
+                    int cols_, 
+                    int max_t, 
+                    int num_agents,
+                    const std::vector<std::pair<int,int>>& starts_,
+                    const std::vector<std::pair<int,int>>& goals_) 
+        : max_timestep(std::max(0, max_t)), rows(rows_), cols(cols_), starts(starts_), goals(goals_) {
         // Reserve space for the actual number of agents to avoid rehashing
-        // Default to 50 if not specified, which is reasonable for most MAPF scenarios
+        if (num_agents <= 0) {
+            std::cerr << "[ERROR] Number of agents must be greater than 0" << std::endl;
+            num_agents = starts_.size();
+            std::cout << "[WARNING] Number of agents is less than the number of starts and goals, setting num_agents to " << num_agents << std::endl;
+        }
         agent_paths.reserve(num_agents);
         agent_waiting_time.reserve(num_agents);
     }

@@ -77,6 +77,7 @@ LocalZoneResult solve_local_zone(
             conflict_map,
             start_t, end_t,
             offset,
+            0, //initial waiting time amount
             rng);
         
         //if solution found, update the current solution

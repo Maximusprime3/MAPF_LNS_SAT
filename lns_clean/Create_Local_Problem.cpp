@@ -328,7 +328,7 @@ std::unordered_map<int, std::shared_ptr<MDD>> build_segment_mdd_map(const LocalZ
     return result;
 }
 
-std::unordered_map<int, std::pair<int,int>> build_segment_entry_exit_map(const LocalZoneState& state) {
+std::unordered_map<int, std::pair<int,int>> build_segment_entry_exit_time_map(const LocalZoneState& state) {
     std::unordered_map<int, std::pair<int,int>> result;
     for (const auto& segment : state.segments) {
         result[segment.segment_id] = {segment.entry_t, segment.exit_t};
@@ -471,7 +471,6 @@ void refresh_zone_after_extension(
                     if (required_path_size <= 0) {
                         std::cout << "[Waiting_time_Solve] ERROR: Required path size" << required_path_size 
                                   << " is less than or equal to 0 for agent " << agent_id << std::endl;
-                                  << "for agent " << agent_id << std::endl;
                         continue;
                     }
                     if (static_cast<int>(segment_to_continue.path.size()) < required_path_size) {
@@ -520,7 +519,7 @@ void refresh_zone_after_extension(
                     //make new mdd
                     MDDConstructor constructor(masked_map, segment_to_continue.path.front(), segment_to_continue.path.back(), segment_to_continue.exit_t - segment_to_continue.entry_t);
                     segment_to_continue.mdd = constructor.construct_mdd();
-                    segment_to_continue.mdd->align_to_time_window(segment_to_continue.entry_t, segment_to_continue.exit_t, state.zone_start_t, state.zone_end_t);
+                    align_mdd_to_time_window(segment_to_continue.mdd, segment_to_continue.entry_t, segment_to_continue.exit_t, state.zone_start_t, state.zone_end_t);
                     //check if there are any new conflicts in the segment?
                     // -> no we already have all conflicts in the zone
                 }
@@ -542,7 +541,7 @@ void refresh_zone_after_extension(
                 //make new mdd
                 MDDConstructor constructor(masked_map, new_segment.path.front(), new_segment.path.back(), new_segment.exit_t - new_segment.entry_t);
                 new_segment.mdd = constructor.construct_mdd();
-                new_segment.mdd->align_to_time_window(new_segment.entry_t, new_segment.exit_t, state.zone_start_t, state.zone_end_t);
+                align_mdd_to_time_window(new_segment.mdd, new_segment.entry_t, new_segment.exit_t, state.zone_start_t, state.zone_end_t);
                 //check if there are any new conflicts in the segment?
                 // -> no we already have all conflicts in the zone
 
@@ -567,7 +566,7 @@ void refresh_zone_after_extension(
             //make new mdd
             MDDConstructor constructor(masked_map, new_segment.path.front(), new_segment.path.back(), new_segment.exit_t - new_segment.entry_t);
             new_segment.mdd = constructor.construct_mdd();
-            new_segment.mdd->align_to_time_window(new_segment.entry_t, new_segment.exit_t, state.zone_start_t, state.zone_end_t);
+            align_mdd_to_time_window(new_segment.mdd, new_segment.entry_t, new_segment.exit_t, state.zone_start_t, state.zone_end_t);
 
             state.original_to_segments[agent_id].push_back(state.segments.size());
             state.segment_index_by_id[agent_id] = state.segments.size();
@@ -591,7 +590,7 @@ void refresh_zone_after_extension(
             //make new mdd
             MDDConstructor constructor(masked_map, new_segment.path.front(), new_segment.path.back(), new_segment.exit_t - new_segment.entry_t);
             new_segment.mdd = constructor.construct_mdd();
-            new_segment.mdd->align_to_time_window(new_segment.entry_t, new_segment.exit_t, state.zone_start_t, state.zone_end_t);
+            align_mdd_to_time_window(new_segment.mdd, new_segment.entry_t, new_segment.exit_t, state.zone_start_t, state.zone_end_t);
 
             state.original_to_pseudo_ids[agent_id].push_back(pseudo_agent_id);
             state.segment_index_by_id[pseudo_agent_id] = state.segments.size();
