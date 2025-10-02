@@ -254,26 +254,26 @@ void apply_waiting_time_delta(
 
     auto idx_it = state.segment_index_by_id.find(segment_id);
     if (idx_it == state.segment_index_by_id.end()) {
-        std::cerr << "[Waiting_time_Solve] ERROR: Segment " << segment_id
+        std::cout << "[Waiting_time_Solve] ERROR: Segment " << segment_id
                   << " not found while applying waiting time" << std::endl;
         return;
     }
 
     size_t seg_index = idx_it->second;
     if (seg_index >= state.segments.size()) {
-        std::cerr << "[Waiting_time_Solve] ERROR: Segment index " << seg_index
+        std::cout << "[Waiting_time_Solve] ERROR: Segment index " << seg_index
                   << " out of bounds for segment " << segment_id << std::endl;
         return;
     }
 
     auto align_segment_mdd = [&](LocalSegment& target) {
         if (!target.mdd) {
-            std::cerr << "[Waiting_time_Solve] WARNING: Segment " << target.segment_id
+            std::cout << "[Waiting_time_Solve] WARNING: Segment " << target.segment_id
                       << " missing MDD; skipping alignment after waiting adjustment" << std::endl;
             return;
         }
         if (target.mdd->levels.empty()) {
-            std::cerr << "[Waiting_time_Solve] WARNING: Segment " << target.segment_id
+            std::cout << "[Waiting_time_Solve] WARNING: Segment " << target.segment_id
                       << " has empty MDD; skipping alignment after waiting adjustment" << std::endl;
             return;
         }
@@ -287,7 +287,7 @@ void apply_waiting_time_delta(
 
     LocalSegment& segment = state.segments[seg_index];
     if (segment.original_id != original_id) {
-        std::cerr << "[Waiting_time_Solve] WARNING: Segment " << segment_id
+        std::cout << "[Waiting_time_Solve] WARNING: Segment " << segment_id
                   << " original agent mismatch (expected " << original_id
                   << ", got " << segment.original_id << ")" << std::endl;
     }
@@ -305,7 +305,7 @@ void apply_waiting_time_delta(
         const auto& goal_pos = segment.path.back();
         int segment_length = segment.exit_t - segment.entry_t + 1;
         if (segment_length <= 0) {
-            std::cerr << "[Waiting_time_Solve] ERROR: Segment " << segment_id
+            std::cout << "[Waiting_time_Solve] ERROR: Segment " << segment_id
                       << " has 0 length path" << std::endl;
             segment_length = static_cast<int>(segment.path.size());
         } 
@@ -313,21 +313,21 @@ void apply_waiting_time_delta(
         segment.mdd = constructor.construct_mdd();
         segment.path = segment.mdd->sample_random_path(rng); //initial place holder path
     } else {
-        std::cerr << "[Waiting_time_Solve] ERROR: Segment " << segment_id
+        std::cout << "[Waiting_time_Solve] ERROR: Segment " << segment_id
                   << " has no path" << std::endl;
         segment.mdd.reset();
     }
 
     auto original_it = state.original_to_segments.find(segment.original_id);
     if (original_it == state.original_to_segments.end()) {
-        std::cerr << "[Waiting_time_Solve] WARNING: No ordering information for agent "
+        std::cout << "[Waiting_time_Solve] WARNING: No ordering information for agent "
                   << segment.original_id << " when shifting subsequent segments" << std::endl;
         return;
     }
     const auto& indices = original_it->second;
     auto pos_it = std::find(indices.begin(), indices.end(), seg_index);
     if (pos_it == indices.end()) {
-        std::cerr << "[Waiting_time_Solve] WARNING: Segment index " << seg_index
+        std::cout << "[Waiting_time_Solve] WARNING: Segment index " << seg_index
                   << " missing from ordering for agent " << segment.original_id << std::endl;
         return;
     }
@@ -335,12 +335,12 @@ void apply_waiting_time_delta(
     for (auto follow_it = std::next(pos_it); follow_it != indices.end(); ++follow_it) {
         size_t follow_index = *follow_it;
         if (follow_index == seg_index) {
-            std::cerr << "[Waiting_time_Solve] ERROR: Shifting segment " << segment_id
+            std::cout << "[Waiting_time_Solve] ERROR: Shifting segment " << segment_id
                       << " which was extended by waiting time. should only shift segments after the extended one" << std::endl;
             continue;
         }
         if (follow_index >= state.segments.size()) {
-            std::cerr << "[Waiting_time_Solve] WARNING: Segment index " << follow_index
+            std::cout << "[Waiting_time_Solve] WARNING: Segment index " << follow_index
                       << " out of range while shifting agent " << segment.original_id << std::endl;
             continue;
         }
@@ -356,7 +356,7 @@ void apply_waiting_time_delta(
     for (auto follow_it = std::next(pos_it); follow_it != indices.end(); ++follow_it) {
         size_t follow_index = *follow_it;
         if (follow_index >= state.segments.size()) {
-            std::cerr << "[Waiting_time_Solve] WARNING: Segment index " << follow_index
+            std::cout << "[Waiting_time_Solve] WARNING: Segment index " << follow_index
                       << " out of range while shifting agent " << segment.original_id << std::endl;
             continue;
         }
@@ -368,9 +368,10 @@ void apply_waiting_time_delta(
     auto& new_path = current_solution.agent_paths.at(segment.original_id);
     //before the segment entry time, the path is the same
     //after the segment exit time, the path is the same but delayed by the waiting time delta
-    for (int i = segment.exit_t + 1; i < static_cast<int>(new_path.size()); ++i) {
+  
+    for (int i = static_cast<int>(new_path.size()) - 1; i >= segment.exit_t + 1; --i) {
         new_path[i] = new_path[i - waiting_time_delta];
-    }    
+    }
     //during the segment the path is the segment path
     for (int i = segment.entry_t; i <= segment.exit_t; ++i) {
         new_path[i] = segment.path[i - segment.entry_t];
@@ -379,7 +380,7 @@ void apply_waiting_time_delta(
     for (auto follow_it = std::next(pos_it); follow_it != indices.end(); ++follow_it) {
         size_t follow_index = *follow_it;
         if (follow_index >= state.segments.size()) {
-            std::cerr << "[Waiting_time_Solve] WARNING: Segment index " << follow_index
+            std::cout << "[Waiting_time_Solve] WARNING: Segment index " << follow_index
                       << " out of range while shifting agent " << segment.original_id << std::endl;
             continue;
         }
@@ -390,16 +391,16 @@ void apply_waiting_time_delta(
     }
     //verify path validity
     if (!verify_path_consistency(new_path, map)) {
-        std::cerr << "[Waiting_time_Solve] ERROR: Path is not consistent after updating with waiting time" << std::endl;
+        std::cout << "[Waiting_time_Solve] ERROR: Path is not consistent after updating with waiting time" << std::endl;
         return;
     }
     //verify start and goal
     if (new_path.front() != current_solution.starts[segment.original_id]) {
-        std::cerr << "[Waiting_time_Solve] ERROR: Path does not start at the start position" << std::endl;
+        std::cout << "[Waiting_time_Solve] ERROR: Path does not start at the start position" << std::endl;
         return;
     }
     if (new_path.back() != current_solution.goals[segment.original_id]) {
-        std::cerr << "[Waiting_time_Solve] ERROR: Path does not end at the goal position" << std::endl;
+        std::cout << "[Waiting_time_Solve] ERROR: Path does not end at the goal position" << std::endl;
         return;
     }
     //puth new path into current solution
@@ -409,7 +410,7 @@ void apply_waiting_time_delta(
     current_solution.create_path_map();
 
     if (segment.exit_t != old_exit + waiting_time_delta) {
-        std::cerr << "[Waiting_time_Solve] WARNING: Segment " << segment_id
+        std::cout << "[Waiting_time_Solve] WARNING: Segment " << segment_id
                   << " exit time mismatch after waiting adjustment" << std::endl;
     }
 }
@@ -569,6 +570,7 @@ LazySolveResult lazy_solve_with_waiting_time(
             return result;
         }
 
+        std::cout << "[Waiting_time_Solve] No solution found, trying to apply waiting time:" << waiting_delta << std::endl;
         auto pending_vertex_collisions = lazy_result.latest_discovered_vertex_collisions;
         auto pending_edge_collisions = lazy_result.latest_discovered_edge_collisions;
 
@@ -593,7 +595,7 @@ LazySolveResult lazy_solve_with_waiting_time(
                 extended_time_window = true;
             }
 
-            std::cout << "[Waiting_time_Solve] Applied waiting time to segment " << segment_id << " for agent " << original_id << std::endl;
+            std::cout << "[Waiting_time_Solve] Applied " << waiting_delta << " waiting time to segment " << segment_id << " for agent " << original_id << std::endl;
 
             applied_wait = true;
 

@@ -140,7 +140,7 @@ void CurrentSolution::update_with_local_paths_and_pseudo_agents(
 
         for (size_t idx : ordered_indices) {
             if (idx >= local_zone_state.segments.size()) {
-                std::cerr << "[ERROR] Segment index " << idx
+                std::cout << "[Current_Solution] ERROR: Segment index " << idx
                           << " out of range for agent " << agent_id << std::endl;
                 continue;
             }
@@ -151,7 +151,7 @@ void CurrentSolution::update_with_local_paths_and_pseudo_agents(
             int original_entry = segment.original_entry_t >= 0 ? segment.original_entry_t : segment.entry_t;
             int original_exit = segment.original_exit_t >= 0 ? segment.original_exit_t : segment.exit_t;
             if (original_entry > original_exit) {
-                std::cerr << "[ERROR] Segment " << segment.segment_id
+                std::cout << "[Current_Solution] ERROR: Segment " << segment.segment_id
                           << " has invalid original bounds [" << original_entry
                           << ", " << original_exit << "]" << std::endl;
                 continue;
@@ -159,14 +159,14 @@ void CurrentSolution::update_with_local_paths_and_pseudo_agents(
             int new_entry = segment.entry_t;
             int new_exit = segment.exit_t;
             if (new_entry < 0 || new_exit < new_entry) {
-                std::cerr << "[ERROR] Segment " << segment.segment_id
+                std::cout << "[Current_Solution] ERROR: Segment " << segment.segment_id
                           << " has invalid new bounds [" << new_entry
                           << ", " << new_exit << "]" << std::endl;
                 continue;
             }
 
             if (new_exit >= path_length) {
-                std::cerr << "[ERROR] Segment " << segment.segment_id
+                std::cout << "[Current_Solution] ERROR: Segment " << segment.segment_id
                           << " new exit timestep " << new_exit
                           << " exceeds global path bounds (size " << path_length
                           << ") for agent " << agent_id << std::endl;
@@ -176,25 +176,28 @@ void CurrentSolution::update_with_local_paths_and_pseudo_agents(
             int shifted_entry = original_entry + cumulative_shift;
             int shifted_exit = original_exit + cumulative_shift;
             if (shifted_entry != new_entry) {
-                std::cerr << "[WARNING] Segment " << segment.segment_id
+                std::cout << "[Current_Solution] WARNING: Segment " << segment.segment_id
                           << " entry mismatch after cumulative shift (expected "
                           << shifted_entry << " got " << new_entry << ")" << std::endl;
                 shifted_entry = new_entry;
             }
             if (shifted_exit != new_exit) {
-                std::cerr << "[INFO] Segment " << segment.segment_id
+                std::cout << "[Current_Solution] INFO: Segment " << segment.segment_id
                           << " exit adjusted from " << shifted_exit
                           << " to " << new_exit << " due to waiting time" << std::endl;
             }
 
             int delta = new_exit - shifted_exit;
             if (delta < 0) {
-                std::cerr << "[WARNING] Segment " << segment.segment_id
+                std::cout << "[Current_Solution] WARNING: Segment " << segment.segment_id
                           << " shortened by " << -delta
                           << " timesteps; shrinking not supported yet" << std::endl;
                 continue;
             }
             if (delta > 0) {
+                std::cout << "[Current_Solution] Segment " << segment.segment_id
+                          << " lengthened by " << delta
+                          << " timesteps; shifting suffix" << std::endl;
                 for (int t = path_length - 1; t >= new_exit + 1; --t) {
                     int src = t - delta;
                     if (src >= shifted_exit + 1 && src < path_length) {
@@ -211,14 +214,14 @@ void CurrentSolution::update_with_local_paths_and_pseudo_agents(
 
             int expected_length = new_exit - new_entry + 1;
             if (static_cast<int>(local_path_ptr->size()) != expected_length) {
-                std::cerr << "[ERROR] Segment " << segment.segment_id
+                std::cout << "[Current_Solution] ERROR: Segment " << segment.segment_id
                           << " local path length (" << local_path_ptr->size()
                           << ") does not match expected length (" << expected_length
                           << ")" << std::endl;
                 continue;
             }
             if (new_entry < 0 || new_entry + expected_length > path_length) {
-                std::cerr << "[ERROR] Segment " << segment.segment_id
+                std::cout << "[Current_Solution] ERROR: Segment " << segment.segment_id
                           << " replacement range [" << new_entry << ", " << new_exit
                           << "] exceeds path bounds for agent " << agent_id << std::endl;
                 continue;
@@ -242,11 +245,11 @@ void CurrentSolution::update_with_local_paths_and_pseudo_agents(
 
         auto it = segment_to_agent.find(segment_id);
         if (it != segment_to_agent.end()) {
-            std::cerr << "[WARNING] Skipping segment " << segment_id
+            std::cout << "[Current_Solution] WARNING: Skipping segment " << segment_id
                       << " for Agent " << it->second
                       << " because no ordering information was available" << std::endl;
         } else {
-            std::cerr << "[WARNING] Skipping segment " << segment_id
+            std::cout << "[Current_Solution] WARNING: Skipping segment " << segment_id
                       << " (segment not present in LocalZoneState)" << std::endl;
         }
     }

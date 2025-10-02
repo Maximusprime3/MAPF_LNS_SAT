@@ -175,7 +175,7 @@ std::unordered_map<int, std::vector<std::pair<int,int>>> LNS(
             if (local_zone_result.solution_found) {
                 std::cout << "[LNS] Successfully solved local zone" << std::endl;
                 //integrate local zone result into current solution
-                current_solution.update_with_local_paths(local_zone_result.local_paths, local_zone_result.local_entry_exit_time);
+                //solution is updated in the waiting time solve
                 //loop back to step 5
             }
             //if impossible to solve, increase makespan
@@ -211,5 +211,8 @@ std::unordered_map<int, std::vector<std::pair<int,int>>> LNS(
         SATSolverManager::print_agent_paths(successfull_solution->agent_paths);
         std::cout << "[LNS] ERROR: Solution is not valid" << std::endl;
     }
+    std::cout << "[LNS] Verified Final agent paths:" << std::endl;
+
+    std::cout << "[LNS] IT WORKED I THINK" << std::endl;
     return successfull_solution->agent_paths;
 }

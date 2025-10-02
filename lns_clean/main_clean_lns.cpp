@@ -178,20 +178,30 @@ int main(int argc, char** argv) {
     bool use_minisat = (to_lower(solver) == "minisat");
 
     std::unique_ptr<std::ofstream> log_stream;
+    std::streambuf* original_cout_buf = nullptr;
     if (!log_path.empty()) {
         log_stream = std::make_unique<std::ofstream>(log_path);
         if (!log_stream->is_open()) {
             std::cerr << "Failed to open log file: " << log_path << std::endl;
             return 2;
         }
-        std::cout.rdbuf(log_stream->rdbuf());
+        // Redirect cout to the log file and keep the original buffer to restore later.
+        original_cout_buf = std::cout.rdbuf(log_stream->rdbuf());
     }
 
     auto result = LNS(map_path, scenario_path, num_agents, scenario_index, use_minisat, seed);
     if (result.empty()) {
         std::cerr << "LNS did not return any agent paths." << std::endl;
+        if (original_cout_buf != nullptr) {
+            std::cout.flush();
+            std::cout.rdbuf(original_cout_buf);
+        }
         return 1;
     }
 
+    if (original_cout_buf != nullptr) {
+        std::cout.flush();
+        std::cout.rdbuf(original_cout_buf);
+    }
     return 0;
 }
