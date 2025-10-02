@@ -1,5 +1,6 @@
 #include "Current_Solution.h"
 #include "Create_Local_Problem.h"
+#include "VerificationHelpers.h"
 #include <set>
 
 //used globally
@@ -101,7 +102,8 @@ std::vector<std::vector<std::vector<int>>> create_conflict_map_2D(
 
 void CurrentSolution::update_with_local_paths_and_pseudo_agents(
     const LocalZoneState& local_zone_state,
-    const std::unordered_map<int, std::vector<std::pair<int,int>>>& solved_segment_paths) {
+    const std::unordered_map<int, std::vector<std::pair<int,int>>>& solved_segment_paths,
+    const std::vector<std::vector<char>>& map) {
 
     std::cout << "[LNS] Updating global solution with pseudo-agent local paths..." << std::endl;
 
@@ -198,11 +200,24 @@ void CurrentSolution::update_with_local_paths_and_pseudo_agents(
                 std::cout << "[Current_Solution] Segment " << segment.segment_id
                           << " lengthened by " << delta
                           << " timesteps; shifting suffix" << std::endl;
-                for (int t = path_length - 1; t >= new_exit + 1; --t) {
+                //verify global solution for consistency
+                if (!verify_path_consistency(global_path, map)) {
+                    std::cout << "[Current_Solution] ERROR: Global solution is not consistent before shifting suffix" << std::endl;
+                }else{
+                    std::cout << "[Current_Solution] Global solution is consistent before shifting suffix" << std::endl;
+                }
+                //we dont need this anymore because we are keeping the paths at correct lengths 
+                /*for (int t = path_length - 1; t >= new_exit + 1; --t) {
                     int src = t - delta;
                     if (src >= shifted_exit + 1 && src < path_length) {
                         global_path[t] = global_path[src];
                     }
+                }*/
+                //verify global solution for consistency
+                if (!verify_path_consistency(global_path, map)) {
+                    std::cout << "[Current_Solution] ERROR: Global solution is not consistent after shifting suffix" << std::endl;
+                }else{
+                    std::cout << "[Current_Solution] Global solution is consistent after shifting suffix" << std::endl;
                 }
             }
 
@@ -227,9 +242,22 @@ void CurrentSolution::update_with_local_paths_and_pseudo_agents(
                 continue;
             }
 
+            if (local_path_ptr->empty()) {
+                std::cout << "[Current_Solution] ERROR: Segment " << segment.segment_id
+                          << " local path is empty for agent " << agent_id << std::endl;
+                continue;
+            }
+
             //update global path
             for (int i = 0; i < expected_length; ++i) {
                 global_path[new_entry + i] = (*local_path_ptr)[i];
+            }
+
+            //verify global solution for consistency
+            if (!verify_path_consistency(global_path, map)) {
+                std::cout << "[Current_Solution] ERROR: Global solution is not consistent after updating with local path" << std::endl;
+            }else{
+                std::cout << "[Current_Solution] Global solution is consistent after updating with local path" << std::endl;
             }
 
             cumulative_shift += delta;

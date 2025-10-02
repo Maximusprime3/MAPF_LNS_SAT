@@ -65,6 +65,12 @@ namespace {
                         segment.entry_t = t;
                     }
                     std::cout << "[Create_Local_problem] Agent " << agent_id << " entered the zone at timestep " << t << std::endl;
+                    //print path
+                    std::cout << "[Create_Local_problem] Path (size: " << path.size() << "): ";
+                    for (const auto& pos : path) {
+                        std::cout << "(" << pos.first << ", " << pos.second << ") ";
+                    }
+                    std::cout << std::endl;
                     segment.contiguous_intervals.emplace_back(t, t); // start new interval
                 } else { // agent is already in the zone
                     segment.contiguous_intervals.back().second = t; // last known position in the zone
@@ -72,7 +78,7 @@ namespace {
                 segment.exit_t = t; 
             } else if (agent_in_zone) { // agent is leaving the zone
                 segment.contiguous_intervals.back().second = segment.exit_t; // end of interval in the zone
-                std::cout << "[Create_Local_problem] Agent " << agent_id << " exited the zone at timestep " << t << std::endl;
+                std::cout << "[Create_Local_problem] Agent " << agent_id << " is not in the zone at timestep " << t << std::endl;
                 std::cout << "The exit time is " << segment.exit_t << std::endl;
                 agent_in_zone = false;
             }       
@@ -161,7 +167,7 @@ void align_mdd_to_time_window(std::shared_ptr<MDD> mdd,
     }
 
     if (end_t < start_t) { // does start and end make sense?
-        std::cerr << "[Create_Local_Problem] ERROR: Invalid time window for MDD alignment (end_t < start_t)." << std::endl;
+        std::cout << "[Create_Local_Problem] ERROR: Invalid time window for MDD alignment (end_t < start_t)." << std::endl;
         mdd->levels.clear();
         return;
     }
@@ -179,36 +185,34 @@ void align_mdd_to_time_window(std::shared_ptr<MDD> mdd,
 
     //check if already aligned to the time window 
     //if first MDD level matches entry
-    std::cout << "[Create_Local_Problem] Checking if MDD start is already aligned to the time window" << std::endl;
     bool mdd_start_aligned = false;
     if (original_levels.begin()->first == relative_entry + start_t) {
-        std::cout << "[Create_Local_Problem] MDD start " << original_levels.begin()->first << " already at relative entry: " << relative_entry + start_t << std::endl;
+        //std::cout << "[Create_Local_Problem] MDD start " << original_levels.begin()->first << " already at relative entry: " << relative_entry + start_t << std::endl;
         mdd_start_aligned = true;
     }
 
     //if last MDD level matches exit
-    std::cout << "[Create_Local_Problem] Checking if MDD end already at relative exit: " << relative_exit + start_t << std::endl;
     bool mdd_end_aligned = false;
     // get last MDD level 
     if (original_levels.rbegin()->first == relative_exit + start_t) {
-        std::cout << "[Create_Local_Problem] MDD end " << original_levels.rbegin()->first << " already aligned to the time window: " << relative_exit + start_t << std::endl;
+        //std::cout << "[Create_Local_Problem] MDD end " << original_levels.rbegin()->first << " already aligned to the time window: " << relative_exit + start_t << std::endl;
         mdd_end_aligned = true;
     }
 
-    std::cout << "checked if MDD start and end are aligned" << std::endl;
+    //std::cout << "checked if MDD start and end are aligned" << std::endl;
     if (mdd_start_aligned && mdd_end_aligned) {
         std::cout << "[Create_Local_Problem] MDD already aligned to the time window" << std::endl;
         return;
     }
 
     // Shift the agent's MDD levels to the correct position
-    std::cout << "[Create_Local_Problem] Aligning now" << std::endl;
+    //std::cout << "[Create_Local_Problem] Aligning now" << std::endl;
     for (const auto& [level, nodes] : original_levels) {
 
         int new_level = level + relative_entry + start_t; //shift the level to the correct position in the window
 
         if (new_level >= zone_mdd_length + start_t) {
-            std::cerr << "[Create_Local_Problem] WARNING: MDD level " << new_level
+            std::cout << "[Create_Local_Problem] ERROR: MDD level " << new_level
                       << " exceeds time window length " << zone_mdd_length + start_t
                       << "; truncating." << std::endl;
             continue;
@@ -400,12 +404,29 @@ void refresh_zone_after_extension(
                       << agent_id << std::endl;
             continue;
         }
+        //verify waiting time
+        int waiting_time = current_solution.get_waiting_time(agent_id);
+        if (global_path.back() != current_solution.goals[agent_id]) {
+            std::cout << "[Create_Local_Problem] ERROR: Agent " << agent_id << " does not end at the goal position" << std::endl;
+            std::cout << "[Create_Local_Problem] Waiting time: " << waiting_time << std::endl;
+            std::cout << "[Create_Local_Problem] Path (size: " << global_path.size() << "): ";
+            for (const auto& pos : global_path) {
+                std::cout << "(" << pos.first << ", " << pos.second << ") ";
+            }
+            std::cout << std::endl;
+        }
+        if (global_path[global_path.size() - waiting_time - 1] != current_solution.goals[agent_id]) {
+            std::cout << "[Create_Local_Problem] ERROR: Agent " << agent_id << " does not end at the goal position with waiting time" << std::endl;
+
+        }
+
         //get the max time of the path
         int path_length = static_cast<int>(global_path.size()) - 1; //should be makespan
         //check if its makespan
         if (path_length == current_solution.max_timestep) {
-            std::cout << "[Create_Local_Problem] WARNING: no error just test Agent " << agent_id << " has makespan path" << std::endl;
-            continue;
+            std::cout << "[Create_Local_Problem]  test Agent " << agent_id << " has makespan path, as it should" << std::endl;
+        } else if (path_length > current_solution.max_timestep) {
+            std::cout << "[Create_Local_Problem] ERROR: Agent " << agent_id << " has path length " << path_length << " instead of makespan " << current_solution.max_timestep << std::endl;
         } else {
             std::cout << "[Create_Local_Problem] ERROR: Agent " << agent_id << " has path length " << path_length << " instead of makespan " << current_solution.max_timestep << std::endl;
         }

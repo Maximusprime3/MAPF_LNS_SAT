@@ -251,6 +251,15 @@ void apply_waiting_time_delta(
     if (waiting_time_delta <= 0) {
         return;
     }
+    std::cout << "[Waiting_time_Solve] Applying waiting time delta " << waiting_time_delta << " to segment " << segment_id << std::endl;
+    std::cout << "[Waiting_time_Solve] Original id: " << original_id << std::endl;
+    //verify current solution for consistency
+    if (!verify_path_consistency(current_solution.agent_paths[original_id], map)) {
+        std::cout << "[Waiting_time_Solve] ERROR: Current solution wrong, before applying waiting time" << std::endl;
+        return;
+    }else{
+        std::cout << "[Waiting_time_Solve] Current solution is consistent, before applying waiting time" << std::endl;
+    }
 
     auto idx_it = state.segment_index_by_id.find(segment_id);
     if (idx_it == state.segment_index_by_id.end()) {
@@ -369,10 +378,10 @@ void apply_waiting_time_delta(
     //safety check if the path ends at the goal
     if (!verify_path_consistency(new_path, map)) {
         std::cout << "[Waiting_time_Solve] ERROR: Path is not consistent before updating with waiting time" << std::endl;
-        if (new_path.back() != current_solution.goals[segment.original_id]) {
-            std::cout << "[Waiting_time_Solve] ERROR: Path does not end at the goal before updating with waiting time" << std::endl;
-            return;
-        }
+
+    }
+    if (new_path.back() != current_solution.goals[segment.original_id]) {
+        std::cout << "[Waiting_time_Solve] ERROR: Path does not end at the goal before updating with waiting time" << std::endl;
     }
     
     //before the segment entry time, the path is the same
@@ -386,9 +395,27 @@ void apply_waiting_time_delta(
         }
         new_path[i] = new_path[src];
     }
+    //check goal
+    if (new_path.back() != current_solution.goals[segment.original_id]) {
+        std::cout << "[Waiting_time_Solve] ERROR: made room for the segment, now path does not end at the goal" << std::endl;
+        //print waiting time delta
+        std::cout << "[Waiting_time_Solve] Waiting time delta: " << waiting_time_delta << std::endl;
+        //print agent waiting time
+        std::cout << "[Waiting_time_Solve] Agent waiting time: " << current_solution.get_waiting_time(segment.original_id) << std::endl;
+        //print path
+        std::cout << "[Waiting_time_Solve] Path: ";
+        for (const auto& pos : new_path) {
+            std::cout << "(" << pos.first << ", " << pos.second << ") ";
+        }
+        std::cout << std::endl;
+    }
     //during the segment the path is the segment path
     for (int i = segment.entry_t; i <= segment.exit_t; ++i) {
         new_path[i] = segment.path[i - segment.entry_t];
+    }
+    //check goal
+    if (new_path.back() != current_solution.goals[segment.original_id]) {
+        std::cout << "[Waiting_time_Solve] ERROR: placed the segment, now path does not end at the goal" << std::endl;
     }
     //now place all following segments into the new path, they do not come with extra delays and can replaced one to one
     for (auto follow_it = std::next(pos_it); follow_it != indices.end(); ++follow_it) {
@@ -406,24 +433,45 @@ void apply_waiting_time_delta(
     //verify path validity
     if (!verify_path_consistency(new_path, map)) {
         std::cout << "[Waiting_time_Solve] ERROR: Path is not consistent after updating with waiting time" << std::endl;
-        //does it end at the goal?
-        if (new_path.back() != current_solution.goals[segment.original_id]) {
-            std::cout << "[Waiting_time_Solve] ERROR: Path does not end at the goal after applying waiting time" << std::endl;
-            return;
-        }
-        return;
+    }
+    //does it end at the goal?
+    if (new_path.back() != current_solution.goals[segment.original_id]) {
+        std::cout << "[Waiting_time_Solve] ERROR: Path does not end at the goal after placing all following segments" << std::endl;
     }
     //verify start and goal
     if (new_path.front() != current_solution.starts[segment.original_id]) {
         std::cout << "[Waiting_time_Solve] ERROR: Path does not start at the start position" << std::endl;
-        return;
     }
     if (new_path.back() != current_solution.goals[segment.original_id]) {
         std::cout << "[Waiting_time_Solve] ERROR: Path does not end at the goal position" << std::endl;
-        return;
     }
+    //check if the path is consistent
+    if (!verify_path_consistency(new_path, map)) {
+        std::cout << "[Waiting_time_Solve] ERROR: Applying waiting time, then path is not consistent" << std::endl;
+        if (verify_path_consistency(current_solution.agent_paths[segment.original_id], map)) {
+            std::cout << "[Waiting_time_Solve] ERROR: Global solution is consistent, but replacement is not after applying waiting time" << std::endl;
+        }
+    }
+
+    //verify global solution for consistency
+    if (!verify_path_consistency(current_solution.agent_paths[segment.original_id], map)) {
+        std::cout << "[Waiting_time_Solve] ERROR: Current solution wrong, before pushing new path " << segment.original_id << std::endl;
+    }
+
     //puth new path into current solution
     current_solution.agent_paths[segment.original_id] = new_path;
+
+    //verify global solution for consistency
+    if (!verify_path_consistency(current_solution.agent_paths[segment.original_id], map)) {
+        std::cout << "[Waiting_time_Solve] ERROR: Current solution wrong, after pushing new path " << segment.original_id << std::endl;
+    }
+    //verify new path for consistency
+    if (!verify_path_consistency(new_path, map)) {
+        std::cout << "[Waiting_time_Solve] ERROR: New path is not consistent after applying waiting time" << std::endl;
+    } else {
+        std::cout << "[Waiting_time_Solve] New path is consistent after applying waiting time for agent " << segment.original_id << std::endl;
+    }
+
     //Now current solution is updated with the new path
     //we can update the path map
     current_solution.create_path_map();
@@ -584,7 +632,26 @@ LazySolveResult lazy_solve_with_waiting_time(
             //we need to make sure that the global solution is updated correctly
             //todo: also check for the correct time adjustments of local segments when deploying waiting time
 
-            current_solution.update_with_local_paths_and_pseudo_agents(state, lazy_result.local_paths);
+            current_solution.update_with_local_paths_and_pseudo_agents(state, lazy_result.local_paths, map);
+
+            //verify every agent has their amount of waiting time as goal positions in the end of their path
+            for (const auto& [agent_id, path] : current_solution.agent_paths) {
+                if (path.back() != current_solution.goals[agent_id]) {
+                    std::cout << "[LNS] ERROR: Agent " << agent_id << " does not end at the goal position" << std::endl;
+                }
+                int waiting_time = current_solution.get_waiting_time(agent_id);
+                if (path[path.size() - waiting_time - 1] != current_solution.goals[agent_id]) {
+                    std::cout << "[Waiting_time_Solve] ERROR: SOLUTION FOUND BUT Agent " << agent_id << " does not end at the goal position with waiting time" << std::endl;
+                    //print waiting time
+                    std::cout << "[Waiting_time_Solve] Waiting time: " << waiting_time << std::endl;
+                    //print path
+                    std::cout << "[Waiting_time_Solve] Path (size: " << path.size() << "): ";
+                    for (const auto& pos : path) {
+                        std::cout << "(" << pos.first << ", " << pos.second << ") ";
+                    }
+                    std::cout << std::endl;
+                }
+            }
 
             result = lazy_result;
             result.local_paths = std::move(lazy_result.local_paths);
@@ -592,6 +659,17 @@ LazySolveResult lazy_solve_with_waiting_time(
             result.solution_found = true;
             return result;
         }
+        //check lazy result solution for consistency
+        for (const auto& path : lazy_result.local_paths) {
+            if (!verify_path_consistency(path.second, map)) {
+                std::cout << "[Waiting_time_Solve] ERROR: Lazy result path is not consistent for agent" << path.first << std::endl;
+                //get og id
+                int original_id = state.segments[state.segment_index_by_id.find(path.first)->second].original_id;
+                std::cout << "[Waiting_time_Solve] ERROR: Lazy result path is not consistent for agent " << original_id << std::endl;
+                return result;
+            }
+        }
+
         //increment waiting time
         waiting_delta++;
         std::cout << "[Waiting_time_Solve] No solution found, trying to apply waiting time:" << waiting_delta << std::endl;
@@ -610,10 +688,34 @@ LazySolveResult lazy_solve_with_waiting_time(
             if (current_solution.get_waiting_time(original_id) < waiting_delta) {
                 return false;
             }
+            //print waiting time delta
+            std::cout << "[Waiting_time_Solve] Applying " << waiting_delta << " waiting time to agent " << original_id << std::endl;
+            //print agent waiting time
+            std::cout << "[Waiting_time_Solve] Agent waiting time: " << current_solution.get_waiting_time(original_id) << std::endl;
+            //current makespan
+            std::cout << "[Waiting_time_Solve] Current makespan: " << current_solution.max_timestep << std::endl;
+            //print path
+            std::cout << "[Waiting_time_Solve] Path (size: " << current_solution.agent_paths[original_id].size() << "): ";
+            for (const auto& pos : current_solution.agent_paths[original_id]) {
+                std::cout << "(" << pos.first << ", " << pos.second << ") ";
+            }
+            std::cout << std::endl;
             current_solution.use_waiting_time(original_id, waiting_delta);
+
+            //check if the path of this agent is consitent before apllying waiting time
+            if (!verify_path_consistency(current_solution.agent_paths[original_id], map)) {
+                std::cout << "[Waiting_time_Solve] ERROR: Path is not consistent before applying waiting time to agent " << original_id << "segment " << segment_id << std::endl;
+                return false;
+            }
             //update local zone state segments associated with the agent            
             //TODO updating mdds
             apply_waiting_time_delta(state, segment_id, original_id, waiting_delta, masked_map, map, current_solution, rng);
+
+            //check if the path of this agent is consitent after apllying waiting time
+            if (!verify_path_consistency(current_solution.agent_paths[original_id], map)) {
+                std::cout << "[Waiting_time_Solve] ERROR: Path is not consistent after applying waiting time to agent " << original_id << "segment " << segment_id << std::endl;
+                return false;
+            }
             //check if we extended the time window
             if (state.zone_end_t > previous_zone_end_t) {
                 extended_time_window = true;
@@ -682,13 +784,36 @@ LazySolveResult lazy_solve_with_waiting_time(
             }
         }
         
-        
+        //check local solution for consistency
+        for (const auto& segment : state.segments) {
+            if (!verify_path_consistency(segment.path, map)) {
+                std::cout << "[Waiting_time_Solve] ERROR: Path is not consistent for segment " << segment.segment_id << std::endl;
+                return result;
+            }
+        }
         if (!applied_wait) {
             std::cout << "[Waiting_time_Solve] No waiting time applied" << std::endl;
             break;
         } else {
             std::cout << "[Waiting_time_Solve] Waiting time applied" << std::endl;
-            
+            //verify every agent has their amount of waiting time as goal positions in the end of their path
+            for (const auto& [agent_id, path] : current_solution.agent_paths) {
+                if (path.back() != current_solution.goals[agent_id]) {
+                    std::cout << "[Waiting_time_Solve] ERROR: Agent " << agent_id << " does not end at the goal position" << std::endl;
+                }
+                int waiting_time = current_solution.get_waiting_time(agent_id);
+                if (path[path.size() - waiting_time - 1] != current_solution.goals[agent_id]) {
+                    std::cout << "[Waiting_time_Solve] ERROR: APPLIED WAITING TIME BUT Agent " << agent_id << " does not end at the goal position with waiting time" << std::endl;
+                    //print waiting time
+                    std::cout << "[Waiting_time_Solve] Waiting time: " << waiting_time << std::endl;
+                    //print path
+                    std::cout << "[Waiting_time_Solve] Path (size: " << path.size() << "): ";
+                    for (const auto& pos : path) {
+                        std::cout << "(" << pos.first << ", " << pos.second << ") ";
+                    }
+                    std::cout << std::endl;
+                }
+            }
         }
         if (out_of_waiting_time) {
             std::cout << "[Waiting_time_Solve] Out of waiting time" << std::endl;
@@ -716,9 +841,22 @@ LazySolveResult lazy_solve_with_waiting_time(
                 conflict_meta,
                 offset);
 
+            //verify every agent has their amount of waiting time as goal positions in the end of their path
             for (const auto& [agent_id, path] : current_solution.agent_paths) {
-                if (!verify_path_consistency(path, map)) {
-                    std::cout << "[Waiting_time_Solve] ERROR: Global solution is not consistent after refreshing zone for agent " << agent_id << std::endl;
+                if (path.back() != current_solution.goals[agent_id]) {
+                    std::cout << "[Waiting_time_Solve] ERROR: Agent " << agent_id << " does not end at the goal position" << std::endl;
+                }
+                int waiting_time = current_solution.get_waiting_time(agent_id);
+                if (path[path.size() - waiting_time - 1] != current_solution.goals[agent_id]) {
+                    std::cout << "[Waiting_time_Solve] ERROR: EXTENDED ZONE END TIME BUT Agent " << agent_id << " does not end at the goal position with waiting time" << std::endl;
+                    //print waiting time
+                    std::cout << "[Waiting_time_Solve] Waiting time: " << waiting_time << std::endl;
+                    //print path
+                    std::cout << "[Waiting_time_Solve] Path (size: " << path.size() << "): ";
+                    for (const auto& pos : path) {
+                        std::cout << "(" << pos.first << ", " << pos.second << ") ";
+                    }
+                    std::cout << std::endl;
                 }
             }
 

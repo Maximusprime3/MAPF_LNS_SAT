@@ -258,7 +258,8 @@ struct CurrentSolution {
     // after waiting-time adjustments. `solved_segment_paths` can override the paths
     // stored in the state (e.g. solver output) before the integration takes place.
     void update_with_local_paths_and_pseudo_agents(const LocalZoneState& local_zone_state,
-        const std::unordered_map<int, std::vector<std::pair<int,int>>>& solved_segment_paths);
+        const std::unordered_map<int, std::vector<std::pair<int,int>>>& solved_segment_paths,
+        const std::vector<std::vector<char>>& map);
 
 
 

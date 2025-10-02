@@ -120,7 +120,27 @@ std::unordered_map<int, std::vector<std::pair<int,int>>> LNS(
         //calculate waiting times for each agent
         current_solution.calculate_waiting_times(problem.goals, current_max_timesteps);
         //pad paths to makespan
-        current_solution.pad_paths_to_makespan();   
+        current_solution.pad_paths_to_makespan();  
+        
+        //verify every agent has their amount of waiting time as goal positions in the end of their path
+        for (const auto& [agent_id, path] : current_solution.agent_paths) {
+            if (path.back() != current_solution.goals[agent_id]) {
+                std::cout << "[LNS] ERROR: Agent " << agent_id << " does not end at the goal position" << std::endl;
+            }
+            int waiting_time = current_solution.get_waiting_time(agent_id);
+            if (path[path.size() - waiting_time - 1] != current_solution.goals[agent_id]) {
+                std::cout << "[LNS] ERROR: Agent " << agent_id << " does not end at the goal position with waiting time" << std::endl;
+                //print waiting time
+                std::cout << "[LNS] Waiting time: " << waiting_time << std::endl;
+                //print path
+                std::cout << "[LNS] Path (size: " << path.size() << "): ";
+                for (const auto& pos : path) {
+                    std::cout << "(" << pos.first << ", " << pos.second << ") ";
+                }
+                std::cout << std::endl;
+            }
+        }
+
         //create path map for current solution
         current_solution.create_path_map();
         std::cout << "[LNS] Created current solution with " << current_solution.agent_paths.size() 
