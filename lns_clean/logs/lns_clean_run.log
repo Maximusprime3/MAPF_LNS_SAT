@@ -1,0 +1,195 @@
+[LNS] Loaded map 32x32, agents: 10
+[LNS] Map:
+@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@
+@..@..@.........................
+@..@..@.........................
+@..@..@..@@@@@@@@@@@@@..@@@@..@.
+@.....@..............@..@..@..@.
+@.....@..............@..@..@..@.
+@..@@@@@@@..@@@@@@@@@@..@..@@@@.
+@...........@...........@.....@.
+@...........@...........@.....@.
+@@@@@@@@@@@@@..@@@@..@@@@..@@@@@
+@..............@.....@..@..@....
+@..............@.....@..@..@....
+@..@@@@@@@@@@@@@@@@@@@..@..@@@@.
+@..............@.....@.....@....
+@..............@.....@.....@....
+@..@@@@@@@..@@@@..@..@@@@..@..@@
+@..@........@.....@........@..@.
+@..@........@.....@........@..@.
+@@@@..@@@@..@..@@@@..@@@@@@@..@.
+@.....@.....@..@.....@........@.
+@.....@.....@..@.....@........@.
+@..@..@@@@@@@..@..@@@@..@@@@@@@.
+@..@........@..@..@..@..@.......
+@..@........@..@..@..@..@.......
+@..@@@@..@@@@..@@@@..@..@@@@@@@.
+@..@..@.................@.......
+@..@..@.................@.......
+@..@..@@@@@@@@@@..@@@@@@@..@@@@.
+@..@..@........@..@........@..@.
+@..@..@........@..@........@..@.
+@..@..@@@@..@..@..@@@@..@@@@..@.
+@.....@.....@...........@.......
+[LNS] Number of agents: 10
+[LNS] Agents (start -> goal):
+  Agent 0: (21,17) -> (16,15)
+  Agent 1: (23,23) -> (19,10)
+  Agent 2: (20,1) -> (2,8)
+  Agent 3: (29,2) -> (22,31)
+  Agent 4: (26,28) -> (16,25)
+  Agent 5: (5,13) -> (1,5)
+  Agent 6: (9,13) -> (19,14)
+  Agent 7: (29,1) -> (8,14)
+  Agent 8: (24,14) -> (4,19)
+  Agent 9: (19,17) -> (14,25)
+[LNS] Base makespan: 93
+
+[LNS] === Attempt with max_timesteps=93 ===
+[SAT] Creating MDDs with shortest paths + waiting time...
+[SAT] Created 10 MDDs with waiting time structure
+[LNS] Built MDDs with waiting time structure for 10 agents at makespan 93
+[LNS] Calculating waiting times for agents...
+  Agent 9 reaches goal at t=13, waiting time=80
+  Agent 8 reaches goal at t=93, waiting time=0
+  Agent 7 reaches goal at t=50, waiting time=43
+  Agent 6 reaches goal at t=55, waiting time=38
+  Agent 5 reaches goal at t=22, waiting time=71
+  Agent 4 reaches goal at t=49, waiting time=44
+  Agent 3 reaches goal at t=58, waiting time=35
+  Agent 2 reaches goal at t=69, waiting time=24
+  Agent 1 reaches goal at t=35, waiting time=58
+  Agent 0 reaches goal at t=15, waiting time=78
+[LNS] Waiting time calculation complete
+[LNS] Created current solution with 10 agent paths on a map of size 32x32
+[LNS] Analyzing conflicts...
+[LNS] Current solution: vertex collisions=3, edge collisions=1
+[LNS] Creating conflict buckets...
+[LOCAL ZONE] Building diamond bucket for conflict 3
+[LOCAL ZONE] Built diamond bucket for conflict 3 with 0 positions, 0 conflicts, 13 - 13 time window
+[LNS] Selected most relevant bucket 3 with time window: 13 - 13, 1 conflicts and 7 positions.
+[LNS] Solving the best bucket Local Zone...
+[Solve_local_zone] Current local zone size: 7 (1.05105% of all walkable positions)
+[Solve_local_zone] Local zone time window: [12, 14]
+[Create_Local_problem] Agent 3 entered the zone at timestep 12
+[Create_Local_problem] Agent 3 exited the zone at timestep 14
+[LNS] Starting to align MDD to the time window: [12, 14]
+[LNS] MDD levels: 3
+[LNS] Checking if MDD start is already aligned to the time window
+[LNS] Checking if MDD end already at relative exit: 14
+checked if MDD start and end are aligned
+[LNS] Aligning now
+[LNS] Aligned MDD to the time window
+[Create_Local_problem] Agent 8 entered the zone at timestep 12
+[Create_Local_problem] Agent 8 exited the zone at timestep 14
+[LNS] Starting to align MDD to the time window: [12, 14]
+[LNS] MDD levels: 3
+[LNS] Checking if MDD start is already aligned to the time window
+[LNS] Checking if MDD end already at relative exit: 14
+checked if MDD start and end are aligned
+[LNS] Aligning now
+[LNS] Aligned MDD to the time window
+[Waiting_time_Solve] Iteration 0...
+[SAT] Start solving CNF: 10 clauses and 6 variables
+[SAT] Solving local zone with SAT iteration 1...
+DEBUG: CNF has 10 clauses
+DEBUG: First clause: 1 
+DEBUG: Adding 10 clauses to MiniSAT
+DEBUG: Clause load summary: input=10, added=10, tautologies_skipped=0, duplicates_skipped=0, unit_clauses=6, empties=0, intra_clause_literals_removed=0, added_but_db_unchanged=4
+DEBUG: After adding clauses, solver has 0 clauses and 6 variables
+DEBUG: MiniSAT found 6 variables
+DEBUG: Assignment size: 6
+DEBUG: First few assignment values: 1 1 1 1 1 1 
+
+=== DEBUG: cnf_assignment_to_paths ===
+Input assignment size: 6
+Input assignment: 1 1 1 1 1 1 
+=== END DEBUG ===
+[SAT] Found 0 vertex collisions and 1 edge collisions
+[SAT] Adding collision clauses and solving again...
+[SAT] Solving local zone with SAT iteration 2...
+DEBUG: CNF has 11 clauses
+DEBUG: First clause: 1 
+DEBUG: Adding 11 clauses to MiniSAT
+[SAT] Local problem is unsatisfiable after 2 iterations
+[SAT] Failed to find local solution after 1000 iterations
+[SAT] Local problem appears to be unsatisfiable in current zone
+  Agent 3 used 1 waiting timesteps, 34 remaining
+[LNS] Starting to align MDD to the time window: [12, 15]
+[LNS] MDD levels: 4
+[LNS] Checking if MDD start is already aligned to the time window
+[LNS] Checking if MDD end already at relative exit: 15
+checked if MDD start and end are aligned
+[LNS] Aligning now
+[LNS] Aligned MDD to the time window
+[Waiting_time_Solve] Applied waiting time to segment 3 for agent 3
+[Waiting_time_Solve] Waiting time applied
+[Waiting_time_Solve] Extended Zone end time from 14 to 15
+[Create_Local_Problem] ERROR: Agent 3 has path length 58 instead of makespan 93
+[Create_Local_problem] Agent 3 entered the zone at timestep 15
+[Create_Local_problem] Agent 3 exited the zone at timestep 15
+[Create_Local_Problem] Agent 3already extended to the end of the zone
+[Create_Local_Problem] ERROR: no error just test Agent 8 has makespan path
+[Waiting_time_Solve] Iteration 1...
+[SAT] Start solving CNF: 17 clauses and 9 variables
+[SAT] Solving local zone with SAT iteration 1...
+DEBUG: CNF has 18 clauses
+DEBUG: First clause: 1 
+DEBUG: Adding 18 clauses to MiniSAT
+DEBUG: Clause load summary: input=18, added=17, tautologies_skipped=0, duplicates_skipped=1, unit_clauses=5, empties=0, intra_clause_literals_removed=0, added_but_db_unchanged=4
+DEBUG: After adding clauses, solver has 8 clauses and 9 variables
+DEBUG: MiniSAT found 9 variables
+DEBUG: Assignment size: 9
+DEBUG: First few assignment values: 1 1 1 1 0 1 0 1 1 
+
+=== DEBUG: cnf_assignment_to_paths ===
+Input assignment size: 9
+Input assignment: 1 1 1 1 0 1 0 1 1 
+=== END DEBUG ===
+[SAT] Found 1 vertex collisions and 0 edge collisions
+[SAT] Adding collision clauses and solving again...
+[SAT] Solving local zone with SAT iteration 2...
+DEBUG: CNF has 19 clauses
+DEBUG: First clause: 1 
+DEBUG: Adding 19 clauses to MiniSAT
+[SAT] Local problem is unsatisfiable after 2 iterations
+[SAT] Failed to find local solution after 1000 iterations
+[SAT] Local problem appears to be unsatisfiable in current zone
+  Agent 3 used 1 waiting timesteps, 33 remaining
+[LNS] Starting to align MDD to the time window: [12, 16]
+[LNS] MDD levels: 5
+[LNS] Checking if MDD start is already aligned to the time window
+[LNS] Checking if MDD end already at relative exit: 16
+checked if MDD start and end are aligned
+[LNS] Aligning now
+[LNS] Aligned MDD to the time window
+[Waiting_time_Solve] Applied waiting time to segment 3 for agent 3
+[Waiting_time_Solve] Waiting time applied
+[Waiting_time_Solve] Extended Zone end time from 15 to 16
+[Waiting_time_Solve] Iteration 2...
+[SAT] Start solving CNF: 41 clauses and 16 variables
+[SAT] Solving local zone with SAT iteration 1...
+DEBUG: CNF has 43 clauses
+DEBUG: First clause: 1 
+DEBUG: Adding 43 clauses to MiniSAT
+DEBUG: Clause load summary: input=43, added=41, tautologies_skipped=0, duplicates_skipped=2, unit_clauses=5, empties=0, intra_clause_literals_removed=0, added_but_db_unchanged=8
+DEBUG: After adding clauses, solver has 28 clauses and 16 variables
+DEBUG: MiniSAT found 16 variables
+DEBUG: Assignment size: 16
+DEBUG: First few assignment values: 1 1 1 1 0 1 1 0 0 0 
+
+=== DEBUG: cnf_assignment_to_paths ===
+Input assignment size: 16
+Input assignment: 1 1 1 1 0 1 1 0 0 0 1 0 0 0 0 1 
+=== END DEBUG ===
+[SAT] Found 0 vertex collisions and 0 edge collisions
+[SAT] Found collision-free local solution!
+[LNS] Updating global solution with pseudo-agent local paths...
+[LNS] Successfully updated global solution with pseudo-agent local paths!
+[LNS] Successfully updated global solution with pseudo-agent local paths!
+[LNS] Updating path map with new local paths...
+[LNS] Successfully updated global solution with local paths and pseudo agents!
+[Solve_local_zone] Successfully solved local zone
+[LNS] Successfully solved local zone
+[LNS] Updating global solution with local paths...
