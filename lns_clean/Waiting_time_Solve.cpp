@@ -362,15 +362,24 @@ void apply_waiting_time_delta(
         }
         align_segment_mdd(state.segments[follow_index]);
     }
-
+    //safety check if the path ends at the goal
+    if (new_path.back() != current_solution.goals[segment.original_id]) {
+        std::cout << "[Waiting_time_Solve] ERROR: Path does not end at the goal" << std::endl;
+        return;
+    }
     //update global solution with the stretched and displaced paths
     //have the stretched segment longer than before need to shift the suffix first
     auto& new_path = current_solution.agent_paths.at(segment.original_id);
     //before the segment entry time, the path is the same
     //after the segment exit time, the path is the same but delayed by the waiting time delta
-  
-    for (int i = static_cast<int>(new_path.size()) - 1; i >= segment.exit_t + 1; --i) {
-        new_path[i] = new_path[i - waiting_time_delta];
+    const int path_length = static_cast<int>(new_path.size());
+    const int suffix_start = static_cast<int>(std::min(segment.exit_t + 1, path_length - 1));
+    for (int i = path_length - 1; i >= suffix_start; --i) {
+        int src = i - waiting_time_delta;
+        if (src < 0) {
+            src = 0;
+        }
+        new_path[i] = new_path[src];
     }
     //during the segment the path is the segment path
     for (int i = segment.entry_t; i <= segment.exit_t; ++i) {
@@ -385,13 +394,18 @@ void apply_waiting_time_delta(
             continue;
         }
         LocalSegment& following = state.segments[follow_index];
-        for (int i = following.entry_t; i <= following.exit_t; ++i) {
-            new_path[i] = following.path[i - following.entry_t];
+        for (int i = 0; i < following.path.size(); ++i) {
+            new_path[following.entry_t + i] = following.path[i];
         }
     }
     //verify path validity
     if (!verify_path_consistency(new_path, map)) {
         std::cout << "[Waiting_time_Solve] ERROR: Path is not consistent after updating with waiting time" << std::endl;
+        //does it end at the goal?
+        if (new_path.back() != current_solution.goals[segment.original_id]) {
+            std::cout << "[Waiting_time_Solve] ERROR: Path does not end at the goal after applying waiting time" << std::endl;
+            return;
+        }
         return;
     }
     //verify start and goal
@@ -504,11 +518,15 @@ LazySolveResult lazy_solve_with_waiting_time(
     
     auto original_entry_exit = build_original_entry_exit_time_map(state);
 
-    //TODO:what if first iteration should be 0 waiting time?
-    int waiting_delta = std::max(1, initial_waiting_time_amount>0? initial_waiting_time_amount : 1);
+    // first iteration should be 0 waiting time
+    int waiting_delta = 0
+    if (initial_waiting_time_amount > 0) {
+        waiting_delta = initial_waiting_time_amount;
+    }
+    
 
     
-    const int max_iterations = 10;
+    const int max_iterations = 100;
     for (int iter = 0; iter < max_iterations; iter++) {
         std::cout << "[Waiting_time_Solve] Iteration " << iter << "..." << std::endl;
 
@@ -569,7 +587,8 @@ LazySolveResult lazy_solve_with_waiting_time(
             result.solution_found = true;
             return result;
         }
-
+        //increment waiting time
+        waiting_delta++;
         std::cout << "[Waiting_time_Solve] No solution found, trying to apply waiting time:" << waiting_delta << std::endl;
         auto pending_vertex_collisions = lazy_result.latest_discovered_vertex_collisions;
         auto pending_edge_collisions = lazy_result.latest_discovered_edge_collisions;

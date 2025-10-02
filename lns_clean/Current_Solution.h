@@ -124,7 +124,7 @@ struct CurrentSolution {
     // Replaces the conflicting segments in agent paths with collision-free local paths
     void update_with_local_paths(const std::unordered_map<int, std::vector<std::pair<int,int>>>& local_paths,
                                 const std::unordered_map<int, std::pair<int,int>>& local_entry_exit_time) {
-        std::cout << "[LNS] Updating global solution with local paths..." << std::endl;
+        std::cout << "[Current_Solution] Updating global solution with local paths..." << std::endl;
         
         for (const auto& [agent_id, local_path] : local_paths) {
             auto entry_exit = local_entry_exit_time.at(agent_id);
