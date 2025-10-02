@@ -336,10 +336,12 @@ std::pair<std::set<std::pair<int,int>>, std::vector<int>> expand_bucket_zone(
     //extract the conflicts from the original bucket
     std::vector<ConflictMeta> expanded_bucket_conflicts_meta;
     std::vector<int> expanded_bucket_conflict_indices;
+    std::set<int> expanded_bucket_conflict_indices_set;
     for (int idx : original_bucket_indices) {
         if (idx >= 0 && idx < (int)conflict_meta.size()) {
             expanded_bucket_conflicts_meta.push_back(conflict_meta[idx]);
             expanded_bucket_conflict_indices.push_back(idx);
+            expanded_bucket_conflict_indices_set.insert(idx);
         }
     }
     // Create expanded diamond shape with increased offset
@@ -351,7 +353,7 @@ std::pair<std::set<std::pair<int,int>>, std::vector<int>> expand_bucket_zone(
     std::set<std::pair<int,int>> previous_bucket_shape(original_bucket_positions.begin(), original_bucket_positions.end());
     auto new_positions_in_expansion = find_new_positions(expanded_diamond_positions, previous_bucket_shape, map);
 
-    std::vector<int> newly_touched_conflicts;
+    std::set<int> newly_touched_conflicts;
     //check the new positions in the expanded zone for conflicts
     for (const auto& pos : new_positions_in_expansion) {
         auto [r, c] = pos;
@@ -361,17 +363,15 @@ std::pair<std::set<std::pair<int,int>>, std::vector<int>> expand_bucket_zone(
         //if we have conflicts at the position go through them
         for (int conflict_idx : conflict_map[r][c]) { 
             //check if the conflict is already in the expanded bucket
-            bool already_in_expanded_bucket = false;
-            for (int expanded_idx : expanded_bucket_conflict_indices) {
-                if (expanded_idx == conflict_idx) { 
-                    already_in_expanded_bucket = true; 
-                    std::cout << "[LOCAL ZONE] ERROR: Conflict " << conflict_idx << " was already in the expanded bucket" << std::endl;
-                    break; }
+            if (expanded_bucket_conflict_indices_set.count(conflict_idx)) {
+                //this is ok if conflict was edge, but not ok if conflict was vertex
+                if (!conflict_meta[conflict_idx].is_edge) {
+                    std::cout << "[LOCAL ZONE] ERROR: VERTEX Conflict " << conflict_idx << " was already in the expanded bucket" << std::endl;     
+                }
+                continue; 
             }
-            if (!already_in_expanded_bucket) {
-                newly_touched_conflicts.push_back(conflict_idx);
-                std::cout << "[LOCAL ZONE] Found newly touched conflict " << conflict_idx << " at position (" << r << "," << c << ")" << std::endl;
-            }
+            newly_touched_conflicts.insert(conflict_idx);
+            std::cout << "[LOCAL ZONE] Found newly touched conflict " << conflict_idx << " at position (" << r << "," << c << ")" << std::endl;
         }
     }
 
@@ -381,6 +381,7 @@ std::pair<std::set<std::pair<int,int>>, std::vector<int>> expand_bucket_zone(
             if (new_conflict_idx >= 0 && new_conflict_idx < (int)conflict_meta.size()) {
                 expanded_bucket_conflicts_meta.push_back(conflict_meta[new_conflict_idx]);
                 expanded_bucket_conflict_indices.push_back(new_conflict_idx);
+                expanded_bucket_conflict_indices_set.insert(new_conflict_idx);
             }
         }
         //set previous bucket shape to the expanded diamond positions
@@ -396,20 +397,20 @@ std::pair<std::set<std::pair<int,int>>, std::vector<int>> expand_bucket_zone(
                 auto [r, c] = pos;
                 if (conflict_map[r][c].empty()) continue; //check if there are conflicts at the position
                 for (int conflict_idx : conflict_map[r][c]) {
-                    bool already_in_expanded_bucket = false;
-                    for (int existing_idx : expanded_bucket_conflict_indices) {
-                        if (existing_idx == conflict_idx) { 
-                            already_in_expanded_bucket = true; 
-                            std::cout << "[LOCAL ZONE] ERROR: Conflict " << conflict_idx << " was already in the expanded bucket" << std::endl;
-                            break; 
+                    if (expanded_bucket_conflict_indices_set.count(conflict_idx)) {
+                        //this is ok if conflict was edge, but not ok if conflict was vertex
+                        if (!conflict_meta[conflict_idx].is_edge) {
+                            std::cout << "[LOCAL ZONE] ERROR: VERTEX Conflict " << conflict_idx << " was already in the expanded bucket" << std::endl;
                         }
+                        continue; 
                     }
-                    if (!already_in_expanded_bucket) {
-                        expanded_bucket_conflicts_meta.push_back(conflict_meta[conflict_idx]);
-                        expanded_bucket_conflict_indices.push_back(conflict_idx);
-                        newly_touched_conflicts.push_back(conflict_idx);
-                        found_more_conflicts = true;
-                    }
+                    
+                    std::cout << "[LOCAL ZONE] Found newly touched conflict " << conflict_idx << " at position (" << r << "," << c << ")" << std::endl;
+                    expanded_bucket_conflicts_meta.push_back(conflict_meta[conflict_idx]);
+                    expanded_bucket_conflict_indices.push_back(conflict_idx);
+                    expanded_bucket_conflict_indices_set.insert(conflict_idx);
+                    newly_touched_conflicts.insert(conflict_idx);
+                    found_more_conflicts = true;
                 }
             }
             previous_bucket_shape = current_expanded_shape;
