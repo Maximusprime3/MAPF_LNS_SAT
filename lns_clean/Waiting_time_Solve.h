@@ -25,4 +25,5 @@ LazySolveResult lazy_solve_with_waiting_time(
     int start_t,
     int end_t,
     int offset,
-    int initial_waiting_time_amount = 0);
+    int initial_waiting_time_amount = 0,
+    std::mt19937& rng = std::mt19937(std::random_device()()));

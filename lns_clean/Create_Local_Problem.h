@@ -4,6 +4,7 @@
 #include "../mdd/MDD.h"
 
 #include <memory>
+#include <set>
 #include <tuple>
 #include <unordered_map>
 #include <utility>
@@ -59,3 +60,15 @@ LocalZoneState build_local_problem_for_zone(
 std::unordered_map<int, std::shared_ptr<MDD>> build_segment_mdd_map(const LocalZoneState& state);
 std::unordered_map<int, std::pair<int,int>> build_segment_entry_exit_map(const LocalZoneState& state);
 std::unordered_map<int, std::vector<std::pair<int,int>>> build_segment_path_map(const LocalZoneState& state);
+
+
+void refresh_zone_after_extension(
+    LocalZoneState& state,
+    CurrentSolution& current_solution,
+    const std::set<std::pair<int,int>>& local_zone_positions,
+    int previous_zone_end_t,
+    const std::vector<std::vector<char>>& masked_map,
+    const std::vector<std::vector<char>>& grid,
+    const std::vector<std::vector<std::vector<int>>>& conflict_map,
+    const std::vector<ConflictMeta>& conflict_meta,
+    int offset);
