@@ -48,9 +48,9 @@ struct CurrentSolution {
         : max_timestep(std::max(0, max_t)), rows(rows_), cols(cols_), starts(starts_), goals(goals_) {
         // Reserve space for the actual number of agents to avoid rehashing
         if (num_agents <= 0) {
-            std::cerr << "[ERROR] Number of agents must be greater than 0" << std::endl;
+            std::cerr << "[Current_Solution] ERROR: Number of agents must be greater than 0" << std::endl;
             num_agents = starts_.size();
-            std::cout << "[WARNING] Number of agents is less than the number of starts and goals, setting num_agents to " << num_agents << std::endl;
+            std::cout << "[Current_Solution] WARNING: Number of agents is less than the number of starts and goals, setting num_agents to " << num_agents << std::endl;
         }
         agent_paths.reserve(num_agents);
         agent_waiting_time.reserve(num_agents);
@@ -134,7 +134,7 @@ struct CurrentSolution {
             // Get the agent's global path
             auto global_it = agent_paths.find(agent_id);
             if (global_it == agent_paths.end()) {
-                std::cerr << "[ERROR] Agent " << agent_id
+                std::cerr << "[Current_Solution] ERROR: Agent " << agent_id
                           << " missing from global solution when applying local path update" << std::endl;
                 continue;
             }
@@ -146,7 +146,7 @@ struct CurrentSolution {
             
             // Bounds checking: ensure entry_t and exit_t are within global_path bounds
             if (entry_t < 0 || exit_t >= (int)global_path.size() || entry_t > exit_t) {
-                std::cerr << "[ERROR] Agent " << agent_id << " invalid time bounds: entry_t=" << entry_t 
+                std::cerr << "[Current_Solution] ERROR: Agent " << agent_id << " invalid time bounds: entry_t=" << entry_t 
                           << ", exit_t=" << exit_t << ", global_path_size=" << global_path.size() << std::endl;
                 continue;
             }
@@ -158,24 +158,24 @@ struct CurrentSolution {
                     if (target_index >= 0 && target_index < (int)global_path.size()) {
                         global_path[target_index] = local_path[i];
                     } else {
-                        std::cerr << "[ERROR] Agent " << agent_id << " target index " << target_index 
+                        std::cerr << "[Current_Solution] ERROR: Agent " << agent_id << " target index " << target_index 
                                   << " out of bounds (global_path_size=" << global_path.size() << ")" << std::endl;
                         break;
                     }
                 }
-                std::cout << "  Updated agent " << agent_id << " path segment from t=" << entry_t 
+                std::cout << "[Current_Solution] Updated agent " << agent_id << " path segment from t=" << entry_t 
                           << " to t=" << exit_t << " (length=" << segment_length << ")" << std::endl;
             } else {
-                std::cerr << "[ERROR] Agent " << agent_id << " local path length (" << local_path.size() 
+                std::cerr << "[Current_Solution] ERROR: Agent " << agent_id << " local path length (" << local_path.size() 
                           << ") doesn't match expected segment length (" << segment_length << ")" << std::endl;
             }
         }
         
         // Update the path map to reflect the new paths
-        std::cout << "[LNS] Updating path map with new local paths..." << std::endl;
+        std::cout << "[Current_Solution] Updating path map with new local paths..." << std::endl;
         create_path_map();
         
-        std::cout << "[LNS] Successfully updated global solution with local paths!" << std::endl;
+        std::cout << "[Current_Solution] Successfully updated global solution with local paths!" << std::endl;
     }
 
     // Update global solution when waiting time was used (local segment lengthened)
@@ -185,7 +185,7 @@ struct CurrentSolution {
         const std::unordered_map<int, std::vector<std::pair<int,int>>>& local_paths,
         const std::unordered_map<int, std::pair<int,int>>& original_entry_exit_time,
         const std::unordered_map<int, std::pair<int,int>>& new_entry_exit_time) {
-        std::cout << "[LNS] Updating global solution with local paths (waiting time) ..." << std::endl;
+        std::cout << "[Current_Solution] Updating global solution with local paths (waiting time) ..." << std::endl;
 
         for (const auto& [agent_id, local_path] : local_paths) {
             auto it_new = new_entry_exit_time.find(agent_id);
@@ -206,14 +206,14 @@ struct CurrentSolution {
             // Bounds and size checks on global path
             auto global_it = agent_paths.find(agent_id);
             if (global_it == agent_paths.end()) {
-                std::cerr << "[ERROR] Agent " << agent_id
+                std::cerr << "[Current_Solution] ERROR: Agent " << agent_id
                           << " missing from global solution when applying waiting-time update" << std::endl;
                 continue;
             }
             auto& global_path = global_it->second;
             const int N = (int)global_path.size(); // should be makespan as paths are padded to makespan with last position
             if (new_entry_t < 0 || new_entry_t > new_exit_t) {
-                std::cerr << "[ERROR] Agent " << agent_id << " invalid new bounds: [" << new_entry_t
+                std::cerr << "[Current_Solution] ERROR: Agent " << agent_id << " invalid new bounds: [" << new_entry_t
                           << "," << new_exit_t << "], global_path_size=" << N << std::endl;
                 continue;
             }
@@ -221,7 +221,7 @@ struct CurrentSolution {
             // If waiting time increased the path length, shift the suffix first
             if (delta > 0) {
                 if (new_exit_t >= N) {
-                    std::cerr << "[ERROR] Agent " << agent_id << " new_exit_t " << new_exit_t
+                    std::cerr << "[Current_Solution] ERROR: Agent " << agent_id << " new_exit_t " << new_exit_t
                               << " out of bounds (N=" << N << ")" << std::endl;
                     continue;
                 }
@@ -237,7 +237,7 @@ struct CurrentSolution {
             // Now replace the (extended) segment with the new local path
             int segment_length = new_exit_t - new_entry_t + 1;
             if ((int)local_path.size() != segment_length) {
-                std::cerr << "[ERROR] Agent " << agent_id << " local path len (" << local_path.size()
+                std::cerr << "[Current_Solution] ERROR: Agent " << agent_id << " local path len (" << local_path.size()
                           << ") != expected (" << segment_length << ")" << std::endl;
                 continue;
             }
@@ -267,7 +267,7 @@ struct CurrentSolution {
     // Calculate waiting time for each agent based on their shortest path vs makespan
     // This should be called after initial path sampling to track available extra actions
     void calculate_waiting_times(const std::vector<std::pair<int,int>>& goals, int makespan) {
-        std::cout << "[LNS] Calculating waiting times for agents..." << std::endl;
+        std::cout << "[Current_Solution] Calculating waiting times for agents..." << std::endl;
         
         for (const auto& [agent_id, path] : agent_paths) {
             //if (agent_id < 0 || agent_id >= (int)goals.size()) continue;
@@ -288,16 +288,16 @@ struct CurrentSolution {
                 int waiting_time = makespan - goal_reached_time;
                 agent_waiting_time[agent_id] = std::max(0, waiting_time);
                 
-                std::cout << "  Agent " << agent_id << " reaches goal at t=" << goal_reached_time 
+                std::cout << "[Current_Solution] Agent " << agent_id << " reaches goal at t=" << goal_reached_time 
                           << ", waiting time=" << agent_waiting_time[agent_id] << std::endl;
             } else {
                 // Agent never reaches goal (shouldn't happen with proper MDDs)
                 agent_waiting_time[agent_id] = 0;
-                std::cerr << "[WARNING] Agent " << agent_id << " never reaches its goal!" << std::endl;
+                std::cerr << "[Current_Solution] WARNING: Agent " << agent_id << " never reaches its goal!" << std::endl;
             }
         }
         
-        std::cout << "[LNS] Waiting time calculation complete" << std::endl;
+        std::cout << "[Current_Solution] Waiting time calculation complete" << std::endl;
     }
 
     // Ensure every agent path has length max_timestep+1 by padding
@@ -324,7 +324,7 @@ struct CurrentSolution {
         auto it = agent_waiting_time.find(agent_id);
         if (it != agent_waiting_time.end()) {
             it->second = std::max(0, it->second - timesteps_used);
-            std::cout << "  Agent " << agent_id << " used " << timesteps_used 
+            std::cout << "[Current_Solution] Agent " << agent_id << " used " << timesteps_used 
                       << " waiting timesteps, " << it->second << " remaining" << std::endl;
         }
     }
@@ -337,7 +337,7 @@ struct CurrentSolution {
     // Restore waiting times from backup
     void restore_waiting_times(const std::unordered_map<int, int>& backup) {
         agent_waiting_time = backup;
-        std::cout << "[LNS] Restored waiting times from backup" << std::endl;
+        std::cout << "[Current_Solution] Restored waiting times from backup" << std::endl;
     }
 
     //backup current paths
@@ -349,7 +349,7 @@ struct CurrentSolution {
     void restore_paths(const std::unordered_map<int, std::vector<std::pair<int,int>>>& backup) {
         agent_paths = backup;
         create_path_map();
-        std::cout << "[LNS] Restored paths from backup" << std::endl;
+        std::cout << "[Current_Solution] Restored paths from backup" << std::endl;
     }
     
     // Get waiting times for a set of agents, sorted by waiting time (descending)

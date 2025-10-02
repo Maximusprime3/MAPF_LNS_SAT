@@ -119,6 +119,8 @@ std::unordered_map<int, std::vector<std::pair<int,int>>> LNS(
         }
         //calculate waiting times for each agent
         current_solution.calculate_waiting_times(problem.goals, current_max_timesteps);
+        //pad paths to makespan
+        current_solution.pad_paths_to_makespan();   
         //create path map for current solution
         current_solution.create_path_map();
         std::cout << "[LNS] Created current solution with " << current_solution.agent_paths.size() 

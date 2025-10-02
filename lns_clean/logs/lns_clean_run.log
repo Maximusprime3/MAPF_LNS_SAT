@@ -50,25 +50,25 @@
 [SAT] Creating MDDs with shortest paths + waiting time...
 [SAT] Created 10 MDDs with waiting time structure
 [LNS] Built MDDs with waiting time structure for 10 agents at makespan 93
-[LNS] Calculating waiting times for agents...
-  Agent 9 reaches goal at t=13, waiting time=80
-  Agent 8 reaches goal at t=93, waiting time=0
-  Agent 7 reaches goal at t=50, waiting time=43
-  Agent 6 reaches goal at t=55, waiting time=38
-  Agent 5 reaches goal at t=22, waiting time=71
-  Agent 4 reaches goal at t=49, waiting time=44
-  Agent 3 reaches goal at t=58, waiting time=35
-  Agent 2 reaches goal at t=69, waiting time=24
-  Agent 1 reaches goal at t=35, waiting time=58
-  Agent 0 reaches goal at t=15, waiting time=78
-[LNS] Waiting time calculation complete
+[Current_Solution] Calculating waiting times for agents...
+[Current_Solution] Agent 9 reaches goal at t=13, waiting time=80
+[Current_Solution] Agent 8 reaches goal at t=93, waiting time=0
+[Current_Solution] Agent 7 reaches goal at t=50, waiting time=43
+[Current_Solution] Agent 6 reaches goal at t=55, waiting time=38
+[Current_Solution] Agent 5 reaches goal at t=22, waiting time=71
+[Current_Solution] Agent 4 reaches goal at t=49, waiting time=44
+[Current_Solution] Agent 3 reaches goal at t=58, waiting time=35
+[Current_Solution] Agent 2 reaches goal at t=69, waiting time=24
+[Current_Solution] Agent 1 reaches goal at t=35, waiting time=58
+[Current_Solution] Agent 0 reaches goal at t=15, waiting time=78
+[Current_Solution] Waiting time calculation complete
 [LNS] Created current solution with 10 agent paths on a map of size 32x32
 [LNS] Analyzing conflicts...
-[LNS] Current solution: vertex collisions=3, edge collisions=1
+[LNS] Current solution: vertex collisions=6, edge collisions=1
 [LNS] Creating conflict buckets...
-[LOCAL ZONE] Building diamond bucket for conflict 3
-[LOCAL ZONE] Built diamond bucket for conflict 3 with 0 positions, 0 conflicts, 13 - 13 time window
-[LNS] Selected most relevant bucket 3 with time window: 13 - 13, 1 conflicts and 7 positions.
+[LOCAL ZONE] Building diamond bucket for conflict 6
+[LOCAL ZONE] Built diamond bucket for conflict 6 with 0 positions, 0 conflicts, 13 - 13 time window
+[LNS] Selected most relevant bucket 6 with time window: 13 - 13, 1 conflicts and 7 positions.
 [LNS] Solving the best bucket Local Zone...
 [Solve_local_zone] Current local zone size: 7 (1.05105% of all walkable positions)
 [Solve_local_zone] Local zone time window: [12, 14]
@@ -115,7 +115,7 @@ DEBUG: Adding 11 clauses to MiniSAT
 [SAT] Local problem is unsatisfiable after 2 iterations
 [SAT] Failed to find local solution after 1000 iterations
 [SAT] Local problem appears to be unsatisfiable in current zone
-  Agent 3 used 1 waiting timesteps, 34 remaining
+[Current_Solution] Agent 3 used 1 waiting timesteps, 34 remaining
 [LNS] Starting to align MDD to the time window: [12, 15]
 [LNS] MDD levels: 4
 [LNS] Checking if MDD start is already aligned to the time window
@@ -126,10 +126,7 @@ checked if MDD start and end are aligned
 [Waiting_time_Solve] Applied waiting time to segment 3 for agent 3
 [Waiting_time_Solve] Waiting time applied
 [Waiting_time_Solve] Extended Zone end time from 14 to 15
-[Create_Local_Problem] ERROR: Agent 3 has path length 58 instead of makespan 93
-[Create_Local_problem] Agent 3 entered the zone at timestep 15
-[Create_Local_problem] Agent 3 exited the zone at timestep 15
-[Create_Local_Problem] Agent 3already extended to the end of the zone
+[Create_Local_Problem] ERROR: no error just test Agent 3 has makespan path
 [Create_Local_Problem] ERROR: no error just test Agent 8 has makespan path
 [Waiting_time_Solve] Iteration 1...
 [SAT] Start solving CNF: 17 clauses and 9 variables
@@ -156,7 +153,7 @@ DEBUG: Adding 19 clauses to MiniSAT
 [SAT] Local problem is unsatisfiable after 2 iterations
 [SAT] Failed to find local solution after 1000 iterations
 [SAT] Local problem appears to be unsatisfiable in current zone
-  Agent 3 used 1 waiting timesteps, 33 remaining
+[Current_Solution] Agent 3 used 1 waiting timesteps, 33 remaining
 [LNS] Starting to align MDD to the time window: [12, 16]
 [LNS] MDD levels: 5
 [LNS] Checking if MDD start is already aligned to the time window
