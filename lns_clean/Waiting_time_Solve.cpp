@@ -718,7 +718,7 @@ LazySolveResult lazy_solve_with_waiting_time(
 std::pair<std::set<std::pair<int,int>>, bool> choose_agents_to_wait(
     const std::vector<ConflictMeta>& current_conflicts, 
     const CurrentSolution& current_solution,
-    std::unordered_map<std::pair<int,int>, int> original_agent_id) {
+    std::unordered_map<int, int> original_agent_id) {
 
     std::set<std::pair<int,int>> agents_to_use_waiting_time_with_pseudo_agents;
     bool can_use_waiting_time = true;
