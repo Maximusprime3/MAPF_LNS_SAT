@@ -158,7 +158,8 @@
 [Solve_local_zone] Local zone time window: [0, 94]
 [Create_Local_problem] Agent 2 entered the zone at timestep 45
 [Create_Local_problem] Agent 2 exited the zone at timestep 52
-[Create_Local_problem] Agent 2 exited the zone at timestep 51
+The exit time is 51
+[Create_Local_problem] Agent 2 exited the zone at exit time 51
 [Create_Local_Problem] Starting to align MDD to the time window: [0, 94]
 [Create_Local_Problem] MDD levels: 7
 [Create_Local_Problem] Checking if MDD start is already aligned to the time window
@@ -168,7 +169,8 @@ checked if MDD start and end are aligned
 [Create_Local_Problem] Aligned MDD to the time window
 [Create_Local_problem] Agent 8 entered the zone at timestep 56
 [Create_Local_problem] Agent 8 exited the zone at timestep 63
-[Create_Local_problem] Agent 8 exited the zone at timestep 62
+The exit time is 62
+[Create_Local_problem] Agent 8 exited the zone at exit time 62
 [Create_Local_Problem] Starting to align MDD to the time window: [0, 94]
 [Create_Local_Problem] MDD levels: 7
 [Create_Local_Problem] Checking if MDD start is already aligned to the time window
@@ -178,7 +180,8 @@ checked if MDD start and end are aligned
 [Create_Local_Problem] Aligned MDD to the time window
 [Create_Local_problem] Agent 10 entered the zone at timestep 0
 [Create_Local_problem] Agent 10 exited the zone at timestep 3
-[Create_Local_problem] Agent 10 exited the zone at timestep 2
+The exit time is 2
+[Create_Local_problem] Agent 10 exited the zone at exit time 2
 [Create_Local_Problem] Starting to align MDD to the time window: [0, 94]
 [Create_Local_Problem] MDD levels: 3
 [Create_Local_Problem] Checking if MDD start is already aligned to the time window
@@ -189,7 +192,8 @@ checked if MDD start and end are aligned
 [Create_Local_Problem] MDD already aligned to the time window
 [Create_Local_problem] Agent 11 entered the zone at timestep 29
 [Create_Local_problem] Agent 11 exited the zone at timestep 36
-[Create_Local_problem] Agent 11 exited the zone at timestep 35
+The exit time is 35
+[Create_Local_problem] Agent 11 exited the zone at exit time 35
 [Create_Local_Problem] Starting to align MDD to the time window: [0, 94]
 [Create_Local_Problem] MDD levels: 7
 [Create_Local_Problem] Checking if MDD start is already aligned to the time window
@@ -199,7 +203,8 @@ checked if MDD start and end are aligned
 [Create_Local_Problem] Aligned MDD to the time window
 [Create_Local_problem] Agent 15 entered the zone at timestep 0
 [Create_Local_problem] Agent 15 exited the zone at timestep 7
-[Create_Local_problem] Agent 15 exited the zone at timestep 6
+The exit time is 6
+[Create_Local_problem] Agent 15 exited the zone at exit time 6
 [Create_Local_Problem] Starting to align MDD to the time window: [0, 94]
 [Create_Local_Problem] MDD levels: 7
 [Create_Local_Problem] Checking if MDD start is already aligned to the time window
@@ -210,7 +215,8 @@ checked if MDD start and end are aligned
 [Create_Local_Problem] MDD already aligned to the time window
 [Create_Local_problem] Agent 23 entered the zone at timestep 31
 [Create_Local_problem] Agent 23 exited the zone at timestep 38
-[Create_Local_problem] Agent 23 exited the zone at timestep 37
+The exit time is 37
+[Create_Local_problem] Agent 23 exited the zone at exit time 37
 [Create_Local_Problem] Starting to align MDD to the time window: [0, 94]
 [Create_Local_Problem] MDD levels: 7
 [Create_Local_Problem] Checking if MDD start is already aligned to the time window
@@ -220,7 +226,8 @@ checked if MDD start and end are aligned
 [Create_Local_Problem] Aligned MDD to the time window
 [Create_Local_problem] Agent 24 entered the zone at timestep 5
 [Create_Local_problem] Agent 24 exited the zone at timestep 12
-[Create_Local_problem] Agent 24 exited the zone at timestep 11
+The exit time is 11
+[Create_Local_problem] Agent 24 exited the zone at exit time 11
 [Create_Local_Problem] Starting to align MDD to the time window: [0, 94]
 [Create_Local_Problem] MDD levels: 7
 [Create_Local_Problem] Checking if MDD start is already aligned to the time window
@@ -230,7 +237,8 @@ checked if MDD start and end are aligned
 [Create_Local_Problem] Aligned MDD to the time window
 [Create_Local_problem] Agent 27 entered the zone at timestep 2
 [Create_Local_problem] Agent 27 exited the zone at timestep 9
-[Create_Local_problem] Agent 27 exited the zone at timestep 8
+The exit time is 8
+[Create_Local_problem] Agent 27 exited the zone at exit time 8
 [Create_Local_Problem] Starting to align MDD to the time window: [0, 94]
 [Create_Local_Problem] MDD levels: 7
 [Create_Local_Problem] Checking if MDD start is already aligned to the time window
@@ -240,7 +248,8 @@ checked if MDD start and end are aligned
 [Create_Local_Problem] Aligned MDD to the time window
 [Create_Local_problem] Agent 29 entered the zone at timestep 49
 [Create_Local_problem] Agent 29 exited the zone at timestep 56
-[Create_Local_problem] Agent 29 exited the zone at timestep 55
+The exit time is 55
+[Create_Local_problem] Agent 29 exited the zone at exit time 55
 [Create_Local_Problem] Starting to align MDD to the time window: [0, 94]
 [Create_Local_Problem] MDD levels: 7
 [Create_Local_Problem] Checking if MDD start is already aligned to the time window
@@ -250,7 +259,8 @@ checked if MDD start and end are aligned
 [Create_Local_Problem] Aligned MDD to the time window
 [Create_Local_problem] Agent 30 entered the zone at timestep 63
 [Create_Local_problem] Agent 30 exited the zone at timestep 70
-[Create_Local_problem] Agent 30 exited the zone at timestep 69
+The exit time is 69
+[Create_Local_problem] Agent 30 exited the zone at exit time 69
 [Create_Local_Problem] Starting to align MDD to the time window: [0, 94]
 [Create_Local_Problem] MDD levels: 7
 [Create_Local_Problem] Checking if MDD start is already aligned to the time window
@@ -260,7 +270,8 @@ checked if MDD start and end are aligned
 [Create_Local_Problem] Aligned MDD to the time window
 [Create_Local_problem] Agent 34 entered the zone at timestep 33
 [Create_Local_problem] Agent 34 exited the zone at timestep 40
-[Create_Local_problem] Agent 34 exited the zone at timestep 39
+The exit time is 39
+[Create_Local_problem] Agent 34 exited the zone at exit time 39
 [Create_Local_Problem] Starting to align MDD to the time window: [0, 94]
 [Create_Local_Problem] MDD levels: 7
 [Create_Local_Problem] Checking if MDD start is already aligned to the time window
@@ -270,7 +281,8 @@ checked if MDD start and end are aligned
 [Create_Local_Problem] Aligned MDD to the time window
 [Create_Local_problem] Agent 35 entered the zone at timestep 5
 [Create_Local_problem] Agent 35 exited the zone at timestep 12
-[Create_Local_problem] Agent 35 exited the zone at timestep 11
+The exit time is 11
+[Create_Local_problem] Agent 35 exited the zone at exit time 11
 [Create_Local_Problem] Starting to align MDD to the time window: [0, 94]
 [Create_Local_Problem] MDD levels: 7
 [Create_Local_Problem] Checking if MDD start is already aligned to the time window
@@ -280,7 +292,8 @@ checked if MDD start and end are aligned
 [Create_Local_Problem] Aligned MDD to the time window
 [Create_Local_problem] Agent 37 entered the zone at timestep 30
 [Create_Local_problem] Agent 37 exited the zone at timestep 37
-[Create_Local_problem] Agent 37 exited the zone at timestep 36
+The exit time is 36
+[Create_Local_problem] Agent 37 exited the zone at exit time 36
 [Create_Local_Problem] Starting to align MDD to the time window: [0, 94]
 [Create_Local_Problem] MDD levels: 7
 [Create_Local_Problem] Checking if MDD start is already aligned to the time window
@@ -289,7 +302,7 @@ checked if MDD start and end are aligned
 [Create_Local_Problem] Aligning now
 [Create_Local_Problem] Aligned MDD to the time window
 [Create_Local_problem] Agent 41 entered the zone at timestep 90
-[Create_Local_problem] Agent 41 exited the zone at timestep 94
+[Create_Local_problem] Agent 41 exited the zone at exit time 94
 [Create_Local_Problem] Starting to align MDD to the time window: [0, 94]
 [Create_Local_Problem] MDD levels: 5
 [Create_Local_Problem] Checking if MDD start is already aligned to the time window
@@ -298,7 +311,7 @@ checked if MDD start and end are aligned
 [Create_Local_Problem] Aligning now
 [Create_Local_Problem] Aligned MDD to the time window
 [Create_Local_problem] Agent 44 entered the zone at timestep 67
-[Create_Local_problem] Agent 44 exited the zone at timestep 94
+[Create_Local_problem] Agent 44 exited the zone at exit time 94
 [Create_Local_Problem] Starting to align MDD to the time window: [0, 94]
 [Create_Local_Problem] MDD levels: 28
 [Create_Local_Problem] Checking if MDD start is already aligned to the time window
@@ -308,7 +321,8 @@ checked if MDD start and end are aligned
 [Create_Local_Problem] Aligned MDD to the time window
 [Create_Local_problem] Agent 45 entered the zone at timestep 8
 [Create_Local_problem] Agent 45 exited the zone at timestep 15
-[Create_Local_problem] Agent 45 exited the zone at timestep 14
+The exit time is 14
+[Create_Local_problem] Agent 45 exited the zone at exit time 14
 [Create_Local_Problem] Starting to align MDD to the time window: [0, 94]
 [Create_Local_Problem] MDD levels: 7
 [Create_Local_Problem] Checking if MDD start is already aligned to the time window
@@ -318,7 +332,8 @@ checked if MDD start and end are aligned
 [Create_Local_Problem] Aligned MDD to the time window
 [Create_Local_problem] Agent 46 entered the zone at timestep 33
 [Create_Local_problem] Agent 46 exited the zone at timestep 40
-[Create_Local_problem] Agent 46 exited the zone at timestep 39
+The exit time is 39
+[Create_Local_problem] Agent 46 exited the zone at exit time 39
 [Create_Local_Problem] Starting to align MDD to the time window: [0, 94]
 [Create_Local_Problem] MDD levels: 7
 [Create_Local_Problem] Checking if MDD start is already aligned to the time window
@@ -328,7 +343,8 @@ checked if MDD start and end are aligned
 [Create_Local_Problem] Aligned MDD to the time window
 [Create_Local_problem] Agent 47 entered the zone at timestep 32
 [Create_Local_problem] Agent 47 exited the zone at timestep 39
-[Create_Local_problem] Agent 47 exited the zone at timestep 38
+The exit time is 38
+[Create_Local_problem] Agent 47 exited the zone at exit time 38
 [Create_Local_Problem] Starting to align MDD to the time window: [0, 94]
 [Create_Local_Problem] MDD levels: 7
 [Create_Local_Problem] Checking if MDD start is already aligned to the time window
@@ -338,7 +354,8 @@ checked if MDD start and end are aligned
 [Create_Local_Problem] Aligned MDD to the time window
 [Create_Local_problem] Agent 49 entered the zone at timestep 62
 [Create_Local_problem] Agent 49 exited the zone at timestep 69
-[Create_Local_problem] Agent 49 exited the zone at timestep 68
+The exit time is 68
+[Create_Local_problem] Agent 49 exited the zone at exit time 68
 [Create_Local_Problem] Starting to align MDD to the time window: [0, 94]
 [Create_Local_Problem] MDD levels: 7
 [Create_Local_Problem] Checking if MDD start is already aligned to the time window
@@ -589,7 +606,8 @@ DEBUG: Adding 3904 clauses to MiniSAT
 [Solve_local_zone] Local zone time window: [0, 94]
 [Create_Local_problem] Agent 2 entered the zone at timestep 44
 [Create_Local_problem] Agent 2 exited the zone at timestep 53
-[Create_Local_problem] Agent 2 exited the zone at timestep 52
+The exit time is 52
+[Create_Local_problem] Agent 2 exited the zone at exit time 52
 [Create_Local_Problem] Starting to align MDD to the time window: [0, 94]
 [Create_Local_Problem] MDD levels: 9
 [Create_Local_Problem] Checking if MDD start is already aligned to the time window
@@ -599,7 +617,8 @@ checked if MDD start and end are aligned
 [Create_Local_Problem] Aligned MDD to the time window
 [Create_Local_problem] Agent 8 entered the zone at timestep 55
 [Create_Local_problem] Agent 8 exited the zone at timestep 64
-[Create_Local_problem] Agent 8 exited the zone at timestep 63
+The exit time is 63
+[Create_Local_problem] Agent 8 exited the zone at exit time 63
 [Create_Local_Problem] Starting to align MDD to the time window: [0, 94]
 [Create_Local_Problem] MDD levels: 9
 [Create_Local_Problem] Checking if MDD start is already aligned to the time window
@@ -609,7 +628,8 @@ checked if MDD start and end are aligned
 [Create_Local_Problem] Aligned MDD to the time window
 [Create_Local_problem] Agent 10 entered the zone at timestep 0
 [Create_Local_problem] Agent 10 exited the zone at timestep 4
-[Create_Local_problem] Agent 10 exited the zone at timestep 3
+The exit time is 3
+[Create_Local_problem] Agent 10 exited the zone at exit time 3
 [Create_Local_Problem] Starting to align MDD to the time window: [0, 94]
 [Create_Local_Problem] MDD levels: 4
 [Create_Local_Problem] Checking if MDD start is already aligned to the time window
@@ -620,7 +640,8 @@ checked if MDD start and end are aligned
 [Create_Local_Problem] MDD already aligned to the time window
 [Create_Local_problem] Agent 11 entered the zone at timestep 28
 [Create_Local_problem] Agent 11 exited the zone at timestep 37
-[Create_Local_problem] Agent 11 exited the zone at timestep 36
+The exit time is 36
+[Create_Local_problem] Agent 11 exited the zone at exit time 36
 [Create_Local_Problem] Starting to align MDD to the time window: [0, 94]
 [Create_Local_Problem] MDD levels: 9
 [Create_Local_Problem] Checking if MDD start is already aligned to the time window
@@ -630,7 +651,8 @@ checked if MDD start and end are aligned
 [Create_Local_Problem] Aligned MDD to the time window
 [Create_Local_problem] Agent 15 entered the zone at timestep 0
 [Create_Local_problem] Agent 15 exited the zone at timestep 8
-[Create_Local_problem] Agent 15 exited the zone at timestep 7
+The exit time is 7
+[Create_Local_problem] Agent 15 exited the zone at exit time 7
 [Create_Local_Problem] Starting to align MDD to the time window: [0, 94]
 [Create_Local_Problem] MDD levels: 8
 [Create_Local_Problem] Checking if MDD start is already aligned to the time window
@@ -641,7 +663,8 @@ checked if MDD start and end are aligned
 [Create_Local_Problem] MDD already aligned to the time window
 [Create_Local_problem] Agent 23 entered the zone at timestep 30
 [Create_Local_problem] Agent 23 exited the zone at timestep 39
-[Create_Local_problem] Agent 23 exited the zone at timestep 38
+The exit time is 38
+[Create_Local_problem] Agent 23 exited the zone at exit time 38
 [Create_Local_Problem] Starting to align MDD to the time window: [0, 94]
 [Create_Local_Problem] MDD levels: 9
 [Create_Local_Problem] Checking if MDD start is already aligned to the time window
@@ -651,7 +674,8 @@ checked if MDD start and end are aligned
 [Create_Local_Problem] Aligned MDD to the time window
 [Create_Local_problem] Agent 24 entered the zone at timestep 4
 [Create_Local_problem] Agent 24 exited the zone at timestep 13
-[Create_Local_problem] Agent 24 exited the zone at timestep 12
+The exit time is 12
+[Create_Local_problem] Agent 24 exited the zone at exit time 12
 [Create_Local_Problem] Starting to align MDD to the time window: [0, 94]
 [Create_Local_Problem] MDD levels: 9
 [Create_Local_Problem] Checking if MDD start is already aligned to the time window
@@ -661,7 +685,8 @@ checked if MDD start and end are aligned
 [Create_Local_Problem] Aligned MDD to the time window
 [Create_Local_problem] Agent 27 entered the zone at timestep 1
 [Create_Local_problem] Agent 27 exited the zone at timestep 10
-[Create_Local_problem] Agent 27 exited the zone at timestep 9
+The exit time is 9
+[Create_Local_problem] Agent 27 exited the zone at exit time 9
 [Create_Local_Problem] Starting to align MDD to the time window: [0, 94]
 [Create_Local_Problem] MDD levels: 9
 [Create_Local_Problem] Checking if MDD start is already aligned to the time window
@@ -671,7 +696,8 @@ checked if MDD start and end are aligned
 [Create_Local_Problem] Aligned MDD to the time window
 [Create_Local_problem] Agent 29 entered the zone at timestep 48
 [Create_Local_problem] Agent 29 exited the zone at timestep 57
-[Create_Local_problem] Agent 29 exited the zone at timestep 56
+The exit time is 56
+[Create_Local_problem] Agent 29 exited the zone at exit time 56
 [Create_Local_Problem] Starting to align MDD to the time window: [0, 94]
 [Create_Local_Problem] MDD levels: 9
 [Create_Local_Problem] Checking if MDD start is already aligned to the time window
@@ -681,7 +707,8 @@ checked if MDD start and end are aligned
 [Create_Local_Problem] Aligned MDD to the time window
 [Create_Local_problem] Agent 30 entered the zone at timestep 62
 [Create_Local_problem] Agent 30 exited the zone at timestep 71
-[Create_Local_problem] Agent 30 exited the zone at timestep 70
+The exit time is 70
+[Create_Local_problem] Agent 30 exited the zone at exit time 70
 [Create_Local_Problem] Starting to align MDD to the time window: [0, 94]
 [Create_Local_Problem] MDD levels: 9
 [Create_Local_Problem] Checking if MDD start is already aligned to the time window
@@ -691,7 +718,8 @@ checked if MDD start and end are aligned
 [Create_Local_Problem] Aligned MDD to the time window
 [Create_Local_problem] Agent 34 entered the zone at timestep 32
 [Create_Local_problem] Agent 34 exited the zone at timestep 41
-[Create_Local_problem] Agent 34 exited the zone at timestep 40
+The exit time is 40
+[Create_Local_problem] Agent 34 exited the zone at exit time 40
 [Create_Local_Problem] Starting to align MDD to the time window: [0, 94]
 [Create_Local_Problem] MDD levels: 9
 [Create_Local_Problem] Checking if MDD start is already aligned to the time window
@@ -701,7 +729,8 @@ checked if MDD start and end are aligned
 [Create_Local_Problem] Aligned MDD to the time window
 [Create_Local_problem] Agent 35 entered the zone at timestep 4
 [Create_Local_problem] Agent 35 exited the zone at timestep 13
-[Create_Local_problem] Agent 35 exited the zone at timestep 12
+The exit time is 12
+[Create_Local_problem] Agent 35 exited the zone at exit time 12
 [Create_Local_Problem] Starting to align MDD to the time window: [0, 94]
 [Create_Local_Problem] MDD levels: 9
 [Create_Local_Problem] Checking if MDD start is already aligned to the time window
@@ -711,7 +740,8 @@ checked if MDD start and end are aligned
 [Create_Local_Problem] Aligned MDD to the time window
 [Create_Local_problem] Agent 37 entered the zone at timestep 29
 [Create_Local_problem] Agent 37 exited the zone at timestep 38
-[Create_Local_problem] Agent 37 exited the zone at timestep 37
+The exit time is 37
+[Create_Local_problem] Agent 37 exited the zone at exit time 37
 [Create_Local_Problem] Starting to align MDD to the time window: [0, 94]
 [Create_Local_Problem] MDD levels: 9
 [Create_Local_Problem] Checking if MDD start is already aligned to the time window
@@ -720,7 +750,7 @@ checked if MDD start and end are aligned
 [Create_Local_Problem] Aligning now
 [Create_Local_Problem] Aligned MDD to the time window
 [Create_Local_problem] Agent 41 entered the zone at timestep 89
-[Create_Local_problem] Agent 41 exited the zone at timestep 94
+[Create_Local_problem] Agent 41 exited the zone at exit time 94
 [Create_Local_Problem] Starting to align MDD to the time window: [0, 94]
 [Create_Local_Problem] MDD levels: 6
 [Create_Local_Problem] Checking if MDD start is already aligned to the time window
@@ -729,7 +759,7 @@ checked if MDD start and end are aligned
 [Create_Local_Problem] Aligning now
 [Create_Local_Problem] Aligned MDD to the time window
 [Create_Local_problem] Agent 44 entered the zone at timestep 66
-[Create_Local_problem] Agent 44 exited the zone at timestep 94
+[Create_Local_problem] Agent 44 exited the zone at exit time 94
 [Create_Local_Problem] Starting to align MDD to the time window: [0, 94]
 [Create_Local_Problem] MDD levels: 29
 [Create_Local_Problem] Checking if MDD start is already aligned to the time window
@@ -739,7 +769,8 @@ checked if MDD start and end are aligned
 [Create_Local_Problem] Aligned MDD to the time window
 [Create_Local_problem] Agent 45 entered the zone at timestep 7
 [Create_Local_problem] Agent 45 exited the zone at timestep 16
-[Create_Local_problem] Agent 45 exited the zone at timestep 15
+The exit time is 15
+[Create_Local_problem] Agent 45 exited the zone at exit time 15
 [Create_Local_Problem] Starting to align MDD to the time window: [0, 94]
 [Create_Local_Problem] MDD levels: 9
 [Create_Local_Problem] Checking if MDD start is already aligned to the time window
@@ -749,7 +780,8 @@ checked if MDD start and end are aligned
 [Create_Local_Problem] Aligned MDD to the time window
 [Create_Local_problem] Agent 46 entered the zone at timestep 32
 [Create_Local_problem] Agent 46 exited the zone at timestep 41
-[Create_Local_problem] Agent 46 exited the zone at timestep 40
+The exit time is 40
+[Create_Local_problem] Agent 46 exited the zone at exit time 40
 [Create_Local_Problem] Starting to align MDD to the time window: [0, 94]
 [Create_Local_Problem] MDD levels: 9
 [Create_Local_Problem] Checking if MDD start is already aligned to the time window
@@ -759,7 +791,8 @@ checked if MDD start and end are aligned
 [Create_Local_Problem] Aligned MDD to the time window
 [Create_Local_problem] Agent 47 entered the zone at timestep 31
 [Create_Local_problem] Agent 47 exited the zone at timestep 40
-[Create_Local_problem] Agent 47 exited the zone at timestep 39
+The exit time is 39
+[Create_Local_problem] Agent 47 exited the zone at exit time 39
 [Create_Local_Problem] Starting to align MDD to the time window: [0, 94]
 [Create_Local_Problem] MDD levels: 9
 [Create_Local_Problem] Checking if MDD start is already aligned to the time window
@@ -769,7 +802,8 @@ checked if MDD start and end are aligned
 [Create_Local_Problem] Aligned MDD to the time window
 [Create_Local_problem] Agent 48 entered the zone at timestep 0
 [Create_Local_problem] Agent 48 exited the zone at timestep 1
-[Create_Local_problem] Agent 48 exited the zone at timestep 0
+The exit time is 0
+[Create_Local_problem] Agent 48 exited the zone at exit time 0
 [Create_Local_Problem] Starting to align MDD to the time window: [0, 94]
 [Create_Local_Problem] MDD levels: 1
 [Create_Local_Problem] Checking if MDD start is already aligned to the time window
@@ -780,7 +814,8 @@ checked if MDD start and end are aligned
 [Create_Local_Problem] MDD already aligned to the time window
 [Create_Local_problem] Agent 49 entered the zone at timestep 61
 [Create_Local_problem] Agent 49 exited the zone at timestep 70
-[Create_Local_problem] Agent 49 exited the zone at timestep 69
+The exit time is 69
+[Create_Local_problem] Agent 49 exited the zone at exit time 69
 [Create_Local_Problem] Starting to align MDD to the time window: [0, 94]
 [Create_Local_Problem] MDD levels: 9
 [Create_Local_Problem] Checking if MDD start is already aligned to the time window
@@ -1106,7 +1141,8 @@ Input assignment size: 800
 [Solve_local_zone] Local zone time window: [0, 75]
 [Create_Local_problem] Agent 2 entered the zone at timestep 54
 [Create_Local_problem] Agent 2 exited the zone at timestep 57
-[Create_Local_problem] Agent 2 exited the zone at timestep 56
+The exit time is 56
+[Create_Local_problem] Agent 2 exited the zone at exit time 56
 [Create_Local_Problem] Starting to align MDD to the time window: [0, 75]
 [Create_Local_Problem] MDD levels: 3
 [Create_Local_Problem] Checking if MDD start is already aligned to the time window
@@ -1116,7 +1152,8 @@ checked if MDD start and end are aligned
 [Create_Local_Problem] Aligned MDD to the time window
 [Create_Local_problem] Agent 8 entered the zone at timestep 65
 [Create_Local_problem] Agent 8 exited the zone at timestep 68
-[Create_Local_problem] Agent 8 exited the zone at timestep 67
+The exit time is 67
+[Create_Local_problem] Agent 8 exited the zone at exit time 67
 [Create_Local_Problem] Starting to align MDD to the time window: [0, 75]
 [Create_Local_Problem] MDD levels: 3
 [Create_Local_Problem] Checking if MDD start is already aligned to the time window
@@ -1126,7 +1163,8 @@ checked if MDD start and end are aligned
 [Create_Local_Problem] Aligned MDD to the time window
 [Create_Local_problem] Agent 11 entered the zone at timestep 24
 [Create_Local_problem] Agent 11 exited the zone at timestep 27
-[Create_Local_problem] Agent 11 exited the zone at timestep 26
+The exit time is 26
+[Create_Local_problem] Agent 11 exited the zone at exit time 26
 [Create_Local_Problem] Starting to align MDD to the time window: [0, 75]
 [Create_Local_Problem] MDD levels: 3
 [Create_Local_Problem] Checking if MDD start is already aligned to the time window
@@ -1136,7 +1174,8 @@ checked if MDD start and end are aligned
 [Create_Local_Problem] Aligned MDD to the time window
 [Create_Local_problem] Agent 23 entered the zone at timestep 46
 [Create_Local_problem] Agent 23 exited the zone at timestep 49
-[Create_Local_problem] Agent 23 exited the zone at timestep 48
+The exit time is 48
+[Create_Local_problem] Agent 23 exited the zone at exit time 48
 [Create_Local_Problem] Starting to align MDD to the time window: [0, 75]
 [Create_Local_Problem] MDD levels: 3
 [Create_Local_Problem] Checking if MDD start is already aligned to the time window
@@ -1146,7 +1185,8 @@ checked if MDD start and end are aligned
 [Create_Local_Problem] Aligned MDD to the time window
 [Create_Local_problem] Agent 24 entered the zone at timestep 0
 [Create_Local_problem] Agent 24 exited the zone at timestep 3
-[Create_Local_problem] Agent 24 exited the zone at timestep 2
+The exit time is 2
+[Create_Local_problem] Agent 24 exited the zone at exit time 2
 [Create_Local_Problem] Starting to align MDD to the time window: [0, 75]
 [Create_Local_Problem] MDD levels: 3
 [Create_Local_Problem] Checking if MDD start is already aligned to the time window
@@ -1156,7 +1196,7 @@ checked if MDD start and end are aligned
 checked if MDD start and end are aligned
 [Create_Local_Problem] MDD already aligned to the time window
 [Create_Local_problem] Agent 27 entered the zone at timestep 12
-[Create_Local_problem] Agent 27 exited the zone at timestep 75
+[Create_Local_problem] Agent 27 exited the zone at exit time 75
 [Create_Local_Problem] Starting to align MDD to the time window: [0, 75]
 [Create_Local_Problem] MDD levels: 64
 [Create_Local_Problem] Checking if MDD start is already aligned to the time window
@@ -1166,7 +1206,8 @@ checked if MDD start and end are aligned
 [Create_Local_Problem] Aligned MDD to the time window
 [Create_Local_problem] Agent 29 entered the zone at timestep 58
 [Create_Local_problem] Agent 29 exited the zone at timestep 61
-[Create_Local_problem] Agent 29 exited the zone at timestep 60
+The exit time is 60
+[Create_Local_problem] Agent 29 exited the zone at exit time 60
 [Create_Local_Problem] Starting to align MDD to the time window: [0, 75]
 [Create_Local_Problem] MDD levels: 3
 [Create_Local_Problem] Checking if MDD start is already aligned to the time window
@@ -1175,7 +1216,7 @@ checked if MDD start and end are aligned
 [Create_Local_Problem] Aligning now
 [Create_Local_Problem] Aligned MDD to the time window
 [Create_Local_problem] Agent 30 entered the zone at timestep 73
-[Create_Local_problem] Agent 30 exited the zone at timestep 75
+[Create_Local_problem] Agent 30 exited the zone at exit time 75
 [Create_Local_Problem] Starting to align MDD to the time window: [0, 75]
 [Create_Local_Problem] MDD levels: 3
 [Create_Local_Problem] Checking if MDD start is already aligned to the time window
@@ -1185,7 +1226,8 @@ checked if MDD start and end are aligned
 [Create_Local_Problem] Aligned MDD to the time window
 [Create_Local_problem] Agent 34 entered the zone at timestep 48
 [Create_Local_problem] Agent 34 exited the zone at timestep 51
-[Create_Local_problem] Agent 34 exited the zone at timestep 50
+The exit time is 50
+[Create_Local_problem] Agent 34 exited the zone at exit time 50
 [Create_Local_Problem] Starting to align MDD to the time window: [0, 75]
 [Create_Local_Problem] MDD levels: 3
 [Create_Local_Problem] Checking if MDD start is already aligned to the time window
@@ -1195,7 +1237,8 @@ checked if MDD start and end are aligned
 [Create_Local_Problem] Aligned MDD to the time window
 [Create_Local_problem] Agent 35 entered the zone at timestep 14
 [Create_Local_problem] Agent 35 exited the zone at timestep 17
-[Create_Local_problem] Agent 35 exited the zone at timestep 16
+The exit time is 16
+[Create_Local_problem] Agent 35 exited the zone at exit time 16
 [Create_Local_Problem] Starting to align MDD to the time window: [0, 75]
 [Create_Local_Problem] MDD levels: 3
 [Create_Local_Problem] Checking if MDD start is already aligned to the time window
@@ -1205,7 +1248,8 @@ checked if MDD start and end are aligned
 [Create_Local_Problem] Aligned MDD to the time window
 [Create_Local_problem] Agent 36 entered the zone at timestep 0
 [Create_Local_problem] Agent 36 exited the zone at timestep 3
-[Create_Local_problem] Agent 36 exited the zone at timestep 2
+The exit time is 2
+[Create_Local_problem] Agent 36 exited the zone at exit time 2
 [Create_Local_Problem] Starting to align MDD to the time window: [0, 75]
 [Create_Local_Problem] MDD levels: 3
 [Create_Local_Problem] Checking if MDD start is already aligned to the time window
@@ -1216,7 +1260,8 @@ checked if MDD start and end are aligned
 [Create_Local_Problem] MDD already aligned to the time window
 [Create_Local_problem] Agent 37 entered the zone at timestep 45
 [Create_Local_problem] Agent 37 exited the zone at timestep 48
-[Create_Local_problem] Agent 37 exited the zone at timestep 47
+The exit time is 47
+[Create_Local_problem] Agent 37 exited the zone at exit time 47
 [Create_Local_Problem] Starting to align MDD to the time window: [0, 75]
 [Create_Local_Problem] MDD levels: 3
 [Create_Local_Problem] Checking if MDD start is already aligned to the time window
@@ -1226,7 +1271,8 @@ checked if MDD start and end are aligned
 [Create_Local_Problem] Aligned MDD to the time window
 [Create_Local_problem] Agent 45 entered the zone at timestep 18
 [Create_Local_problem] Agent 45 exited the zone at timestep 21
-[Create_Local_problem] Agent 45 exited the zone at timestep 20
+The exit time is 20
+[Create_Local_problem] Agent 45 exited the zone at exit time 20
 [Create_Local_Problem] Starting to align MDD to the time window: [0, 75]
 [Create_Local_Problem] MDD levels: 3
 [Create_Local_Problem] Checking if MDD start is already aligned to the time window
@@ -1236,7 +1282,8 @@ checked if MDD start and end are aligned
 [Create_Local_Problem] Aligned MDD to the time window
 [Create_Local_problem] Agent 46 entered the zone at timestep 28
 [Create_Local_problem] Agent 46 exited the zone at timestep 31
-[Create_Local_problem] Agent 46 exited the zone at timestep 30
+The exit time is 30
+[Create_Local_problem] Agent 46 exited the zone at exit time 30
 [Create_Local_Problem] Starting to align MDD to the time window: [0, 75]
 [Create_Local_Problem] MDD levels: 3
 [Create_Local_Problem] Checking if MDD start is already aligned to the time window
@@ -1246,7 +1293,8 @@ checked if MDD start and end are aligned
 [Create_Local_Problem] Aligned MDD to the time window
 [Create_Local_problem] Agent 47 entered the zone at timestep 47
 [Create_Local_problem] Agent 47 exited the zone at timestep 50
-[Create_Local_problem] Agent 47 exited the zone at timestep 49
+The exit time is 49
+[Create_Local_problem] Agent 47 exited the zone at exit time 49
 [Create_Local_Problem] Starting to align MDD to the time window: [0, 75]
 [Create_Local_Problem] MDD levels: 3
 [Create_Local_Problem] Checking if MDD start is already aligned to the time window
@@ -1256,7 +1304,8 @@ checked if MDD start and end are aligned
 [Create_Local_Problem] Aligned MDD to the time window
 [Create_Local_problem] Agent 49 entered the zone at timestep 71
 [Create_Local_problem] Agent 49 exited the zone at timestep 74
-[Create_Local_problem] Agent 49 exited the zone at timestep 73
+The exit time is 73
+[Create_Local_problem] Agent 49 exited the zone at exit time 73
 [Create_Local_Problem] Starting to align MDD to the time window: [0, 75]
 [Create_Local_Problem] MDD levels: 3
 [Create_Local_Problem] Checking if MDD start is already aligned to the time window
@@ -1390,7 +1439,8 @@ Input assignment size: 544
 [Solve_local_zone] Local zone time window: [0, 67]
 [Create_Local_problem] Agent 2 entered the zone at timestep 37
 [Create_Local_problem] Agent 2 exited the zone at timestep 41
-[Create_Local_problem] Agent 2 exited the zone at timestep 40
+The exit time is 40
+[Create_Local_problem] Agent 2 exited the zone at exit time 40
 [Create_Local_Problem] Starting to align MDD to the time window: [0, 67]
 [Create_Local_Problem] MDD levels: 4
 [Create_Local_Problem] Checking if MDD start is already aligned to the time window
@@ -1400,7 +1450,8 @@ checked if MDD start and end are aligned
 [Create_Local_Problem] Aligned MDD to the time window
 [Create_Local_problem] Agent 6 entered the zone at timestep 0
 [Create_Local_problem] Agent 6 exited the zone at timestep 3
-[Create_Local_problem] Agent 6 exited the zone at timestep 2
+The exit time is 2
+[Create_Local_problem] Agent 6 exited the zone at exit time 2
 [Create_Local_Problem] Starting to align MDD to the time window: [0, 67]
 [Create_Local_Problem] MDD levels: 3
 [Create_Local_Problem] Checking if MDD start is already aligned to the time window
@@ -1411,7 +1462,8 @@ checked if MDD start and end are aligned
 [Create_Local_Problem] MDD already aligned to the time window
 [Create_Local_problem] Agent 7 entered the zone at timestep 46
 [Create_Local_problem] Agent 7 exited the zone at timestep 50
-[Create_Local_problem] Agent 7 exited the zone at timestep 49
+The exit time is 49
+[Create_Local_problem] Agent 7 exited the zone at exit time 49
 [Create_Local_Problem] Starting to align MDD to the time window: [0, 67]
 [Create_Local_Problem] MDD levels: 4
 [Create_Local_Problem] Checking if MDD start is already aligned to the time window
@@ -1421,7 +1473,8 @@ checked if MDD start and end are aligned
 [Create_Local_Problem] Aligned MDD to the time window
 [Create_Local_problem] Agent 8 entered the zone at timestep 48
 [Create_Local_problem] Agent 8 exited the zone at timestep 52
-[Create_Local_problem] Agent 8 exited the zone at timestep 51
+The exit time is 51
+[Create_Local_problem] Agent 8 exited the zone at exit time 51
 [Create_Local_Problem] Starting to align MDD to the time window: [0, 67]
 [Create_Local_Problem] MDD levels: 4
 [Create_Local_Problem] Checking if MDD start is already aligned to the time window
@@ -1431,7 +1484,8 @@ checked if MDD start and end are aligned
 [Create_Local_Problem] Aligned MDD to the time window
 [Create_Local_problem] Agent 11 entered the zone at timestep 40
 [Create_Local_problem] Agent 11 exited the zone at timestep 44
-[Create_Local_problem] Agent 11 exited the zone at timestep 43
+The exit time is 43
+[Create_Local_problem] Agent 11 exited the zone at exit time 43
 [Create_Local_Problem] Starting to align MDD to the time window: [0, 67]
 [Create_Local_Problem] MDD levels: 4
 [Create_Local_Problem] Checking if MDD start is already aligned to the time window
@@ -1441,7 +1495,8 @@ checked if MDD start and end are aligned
 [Create_Local_Problem] Aligned MDD to the time window
 [Create_Local_problem] Agent 13 entered the zone at timestep 51
 [Create_Local_problem] Agent 13 exited the zone at timestep 55
-[Create_Local_problem] Agent 13 exited the zone at timestep 54
+The exit time is 54
+[Create_Local_problem] Agent 13 exited the zone at exit time 54
 [Create_Local_Problem] Starting to align MDD to the time window: [0, 67]
 [Create_Local_Problem] MDD levels: 4
 [Create_Local_Problem] Checking if MDD start is already aligned to the time window
@@ -1451,7 +1506,8 @@ checked if MDD start and end are aligned
 [Create_Local_Problem] Aligned MDD to the time window
 [Create_Local_problem] Agent 15 entered the zone at timestep 11
 [Create_Local_problem] Agent 15 exited the zone at timestep 15
-[Create_Local_problem] Agent 15 exited the zone at timestep 14
+The exit time is 14
+[Create_Local_problem] Agent 15 exited the zone at exit time 14
 [Create_Local_Problem] Starting to align MDD to the time window: [0, 67]
 [Create_Local_Problem] MDD levels: 4
 [Create_Local_Problem] Checking if MDD start is already aligned to the time window
@@ -1460,7 +1516,7 @@ checked if MDD start and end are aligned
 [Create_Local_Problem] Aligning now
 [Create_Local_Problem] Aligned MDD to the time window
 [Create_Local_problem] Agent 18 entered the zone at timestep 57
-[Create_Local_problem] Agent 18 exited the zone at timestep 67
+[Create_Local_problem] Agent 18 exited the zone at exit time 67
 [Create_Local_Problem] Starting to align MDD to the time window: [0, 67]
 [Create_Local_Problem] MDD levels: 11
 [Create_Local_Problem] Checking if MDD start is already aligned to the time window
@@ -1470,7 +1526,8 @@ checked if MDD start and end are aligned
 [Create_Local_Problem] Aligned MDD to the time window
 [Create_Local_problem] Agent 23 entered the zone at timestep 23
 [Create_Local_problem] Agent 23 exited the zone at timestep 27
-[Create_Local_problem] Agent 23 exited the zone at timestep 26
+The exit time is 26
+[Create_Local_problem] Agent 23 exited the zone at exit time 26
 [Create_Local_Problem] Starting to align MDD to the time window: [0, 67]
 [Create_Local_Problem] MDD levels: 4
 [Create_Local_Problem] Checking if MDD start is already aligned to the time window
@@ -1480,7 +1537,8 @@ checked if MDD start and end are aligned
 [Create_Local_Problem] Aligned MDD to the time window
 [Create_Local_problem] Agent 24 entered the zone at timestep 16
 [Create_Local_problem] Agent 24 exited the zone at timestep 20
-[Create_Local_problem] Agent 24 exited the zone at timestep 19
+The exit time is 19
+[Create_Local_problem] Agent 24 exited the zone at exit time 19
 [Create_Local_Problem] Starting to align MDD to the time window: [0, 67]
 [Create_Local_Problem] MDD levels: 4
 [Create_Local_Problem] Checking if MDD start is already aligned to the time window
@@ -1490,7 +1548,8 @@ checked if MDD start and end are aligned
 [Create_Local_Problem] Aligned MDD to the time window
 [Create_Local_problem] Agent 29 entered the zone at timestep 41
 [Create_Local_problem] Agent 29 exited the zone at timestep 45
-[Create_Local_problem] Agent 29 exited the zone at timestep 44
+The exit time is 44
+[Create_Local_problem] Agent 29 exited the zone at exit time 44
 [Create_Local_Problem] Starting to align MDD to the time window: [0, 67]
 [Create_Local_Problem] MDD levels: 4
 [Create_Local_Problem] Checking if MDD start is already aligned to the time window
@@ -1500,7 +1559,8 @@ checked if MDD start and end are aligned
 [Create_Local_Problem] Aligned MDD to the time window
 [Create_Local_problem] Agent 30 entered the zone at timestep 55
 [Create_Local_problem] Agent 30 exited the zone at timestep 59
-[Create_Local_problem] Agent 30 exited the zone at timestep 58
+The exit time is 58
+[Create_Local_problem] Agent 30 exited the zone at exit time 58
 [Create_Local_Problem] Starting to align MDD to the time window: [0, 67]
 [Create_Local_Problem] MDD levels: 4
 [Create_Local_Problem] Checking if MDD start is already aligned to the time window
@@ -1510,7 +1570,8 @@ checked if MDD start and end are aligned
 [Create_Local_Problem] Aligned MDD to the time window
 [Create_Local_problem] Agent 34 entered the zone at timestep 25
 [Create_Local_problem] Agent 34 exited the zone at timestep 29
-[Create_Local_problem] Agent 34 exited the zone at timestep 28
+The exit time is 28
+[Create_Local_problem] Agent 34 exited the zone at exit time 28
 [Create_Local_Problem] Starting to align MDD to the time window: [0, 67]
 [Create_Local_Problem] MDD levels: 4
 [Create_Local_Problem] Checking if MDD start is already aligned to the time window
@@ -1520,7 +1581,8 @@ checked if MDD start and end are aligned
 [Create_Local_Problem] Aligned MDD to the time window
 [Create_Local_problem] Agent 35 entered the zone at timestep 0
 [Create_Local_problem] Agent 35 exited the zone at timestep 1
-[Create_Local_problem] Agent 35 exited the zone at timestep 0
+The exit time is 0
+[Create_Local_problem] Agent 35 exited the zone at exit time 0
 [Create_Local_Problem] Starting to align MDD to the time window: [0, 67]
 [Create_Local_Problem] MDD levels: 1
 [Create_Local_Problem] Checking if MDD start is already aligned to the time window
@@ -1531,7 +1593,8 @@ checked if MDD start and end are aligned
 [Create_Local_Problem] MDD already aligned to the time window
 [Create_Local_problem] Agent 37 entered the zone at timestep 22
 [Create_Local_problem] Agent 37 exited the zone at timestep 26
-[Create_Local_problem] Agent 37 exited the zone at timestep 25
+The exit time is 25
+[Create_Local_problem] Agent 37 exited the zone at exit time 25
 [Create_Local_Problem] Starting to align MDD to the time window: [0, 67]
 [Create_Local_Problem] MDD levels: 4
 [Create_Local_Problem] Checking if MDD start is already aligned to the time window
@@ -1540,7 +1603,7 @@ checked if MDD start and end are aligned
 [Create_Local_Problem] Aligning now
 [Create_Local_Problem] Aligned MDD to the time window
 [Create_Local_problem] Agent 43 entered the zone at timestep 64
-[Create_Local_problem] Agent 43 exited the zone at timestep 67
+[Create_Local_problem] Agent 43 exited the zone at exit time 67
 [Create_Local_Problem] Starting to align MDD to the time window: [0, 67]
 [Create_Local_Problem] MDD levels: 4
 [Create_Local_Problem] Checking if MDD start is already aligned to the time window
@@ -1550,7 +1613,8 @@ checked if MDD start and end are aligned
 [Create_Local_Problem] Aligned MDD to the time window
 [Create_Local_problem] Agent 44 entered the zone at timestep 59
 [Create_Local_problem] Agent 44 exited the zone at timestep 63
-[Create_Local_problem] Agent 44 exited the zone at timestep 62
+The exit time is 62
+[Create_Local_problem] Agent 44 exited the zone at exit time 62
 [Create_Local_Problem] Starting to align MDD to the time window: [0, 67]
 [Create_Local_Problem] MDD levels: 4
 [Create_Local_Problem] Checking if MDD start is already aligned to the time window
@@ -1560,7 +1624,8 @@ checked if MDD start and end are aligned
 [Create_Local_Problem] Aligned MDD to the time window
 [Create_Local_problem] Agent 45 entered the zone at timestep 0
 [Create_Local_problem] Agent 45 exited the zone at timestep 4
-[Create_Local_problem] Agent 45 exited the zone at timestep 3
+The exit time is 3
+[Create_Local_problem] Agent 45 exited the zone at exit time 3
 [Create_Local_Problem] Starting to align MDD to the time window: [0, 67]
 [Create_Local_Problem] MDD levels: 4
 [Create_Local_Problem] Checking if MDD start is already aligned to the time window
@@ -1571,7 +1636,8 @@ checked if MDD start and end are aligned
 [Create_Local_Problem] MDD already aligned to the time window
 [Create_Local_problem] Agent 46 entered the zone at timestep 44
 [Create_Local_problem] Agent 46 exited the zone at timestep 48
-[Create_Local_problem] Agent 46 exited the zone at timestep 47
+The exit time is 47
+[Create_Local_problem] Agent 46 exited the zone at exit time 47
 [Create_Local_Problem] Starting to align MDD to the time window: [0, 67]
 [Create_Local_Problem] MDD levels: 4
 [Create_Local_Problem] Checking if MDD start is already aligned to the time window
@@ -1581,7 +1647,8 @@ checked if MDD start and end are aligned
 [Create_Local_Problem] Aligned MDD to the time window
 [Create_Local_problem] Agent 47 entered the zone at timestep 24
 [Create_Local_problem] Agent 47 exited the zone at timestep 28
-[Create_Local_problem] Agent 47 exited the zone at timestep 27
+The exit time is 27
+[Create_Local_problem] Agent 47 exited the zone at exit time 27
 [Create_Local_Problem] Starting to align MDD to the time window: [0, 67]
 [Create_Local_Problem] MDD levels: 4
 [Create_Local_Problem] Checking if MDD start is already aligned to the time window
@@ -1591,7 +1658,8 @@ checked if MDD start and end are aligned
 [Create_Local_Problem] Aligned MDD to the time window
 [Create_Local_problem] Agent 48 entered the zone at timestep 4
 [Create_Local_problem] Agent 48 exited the zone at timestep 8
-[Create_Local_problem] Agent 48 exited the zone at timestep 7
+The exit time is 7
+[Create_Local_problem] Agent 48 exited the zone at exit time 7
 [Create_Local_Problem] Starting to align MDD to the time window: [0, 67]
 [Create_Local_Problem] MDD levels: 4
 [Create_Local_Problem] Checking if MDD start is already aligned to the time window
@@ -1601,7 +1669,8 @@ checked if MDD start and end are aligned
 [Create_Local_Problem] Aligned MDD to the time window
 [Create_Local_problem] Agent 49 entered the zone at timestep 54
 [Create_Local_problem] Agent 49 exited the zone at timestep 58
-[Create_Local_problem] Agent 49 exited the zone at timestep 57
+The exit time is 57
+[Create_Local_problem] Agent 49 exited the zone at exit time 57
 [Create_Local_Problem] Starting to align MDD to the time window: [0, 67]
 [Create_Local_Problem] MDD levels: 4
 [Create_Local_Problem] Checking if MDD start is already aligned to the time window
@@ -1893,7 +1962,8 @@ Input assignment size: 213
 [Solve_local_zone] Local zone time window: [2, 51]
 [Create_Local_problem] Agent 1 entered the zone at timestep 8
 [Create_Local_problem] Agent 1 exited the zone at timestep 32
-[Create_Local_problem] Agent 1 exited the zone at timestep 31
+The exit time is 31
+[Create_Local_problem] Agent 1 exited the zone at exit time 31
 [Create_Local_Problem] Starting to align MDD to the time window: [2, 51]
 [Create_Local_Problem] MDD levels: 24
 [Create_Local_Problem] Checking if MDD start is already aligned to the time window
@@ -1903,7 +1973,8 @@ checked if MDD start and end are aligned
 [Create_Local_Problem] Aligned MDD to the time window
 [Create_Local_problem] Agent 2 entered the zone at timestep 4
 [Create_Local_problem] Agent 2 exited the zone at timestep 11
-[Create_Local_problem] Agent 2 exited the zone at timestep 10
+The exit time is 10
+[Create_Local_problem] Agent 2 exited the zone at exit time 10
 [Create_Local_Problem] Starting to align MDD to the time window: [2, 51]
 [Create_Local_Problem] MDD levels: 7
 [Create_Local_Problem] Checking if MDD start is already aligned to the time window
@@ -1913,7 +1984,8 @@ checked if MDD start and end are aligned
 [Create_Local_Problem] Aligned MDD to the time window
 [Create_Local_problem] Agent 3 entered the zone at timestep 11
 [Create_Local_problem] Agent 3 exited the zone at timestep 31
-[Create_Local_problem] Agent 3 exited the zone at timestep 30
+The exit time is 30
+[Create_Local_problem] Agent 3 exited the zone at exit time 30
 [Create_Local_Problem] Starting to align MDD to the time window: [2, 51]
 [Create_Local_Problem] MDD levels: 20
 [Create_Local_Problem] Checking if MDD start is already aligned to the time window
@@ -1923,7 +1995,8 @@ checked if MDD start and end are aligned
 [Create_Local_Problem] Aligned MDD to the time window
 [Create_Local_problem] Agent 4 entered the zone at timestep 21
 [Create_Local_problem] Agent 4 exited the zone at timestep 27
-[Create_Local_problem] Agent 4 exited the zone at timestep 26
+The exit time is 26
+[Create_Local_problem] Agent 4 exited the zone at exit time 26
 [Create_Local_Problem] Starting to align MDD to the time window: [2, 51]
 [Create_Local_Problem] MDD levels: 6
 [Create_Local_Problem] Checking if MDD start is already aligned to the time window
@@ -1933,7 +2006,8 @@ checked if MDD start and end are aligned
 [Create_Local_Problem] Aligned MDD to the time window
 [Create_Local_problem] Agent 6 entered the zone at timestep 29
 [Create_Local_problem] Agent 6 exited the zone at timestep 50
-[Create_Local_problem] Agent 6 exited the zone at timestep 49
+The exit time is 49
+[Create_Local_problem] Agent 6 exited the zone at exit time 49
 [Create_Local_Problem] Starting to align MDD to the time window: [2, 51]
 [Create_Local_Problem] MDD levels: 21
 [Create_Local_Problem] Checking if MDD start is already aligned to the time window
@@ -1943,7 +2017,8 @@ checked if MDD start and end are aligned
 [Create_Local_Problem] Aligned MDD to the time window
 [Create_Local_problem] Agent 7 entered the zone at timestep 13
 [Create_Local_problem] Agent 7 exited the zone at timestep 20
-[Create_Local_problem] Agent 7 exited the zone at timestep 19
+The exit time is 19
+[Create_Local_problem] Agent 7 exited the zone at exit time 19
 [Create_Local_Problem] Starting to align MDD to the time window: [2, 51]
 [Create_Local_Problem] MDD levels: 7
 [Create_Local_Problem] Checking if MDD start is already aligned to the time window
@@ -1953,7 +2028,8 @@ checked if MDD start and end are aligned
 [Create_Local_Problem] Aligned MDD to the time window
 [Create_Local_problem] Agent 8 entered the zone at timestep 2
 [Create_Local_problem] Agent 8 exited the zone at timestep 22
-[Create_Local_problem] Agent 8 exited the zone at timestep 21
+The exit time is 21
+[Create_Local_problem] Agent 8 exited the zone at exit time 21
 [Create_Local_Problem] Starting to align MDD to the time window: [2, 51]
 [Create_Local_Problem] MDD levels: 20
 [Create_Local_Problem] Checking if MDD start is already aligned to the time window
@@ -1962,7 +2038,7 @@ checked if MDD start and end are aligned
 [Create_Local_Problem] Aligning now
 [Create_Local_Problem] Aligned MDD to the time window
 [Create_Local_problem] Agent 12 entered the zone at timestep 15
-[Create_Local_problem] Agent 12 exited the zone at timestep 51
+[Create_Local_problem] Agent 12 exited the zone at exit time 51
 [Create_Local_Problem] Starting to align MDD to the time window: [2, 51]
 [Create_Local_Problem] MDD levels: 37
 [Create_Local_Problem] Checking if MDD start is already aligned to the time window
@@ -1972,7 +2048,8 @@ checked if MDD start and end are aligned
 [Create_Local_Problem] Aligned MDD to the time window
 [Create_Local_problem] Agent 13 entered the zone at timestep 2
 [Create_Local_problem] Agent 13 exited the zone at timestep 25
-[Create_Local_problem] Agent 13 exited the zone at timestep 24
+The exit time is 24
+[Create_Local_problem] Agent 13 exited the zone at exit time 24
 [Create_Local_Problem] Starting to align MDD to the time window: [2, 51]
 [Create_Local_Problem] MDD levels: 23
 [Create_Local_Problem] Checking if MDD start is already aligned to the time window
@@ -1982,7 +2059,8 @@ checked if MDD start and end are aligned
 [Create_Local_Problem] Aligned MDD to the time window
 [Create_Local_problem] Agent 14 entered the zone at timestep 10
 [Create_Local_problem] Agent 14 exited the zone at timestep 31
-[Create_Local_problem] Agent 14 exited the zone at timestep 30
+The exit time is 30
+[Create_Local_problem] Agent 14 exited the zone at exit time 30
 [Create_Local_Problem] Starting to align MDD to the time window: [2, 51]
 [Create_Local_Problem] MDD levels: 21
 [Create_Local_Problem] Checking if MDD start is already aligned to the time window
@@ -1991,7 +2069,7 @@ checked if MDD start and end are aligned
 [Create_Local_Problem] Aligning now
 [Create_Local_Problem] Aligned MDD to the time window
 [Create_Local_problem] Agent 15 entered the zone at timestep 41
-[Create_Local_problem] Agent 15 exited the zone at timestep 51
+[Create_Local_problem] Agent 15 exited the zone at exit time 51
 [Create_Local_Problem] Starting to align MDD to the time window: [2, 51]
 [Create_Local_Problem] MDD levels: 11
 [Create_Local_Problem] Checking if MDD start is already aligned to the time window
@@ -2001,7 +2079,8 @@ checked if MDD start and end are aligned
 [Create_Local_Problem] Aligned MDD to the time window
 [Create_Local_problem] Agent 16 entered the zone at timestep 33
 [Create_Local_problem] Agent 16 exited the zone at timestep 39
-[Create_Local_problem] Agent 16 exited the zone at timestep 38
+The exit time is 38
+[Create_Local_problem] Agent 16 exited the zone at exit time 38
 [Create_Local_Problem] Starting to align MDD to the time window: [2, 51]
 [Create_Local_Problem] MDD levels: 6
 [Create_Local_Problem] Checking if MDD start is already aligned to the time window
@@ -2011,7 +2090,8 @@ checked if MDD start and end are aligned
 [Create_Local_Problem] Aligned MDD to the time window
 [Create_Local_problem] Agent 17 entered the zone at timestep 18
 [Create_Local_problem] Agent 17 exited the zone at timestep 39
-[Create_Local_problem] Agent 17 exited the zone at timestep 38
+The exit time is 38
+[Create_Local_problem] Agent 17 exited the zone at exit time 38
 [Create_Local_Problem] Starting to align MDD to the time window: [2, 51]
 [Create_Local_Problem] MDD levels: 21
 [Create_Local_Problem] Checking if MDD start is already aligned to the time window
@@ -2021,7 +2101,8 @@ checked if MDD start and end are aligned
 [Create_Local_Problem] Aligned MDD to the time window
 [Create_Local_problem] Agent 18 entered the zone at timestep 6
 [Create_Local_problem] Agent 18 exited the zone at timestep 31
-[Create_Local_problem] Agent 18 exited the zone at timestep 30
+The exit time is 30
+[Create_Local_problem] Agent 18 exited the zone at exit time 30
 [Create_Local_Problem] Starting to align MDD to the time window: [2, 51]
 [Create_Local_Problem] MDD levels: 25
 [Create_Local_Problem] Checking if MDD start is already aligned to the time window
@@ -2030,7 +2111,7 @@ checked if MDD start and end are aligned
 [Create_Local_Problem] Aligning now
 [Create_Local_Problem] Aligned MDD to the time window
 [Create_Local_problem] Agent 19 entered the zone at timestep 33
-[Create_Local_problem] Agent 19 exited the zone at timestep 51
+[Create_Local_problem] Agent 19 exited the zone at exit time 51
 [Create_Local_Problem] Starting to align MDD to the time window: [2, 51]
 [Create_Local_Problem] MDD levels: 19
 [Create_Local_Problem] Checking if MDD start is already aligned to the time window
@@ -2039,7 +2120,7 @@ checked if MDD start and end are aligned
 [Create_Local_Problem] Aligning now
 [Create_Local_Problem] Aligned MDD to the time window
 [Create_Local_problem] Agent 20 entered the zone at timestep 7
-[Create_Local_problem] Agent 20 exited the zone at timestep 51
+[Create_Local_problem] Agent 20 exited the zone at exit time 51
 [Create_Local_Problem] Starting to align MDD to the time window: [2, 51]
 [Create_Local_Problem] MDD levels: 45
 [Create_Local_Problem] Checking if MDD start is already aligned to the time window
@@ -2049,7 +2130,8 @@ checked if MDD start and end are aligned
 [Create_Local_Problem] Aligned MDD to the time window
 [Create_Local_problem] Agent 21 entered the zone at timestep 3
 [Create_Local_problem] Agent 21 exited the zone at timestep 8
-[Create_Local_problem] Agent 21 exited the zone at timestep 7
+The exit time is 7
+[Create_Local_problem] Agent 21 exited the zone at exit time 7
 [Create_Local_Problem] Starting to align MDD to the time window: [2, 51]
 [Create_Local_Problem] MDD levels: 5
 [Create_Local_Problem] Checking if MDD start is already aligned to the time window
@@ -2058,7 +2140,7 @@ checked if MDD start and end are aligned
 [Create_Local_Problem] Aligning now
 [Create_Local_Problem] Aligned MDD to the time window
 [Create_Local_problem] Agent 24 entered the zone at timestep 46
-[Create_Local_problem] Agent 24 exited the zone at timestep 51
+[Create_Local_problem] Agent 24 exited the zone at exit time 51
 [Create_Local_Problem] Starting to align MDD to the time window: [2, 51]
 [Create_Local_Problem] MDD levels: 6
 [Create_Local_Problem] Checking if MDD start is already aligned to the time window
@@ -2068,7 +2150,8 @@ checked if MDD start and end are aligned
 [Create_Local_Problem] Aligned MDD to the time window
 [Create_Local_problem] Agent 25 entered the zone at timestep 2
 [Create_Local_problem] Agent 25 exited the zone at timestep 7
-[Create_Local_problem] Agent 25 exited the zone at timestep 6
+The exit time is 6
+[Create_Local_problem] Agent 25 exited the zone at exit time 6
 [Create_Local_Problem] Starting to align MDD to the time window: [2, 51]
 [Create_Local_Problem] MDD levels: 5
 [Create_Local_Problem] Checking if MDD start is already aligned to the time window
@@ -2078,7 +2161,8 @@ checked if MDD start and end are aligned
 [Create_Local_Problem] Aligned MDD to the time window
 [Create_Local_problem] Agent 28 entered the zone at timestep 25
 [Create_Local_problem] Agent 28 exited the zone at timestep 50
-[Create_Local_problem] Agent 28 exited the zone at timestep 49
+The exit time is 49
+[Create_Local_problem] Agent 28 exited the zone at exit time 49
 [Create_Local_Problem] Starting to align MDD to the time window: [2, 51]
 [Create_Local_Problem] MDD levels: 25
 [Create_Local_Problem] Checking if MDD start is already aligned to the time window
@@ -2088,7 +2172,8 @@ checked if MDD start and end are aligned
 [Create_Local_Problem] Aligned MDD to the time window
 [Create_Local_problem] Agent 29 entered the zone at timestep 2
 [Create_Local_problem] Agent 29 exited the zone at timestep 15
-[Create_Local_problem] Agent 29 exited the zone at timestep 14
+The exit time is 14
+[Create_Local_problem] Agent 29 exited the zone at exit time 14
 [Create_Local_Problem] Starting to align MDD to the time window: [2, 51]
 [Create_Local_Problem] MDD levels: 13
 [Create_Local_Problem] Checking if MDD start is already aligned to the time window
@@ -2098,7 +2183,8 @@ checked if MDD start and end are aligned
 [Create_Local_Problem] Aligned MDD to the time window
 [Create_Local_problem] Agent 30 entered the zone at timestep 4
 [Create_Local_problem] Agent 30 exited the zone at timestep 29
-[Create_Local_problem] Agent 30 exited the zone at timestep 28
+The exit time is 28
+[Create_Local_problem] Agent 30 exited the zone at exit time 28
 [Create_Local_Problem] Starting to align MDD to the time window: [2, 51]
 [Create_Local_Problem] MDD levels: 25
 [Create_Local_Problem] Checking if MDD start is already aligned to the time window
@@ -2108,7 +2194,8 @@ checked if MDD start and end are aligned
 [Create_Local_Problem] Aligned MDD to the time window
 [Create_Local_problem] Agent 31 entered the zone at timestep 18
 [Create_Local_problem] Agent 31 exited the zone at timestep 43
-[Create_Local_problem] Agent 31 exited the zone at timestep 42
+The exit time is 42
+[Create_Local_problem] Agent 31 exited the zone at exit time 42
 [Create_Local_Problem] Starting to align MDD to the time window: [2, 51]
 [Create_Local_Problem] MDD levels: 25
 [Create_Local_Problem] Checking if MDD start is already aligned to the time window
@@ -2117,7 +2204,7 @@ checked if MDD start and end are aligned
 [Create_Local_Problem] Aligning now
 [Create_Local_Problem] Aligned MDD to the time window
 [Create_Local_problem] Agent 33 entered the zone at timestep 2
-[Create_Local_problem] Agent 33 exited the zone at timestep 51
+[Create_Local_problem] Agent 33 exited the zone at exit time 51
 [Create_Local_Problem] Starting to align MDD to the time window: [2, 51]
 [Create_Local_Problem] MDD levels: 50
 [Create_Local_Problem] Checking if MDD start is already aligned to the time window
@@ -2127,7 +2214,8 @@ checked if MDD start and end are aligned
 [Create_Local_Problem] Aligned MDD to the time window
 [Create_Local_problem] Agent 38 entered the zone at timestep 31
 [Create_Local_problem] Agent 38 exited the zone at timestep 46
-[Create_Local_problem] Agent 38 exited the zone at timestep 45
+The exit time is 45
+[Create_Local_problem] Agent 38 exited the zone at exit time 45
 [Create_Local_Problem] Starting to align MDD to the time window: [2, 51]
 [Create_Local_Problem] MDD levels: 15
 [Create_Local_Problem] Checking if MDD start is already aligned to the time window
@@ -2137,7 +2225,8 @@ checked if MDD start and end are aligned
 [Create_Local_Problem] Aligned MDD to the time window
 [Create_Local_problem] Agent 39 entered the zone at timestep 17
 [Create_Local_problem] Agent 39 exited the zone at timestep 42
-[Create_Local_problem] Agent 39 exited the zone at timestep 41
+The exit time is 41
+[Create_Local_problem] Agent 39 exited the zone at exit time 41
 [Create_Local_Problem] Starting to align MDD to the time window: [2, 51]
 [Create_Local_Problem] MDD levels: 25
 [Create_Local_Problem] Checking if MDD start is already aligned to the time window
@@ -2147,7 +2236,8 @@ checked if MDD start and end are aligned
 [Create_Local_Problem] Aligned MDD to the time window
 [Create_Local_problem] Agent 40 entered the zone at timestep 5
 [Create_Local_problem] Agent 40 exited the zone at timestep 24
-[Create_Local_problem] Agent 40 exited the zone at timestep 23
+The exit time is 23
+[Create_Local_problem] Agent 40 exited the zone at exit time 23
 [Create_Local_Problem] Starting to align MDD to the time window: [2, 51]
 [Create_Local_Problem] MDD levels: 19
 [Create_Local_Problem] Checking if MDD start is already aligned to the time window
@@ -2156,7 +2246,7 @@ checked if MDD start and end are aligned
 [Create_Local_Problem] Aligning now
 [Create_Local_Problem] Aligned MDD to the time window
 [Create_Local_problem] Agent 41 entered the zone at timestep 32
-[Create_Local_problem] Agent 41 exited the zone at timestep 51
+[Create_Local_problem] Agent 41 exited the zone at exit time 51
 [Create_Local_Problem] Starting to align MDD to the time window: [2, 51]
 [Create_Local_Problem] MDD levels: 20
 [Create_Local_Problem] Checking if MDD start is already aligned to the time window
@@ -2166,7 +2256,8 @@ checked if MDD start and end are aligned
 [Create_Local_Problem] Aligned MDD to the time window
 [Create_Local_problem] Agent 42 entered the zone at timestep 2
 [Create_Local_problem] Agent 42 exited the zone at timestep 15
-[Create_Local_problem] Agent 42 exited the zone at timestep 14
+The exit time is 14
+[Create_Local_problem] Agent 42 exited the zone at exit time 14
 [Create_Local_Problem] Starting to align MDD to the time window: [2, 51]
 [Create_Local_Problem] MDD levels: 13
 [Create_Local_Problem] Checking if MDD start is already aligned to the time window
@@ -2176,7 +2267,8 @@ checked if MDD start and end are aligned
 [Create_Local_Problem] Aligned MDD to the time window
 [Create_Local_problem] Agent 43 entered the zone at timestep 14
 [Create_Local_problem] Agent 43 exited the zone at timestep 38
-[Create_Local_problem] Agent 43 exited the zone at timestep 37
+The exit time is 37
+[Create_Local_problem] Agent 43 exited the zone at exit time 37
 [Create_Local_Problem] Starting to align MDD to the time window: [2, 51]
 [Create_Local_Problem] MDD levels: 24
 [Create_Local_Problem] Checking if MDD start is already aligned to the time window
@@ -2186,7 +2278,8 @@ checked if MDD start and end are aligned
 [Create_Local_Problem] Aligned MDD to the time window
 [Create_Local_problem] Agent 44 entered the zone at timestep 9
 [Create_Local_problem] Agent 44 exited the zone at timestep 33
-[Create_Local_problem] Agent 44 exited the zone at timestep 32
+The exit time is 32
+[Create_Local_problem] Agent 44 exited the zone at exit time 32
 [Create_Local_Problem] Starting to align MDD to the time window: [2, 51]
 [Create_Local_Problem] MDD levels: 24
 [Create_Local_Problem] Checking if MDD start is already aligned to the time window
@@ -2195,7 +2288,7 @@ checked if MDD start and end are aligned
 [Create_Local_Problem] Aligning now
 [Create_Local_Problem] Aligned MDD to the time window
 [Create_Local_problem] Agent 48 entered the zone at timestep 34
-[Create_Local_problem] Agent 48 exited the zone at timestep 51
+[Create_Local_problem] Agent 48 exited the zone at exit time 51
 [Create_Local_Problem] Starting to align MDD to the time window: [2, 51]
 [Create_Local_Problem] MDD levels: 18
 [Create_Local_Problem] Checking if MDD start is already aligned to the time window
@@ -2205,7 +2298,8 @@ checked if MDD start and end are aligned
 [Create_Local_Problem] Aligned MDD to the time window
 [Create_Local_problem] Agent 49 entered the zone at timestep 3
 [Create_Local_problem] Agent 49 exited the zone at timestep 28
-[Create_Local_problem] Agent 49 exited the zone at timestep 27
+The exit time is 27
+[Create_Local_problem] Agent 49 exited the zone at exit time 27
 [Create_Local_Problem] Starting to align MDD to the time window: [2, 51]
 [Create_Local_Problem] MDD levels: 25
 [Create_Local_Problem] Checking if MDD start is already aligned to the time window
@@ -2909,7 +3003,8 @@ checked if MDD start and end are aligned
 [Solve_local_zone] Local zone time window: [2, 64]
 [Create_Local_problem] Agent 1 entered the zone at timestep 7
 [Create_Local_problem] Agent 1 exited the zone at timestep 35
-[Create_Local_problem] Agent 1 exited the zone at timestep 34
+The exit time is 34
+[Create_Local_problem] Agent 1 exited the zone at exit time 34
 [Create_Local_Problem] Starting to align MDD to the time window: [2, 64]
 [Create_Local_Problem] MDD levels: 28
 [Create_Local_Problem] Checking if MDD start is already aligned to the time window
@@ -2919,7 +3014,8 @@ checked if MDD start and end are aligned
 [Create_Local_Problem] Aligned MDD to the time window
 [Create_Local_problem] Agent 2 entered the zone at timestep 2
 [Create_Local_problem] Agent 2 exited the zone at timestep 36
-[Create_Local_problem] Agent 2 exited the zone at timestep 35
+The exit time is 35
+[Create_Local_problem] Agent 2 exited the zone at exit time 35
 [Create_Local_Problem] Starting to align MDD to the time window: [2, 64]
 [Create_Local_Problem] MDD levels: 34
 [Create_Local_Problem] Checking if MDD start is already aligned to the time window
@@ -2929,7 +3025,8 @@ checked if MDD start and end are aligned
 [Create_Local_Problem] Aligned MDD to the time window
 [Create_Local_problem] Agent 3 entered the zone at timestep 10
 [Create_Local_problem] Agent 3 exited the zone at timestep 32
-[Create_Local_problem] Agent 3 exited the zone at timestep 31
+The exit time is 31
+[Create_Local_problem] Agent 3 exited the zone at exit time 31
 [Create_Local_Problem] Starting to align MDD to the time window: [2, 64]
 [Create_Local_Problem] MDD levels: 22
 [Create_Local_Problem] Checking if MDD start is already aligned to the time window
@@ -2939,7 +3036,8 @@ checked if MDD start and end are aligned
 [Create_Local_Problem] Aligned MDD to the time window
 [Create_Local_problem] Agent 4 entered the zone at timestep 20
 [Create_Local_problem] Agent 4 exited the zone at timestep 34
-[Create_Local_problem] Agent 4 exited the zone at timestep 33
+The exit time is 33
+[Create_Local_problem] Agent 4 exited the zone at exit time 33
 [Create_Local_Problem] Starting to align MDD to the time window: [2, 64]
 [Create_Local_Problem] MDD levels: 14
 [Create_Local_Problem] Checking if MDD start is already aligned to the time window
@@ -2948,7 +3046,7 @@ checked if MDD start and end are aligned
 [Create_Local_Problem] Aligning now
 [Create_Local_Problem] Aligned MDD to the time window
 [Create_Local_problem] Agent 6 entered the zone at timestep 5
-[Create_Local_problem] Agent 6 exited the zone at timestep 64
+[Create_Local_problem] Agent 6 exited the zone at exit time 64
 [Create_Local_Problem] Starting to align MDD to the time window: [2, 64]
 [Create_Local_Problem] MDD levels: 60
 [Create_Local_Problem] Checking if MDD start is already aligned to the time window
@@ -2958,7 +3056,8 @@ checked if MDD start and end are aligned
 [Create_Local_Problem] Aligned MDD to the time window
 [Create_Local_problem] Agent 7 entered the zone at timestep 12
 [Create_Local_problem] Agent 7 exited the zone at timestep 45
-[Create_Local_problem] Agent 7 exited the zone at timestep 44
+The exit time is 44
+[Create_Local_problem] Agent 7 exited the zone at exit time 44
 [Create_Local_Problem] Starting to align MDD to the time window: [2, 64]
 [Create_Local_Problem] MDD levels: 33
 [Create_Local_Problem] Checking if MDD start is already aligned to the time window
@@ -2968,7 +3067,8 @@ checked if MDD start and end are aligned
 [Create_Local_Problem] Aligned MDD to the time window
 [Create_Local_problem] Agent 8 entered the zone at timestep 2
 [Create_Local_problem] Agent 8 exited the zone at timestep 47
-[Create_Local_problem] Agent 8 exited the zone at timestep 46
+The exit time is 46
+[Create_Local_problem] Agent 8 exited the zone at exit time 46
 [Create_Local_Problem] Starting to align MDD to the time window: [2, 64]
 [Create_Local_Problem] MDD levels: 45
 [Create_Local_Problem] Checking if MDD start is already aligned to the time window
@@ -2977,7 +3077,7 @@ checked if MDD start and end are aligned
 [Create_Local_Problem] Aligning now
 [Create_Local_Problem] Aligned MDD to the time window
 [Create_Local_problem] Agent 11 entered the zone at timestep 46
-[Create_Local_problem] Agent 11 exited the zone at timestep 64
+[Create_Local_problem] Agent 11 exited the zone at exit time 64
 [Create_Local_Problem] Starting to align MDD to the time window: [2, 64]
 [Create_Local_Problem] MDD levels: 19
 [Create_Local_Problem] Checking if MDD start is already aligned to the time window
@@ -2986,7 +3086,7 @@ checked if MDD start and end are aligned
 [Create_Local_Problem] Aligning now
 [Create_Local_Problem] Aligned MDD to the time window
 [Create_Local_problem] Agent 12 entered the zone at timestep 13
-[Create_Local_problem] Agent 12 exited the zone at timestep 64
+[Create_Local_problem] Agent 12 exited the zone at exit time 64
 [Create_Local_Problem] Starting to align MDD to the time window: [2, 64]
 [Create_Local_Problem] MDD levels: 52
 [Create_Local_Problem] Checking if MDD start is already aligned to the time window
@@ -2996,7 +3096,8 @@ checked if MDD start and end are aligned
 [Create_Local_Problem] Aligned MDD to the time window
 [Create_Local_problem] Agent 13 entered the zone at timestep 2
 [Create_Local_problem] Agent 13 exited the zone at timestep 50
-[Create_Local_problem] Agent 13 exited the zone at timestep 49
+The exit time is 49
+[Create_Local_problem] Agent 13 exited the zone at exit time 49
 [Create_Local_Problem] Starting to align MDD to the time window: [2, 64]
 [Create_Local_Problem] MDD levels: 48
 [Create_Local_Problem] Checking if MDD start is already aligned to the time window
@@ -3006,7 +3107,8 @@ checked if MDD start and end are aligned
 [Create_Local_Problem] Aligned MDD to the time window
 [Create_Local_problem] Agent 14 entered the zone at timestep 3
 [Create_Local_problem] Agent 14 exited the zone at timestep 39
-[Create_Local_problem] Agent 14 exited the zone at timestep 38
+The exit time is 38
+[Create_Local_problem] Agent 14 exited the zone at exit time 38
 [Create_Local_Problem] Starting to align MDD to the time window: [2, 64]
 [Create_Local_Problem] MDD levels: 36
 [Create_Local_Problem] Checking if MDD start is already aligned to the time window
@@ -3015,7 +3117,7 @@ checked if MDD start and end are aligned
 [Create_Local_Problem] Aligning now
 [Create_Local_Problem] Aligned MDD to the time window
 [Create_Local_problem] Agent 15 entered the zone at timestep 16
-[Create_Local_problem] Agent 15 exited the zone at timestep 64
+[Create_Local_problem] Agent 15 exited the zone at exit time 64
 [Create_Local_Problem] Starting to align MDD to the time window: [2, 64]
 [Create_Local_Problem] MDD levels: 49
 [Create_Local_Problem] Checking if MDD start is already aligned to the time window
@@ -3025,7 +3127,8 @@ checked if MDD start and end are aligned
 [Create_Local_Problem] Aligned MDD to the time window
 [Create_Local_problem] Agent 16 entered the zone at timestep 26
 [Create_Local_problem] Agent 16 exited the zone at timestep 40
-[Create_Local_problem] Agent 16 exited the zone at timestep 39
+The exit time is 39
+[Create_Local_problem] Agent 16 exited the zone at exit time 39
 [Create_Local_Problem] Starting to align MDD to the time window: [2, 64]
 [Create_Local_Problem] MDD levels: 14
 [Create_Local_Problem] Checking if MDD start is already aligned to the time window
@@ -3035,8 +3138,9 @@ checked if MDD start and end are aligned
 [Create_Local_Problem] Aligned MDD to the time window
 [Create_Local_problem] Agent 17 entered the zone at timestep 10
 [Create_Local_problem] Agent 17 exited the zone at timestep 11
+The exit time is 10
 [Create_Local_problem] Agent 17 entered the zone at timestep 12
-[Create_Local_problem] Agent 17 exited the zone at timestep 64
+[Create_Local_problem] Agent 17 exited the zone at exit time 64
 [Create_Local_problem] Agent 17 returned to the zone 1 times within time window
 [Create_Local_problem] NEED TO HANDLE RETURNING AGENTS AS PSEUDO AGENTS
 [Create_Local_Problem] Starting to align MDD to the time window: [2, 64]
@@ -3055,7 +3159,8 @@ checked if MDD start and end are aligned
 [Create_Local_Problem] Aligned MDD to the time window
 [Create_Local_problem] Agent 18 entered the zone at timestep 5
 [Create_Local_problem] Agent 18 exited the zone at timestep 56
-[Create_Local_problem] Agent 18 exited the zone at timestep 55
+The exit time is 55
+[Create_Local_problem] Agent 18 exited the zone at exit time 55
 [Create_Local_Problem] Starting to align MDD to the time window: [2, 64]
 [Create_Local_Problem] MDD levels: 51
 [Create_Local_Problem] Checking if MDD start is already aligned to the time window
@@ -3064,7 +3169,7 @@ checked if MDD start and end are aligned
 [Create_Local_Problem] Aligning now
 [Create_Local_Problem] Aligned MDD to the time window
 [Create_Local_problem] Agent 19 entered the zone at timestep 25
-[Create_Local_problem] Agent 19 exited the zone at timestep 64
+[Create_Local_problem] Agent 19 exited the zone at exit time 64
 [Create_Local_Problem] Starting to align MDD to the time window: [2, 64]
 [Create_Local_Problem] MDD levels: 40
 [Create_Local_Problem] Checking if MDD start is already aligned to the time window
@@ -3073,7 +3178,7 @@ checked if MDD start and end are aligned
 [Create_Local_Problem] Aligning now
 [Create_Local_Problem] Aligned MDD to the time window
 [Create_Local_problem] Agent 20 entered the zone at timestep 6
-[Create_Local_problem] Agent 20 exited the zone at timestep 64
+[Create_Local_problem] Agent 20 exited the zone at exit time 64
 [Create_Local_Problem] Starting to align MDD to the time window: [2, 64]
 [Create_Local_Problem] MDD levels: 59
 [Create_Local_Problem] Checking if MDD start is already aligned to the time window
@@ -3083,7 +3188,8 @@ checked if MDD start and end are aligned
 [Create_Local_Problem] Aligned MDD to the time window
 [Create_Local_problem] Agent 21 entered the zone at timestep 2
 [Create_Local_problem] Agent 21 exited the zone at timestep 15
-[Create_Local_problem] Agent 21 exited the zone at timestep 14
+The exit time is 14
+[Create_Local_problem] Agent 21 exited the zone at exit time 14
 [Create_Local_Problem] Starting to align MDD to the time window: [2, 64]
 [Create_Local_Problem] MDD levels: 13
 [Create_Local_Problem] Checking if MDD start is already aligned to the time window
@@ -3093,7 +3199,8 @@ checked if MDD start and end are aligned
 [Create_Local_Problem] Aligned MDD to the time window
 [Create_Local_problem] Agent 23 entered the zone at timestep 2
 [Create_Local_problem] Agent 23 exited the zone at timestep 22
-[Create_Local_problem] Agent 23 exited the zone at timestep 21
+The exit time is 21
+[Create_Local_problem] Agent 23 exited the zone at exit time 21
 [Create_Local_Problem] Starting to align MDD to the time window: [2, 64]
 [Create_Local_Problem] MDD levels: 20
 [Create_Local_Problem] Checking if MDD start is already aligned to the time window
@@ -3102,7 +3209,7 @@ checked if MDD start and end are aligned
 [Create_Local_Problem] Aligning now
 [Create_Local_Problem] Aligned MDD to the time window
 [Create_Local_problem] Agent 24 entered the zone at timestep 22
-[Create_Local_problem] Agent 24 exited the zone at timestep 64
+[Create_Local_problem] Agent 24 exited the zone at exit time 64
 [Create_Local_Problem] Starting to align MDD to the time window: [2, 64]
 [Create_Local_Problem] MDD levels: 43
 [Create_Local_Problem] Checking if MDD start is already aligned to the time window
@@ -3112,7 +3219,8 @@ checked if MDD start and end are aligned
 [Create_Local_Problem] Aligned MDD to the time window
 [Create_Local_problem] Agent 25 entered the zone at timestep 2
 [Create_Local_problem] Agent 25 exited the zone at timestep 8
-[Create_Local_problem] Agent 25 exited the zone at timestep 7
+The exit time is 7
+[Create_Local_problem] Agent 25 exited the zone at exit time 7
 [Create_Local_Problem] Starting to align MDD to the time window: [2, 64]
 [Create_Local_Problem] MDD levels: 6
 [Create_Local_Problem] Checking if MDD start is already aligned to the time window
@@ -3122,7 +3230,8 @@ checked if MDD start and end are aligned
 [Create_Local_Problem] Aligned MDD to the time window
 [Create_Local_problem] Agent 28 entered the zone at timestep 2
 [Create_Local_problem] Agent 28 exited the zone at timestep 51
-[Create_Local_problem] Agent 28 exited the zone at timestep 50
+The exit time is 50
+[Create_Local_problem] Agent 28 exited the zone at exit time 50
 [Create_Local_Problem] Starting to align MDD to the time window: [2, 64]
 [Create_Local_Problem] MDD levels: 49
 [Create_Local_Problem] Checking if MDD start is already aligned to the time window
@@ -3132,7 +3241,8 @@ checked if MDD start and end are aligned
 [Create_Local_Problem] Aligned MDD to the time window
 [Create_Local_problem] Agent 29 entered the zone at timestep 2
 [Create_Local_problem] Agent 29 exited the zone at timestep 40
-[Create_Local_problem] Agent 29 exited the zone at timestep 39
+The exit time is 39
+[Create_Local_problem] Agent 29 exited the zone at exit time 39
 [Create_Local_Problem] Starting to align MDD to the time window: [2, 64]
 [Create_Local_Problem] MDD levels: 38
 [Create_Local_Problem] Checking if MDD start is already aligned to the time window
@@ -3142,7 +3252,8 @@ checked if MDD start and end are aligned
 [Create_Local_Problem] Aligned MDD to the time window
 [Create_Local_problem] Agent 30 entered the zone at timestep 3
 [Create_Local_problem] Agent 30 exited the zone at timestep 54
-[Create_Local_problem] Agent 30 exited the zone at timestep 53
+The exit time is 53
+[Create_Local_problem] Agent 30 exited the zone at exit time 53
 [Create_Local_Problem] Starting to align MDD to the time window: [2, 64]
 [Create_Local_Problem] MDD levels: 51
 [Create_Local_Problem] Checking if MDD start is already aligned to the time window
@@ -3152,7 +3263,8 @@ checked if MDD start and end are aligned
 [Create_Local_Problem] Aligned MDD to the time window
 [Create_Local_problem] Agent 31 entered the zone at timestep 2
 [Create_Local_problem] Agent 31 exited the zone at timestep 44
-[Create_Local_problem] Agent 31 exited the zone at timestep 43
+The exit time is 43
+[Create_Local_problem] Agent 31 exited the zone at exit time 43
 [Create_Local_Problem] Starting to align MDD to the time window: [2, 64]
 [Create_Local_Problem] MDD levels: 42
 [Create_Local_Problem] Checking if MDD start is already aligned to the time window
@@ -3161,7 +3273,7 @@ checked if MDD start and end are aligned
 [Create_Local_Problem] Aligning now
 [Create_Local_Problem] Aligned MDD to the time window
 [Create_Local_problem] Agent 33 entered the zone at timestep 2
-[Create_Local_problem] Agent 33 exited the zone at timestep 64
+[Create_Local_problem] Agent 33 exited the zone at exit time 64
 [Create_Local_Problem] Starting to align MDD to the time window: [2, 64]
 [Create_Local_Problem] MDD levels: 63
 [Create_Local_Problem] Checking if MDD start is already aligned to the time window
@@ -3171,7 +3283,8 @@ checked if MDD start and end are aligned
 [Create_Local_Problem] Aligned MDD to the time window
 [Create_Local_problem] Agent 34 entered the zone at timestep 2
 [Create_Local_problem] Agent 34 exited the zone at timestep 24
-[Create_Local_problem] Agent 34 exited the zone at timestep 23
+The exit time is 23
+[Create_Local_problem] Agent 34 exited the zone at exit time 23
 [Create_Local_Problem] Starting to align MDD to the time window: [2, 64]
 [Create_Local_Problem] MDD levels: 22
 [Create_Local_Problem] Checking if MDD start is already aligned to the time window
@@ -3181,7 +3294,8 @@ checked if MDD start and end are aligned
 [Create_Local_Problem] Aligned MDD to the time window
 [Create_Local_problem] Agent 37 entered the zone at timestep 2
 [Create_Local_problem] Agent 37 exited the zone at timestep 21
-[Create_Local_problem] Agent 37 exited the zone at timestep 20
+The exit time is 20
+[Create_Local_problem] Agent 37 exited the zone at exit time 20
 [Create_Local_Problem] Starting to align MDD to the time window: [2, 64]
 [Create_Local_Problem] MDD levels: 19
 [Create_Local_Problem] Checking if MDD start is already aligned to the time window
@@ -3191,7 +3305,8 @@ checked if MDD start and end are aligned
 [Create_Local_Problem] Aligned MDD to the time window
 [Create_Local_problem] Agent 38 entered the zone at timestep 30
 [Create_Local_problem] Agent 38 exited the zone at timestep 47
-[Create_Local_problem] Agent 38 exited the zone at timestep 46
+The exit time is 46
+[Create_Local_problem] Agent 38 exited the zone at exit time 46
 [Create_Local_Problem] Starting to align MDD to the time window: [2, 64]
 [Create_Local_Problem] MDD levels: 17
 [Create_Local_Problem] Checking if MDD start is already aligned to the time window
@@ -3201,7 +3316,8 @@ checked if MDD start and end are aligned
 [Create_Local_Problem] Aligned MDD to the time window
 [Create_Local_problem] Agent 39 entered the zone at timestep 2
 [Create_Local_problem] Agent 39 exited the zone at timestep 43
-[Create_Local_problem] Agent 39 exited the zone at timestep 42
+The exit time is 42
+[Create_Local_problem] Agent 39 exited the zone at exit time 42
 [Create_Local_Problem] Starting to align MDD to the time window: [2, 64]
 [Create_Local_Problem] MDD levels: 41
 [Create_Local_Problem] Checking if MDD start is already aligned to the time window
@@ -3211,7 +3327,8 @@ checked if MDD start and end are aligned
 [Create_Local_Problem] Aligned MDD to the time window
 [Create_Local_problem] Agent 40 entered the zone at timestep 4
 [Create_Local_problem] Agent 40 exited the zone at timestep 25
-[Create_Local_problem] Agent 40 exited the zone at timestep 24
+The exit time is 24
+[Create_Local_problem] Agent 40 exited the zone at exit time 24
 [Create_Local_Problem] Starting to align MDD to the time window: [2, 64]
 [Create_Local_Problem] MDD levels: 21
 [Create_Local_Problem] Checking if MDD start is already aligned to the time window
@@ -3220,7 +3337,7 @@ checked if MDD start and end are aligned
 [Create_Local_Problem] Aligning now
 [Create_Local_Problem] Aligned MDD to the time window
 [Create_Local_problem] Agent 41 entered the zone at timestep 31
-[Create_Local_problem] Agent 41 exited the zone at timestep 64
+[Create_Local_problem] Agent 41 exited the zone at exit time 64
 [Create_Local_Problem] Starting to align MDD to the time window: [2, 64]
 [Create_Local_Problem] MDD levels: 34
 [Create_Local_Problem] Checking if MDD start is already aligned to the time window
@@ -3230,7 +3347,8 @@ checked if MDD start and end are aligned
 [Create_Local_Problem] Aligned MDD to the time window
 [Create_Local_problem] Agent 42 entered the zone at timestep 2
 [Create_Local_problem] Agent 42 exited the zone at timestep 16
-[Create_Local_problem] Agent 42 exited the zone at timestep 15
+The exit time is 15
+[Create_Local_problem] Agent 42 exited the zone at exit time 15
 [Create_Local_Problem] Starting to align MDD to the time window: [2, 64]
 [Create_Local_Problem] MDD levels: 14
 [Create_Local_Problem] Checking if MDD start is already aligned to the time window
@@ -3240,7 +3358,8 @@ checked if MDD start and end are aligned
 [Create_Local_Problem] Aligned MDD to the time window
 [Create_Local_problem] Agent 43 entered the zone at timestep 13
 [Create_Local_problem] Agent 43 exited the zone at timestep 63
-[Create_Local_problem] Agent 43 exited the zone at timestep 62
+The exit time is 62
+[Create_Local_problem] Agent 43 exited the zone at exit time 62
 [Create_Local_Problem] Starting to align MDD to the time window: [2, 64]
 [Create_Local_Problem] MDD levels: 50
 [Create_Local_Problem] Checking if MDD start is already aligned to the time window
@@ -3250,7 +3369,8 @@ checked if MDD start and end are aligned
 [Create_Local_Problem] Aligned MDD to the time window
 [Create_Local_problem] Agent 44 entered the zone at timestep 8
 [Create_Local_problem] Agent 44 exited the zone at timestep 58
-[Create_Local_problem] Agent 44 exited the zone at timestep 57
+The exit time is 57
+[Create_Local_problem] Agent 44 exited the zone at exit time 57
 [Create_Local_Problem] Starting to align MDD to the time window: [2, 64]
 [Create_Local_Problem] MDD levels: 50
 [Create_Local_Problem] Checking if MDD start is already aligned to the time window
@@ -3259,7 +3379,7 @@ checked if MDD start and end are aligned
 [Create_Local_Problem] Aligning now
 [Create_Local_Problem] Aligned MDD to the time window
 [Create_Local_problem] Agent 46 entered the zone at timestep 50
-[Create_Local_problem] Agent 46 exited the zone at timestep 64
+[Create_Local_problem] Agent 46 exited the zone at exit time 64
 [Create_Local_Problem] Starting to align MDD to the time window: [2, 64]
 [Create_Local_Problem] MDD levels: 15
 [Create_Local_Problem] Checking if MDD start is already aligned to the time window
@@ -3269,7 +3389,8 @@ checked if MDD start and end are aligned
 [Create_Local_Problem] Aligned MDD to the time window
 [Create_Local_problem] Agent 47 entered the zone at timestep 2
 [Create_Local_problem] Agent 47 exited the zone at timestep 23
-[Create_Local_problem] Agent 47 exited the zone at timestep 22
+The exit time is 22
+[Create_Local_problem] Agent 47 exited the zone at exit time 22
 [Create_Local_Problem] Starting to align MDD to the time window: [2, 64]
 [Create_Local_Problem] MDD levels: 21
 [Create_Local_Problem] Checking if MDD start is already aligned to the time window
@@ -3279,7 +3400,8 @@ checked if MDD start and end are aligned
 [Create_Local_Problem] Aligned MDD to the time window
 [Create_Local_problem] Agent 48 entered the zone at timestep 10
 [Create_Local_problem] Agent 48 exited the zone at timestep 63
-[Create_Local_problem] Agent 48 exited the zone at timestep 62
+The exit time is 62
+[Create_Local_problem] Agent 48 exited the zone at exit time 62
 [Create_Local_Problem] Starting to align MDD to the time window: [2, 64]
 [Create_Local_Problem] MDD levels: 53
 [Create_Local_Problem] Checking if MDD start is already aligned to the time window
@@ -3289,7 +3411,8 @@ checked if MDD start and end are aligned
 [Create_Local_Problem] Aligned MDD to the time window
 [Create_Local_problem] Agent 49 entered the zone at timestep 2
 [Create_Local_problem] Agent 49 exited the zone at timestep 53
-[Create_Local_problem] Agent 49 exited the zone at timestep 52
+The exit time is 52
+[Create_Local_problem] Agent 49 exited the zone at exit time 52
 [Create_Local_Problem] Starting to align MDD to the time window: [2, 64]
 [Create_Local_Problem] MDD levels: 51
 [Create_Local_Problem] Checking if MDD start is already aligned to the time window
@@ -4215,7 +4338,7 @@ checked if MDD start and end are aligned
 [Solve_local_zone] Current local zone size: 152 (22.8228% of all walkable positions)
 [Solve_local_zone] Local zone time window: [2, 64]
 [Create_Local_problem] Agent 1 entered the zone at timestep 6
-[Create_Local_problem] Agent 1 exited the zone at timestep 64
+[Create_Local_problem] Agent 1 exited the zone at exit time 64
 [Create_Local_Problem] Starting to align MDD to the time window: [2, 64]
 [Create_Local_Problem] MDD levels: 59
 [Create_Local_Problem] Checking if MDD start is already aligned to the time window
@@ -4225,7 +4348,8 @@ checked if MDD start and end are aligned
 [Create_Local_Problem] Aligned MDD to the time window
 [Create_Local_problem] Agent 2 entered the zone at timestep 2
 [Create_Local_problem] Agent 2 exited the zone at timestep 37
-[Create_Local_problem] Agent 2 exited the zone at timestep 36
+The exit time is 36
+[Create_Local_problem] Agent 2 exited the zone at exit time 36
 [Create_Local_Problem] Starting to align MDD to the time window: [2, 64]
 [Create_Local_Problem] MDD levels: 35
 [Create_Local_Problem] Checking if MDD start is already aligned to the time window
@@ -4235,7 +4359,8 @@ checked if MDD start and end are aligned
 [Create_Local_Problem] Aligned MDD to the time window
 [Create_Local_problem] Agent 3 entered the zone at timestep 9
 [Create_Local_problem] Agent 3 exited the zone at timestep 33
-[Create_Local_problem] Agent 3 exited the zone at timestep 32
+The exit time is 32
+[Create_Local_problem] Agent 3 exited the zone at exit time 32
 [Create_Local_Problem] Starting to align MDD to the time window: [2, 64]
 [Create_Local_Problem] MDD levels: 24
 [Create_Local_Problem] Checking if MDD start is already aligned to the time window
@@ -4245,7 +4370,8 @@ checked if MDD start and end are aligned
 [Create_Local_Problem] Aligned MDD to the time window
 [Create_Local_problem] Agent 4 entered the zone at timestep 19
 [Create_Local_problem] Agent 4 exited the zone at timestep 35
-[Create_Local_problem] Agent 4 exited the zone at timestep 34
+The exit time is 34
+[Create_Local_problem] Agent 4 exited the zone at exit time 34
 [Create_Local_Problem] Starting to align MDD to the time window: [2, 64]
 [Create_Local_Problem] MDD levels: 16
 [Create_Local_Problem] Checking if MDD start is already aligned to the time window
@@ -4254,7 +4380,7 @@ checked if MDD start and end are aligned
 [Create_Local_Problem] Aligning now
 [Create_Local_Problem] Aligned MDD to the time window
 [Create_Local_problem] Agent 6 entered the zone at timestep 4
-[Create_Local_problem] Agent 6 exited the zone at timestep 64
+[Create_Local_problem] Agent 6 exited the zone at exit time 64
 [Create_Local_Problem] Starting to align MDD to the time window: [2, 64]
 [Create_Local_Problem] MDD levels: 61
 [Create_Local_Problem] Checking if MDD start is already aligned to the time window
@@ -4264,7 +4390,8 @@ checked if MDD start and end are aligned
 [Create_Local_Problem] Aligned MDD to the time window
 [Create_Local_problem] Agent 7 entered the zone at timestep 10
 [Create_Local_problem] Agent 7 exited the zone at timestep 46
-[Create_Local_problem] Agent 7 exited the zone at timestep 45
+The exit time is 45
+[Create_Local_problem] Agent 7 exited the zone at exit time 45
 [Create_Local_Problem] Starting to align MDD to the time window: [2, 64]
 [Create_Local_Problem] MDD levels: 36
 [Create_Local_Problem] Checking if MDD start is already aligned to the time window
@@ -4274,7 +4401,8 @@ checked if MDD start and end are aligned
 [Create_Local_Problem] Aligned MDD to the time window
 [Create_Local_problem] Agent 8 entered the zone at timestep 2
 [Create_Local_problem] Agent 8 exited the zone at timestep 48
-[Create_Local_problem] Agent 8 exited the zone at timestep 47
+The exit time is 47
+[Create_Local_problem] Agent 8 exited the zone at exit time 47
 [Create_Local_Problem] Starting to align MDD to the time window: [2, 64]
 [Create_Local_Problem] MDD levels: 46
 [Create_Local_Problem] Checking if MDD start is already aligned to the time window
@@ -4283,7 +4411,7 @@ checked if MDD start and end are aligned
 [Create_Local_Problem] Aligning now
 [Create_Local_Problem] Aligned MDD to the time window
 [Create_Local_problem] Agent 11 entered the zone at timestep 45
-[Create_Local_problem] Agent 11 exited the zone at timestep 64
+[Create_Local_problem] Agent 11 exited the zone at exit time 64
 [Create_Local_Problem] Starting to align MDD to the time window: [2, 64]
 [Create_Local_Problem] MDD levels: 20
 [Create_Local_Problem] Checking if MDD start is already aligned to the time window
@@ -4292,7 +4420,7 @@ checked if MDD start and end are aligned
 [Create_Local_Problem] Aligning now
 [Create_Local_Problem] Aligned MDD to the time window
 [Create_Local_problem] Agent 12 entered the zone at timestep 12
-[Create_Local_problem] Agent 12 exited the zone at timestep 64
+[Create_Local_problem] Agent 12 exited the zone at exit time 64
 [Create_Local_Problem] Starting to align MDD to the time window: [2, 64]
 [Create_Local_Problem] MDD levels: 53
 [Create_Local_Problem] Checking if MDD start is already aligned to the time window
@@ -4302,7 +4430,8 @@ checked if MDD start and end are aligned
 [Create_Local_Problem] Aligned MDD to the time window
 [Create_Local_problem] Agent 13 entered the zone at timestep 2
 [Create_Local_problem] Agent 13 exited the zone at timestep 51
-[Create_Local_problem] Agent 13 exited the zone at timestep 50
+The exit time is 50
+[Create_Local_problem] Agent 13 exited the zone at exit time 50
 [Create_Local_Problem] Starting to align MDD to the time window: [2, 64]
 [Create_Local_Problem] MDD levels: 49
 [Create_Local_Problem] Checking if MDD start is already aligned to the time window
@@ -4312,7 +4441,8 @@ checked if MDD start and end are aligned
 [Create_Local_Problem] Aligned MDD to the time window
 [Create_Local_problem] Agent 14 entered the zone at timestep 2
 [Create_Local_problem] Agent 14 exited the zone at timestep 40
-[Create_Local_problem] Agent 14 exited the zone at timestep 39
+The exit time is 39
+[Create_Local_problem] Agent 14 exited the zone at exit time 39
 [Create_Local_Problem] Starting to align MDD to the time window: [2, 64]
 [Create_Local_Problem] MDD levels: 38
 [Create_Local_Problem] Checking if MDD start is already aligned to the time window
@@ -4321,7 +4451,7 @@ checked if MDD start and end are aligned
 [Create_Local_Problem] Aligning now
 [Create_Local_Problem] Aligned MDD to the time window
 [Create_Local_problem] Agent 15 entered the zone at timestep 15
-[Create_Local_problem] Agent 15 exited the zone at timestep 64
+[Create_Local_problem] Agent 15 exited the zone at exit time 64
 [Create_Local_Problem] Starting to align MDD to the time window: [2, 64]
 [Create_Local_Problem] MDD levels: 50
 [Create_Local_Problem] Checking if MDD start is already aligned to the time window
@@ -4331,7 +4461,8 @@ checked if MDD start and end are aligned
 [Create_Local_Problem] Aligned MDD to the time window
 [Create_Local_problem] Agent 16 entered the zone at timestep 25
 [Create_Local_problem] Agent 16 exited the zone at timestep 41
-[Create_Local_problem] Agent 16 exited the zone at timestep 40
+The exit time is 40
+[Create_Local_problem] Agent 16 exited the zone at exit time 40
 [Create_Local_Problem] Starting to align MDD to the time window: [2, 64]
 [Create_Local_Problem] MDD levels: 16
 [Create_Local_Problem] Checking if MDD start is already aligned to the time window
@@ -4340,7 +4471,7 @@ checked if MDD start and end are aligned
 [Create_Local_Problem] Aligning now
 [Create_Local_Problem] Aligned MDD to the time window
 [Create_Local_problem] Agent 17 entered the zone at timestep 9
-[Create_Local_problem] Agent 17 exited the zone at timestep 64
+[Create_Local_problem] Agent 17 exited the zone at exit time 64
 [Create_Local_Problem] Starting to align MDD to the time window: [2, 64]
 [Create_Local_Problem] MDD levels: 56
 [Create_Local_Problem] Checking if MDD start is already aligned to the time window
@@ -4350,7 +4481,8 @@ checked if MDD start and end are aligned
 [Create_Local_Problem] Aligned MDD to the time window
 [Create_Local_problem] Agent 18 entered the zone at timestep 4
 [Create_Local_problem] Agent 18 exited the zone at timestep 57
-[Create_Local_problem] Agent 18 exited the zone at timestep 56
+The exit time is 56
+[Create_Local_problem] Agent 18 exited the zone at exit time 56
 [Create_Local_Problem] Starting to align MDD to the time window: [2, 64]
 [Create_Local_Problem] MDD levels: 53
 [Create_Local_Problem] Checking if MDD start is already aligned to the time window
@@ -4359,7 +4491,7 @@ checked if MDD start and end are aligned
 [Create_Local_Problem] Aligning now
 [Create_Local_Problem] Aligned MDD to the time window
 [Create_Local_problem] Agent 19 entered the zone at timestep 24
-[Create_Local_problem] Agent 19 exited the zone at timestep 64
+[Create_Local_problem] Agent 19 exited the zone at exit time 64
 [Create_Local_Problem] Starting to align MDD to the time window: [2, 64]
 [Create_Local_Problem] MDD levels: 41
 [Create_Local_Problem] Checking if MDD start is already aligned to the time window
@@ -4368,7 +4500,7 @@ checked if MDD start and end are aligned
 [Create_Local_Problem] Aligning now
 [Create_Local_Problem] Aligned MDD to the time window
 [Create_Local_problem] Agent 20 entered the zone at timestep 5
-[Create_Local_problem] Agent 20 exited the zone at timestep 64
+[Create_Local_problem] Agent 20 exited the zone at exit time 64
 [Create_Local_Problem] Starting to align MDD to the time window: [2, 64]
 [Create_Local_Problem] MDD levels: 60
 [Create_Local_Problem] Checking if MDD start is already aligned to the time window
@@ -4378,7 +4510,8 @@ checked if MDD start and end are aligned
 [Create_Local_Problem] Aligned MDD to the time window
 [Create_Local_problem] Agent 21 entered the zone at timestep 2
 [Create_Local_problem] Agent 21 exited the zone at timestep 16
-[Create_Local_problem] Agent 21 exited the zone at timestep 15
+The exit time is 15
+[Create_Local_problem] Agent 21 exited the zone at exit time 15
 [Create_Local_Problem] Starting to align MDD to the time window: [2, 64]
 [Create_Local_Problem] MDD levels: 14
 [Create_Local_Problem] Checking if MDD start is already aligned to the time window
@@ -4388,7 +4521,8 @@ checked if MDD start and end are aligned
 [Create_Local_Problem] Aligned MDD to the time window
 [Create_Local_problem] Agent 23 entered the zone at timestep 2
 [Create_Local_problem] Agent 23 exited the zone at timestep 23
-[Create_Local_problem] Agent 23 exited the zone at timestep 22
+The exit time is 22
+[Create_Local_problem] Agent 23 exited the zone at exit time 22
 [Create_Local_Problem] Starting to align MDD to the time window: [2, 64]
 [Create_Local_Problem] MDD levels: 21
 [Create_Local_Problem] Checking if MDD start is already aligned to the time window
@@ -4397,7 +4531,7 @@ checked if MDD start and end are aligned
 [Create_Local_Problem] Aligning now
 [Create_Local_Problem] Aligned MDD to the time window
 [Create_Local_problem] Agent 24 entered the zone at timestep 21
-[Create_Local_problem] Agent 24 exited the zone at timestep 64
+[Create_Local_problem] Agent 24 exited the zone at exit time 64
 [Create_Local_Problem] Starting to align MDD to the time window: [2, 64]
 [Create_Local_Problem] MDD levels: 44
 [Create_Local_Problem] Checking if MDD start is already aligned to the time window
@@ -4407,7 +4541,8 @@ checked if MDD start and end are aligned
 [Create_Local_Problem] Aligned MDD to the time window
 [Create_Local_problem] Agent 25 entered the zone at timestep 2
 [Create_Local_problem] Agent 25 exited the zone at timestep 9
-[Create_Local_problem] Agent 25 exited the zone at timestep 8
+The exit time is 8
+[Create_Local_problem] Agent 25 exited the zone at exit time 8
 [Create_Local_Problem] Starting to align MDD to the time window: [2, 64]
 [Create_Local_Problem] MDD levels: 7
 [Create_Local_Problem] Checking if MDD start is already aligned to the time window
@@ -4417,7 +4552,8 @@ checked if MDD start and end are aligned
 [Create_Local_Problem] Aligned MDD to the time window
 [Create_Local_problem] Agent 28 entered the zone at timestep 2
 [Create_Local_problem] Agent 28 exited the zone at timestep 52
-[Create_Local_problem] Agent 28 exited the zone at timestep 51
+The exit time is 51
+[Create_Local_problem] Agent 28 exited the zone at exit time 51
 [Create_Local_Problem] Starting to align MDD to the time window: [2, 64]
 [Create_Local_Problem] MDD levels: 50
 [Create_Local_Problem] Checking if MDD start is already aligned to the time window
@@ -4427,7 +4563,8 @@ checked if MDD start and end are aligned
 [Create_Local_Problem] Aligned MDD to the time window
 [Create_Local_problem] Agent 29 entered the zone at timestep 2
 [Create_Local_problem] Agent 29 exited the zone at timestep 41
-[Create_Local_problem] Agent 29 exited the zone at timestep 40
+The exit time is 40
+[Create_Local_problem] Agent 29 exited the zone at exit time 40
 [Create_Local_Problem] Starting to align MDD to the time window: [2, 64]
 [Create_Local_Problem] MDD levels: 39
 [Create_Local_Problem] Checking if MDD start is already aligned to the time window
@@ -4437,7 +4574,8 @@ checked if MDD start and end are aligned
 [Create_Local_Problem] Aligned MDD to the time window
 [Create_Local_problem] Agent 30 entered the zone at timestep 2
 [Create_Local_problem] Agent 30 exited the zone at timestep 55
-[Create_Local_problem] Agent 30 exited the zone at timestep 54
+The exit time is 54
+[Create_Local_problem] Agent 30 exited the zone at exit time 54
 [Create_Local_Problem] Starting to align MDD to the time window: [2, 64]
 [Create_Local_Problem] MDD levels: 53
 [Create_Local_Problem] Checking if MDD start is already aligned to the time window
@@ -4447,7 +4585,8 @@ checked if MDD start and end are aligned
 [Create_Local_Problem] Aligned MDD to the time window
 [Create_Local_problem] Agent 31 entered the zone at timestep 2
 [Create_Local_problem] Agent 31 exited the zone at timestep 45
-[Create_Local_problem] Agent 31 exited the zone at timestep 44
+The exit time is 44
+[Create_Local_problem] Agent 31 exited the zone at exit time 44
 [Create_Local_Problem] Starting to align MDD to the time window: [2, 64]
 [Create_Local_Problem] MDD levels: 43
 [Create_Local_Problem] Checking if MDD start is already aligned to the time window
@@ -4456,7 +4595,7 @@ checked if MDD start and end are aligned
 [Create_Local_Problem] Aligning now
 [Create_Local_Problem] Aligned MDD to the time window
 [Create_Local_problem] Agent 33 entered the zone at timestep 2
-[Create_Local_problem] Agent 33 exited the zone at timestep 64
+[Create_Local_problem] Agent 33 exited the zone at exit time 64
 [Create_Local_Problem] Starting to align MDD to the time window: [2, 64]
 [Create_Local_Problem] MDD levels: 63
 [Create_Local_Problem] Checking if MDD start is already aligned to the time window
@@ -4466,7 +4605,8 @@ checked if MDD start and end are aligned
 [Create_Local_Problem] Aligned MDD to the time window
 [Create_Local_problem] Agent 34 entered the zone at timestep 2
 [Create_Local_problem] Agent 34 exited the zone at timestep 25
-[Create_Local_problem] Agent 34 exited the zone at timestep 24
+The exit time is 24
+[Create_Local_problem] Agent 34 exited the zone at exit time 24
 [Create_Local_Problem] Starting to align MDD to the time window: [2, 64]
 [Create_Local_Problem] MDD levels: 23
 [Create_Local_Problem] Checking if MDD start is already aligned to the time window
@@ -4476,7 +4616,8 @@ checked if MDD start and end are aligned
 [Create_Local_Problem] Aligned MDD to the time window
 [Create_Local_problem] Agent 37 entered the zone at timestep 2
 [Create_Local_problem] Agent 37 exited the zone at timestep 22
-[Create_Local_problem] Agent 37 exited the zone at timestep 21
+The exit time is 21
+[Create_Local_problem] Agent 37 exited the zone at exit time 21
 [Create_Local_Problem] Starting to align MDD to the time window: [2, 64]
 [Create_Local_Problem] MDD levels: 20
 [Create_Local_Problem] Checking if MDD start is already aligned to the time window
@@ -4485,7 +4626,7 @@ checked if MDD start and end are aligned
 [Create_Local_Problem] Aligning now
 [Create_Local_Problem] Aligned MDD to the time window
 [Create_Local_problem] Agent 38 entered the zone at timestep 29
-[Create_Local_problem] Agent 38 exited the zone at timestep 64
+[Create_Local_problem] Agent 38 exited the zone at exit time 64
 [Create_Local_Problem] Starting to align MDD to the time window: [2, 64]
 [Create_Local_Problem] MDD levels: 36
 [Create_Local_Problem] Checking if MDD start is already aligned to the time window
@@ -4495,7 +4636,8 @@ checked if MDD start and end are aligned
 [Create_Local_Problem] Aligned MDD to the time window
 [Create_Local_problem] Agent 39 entered the zone at timestep 2
 [Create_Local_problem] Agent 39 exited the zone at timestep 44
-[Create_Local_problem] Agent 39 exited the zone at timestep 43
+The exit time is 43
+[Create_Local_problem] Agent 39 exited the zone at exit time 43
 [Create_Local_Problem] Starting to align MDD to the time window: [2, 64]
 [Create_Local_Problem] MDD levels: 42
 [Create_Local_Problem] Checking if MDD start is already aligned to the time window
@@ -4505,7 +4647,8 @@ checked if MDD start and end are aligned
 [Create_Local_Problem] Aligned MDD to the time window
 [Create_Local_problem] Agent 40 entered the zone at timestep 3
 [Create_Local_problem] Agent 40 exited the zone at timestep 26
-[Create_Local_problem] Agent 40 exited the zone at timestep 25
+The exit time is 25
+[Create_Local_problem] Agent 40 exited the zone at exit time 25
 [Create_Local_Problem] Starting to align MDD to the time window: [2, 64]
 [Create_Local_Problem] MDD levels: 23
 [Create_Local_Problem] Checking if MDD start is already aligned to the time window
@@ -4514,7 +4657,7 @@ checked if MDD start and end are aligned
 [Create_Local_Problem] Aligning now
 [Create_Local_Problem] Aligned MDD to the time window
 [Create_Local_problem] Agent 41 entered the zone at timestep 30
-[Create_Local_problem] Agent 41 exited the zone at timestep 64
+[Create_Local_problem] Agent 41 exited the zone at exit time 64
 [Create_Local_Problem] Starting to align MDD to the time window: [2, 64]
 [Create_Local_Problem] MDD levels: 35
 [Create_Local_Problem] Checking if MDD start is already aligned to the time window
@@ -4524,7 +4667,8 @@ checked if MDD start and end are aligned
 [Create_Local_Problem] Aligned MDD to the time window
 [Create_Local_problem] Agent 42 entered the zone at timestep 2
 [Create_Local_problem] Agent 42 exited the zone at timestep 17
-[Create_Local_problem] Agent 42 exited the zone at timestep 16
+The exit time is 16
+[Create_Local_problem] Agent 42 exited the zone at exit time 16
 [Create_Local_Problem] Starting to align MDD to the time window: [2, 64]
 [Create_Local_Problem] MDD levels: 15
 [Create_Local_Problem] Checking if MDD start is already aligned to the time window
@@ -4534,7 +4678,8 @@ checked if MDD start and end are aligned
 [Create_Local_Problem] Aligned MDD to the time window
 [Create_Local_problem] Agent 43 entered the zone at timestep 12
 [Create_Local_problem] Agent 43 exited the zone at timestep 64
-[Create_Local_problem] Agent 43 exited the zone at timestep 63
+The exit time is 63
+[Create_Local_problem] Agent 43 exited the zone at exit time 63
 [Create_Local_Problem] Starting to align MDD to the time window: [2, 64]
 [Create_Local_Problem] MDD levels: 52
 [Create_Local_Problem] Checking if MDD start is already aligned to the time window
@@ -4544,7 +4689,8 @@ checked if MDD start and end are aligned
 [Create_Local_Problem] Aligned MDD to the time window
 [Create_Local_problem] Agent 44 entered the zone at timestep 7
 [Create_Local_problem] Agent 44 exited the zone at timestep 59
-[Create_Local_problem] Agent 44 exited the zone at timestep 58
+The exit time is 58
+[Create_Local_problem] Agent 44 exited the zone at exit time 58
 [Create_Local_Problem] Starting to align MDD to the time window: [2, 64]
 [Create_Local_Problem] MDD levels: 52
 [Create_Local_Problem] Checking if MDD start is already aligned to the time window
@@ -4553,7 +4699,7 @@ checked if MDD start and end are aligned
 [Create_Local_Problem] Aligning now
 [Create_Local_Problem] Aligned MDD to the time window
 [Create_Local_problem] Agent 46 entered the zone at timestep 49
-[Create_Local_problem] Agent 46 exited the zone at timestep 64
+[Create_Local_problem] Agent 46 exited the zone at exit time 64
 [Create_Local_Problem] Starting to align MDD to the time window: [2, 64]
 [Create_Local_Problem] MDD levels: 16
 [Create_Local_Problem] Checking if MDD start is already aligned to the time window
@@ -4563,7 +4709,8 @@ checked if MDD start and end are aligned
 [Create_Local_Problem] Aligned MDD to the time window
 [Create_Local_problem] Agent 47 entered the zone at timestep 2
 [Create_Local_problem] Agent 47 exited the zone at timestep 24
-[Create_Local_problem] Agent 47 exited the zone at timestep 23
+The exit time is 23
+[Create_Local_problem] Agent 47 exited the zone at exit time 23
 [Create_Local_Problem] Starting to align MDD to the time window: [2, 64]
 [Create_Local_Problem] MDD levels: 22
 [Create_Local_Problem] Checking if MDD start is already aligned to the time window
@@ -4573,7 +4720,8 @@ checked if MDD start and end are aligned
 [Create_Local_Problem] Aligned MDD to the time window
 [Create_Local_problem] Agent 48 entered the zone at timestep 9
 [Create_Local_problem] Agent 48 exited the zone at timestep 64
-[Create_Local_problem] Agent 48 exited the zone at timestep 63
+The exit time is 63
+[Create_Local_problem] Agent 48 exited the zone at exit time 63
 [Create_Local_Problem] Starting to align MDD to the time window: [2, 64]
 [Create_Local_Problem] MDD levels: 55
 [Create_Local_Problem] Checking if MDD start is already aligned to the time window
@@ -4583,7 +4731,8 @@ checked if MDD start and end are aligned
 [Create_Local_Problem] Aligned MDD to the time window
 [Create_Local_problem] Agent 49 entered the zone at timestep 2
 [Create_Local_problem] Agent 49 exited the zone at timestep 54
-[Create_Local_problem] Agent 49 exited the zone at timestep 53
+The exit time is 53
+[Create_Local_problem] Agent 49 exited the zone at exit time 53
 [Create_Local_Problem] Starting to align MDD to the time window: [2, 64]
 [Create_Local_Problem] MDD levels: 52
 [Create_Local_Problem] Checking if MDD start is already aligned to the time window
@@ -4613,283 +4762,3 @@ Input assignment size: 20797
 DEBUG: CNF has 741486 clauses
 DEBUG: First clause: 1 
 DEBUG: Adding 741486 clauses to MiniSAT
-[SAT] Local problem is unsatisfiable after 2 iterations
-[SAT] Failed to find local solution after 1000 iterations
-[SAT] Local problem appears to be unsatisfiable in current zone
-[Waiting_time_Solve] No solution found, trying to apply waiting time:1
-[Current_Solution] Agent 20 used 1 waiting timesteps, 68 remaining
-[Create_Local_Problem] Starting to align MDD to the time window: [2, 65]
-[Create_Local_Problem] MDD levels: 61
-[Create_Local_Problem] Checking if MDD start is already aligned to the time window
-[Create_Local_Problem] Checking if MDD end already at relative exit: 65
-checked if MDD start and end are aligned
-[Create_Local_Problem] Aligning now
-[Create_Local_Problem] Aligned MDD to the time window
-[Waiting_time_Solve] Applied 1 waiting time to segment 20 for agent 20
-[Current_Solution] Agent 1 used 1 waiting timesteps, 60 remaining
-[Create_Local_Problem] Starting to align MDD to the time window: [2, 65]
-[Create_Local_Problem] MDD levels: 60
-[Create_Local_Problem] Checking if MDD start is already aligned to the time window
-[Create_Local_Problem] Checking if MDD end already at relative exit: 65
-checked if MDD start and end are aligned
-[Create_Local_Problem] Aligning now
-[Create_Local_Problem] Aligned MDD to the time window
-[Waiting_time_Solve] Applied 1 waiting time to segment 1 for agent 1
-[Current_Solution] Agent 4 used 1 waiting timesteps, 46 remaining
-[Create_Local_Problem] Starting to align MDD to the time window: [2, 65]
-[Create_Local_Problem] MDD levels: 17
-[Create_Local_Problem] Checking if MDD start is already aligned to the time window
-[Create_Local_Problem] Checking if MDD end already at relative exit: 35
-checked if MDD start and end are aligned
-[Create_Local_Problem] Aligning now
-[Create_Local_Problem] Aligned MDD to the time window
-[Waiting_time_Solve] Applied 1 waiting time to segment 4 for agent 4
-[Current_Solution] Agent 6 used 1 waiting timesteps, 40 remaining
-[Create_Local_Problem] Starting to align MDD to the time window: [2, 65]
-[Create_Local_Problem] MDD levels: 62
-[Create_Local_Problem] Checking if MDD start is already aligned to the time window
-[Create_Local_Problem] Checking if MDD end already at relative exit: 65
-checked if MDD start and end are aligned
-[Create_Local_Problem] Aligning now
-[Create_Local_Problem] Aligned MDD to the time window
-[Waiting_time_Solve] Applied 1 waiting time to segment 6 for agent 6
-[Current_Solution] Agent 7 used 1 waiting timesteps, 45 remaining
-[Create_Local_Problem] Starting to align MDD to the time window: [2, 65]
-[Create_Local_Problem] MDD levels: 37
-[Create_Local_Problem] Checking if MDD start is already aligned to the time window
-[Create_Local_Problem] Checking if MDD end already at relative exit: 46
-checked if MDD start and end are aligned
-[Create_Local_Problem] Aligning now
-[Create_Local_Problem] Aligned MDD to the time window
-[Waiting_time_Solve] Applied 1 waiting time to segment 7 for agent 7
-[Current_Solution] Agent 13 used 1 waiting timesteps, 40 remaining
-[Create_Local_Problem] Starting to align MDD to the time window: [2, 65]
-[Create_Local_Problem] MDD levels: 50
-[Create_Local_Problem] Checking if MDD start is already aligned to the time window
-[Create_Local_Problem] Checking if MDD end already at relative exit: 51
-checked if MDD start and end are aligned
-[Create_Local_Problem] Aligning now
-[Create_Local_Problem] Aligned MDD to the time window
-[Waiting_time_Solve] Applied 1 waiting time to segment 13 for agent 13
-[Current_Solution] Agent 17 used 1 waiting timesteps, 49 remaining
-[Create_Local_Problem] Starting to align MDD to the time window: [2, 65]
-[Create_Local_Problem] MDD levels: 57
-[Create_Local_Problem] Checking if MDD start is already aligned to the time window
-[Create_Local_Problem] Checking if MDD end already at relative exit: 65
-checked if MDD start and end are aligned
-[Create_Local_Problem] Aligning now
-[Create_Local_Problem] Aligned MDD to the time window
-[Waiting_time_Solve] Applied 1 waiting time to segment 17 for agent 17
-[Current_Solution] Agent 19 used 1 waiting timesteps, 10 remaining
-[Create_Local_Problem] Starting to align MDD to the time window: [2, 65]
-[Create_Local_Problem] MDD levels: 42
-[Create_Local_Problem] Checking if MDD start is already aligned to the time window
-[Create_Local_Problem] Checking if MDD end already at relative exit: 65
-checked if MDD start and end are aligned
-[Create_Local_Problem] Aligning now
-[Create_Local_Problem] Aligned MDD to the time window
-[Waiting_time_Solve] Applied 1 waiting time to segment 19 for agent 19
-[Current_Solution] Agent 24 used 1 waiting timesteps, 29 remaining
-[Create_Local_Problem] Starting to align MDD to the time window: [2, 65]
-[Create_Local_Problem] MDD levels: 45
-[Create_Local_Problem] Checking if MDD start is already aligned to the time window
-[Create_Local_Problem] Checking if MDD end already at relative exit: 65
-checked if MDD start and end are aligned
-[Create_Local_Problem] Aligning now
-[Create_Local_Problem] Aligned MDD to the time window
-[Waiting_time_Solve] Applied 1 waiting time to segment 24 for agent 24
-[Current_Solution] Agent 25 used 1 waiting timesteps, 81 remaining
-[Create_Local_Problem] Starting to align MDD to the time window: [2, 65]
-[Create_Local_Problem] MDD levels: 8
-[Create_Local_Problem] Checking if MDD start is already aligned to the time window
-[Create_Local_Problem] Checking if MDD end already at relative exit: 9
-checked if MDD start and end are aligned
-[Create_Local_Problem] Aligning now
-[Create_Local_Problem] Aligned MDD to the time window
-[Waiting_time_Solve] Applied 1 waiting time to segment 25 for agent 25
-[Current_Solution] Agent 37 used 1 waiting timesteps, 31 remaining
-[Create_Local_Problem] Starting to align MDD to the time window: [2, 65]
-[Create_Local_Problem] MDD levels: 21
-[Create_Local_Problem] Checking if MDD start is already aligned to the time window
-[Create_Local_Problem] Checking if MDD end already at relative exit: 22
-checked if MDD start and end are aligned
-[Create_Local_Problem] Aligning now
-[Create_Local_Problem] Aligned MDD to the time window
-[VerificationHelpers] ERROR: Path is not consistent at timestep 41 7,22 is not neighbor of 5,22
-path: (14,10) (13,10) (13,9) (13,8) (13,7) (13,6) (13,5) (13,4) (13,3) (13,2) (12,2) (11,2) (11,3) (11,4) (10,4) (10,5) (10,6) (10,7) (10,8) (10,9) (10,10) (10,11) (10,12) (10,13) (10,14) (9,14) (8,14) (7,14) (7,15) (7,16) (7,17) (7,18) (7,19) (8,19) (8,20) (8,21) (7,21) (7,22) (6,22) (5,22) (5,22) (7,22) (6,22) (5,22) (4,22) (3,22) (2,22) (2,21) (2,20) (2,19) (2,18) (2,17) (2,16) (2,15) (2,14) (2,13) (2,12) (2,11) (2,10) (2,9) (2,8) (3,8) (4,8) (5,8) (5,9) (5,10) (5,11) (5,12) (5,12) (5,12) (5,12) (5,12) (5,12) (5,12) (5,12) (5,12) (5,12) (5,12) (5,12) (5,12) (5,12) (5,12) (5,12) (5,12) (5,12) (5,12) (5,12) (5,12) (5,12) (5,12) (5,12) (5,12) (5,12) (5,12) (5,12) (5,12) (5,12) 
-[Waiting_time_Solve] ERROR: Path is not consistent before updating with waiting time
-[VerificationHelpers] ERROR: Path is not consistent at timestep 42 7,22 is not neighbor of 5,22
-path: (14,10) (13,10) (13,9) (13,8) (13,7) (13,7) (13,6) (13,5) (13,4) (13,3) (13,2) (12,2) (11,2) (10,2) (10,3) (10,4) (10,5) (10,6) (10,7) (10,8) (10,9) (10,10) (10,11) (10,12) (10,13) (10,14) (9,14) (8,14) (7,14) (7,15) (7,16) (7,17) (7,18) (7,19) (8,19) (8,20) (8,21) (7,21) (7,22) (6,22) (5,22) (5,22) (7,22) (6,22) (5,22) (4,22) (3,22) (2,22) (2,21) (2,20) (2,19) (2,18) (2,17) (2,16) (2,15) (2,14) (2,13) (2,12) (2,11) (2,10) (2,9) (2,8) (3,8) (4,8) (5,8) (5,9) (5,10) (5,11) (5,12) (5,12) (5,12) (5,12) (5,12) (5,12) (5,12) (5,12) (5,12) (5,12) (5,12) (5,12) (5,12) (5,12) (5,12) (5,12) (5,12) (5,12) (5,12) (5,12) (5,12) (5,12) (5,12) (5,12) (5,12) (5,12) (5,12) (5,12) (5,12) 
-[Waiting_time_Solve] ERROR: Path is not consistent after updating with waiting time
-[Waiting_time_Solve] Applied 1 waiting time to segment 37 for agent 37
-[Current_Solution] Agent 38 used 1 waiting timesteps, 48 remaining
-[Create_Local_Problem] Starting to align MDD to the time window: [2, 65]
-[Create_Local_Problem] MDD levels: 37
-[Create_Local_Problem] Checking if MDD start is already aligned to the time window
-[Create_Local_Problem] Checking if MDD end already at relative exit: 65
-checked if MDD start and end are aligned
-[Create_Local_Problem] Aligning now
-[Create_Local_Problem] Aligned MDD to the time window
-[Waiting_time_Solve] Applied 1 waiting time to segment 38 for agent 38
-[Current_Solution] Agent 43 used 1 waiting timesteps, 25 remaining
-[Create_Local_Problem] Starting to align MDD to the time window: [2, 65]
-[Create_Local_Problem] MDD levels: 53
-[Create_Local_Problem] Checking if MDD start is already aligned to the time window
-[Create_Local_Problem] Checking if MDD end already at relative exit: 64
-checked if MDD start and end are aligned
-[Create_Local_Problem] Aligning now
-[Create_Local_Problem] Aligned MDD to the time window
-[Waiting_time_Solve] Applied 1 waiting time to segment 43 for agent 43
-[Current_Solution] Agent 47 used 1 waiting timesteps, 35 remaining
-[Create_Local_Problem] Starting to align MDD to the time window: [2, 65]
-[Create_Local_Problem] MDD levels: 23
-[Create_Local_Problem] Checking if MDD start is already aligned to the time window
-[Create_Local_Problem] Checking if MDD end already at relative exit: 24
-checked if MDD start and end are aligned
-[Create_Local_Problem] Aligning now
-[Create_Local_Problem] Aligned MDD to the time window
-[VerificationHelpers] ERROR: Path is not consistent at timestep 43 7,22 is not neighbor of 5,22
-path: (16,10) (15,10) (14,10) (13,10) (13,9) (13,8) (13,7) (13,6) (13,5) (13,4) (13,3) (13,2) (12,2) (11,2) (11,3) (11,4) (11,5) (10,5) (10,6) (10,7) (10,8) (10,9) (10,10) (10,11) (10,12) (10,13) (10,14) (9,14) (8,14) (7,14) (7,15) (7,16) (7,17) (8,17) (8,18) (7,18) (7,18) (7,19) (7,20) (7,21) (7,22) (6,22) (5,22) (7,22) (6,22) (5,22) (4,22) (3,22) (2,22) (2,21) (2,20) (2,19) (2,18) (2,17) (2,16) (2,15) (2,14) (2,13) (2,12) (2,11) (2,10) (2,9) (2,8) (3,8) (3,8) (3,8) (3,8) (3,8) (3,8) (3,8) (3,8) (3,8) (3,8) (3,8) (3,8) (3,8) (3,8) (3,8) (3,8) (3,8) (3,8) (3,8) (3,8) (3,8) (3,8) (3,8) (3,8) (3,8) (3,8) (3,8) (3,8) (3,8) (3,8) (3,8) (3,8) (3,8) (3,8) 
-[Waiting_time_Solve] ERROR: Path is not consistent before updating with waiting time
-[VerificationHelpers] ERROR: Path is not consistent at timestep 44 7,22 is not neighbor of 5,22
-path: (16,10) (15,10) (14,10) (14,9) (13,9) (13,8) (13,7) (13,6) (13,5) (13,4) (13,4) (13,3) (13,2) (12,2) (11,2) (10,2) (10,3) (10,4) (10,5) (10,6) (10,7) (10,8) (10,9) (10,10) (10,11) (10,12) (10,13) (10,14) (9,14) (8,14) (7,14) (7,15) (7,16) (7,17) (8,17) (8,18) (7,18) (7,18) (7,19) (7,20) (7,21) (7,22) (6,22) (5,22) (7,22) (6,22) (5,22) (4,22) (3,22) (2,22) (2,21) (2,20) (2,19) (2,18) (2,17) (2,16) (2,15) (2,14) (2,13) (2,12) (2,11) (2,10) (2,9) (2,8) (3,8) (3,8) (3,8) (3,8) (3,8) (3,8) (3,8) (3,8) (3,8) (3,8) (3,8) (3,8) (3,8) (3,8) (3,8) (3,8) (3,8) (3,8) (3,8) (3,8) (3,8) (3,8) (3,8) (3,8) (3,8) (3,8) (3,8) (3,8) (3,8) (3,8) (3,8) (3,8) (3,8) 
-[Waiting_time_Solve] ERROR: Path is not consistent after updating with waiting time
-[Waiting_time_Solve] Applied 1 waiting time to segment 47 for agent 47
-[Current_Solution] Agent 31 used 1 waiting timesteps, 46 remaining
-[Create_Local_Problem] Starting to align MDD to the time window: [2, 65]
-[Create_Local_Problem] MDD levels: 44
-[Create_Local_Problem] Checking if MDD start is already aligned to the time window
-[Create_Local_Problem] Checking if MDD end already at relative exit: 45
-checked if MDD start and end are aligned
-[Create_Local_Problem] Aligning now
-[Create_Local_Problem] Aligned MDD to the time window
-[Waiting_time_Solve] Applied 1 waiting time to segment 31 for agent 31
-[Current_Solution] Agent 40 used 1 waiting timesteps, 59 remaining
-[Create_Local_Problem] Starting to align MDD to the time window: [2, 65]
-[Create_Local_Problem] MDD levels: 24
-[Create_Local_Problem] Checking if MDD start is already aligned to the time window
-[Create_Local_Problem] Checking if MDD end already at relative exit: 26
-checked if MDD start and end are aligned
-[Create_Local_Problem] Aligning now
-[Create_Local_Problem] Aligned MDD to the time window
-[Waiting_time_Solve] Applied 1 waiting time to segment 40 for agent 40
-[Current_Solution] Agent 30 used 1 waiting timesteps, 13 remaining
-[Create_Local_Problem] Starting to align MDD to the time window: [2, 65]
-[Create_Local_Problem] MDD levels: 54
-[Create_Local_Problem] Checking if MDD start is already aligned to the time window
-[Create_Local_Problem] Checking if MDD end already at relative exit: 55
-checked if MDD start and end are aligned
-[Create_Local_Problem] Aligning now
-[Create_Local_Problem] Aligned MDD to the time window
-[Waiting_time_Solve] Applied 1 waiting time to segment 30 for agent 30
-[Current_Solution] Agent 15 used 1 waiting timesteps, 3 remaining
-[Create_Local_Problem] Starting to align MDD to the time window: [2, 65]
-[Create_Local_Problem] MDD levels: 51
-[Create_Local_Problem] Checking if MDD start is already aligned to the time window
-[Create_Local_Problem] Checking if MDD end already at relative exit: 65
-checked if MDD start and end are aligned
-[Create_Local_Problem] Aligning now
-[Create_Local_Problem] Aligned MDD to the time window
-[Waiting_time_Solve] Applied 1 waiting time to segment 15 for agent 15
-[Current_Solution] Agent 39 used 1 waiting timesteps, 44 remaining
-[Create_Local_Problem] Starting to align MDD to the time window: [2, 65]
-[Create_Local_Problem] MDD levels: 43
-[Create_Local_Problem] Checking if MDD start is already aligned to the time window
-[Create_Local_Problem] Checking if MDD end already at relative exit: 44
-checked if MDD start and end are aligned
-[Create_Local_Problem] Aligning now
-[Create_Local_Problem] Aligned MDD to the time window
-[Waiting_time_Solve] Applied 1 waiting time to segment 39 for agent 39
-[Current_Solution] Agent 14 used 1 waiting timesteps, 36 remaining
-[Create_Local_Problem] Starting to align MDD to the time window: [2, 65]
-[Create_Local_Problem] MDD levels: 39
-[Create_Local_Problem] Checking if MDD start is already aligned to the time window
-[Create_Local_Problem] Checking if MDD end already at relative exit: 40
-checked if MDD start and end are aligned
-[Create_Local_Problem] Aligning now
-[Create_Local_Problem] Aligned MDD to the time window
-[Waiting_time_Solve] Applied 1 waiting time to segment 14 for agent 14
-[Current_Solution] Agent 23 used 1 waiting timesteps, 33 remaining
-[Create_Local_Problem] Starting to align MDD to the time window: [2, 65]
-[Create_Local_Problem] MDD levels: 22
-[Create_Local_Problem] Checking if MDD start is already aligned to the time window
-[Create_Local_Problem] Checking if MDD end already at relative exit: 23
-checked if MDD start and end are aligned
-[Create_Local_Problem] Aligning now
-[Create_Local_Problem] Aligned MDD to the time window
-[VerificationHelpers] ERROR: Path is not consistent at timestep 42 7,22 is not neighbor of 5,22
-path: (14,11) (14,10) (14,9) (14,8) (13,8) (13,7) (13,6) (13,5) (13,4) (13,3) (13,2) (12,2) (11,2) (11,3) (11,4) (11,5) (10,5) (10,6) (10,7) (10,8) (10,9) (10,10) (10,11) (10,12) (10,13) (10,14) (9,14) (8,14) (7,14) (7,15) (7,16) (7,17) (8,17) (8,18) (8,19) (8,20) (7,20) (7,21) (7,22) (6,22) (6,22) (5,22) (7,22) (6,22) (5,22) (4,22) (3,22) (2,22) (2,21) (2,20) (2,19) (2,18) (2,17) (2,16) (2,15) (2,14) (2,13) (2,12) (2,11) (2,10) (2,9) (2,8) (3,8) (3,7) (4,7) (5,7) (5,7) (5,7) (5,7) (5,7) (5,7) (5,7) (5,7) (5,7) (5,7) (5,7) (5,7) (5,7) (5,7) (5,7) (5,7) (5,7) (5,7) (5,7) (5,7) (5,7) (5,7) (5,7) (5,7) (5,7) (5,7) (5,7) (5,7) (5,7) (5,7) (5,7) (5,7) 
-[Waiting_time_Solve] ERROR: Path is not consistent before updating with waiting time
-[VerificationHelpers] ERROR: Path is not consistent at timestep 43 7,22 is not neighbor of 5,22
-path: (14,11) (14,10) (14,9) (14,8) (13,8) (13,8) (13,7) (13,6) (13,5) (13,4) (13,3) (13,2) (12,2) (11,2) (10,2) (10,3) (10,4) (10,5) (10,6) (10,7) (10,8) (10,9) (10,10) (10,11) (10,12) (10,13) (10,14) (9,14) (8,14) (7,14) (7,15) (7,16) (7,17) (8,17) (8,18) (8,19) (8,20) (7,20) (7,21) (7,22) (6,22) (6,22) (5,22) (7,22) (6,22) (5,22) (4,22) (3,22) (2,22) (2,21) (2,20) (2,19) (2,18) (2,17) (2,16) (2,15) (2,14) (2,13) (2,12) (2,11) (2,10) (2,9) (2,8) (3,8) (3,7) (4,7) (5,7) (5,7) (5,7) (5,7) (5,7) (5,7) (5,7) (5,7) (5,7) (5,7) (5,7) (5,7) (5,7) (5,7) (5,7) (5,7) (5,7) (5,7) (5,7) (5,7) (5,7) (5,7) (5,7) (5,7) (5,7) (5,7) (5,7) (5,7) (5,7) (5,7) (5,7) 
-[Waiting_time_Solve] ERROR: Path is not consistent after updating with waiting time
-[Waiting_time_Solve] Applied 1 waiting time to segment 23 for agent 23
-[Current_Solution] Agent 44 used 1 waiting timesteps, 25 remaining
-[Create_Local_Problem] Starting to align MDD to the time window: [2, 65]
-[Create_Local_Problem] MDD levels: 53
-[Create_Local_Problem] Checking if MDD start is already aligned to the time window
-[Create_Local_Problem] Checking if MDD end already at relative exit: 59
-checked if MDD start and end are aligned
-[Create_Local_Problem] Aligning now
-[Create_Local_Problem] Aligned MDD to the time window
-[Waiting_time_Solve] Applied 1 waiting time to segment 44 for agent 44
-[Current_Solution] Agent 48 used 1 waiting timesteps, 10 remaining
-[Create_Local_Problem] Starting to align MDD to the time window: [2, 65]
-[Create_Local_Problem] MDD levels: 56
-[Create_Local_Problem] Checking if MDD start is already aligned to the time window
-[Create_Local_Problem] Checking if MDD end already at relative exit: 64
-checked if MDD start and end are aligned
-[Create_Local_Problem] Aligning now
-[Create_Local_Problem] Aligned MDD to the time window
-[Waiting_time_Solve] Applied 1 waiting time to segment 48 for agent 48
-[Waiting_time_Solve] Waiting time applied
-[Waiting_time_Solve] Extended Zone end time from 64 to 65
-[VerificationHelpers] ERROR: Path is not consistent at timestep 44 7,22 is not neighbor of 5,22
-path: (16,10) (15,10) (14,10) (14,9) (13,9) (13,8) (13,7) (13,6) (13,5) (13,4) (13,4) (13,3) (13,2) (12,2) (11,2) (10,2) (10,3) (10,4) (10,5) (10,6) (10,7) (10,8) (10,9) (10,10) (10,11) (10,12) (10,13) (10,14) (9,14) (8,14) (7,14) (7,15) (7,16) (7,17) (8,17) (8,18) (7,18) (7,18) (7,19) (7,20) (7,21) (7,22) (6,22) (5,22) (7,22) (6,22) (5,22) (4,22) (3,22) (2,22) (2,21) (2,20) (2,19) (2,18) (2,17) (2,16) (2,15) (2,14) (2,13) (2,12) (2,11) (2,10) (2,9) (2,8) (3,8) (3,8) (3,8) (3,8) (3,8) (3,8) (3,8) (3,8) (3,8) (3,8) (3,8) (3,8) (3,8) (3,8) (3,8) (3,8) (3,8) (3,8) (3,8) (3,8) (3,8) (3,8) (3,8) (3,8) (3,8) (3,8) (3,8) (3,8) (3,8) (3,8) (3,8) (3,8) (3,8) 
-[Waiting_time_Solve] ERROR: Global solution is not consistent before refreshing zone for agent 47
-[VerificationHelpers] ERROR: Path is not consistent at timestep 10 10,13 is not neighbor of 8,13
-path: (11,13) (11,13) (10,13) (10,14) (9,14) (10,14) (9,14) (9,13) (8,13) (8,13) (10,13) (10,14) (10,14) (10,13) (9,13) (8,13) (7,13) (7,14) (7,15) (7,16) (7,17) (7,18) (7,19) (7,20) (7,21) (7,22) (6,22) (6,23) (5,23) (4,23) (3,23) (2,23) (2,24) (2,25) (2,26) (2,27) (2,28) (2,29) (2,30) (2,31) (3,31) (4,31) (4,31) (4,31) (4,31) (4,31) (4,31) (4,31) (4,31) (4,31) (4,31) (4,31) (4,31) (4,31) (4,31) (4,31) (4,31) (4,31) (4,31) (4,31) (4,31) (4,31) (4,31) (4,31) (4,31) (4,31) (4,31) (4,31) (4,31) (4,31) (4,31) (4,31) (4,31) (4,31) (4,31) (4,31) (4,31) (4,31) (4,31) (4,31) (4,31) (4,31) (4,31) (4,31) (4,31) (4,31) (4,31) (4,31) (4,31) (4,31) (4,31) (4,31) (4,31) (4,31) (4,31) (4,31) (4,31) 
-[Waiting_time_Solve] ERROR: Global solution is not consistent before refreshing zone for agent 45
-[VerificationHelpers] ERROR: Path is not consistent at timestep 42 7,22 is not neighbor of 5,22
-path: (14,10) (13,10) (13,9) (13,8) (13,7) (13,7) (13,6) (13,5) (13,4) (13,3) (13,2) (12,2) (11,2) (10,2) (10,3) (10,4) (10,5) (10,6) (10,7) (10,8) (10,9) (10,10) (10,11) (10,12) (10,13) (10,14) (9,14) (8,14) (7,14) (7,15) (7,16) (7,17) (7,18) (7,19) (8,19) (8,20) (8,21) (7,21) (7,22) (6,22) (5,22) (5,22) (7,22) (6,22) (5,22) (4,22) (3,22) (2,22) (2,21) (2,20) (2,19) (2,18) (2,17) (2,16) (2,15) (2,14) (2,13) (2,12) (2,11) (2,10) (2,9) (2,8) (3,8) (4,8) (5,8) (5,9) (5,10) (5,11) (5,12) (5,12) (5,12) (5,12) (5,12) (5,12) (5,12) (5,12) (5,12) (5,12) (5,12) (5,12) (5,12) (5,12) (5,12) (5,12) (5,12) (5,12) (5,12) (5,12) (5,12) (5,12) (5,12) (5,12) (5,12) (5,12) (5,12) (5,12) (5,12) 
-[Waiting_time_Solve] ERROR: Global solution is not consistent before refreshing zone for agent 37
-[VerificationHelpers] ERROR: Path is not consistent at timestep 44 7,22 is not neighbor of 5,22
-path: (16,11) (16,10) (15,10) (14,10) (13,10) (13,9) (13,8) (13,7) (13,6) (13,5) (13,4) (13,3) (13,2) (12,2) (11,2) (11,3) (10,3) (10,4) (10,5) (10,6) (10,7) (10,8) (10,9) (10,10) (10,11) (10,12) (10,13) (10,14) (9,14) (8,14) (7,14) (7,15) (7,16) (7,17) (8,17) (8,18) (8,18) (8,19) (7,19) (7,20) (7,21) (7,22) (6,22) (5,22) (7,22) (6,22) (5,22) (4,22) (3,22) (2,22) (2,21) (2,20) (2,19) (2,18) (2,17) (2,16) (2,15) (2,14) (2,13) (2,12) (2,11) (2,10) (2,9) (2,8) (2,7) (3,7) (3,7) (3,7) (3,7) (3,7) (3,7) (3,7) (3,7) (3,7) (3,7) (3,7) (3,7) (3,7) (3,7) (3,7) (3,7) (3,7) (3,7) (3,7) (3,7) (3,7) (3,7) (3,7) (3,7) (3,7) (3,7) (3,7) (3,7) (3,7) (3,7) (3,7) (3,7) 
-[Waiting_time_Solve] ERROR: Global solution is not consistent before refreshing zone for agent 34
-[VerificationHelpers] ERROR: Path is not consistent at timestep 43 7,22 is not neighbor of 5,22
-path: (14,11) (14,10) (14,9) (14,8) (13,8) (13,8) (13,7) (13,6) (13,5) (13,4) (13,3) (13,2) (12,2) (11,2) (10,2) (10,3) (10,4) (10,5) (10,6) (10,7) (10,8) (10,9) (10,10) (10,11) (10,12) (10,13) (10,14) (9,14) (8,14) (7,14) (7,15) (7,16) (7,17) (8,17) (8,18) (8,19) (8,20) (7,20) (7,21) (7,22) (6,22) (6,22) (5,22) (7,22) (6,22) (5,22) (4,22) (3,22) (2,22) (2,21) (2,20) (2,19) (2,18) (2,17) (2,16) (2,15) (2,14) (2,13) (2,12) (2,11) (2,10) (2,9) (2,8) (3,8) (3,7) (4,7) (5,7) (5,7) (5,7) (5,7) (5,7) (5,7) (5,7) (5,7) (5,7) (5,7) (5,7) (5,7) (5,7) (5,7) (5,7) (5,7) (5,7) (5,7) (5,7) (5,7) (5,7) (5,7) (5,7) (5,7) (5,7) (5,7) (5,7) (5,7) (5,7) (5,7) (5,7) 
-[Waiting_time_Solve] ERROR: Global solution is not consistent before refreshing zone for agent 23
-[Create_Local_Problem] WARNING: no error just test Agent 1 has makespan path
-[Create_Local_Problem] WARNING: no error just test Agent 6 has makespan path
-[Create_Local_Problem] WARNING: no error just test Agent 11 has makespan path
-[Create_Local_Problem] WARNING: no error just test Agent 12 has makespan path
-[Create_Local_Problem] WARNING: no error just test Agent 15 has makespan path
-[Create_Local_Problem] WARNING: no error just test Agent 17 has makespan path
-[Create_Local_Problem] WARNING: no error just test Agent 19 has makespan path
-[Create_Local_Problem] WARNING: no error just test Agent 20 has makespan path
-[Create_Local_Problem] WARNING: no error just test Agent 24 has makespan path
-[Create_Local_Problem] WARNING: no error just test Agent 33 has makespan path
-[Create_Local_Problem] WARNING: no error just test Agent 38 has makespan path
-[Create_Local_Problem] WARNING: no error just test Agent 41 has makespan path
-[Create_Local_Problem] WARNING: no error just test Agent 46 has makespan path
-[VerificationHelpers] ERROR: Path is not consistent at timestep 44 7,22 is not neighbor of 5,22
-path: (16,10) (15,10) (14,10) (14,9) (13,9) (13,8) (13,7) (13,6) (13,5) (13,4) (13,4) (13,3) (13,2) (12,2) (11,2) (10,2) (10,3) (10,4) (10,5) (10,6) (10,7) (10,8) (10,9) (10,10) (10,11) (10,12) (10,13) (10,14) (9,14) (8,14) (7,14) (7,15) (7,16) (7,17) (8,17) (8,18) (7,18) (7,18) (7,19) (7,20) (7,21) (7,22) (6,22) (5,22) (7,22) (6,22) (5,22) (4,22) (3,22) (2,22) (2,21) (2,20) (2,19) (2,18) (2,17) (2,16) (2,15) (2,14) (2,13) (2,12) (2,11) (2,10) (2,9) (2,8) (3,8) (3,8) (3,8) (3,8) (3,8) (3,8) (3,8) (3,8) (3,8) (3,8) (3,8) (3,8) (3,8) (3,8) (3,8) (3,8) (3,8) (3,8) (3,8) (3,8) (3,8) (3,8) (3,8) (3,8) (3,8) (3,8) (3,8) (3,8) (3,8) (3,8) (3,8) (3,8) (3,8) 
-[Waiting_time_Solve] ERROR: Global solution is not consistent after refreshing zone for agent 47
-[VerificationHelpers] ERROR: Path is not consistent at timestep 10 10,13 is not neighbor of 8,13
-path: (11,13) (11,13) (10,13) (10,14) (9,14) (10,14) (9,14) (9,13) (8,13) (8,13) (10,13) (10,14) (10,14) (10,13) (9,13) (8,13) (7,13) (7,14) (7,15) (7,16) (7,17) (7,18) (7,19) (7,20) (7,21) (7,22) (6,22) (6,23) (5,23) (4,23) (3,23) (2,23) (2,24) (2,25) (2,26) (2,27) (2,28) (2,29) (2,30) (2,31) (3,31) (4,31) (4,31) (4,31) (4,31) (4,31) (4,31) (4,31) (4,31) (4,31) (4,31) (4,31) (4,31) (4,31) (4,31) (4,31) (4,31) (4,31) (4,31) (4,31) (4,31) (4,31) (4,31) (4,31) (4,31) (4,31) (4,31) (4,31) (4,31) (4,31) (4,31) (4,31) (4,31) (4,31) (4,31) (4,31) (4,31) (4,31) (4,31) (4,31) (4,31) (4,31) (4,31) (4,31) (4,31) (4,31) (4,31) (4,31) (4,31) (4,31) (4,31) (4,31) (4,31) (4,31) (4,31) (4,31) (4,31) 
-[Waiting_time_Solve] ERROR: Global solution is not consistent after refreshing zone for agent 45
-[VerificationHelpers] ERROR: Path is not consistent at timestep 42 7,22 is not neighbor of 5,22
-path: (14,10) (13,10) (13,9) (13,8) (13,7) (13,7) (13,6) (13,5) (13,4) (13,3) (13,2) (12,2) (11,2) (10,2) (10,3) (10,4) (10,5) (10,6) (10,7) (10,8) (10,9) (10,10) (10,11) (10,12) (10,13) (10,14) (9,14) (8,14) (7,14) (7,15) (7,16) (7,17) (7,18) (7,19) (8,19) (8,20) (8,21) (7,21) (7,22) (6,22) (5,22) (5,22) (7,22) (6,22) (5,22) (4,22) (3,22) (2,22) (2,21) (2,20) (2,19) (2,18) (2,17) (2,16) (2,15) (2,14) (2,13) (2,12) (2,11) (2,10) (2,9) (2,8) (3,8) (4,8) (5,8) (5,9) (5,10) (5,11) (5,12) (5,12) (5,12) (5,12) (5,12) (5,12) (5,12) (5,12) (5,12) (5,12) (5,12) (5,12) (5,12) (5,12) (5,12) (5,12) (5,12) (5,12) (5,12) (5,12) (5,12) (5,12) (5,12) (5,12) (5,12) (5,12) (5,12) (5,12) (5,12) 
-[Waiting_time_Solve] ERROR: Global solution is not consistent after refreshing zone for agent 37
-[VerificationHelpers] ERROR: Path is not consistent at timestep 44 7,22 is not neighbor of 5,22
-path: (16,11) (16,10) (15,10) (14,10) (13,10) (13,9) (13,8) (13,7) (13,6) (13,5) (13,4) (13,3) (13,2) (12,2) (11,2) (11,3) (10,3) (10,4) (10,5) (10,6) (10,7) (10,8) (10,9) (10,10) (10,11) (10,12) (10,13) (10,14) (9,14) (8,14) (7,14) (7,15) (7,16) (7,17) (8,17) (8,18) (8,18) (8,19) (7,19) (7,20) (7,21) (7,22) (6,22) (5,22) (7,22) (6,22) (5,22) (4,22) (3,22) (2,22) (2,21) (2,20) (2,19) (2,18) (2,17) (2,16) (2,15) (2,14) (2,13) (2,12) (2,11) (2,10) (2,9) (2,8) (2,7) (3,7) (3,7) (3,7) (3,7) (3,7) (3,7) (3,7) (3,7) (3,7) (3,7) (3,7) (3,7) (3,7) (3,7) (3,7) (3,7) (3,7) (3,7) (3,7) (3,7) (3,7) (3,7) (3,7) (3,7) (3,7) (3,7) (3,7) (3,7) (3,7) (3,7) (3,7) (3,7) 
-[Waiting_time_Solve] ERROR: Global solution is not consistent after refreshing zone for agent 34
-[VerificationHelpers] ERROR: Path is not consistent at timestep 43 7,22 is not neighbor of 5,22
-path: (14,11) (14,10) (14,9) (14,8) (13,8) (13,8) (13,7) (13,6) (13,5) (13,4) (13,3) (13,2) (12,2) (11,2) (10,2) (10,3) (10,4) (10,5) (10,6) (10,7) (10,8) (10,9) (10,10) (10,11) (10,12) (10,13) (10,14) (9,14) (8,14) (7,14) (7,15) (7,16) (7,17) (8,17) (8,18) (8,19) (8,20) (7,20) (7,21) (7,22) (6,22) (6,22) (5,22) (7,22) (6,22) (5,22) (4,22) (3,22) (2,22) (2,21) (2,20) (2,19) (2,18) (2,17) (2,16) (2,15) (2,14) (2,13) (2,12) (2,11) (2,10) (2,9) (2,8) (3,8) (3,7) (4,7) (5,7) (5,7) (5,7) (5,7) (5,7) (5,7) (5,7) (5,7) (5,7) (5,7) (5,7) (5,7) (5,7) (5,7) (5,7) (5,7) (5,7) (5,7) (5,7) (5,7) (5,7) (5,7) (5,7) (5,7) (5,7) (5,7) (5,7) (5,7) (5,7) (5,7) (5,7) 
-[Waiting_time_Solve] ERROR: Global solution is not consistent after refreshing zone for agent 23
-[Waiting_time_Solve] Iteration 1...
-[SAT] Start solving CNF: 772664 clauses and 22472 variables
-[SAT] Solving local zone with SAT iteration 1...
-DEBUG: CNF has 772760 clauses
-DEBUG: First clause: 1 
-DEBUG: Adding 772760 clauses to MiniSAT

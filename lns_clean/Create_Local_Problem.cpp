@@ -73,13 +73,14 @@ namespace {
             } else if (agent_in_zone) { // agent is leaving the zone
                 segment.contiguous_intervals.back().second = segment.exit_t; // end of interval in the zone
                 std::cout << "[Create_Local_problem] Agent " << agent_id << " exited the zone at timestep " << t << std::endl;
+                std::cout << "The exit time is " << segment.exit_t << std::endl;
                 agent_in_zone = false;
             }       
         }
         
         if (!segment.contiguous_intervals.empty() && segment.agent_in_zone) {
             segment.contiguous_intervals.back().second = segment.exit_t; 
-            std::cout << "[Create_Local_problem] Agent " << agent_id << " exited the zone at timestep " << segment.exit_t << std::endl;
+            std::cout << "[Create_Local_problem] Agent " << agent_id << " exited the zone at exit time " << segment.exit_t << std::endl;
         }
         
         return segment;
