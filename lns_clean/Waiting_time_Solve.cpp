@@ -625,6 +625,21 @@ LazySolveResult lazy_solve_with_waiting_time(
                 }
                 segment.path = it_path->second;   
             }
+
+            //verify local solution for consistency
+            for (const auto& segment : state.segments) {
+                if (!verify_path_consistency(segment.path, map)) {
+                    std::cout << "[Waiting_time_Solve] ERROR: Local solution is not consistent after updating with local paths" << std::endl;
+                }
+            }
+
+            //verify current solution before updating
+            for (const auto& [agent_id, path] : current_solution.agent_paths) {
+                if (!verify_path_consistency(path, map)) {
+                    std::cout << "[Waiting_time_Solve] ERROR: Current solution is not consistent before updating with local paths" << std::endl;
+                }
+            }
+
             //update global solution
             //todo: update delayed current solution 
             // when we extend paths in the current solution at the time we deploy waiting time 
