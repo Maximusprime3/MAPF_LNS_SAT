@@ -253,11 +253,7 @@ std::shared_ptr<MDD> build_segment_mdd_with_optional_wait_tail(
         const int idx = static_cast<int>(std::distance(segment_path.begin(), it));
         MDDConstructor constructor(masked_map, start_pos, global_goal_pos, std::max(0, idx));
         auto mdd = constructor.construct_mdd();
-        //print mdd levels
-        std::cout << "[Create_Local_Problem] Agent " << agent_id << " MDD levels: " << mdd->levels.size() << std::endl;
-        for (const auto& [level, nodes] : mdd->levels) {
-            std::cout << "[Create_Local_Problem] Level " << level << ": " << nodes.size() << " nodes" << std::endl;
-        }
+
         int start_of_waiting_suffix = segment_entry_t + idx;
         align_mdd_to_time_window(mdd, segment_entry_t, start_of_waiting_suffix, window_start_t, window_end_t);
         // verify suffix waits at goal
