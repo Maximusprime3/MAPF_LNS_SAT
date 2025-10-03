@@ -638,6 +638,23 @@ LazySolveResult lazy_solve_with_waiting_time(
                 if (!verify_path_consistency(path, map)) {
                     std::cout << "[Waiting_time_Solve] ERROR: Current solution is not consistent before updating with local paths" << std::endl;
                 }
+                int waiting_time = current_solution.get_waiting_time(agent_id);
+                if (path[path.size() - waiting_time - 1] != current_solution.goals[agent_id]) {
+                    std::cout << "[Waiting_time_Solve] ERROR: before updating, Agent " << agent_id << " does not end at the goal position with waiting time" << std::endl;
+                }
+                if (path.back() != current_solution.goals[agent_id]) {
+                    std::cout << "[Waiting_time_Solve] ERROR: before updating, Agent " << agent_id << " does not end at the goal position" << std::endl;
+                }
+                if (agent_id == 44) {
+                    //print path
+                    std::cout << "[Waiting_time_Solve] AGENT 44 Path (size: " << path.size() << "): ";
+                    for (const auto& pos : path) {
+                        std::cout << "(" << pos.first << ", " << pos.second << ") ";
+                    }
+                    std::cout << std::endl;
+                    std::cout << "[Waiting_time_Solve] Waiting time: " << waiting_time << std::endl;
+                    std::cout << "[Waiting_time_Solve] Goal: " << current_solution.goals[agent_id].first << ", " << current_solution.goals[agent_id].second << std::endl;
+                }
             }
 
             //update global solution

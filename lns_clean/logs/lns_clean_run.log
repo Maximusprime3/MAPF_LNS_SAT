@@ -1062,61 +1062,84 @@ Input assignment size: 800
 === END DEBUG ===
 [SAT] Found 0 vertex collisions and 0 edge collisions
 [SAT] Found collision-free local solution!
+[Waiting_time_Solve] AGENT 44 Path (size: 97): (21, 22) (22, 22) (23, 22) (24, 22) (25, 22) (25, 21) (25, 20) (25, 19) (25, 18) (25, 17) (25, 16) (25, 15) (25, 14) (25, 13) (25, 12) (25, 11) (25, 10) (25, 9) (25, 8) (25, 7) (24, 7) (23, 7) (22, 7) (22, 6) (22, 5) (21, 5) (20, 5) (19, 5) (18, 5) (17, 5) (16, 5) (16, 6) (16, 7) (16, 8) (16, 9) (16, 10) (15, 10) (14, 10) (14, 9) (14, 8) (14, 7) (13, 7) (13, 6) (13, 5) (13, 4) (13, 3) (13, 2) (12, 2) (11, 2) (11, 3) (10, 3) (10, 4) (10, 5) (10, 6) (10, 7) (10, 8) (10, 9) (10, 10) (10, 11) (10, 12) (10, 13) (10, 14) (9, 14) (8, 14) (8, 15) (8, 16) (8, 17) (7, 17) (7, 18) (7, 19) (7, 20) (7, 20) (7, 20) (7, 20) (7, 20) (7, 20) (7, 20) (7, 20) (7, 20) (7, 20) (7, 20) (7, 20) (7, 20) (7, 20) (7, 20) (7, 20) (7, 20) (7, 20) (7, 20) (7, 20) (7, 20) (7, 20) (7, 20) (7, 20) (7, 20) (7, 20) (7, 20) 
+[Waiting_time_Solve] Waiting time: 26
+[Waiting_time_Solve] Goal: 7, 20
 [LNS] Updating global solution with pseudo-agent local paths...
+[Current_Solution] Updating global solution for agent 49
 [Current_Solution] Global solution is consistent after updating with local path
 [LNS] Successfully updated global solution with pseudo-agent local paths!
+[Current_Solution] Updating global solution for agent 48
 [Current_Solution] Global solution is consistent after updating with local path
 [LNS] Successfully updated global solution with pseudo-agent local paths!
+[Current_Solution] Updating global solution for agent 47
 [Current_Solution] INFO: Segment 47 exit adjusted from 39 to 42 due to waiting time
 [Current_Solution] Segment 47 lengthened by 3 timesteps; shifting suffix
 [Current_Solution] Global solution is consistent before shifting suffix
 [Current_Solution] Global solution is consistent after shifting suffix
 [Current_Solution] Global solution is consistent after updating with local path
 [LNS] Successfully updated global solution with pseudo-agent local paths!
+[Current_Solution] Updating global solution for agent 46
 [Current_Solution] Global solution is consistent after updating with local path
 [LNS] Successfully updated global solution with pseudo-agent local paths!
+[Current_Solution] Updating global solution for agent 45
 [Current_Solution] Global solution is consistent after updating with local path
 [LNS] Successfully updated global solution with pseudo-agent local paths!
+[Current_Solution] Updating global solution for agent 41
 [Current_Solution] Global solution is consistent after updating with local path
 [LNS] Successfully updated global solution with pseudo-agent local paths!
+[Current_Solution] Updating global solution for agent 2
 [Current_Solution] Global solution is consistent after updating with local path
 [LNS] Successfully updated global solution with pseudo-agent local paths!
+[Current_Solution] Updating global solution for agent 44
 [Current_Solution] Global solution is consistent after updating with local path
 [LNS] Successfully updated global solution with pseudo-agent local paths!
+[Current_Solution] Updating global solution for agent 15
 [Current_Solution] Global solution is consistent after updating with local path
 [LNS] Successfully updated global solution with pseudo-agent local paths!
+[Current_Solution] Updating global solution for agent 34
 [Current_Solution] INFO: Segment 34 exit adjusted from 40 to 43 due to waiting time
 [Current_Solution] Segment 34 lengthened by 3 timesteps; shifting suffix
 [Current_Solution] Global solution is consistent before shifting suffix
 [Current_Solution] Global solution is consistent after shifting suffix
 [Current_Solution] Global solution is consistent after updating with local path
 [LNS] Successfully updated global solution with pseudo-agent local paths!
+[Current_Solution] Updating global solution for agent 10
 [Current_Solution] Global solution is consistent after updating with local path
 [LNS] Successfully updated global solution with pseudo-agent local paths!
+[Current_Solution] Updating global solution for agent 23
 [Current_Solution] INFO: Segment 23 exit adjusted from 38 to 41 due to waiting time
 [Current_Solution] Segment 23 lengthened by 3 timesteps; shifting suffix
 [Current_Solution] Global solution is consistent before shifting suffix
 [Current_Solution] Global solution is consistent after shifting suffix
 [Current_Solution] Global solution is consistent after updating with local path
 [LNS] Successfully updated global solution with pseudo-agent local paths!
+[Current_Solution] Updating global solution for agent 11
 [Current_Solution] Global solution is consistent after updating with local path
 [LNS] Successfully updated global solution with pseudo-agent local paths!
+[Current_Solution] Updating global solution for agent 24
 [Current_Solution] Global solution is consistent after updating with local path
 [LNS] Successfully updated global solution with pseudo-agent local paths!
+[Current_Solution] Updating global solution for agent 8
 [Current_Solution] Global solution is consistent after updating with local path
 [LNS] Successfully updated global solution with pseudo-agent local paths!
+[Current_Solution] Updating global solution for agent 37
 [Current_Solution] INFO: Segment 37 exit adjusted from 37 to 40 due to waiting time
 [Current_Solution] Segment 37 lengthened by 3 timesteps; shifting suffix
 [Current_Solution] Global solution is consistent before shifting suffix
 [Current_Solution] Global solution is consistent after shifting suffix
 [Current_Solution] Global solution is consistent after updating with local path
 [LNS] Successfully updated global solution with pseudo-agent local paths!
+[Current_Solution] Updating global solution for agent 27
 [Current_Solution] Global solution is consistent after updating with local path
 [LNS] Successfully updated global solution with pseudo-agent local paths!
+[Current_Solution] Updating global solution for agent 29
 [Current_Solution] Global solution is consistent after updating with local path
 [LNS] Successfully updated global solution with pseudo-agent local paths!
+[Current_Solution] Updating global solution for agent 30
 [Current_Solution] Global solution is consistent after updating with local path
 [LNS] Successfully updated global solution with pseudo-agent local paths!
+[Current_Solution] Updating global solution for agent 35
 [Current_Solution] Global solution is consistent after updating with local path
 [LNS] Successfully updated global solution with pseudo-agent local paths!
 [LNS] Updating path map with new local paths...
@@ -1351,45 +1374,66 @@ Input assignment size: 544
 === END DEBUG ===
 [SAT] Found 0 vertex collisions and 0 edge collisions
 [SAT] Found collision-free local solution!
+[Waiting_time_Solve] ERROR: before updating, Agent 44 does not end at the goal position with waiting time
+[Waiting_time_Solve] AGENT 44 Path (size: 97): (21, 22) (22, 22) (23, 22) (24, 22) (25, 22) (25, 21) (25, 20) (25, 19) (25, 18) (25, 17) (25, 16) (25, 15) (25, 14) (25, 13) (25, 12) (25, 11) (25, 10) (25, 9) (25, 8) (25, 7) (24, 7) (23, 7) (22, 7) (22, 6) (22, 5) (21, 5) (20, 5) (19, 5) (18, 5) (17, 5) (16, 5) (16, 6) (16, 7) (16, 8) (16, 9) (16, 10) (15, 10) (14, 10) (14, 9) (14, 8) (14, 7) (13, 7) (13, 6) (13, 5) (13, 4) (13, 3) (13, 2) (12, 2) (11, 2) (11, 3) (10, 3) (10, 4) (10, 5) (10, 6) (10, 7) (10, 8) (10, 9) (10, 10) (10, 11) (10, 12) (10, 13) (10, 14) (9, 14) (8, 14) (8, 15) (8, 16) (8, 17) (8, 17) (8, 18) (8, 19) (8, 20) (8, 21) (8, 22) (8, 23) (8, 22) (8, 21) (8, 21) (8, 22) (8, 22) (8, 23) (8, 23) (7, 23) (7, 22) (7, 23) (7, 22) (8, 22) (8, 22) (8, 21) (8, 22) (8, 21) (8, 20) (9, 20) (8, 20) (8, 20) (7, 20) (7, 20) (7, 20) 
+[Waiting_time_Solve] Waiting time: 26
+[Waiting_time_Solve] Goal: 7, 20
+[Waiting_time_Solve] ERROR: before updating, Agent 27 does not end at the goal position with waiting time
 [LNS] Updating global solution with pseudo-agent local paths...
+[Current_Solution] Updating global solution for agent 49
 [Current_Solution] Global solution is consistent after updating with local path
 [LNS] Successfully updated global solution with pseudo-agent local paths!
+[Current_Solution] Updating global solution for agent 47
 [Current_Solution] Global solution is consistent after updating with local path
 [LNS] Successfully updated global solution with pseudo-agent local paths!
+[Current_Solution] Updating global solution for agent 46
 [Current_Solution] Global solution is consistent after updating with local path
 [LNS] Successfully updated global solution with pseudo-agent local paths!
+[Current_Solution] Updating global solution for agent 2
 [Current_Solution] Global solution is consistent after updating with local path
 [LNS] Successfully updated global solution with pseudo-agent local paths!
+[Current_Solution] Updating global solution for agent 34
 [Current_Solution] Global solution is consistent after updating with local path
 [LNS] Successfully updated global solution with pseudo-agent local paths!
+[Current_Solution] Updating global solution for agent 11
 [Current_Solution] Global solution is consistent after updating with local path
 [LNS] Successfully updated global solution with pseudo-agent local paths!
+[Current_Solution] Updating global solution for agent 24
 [Current_Solution] Global solution is consistent after updating with local path
 [LNS] Successfully updated global solution with pseudo-agent local paths!
+[Current_Solution] Updating global solution for agent 8
 [Current_Solution] Global solution is consistent after updating with local path
 [LNS] Successfully updated global solution with pseudo-agent local paths!
+[Current_Solution] Updating global solution for agent 37
 [Current_Solution] Global solution is consistent after updating with local path
 [LNS] Successfully updated global solution with pseudo-agent local paths!
+[Current_Solution] Updating global solution for agent 23
 [Current_Solution] Global solution is consistent after updating with local path
 [LNS] Successfully updated global solution with pseudo-agent local paths!
+[Current_Solution] Updating global solution for agent 36
 [Current_Solution] INFO: Segment 36 exit adjusted from 2 to 3 due to waiting time
 [Current_Solution] Segment 36 lengthened by 1 timesteps; shifting suffix
 [Current_Solution] Global solution is consistent before shifting suffix
 [Current_Solution] Global solution is consistent after shifting suffix
 [Current_Solution] Global solution is consistent after updating with local path
 [LNS] Successfully updated global solution with pseudo-agent local paths!
+[Current_Solution] Updating global solution for agent 27
 [Current_Solution] INFO: Segment 27 exit adjusted from 75 to 76 due to waiting time
 [Current_Solution] Segment 27 lengthened by 1 timesteps; shifting suffix
 [Current_Solution] Global solution is consistent before shifting suffix
 [Current_Solution] Global solution is consistent after shifting suffix
 [Current_Solution] Global solution is consistent after updating with local path
 [LNS] Successfully updated global solution with pseudo-agent local paths!
+[Current_Solution] Updating global solution for agent 29
 [Current_Solution] Global solution is consistent after updating with local path
 [LNS] Successfully updated global solution with pseudo-agent local paths!
+[Current_Solution] Updating global solution for agent 30
 [Current_Solution] Global solution is consistent after updating with local path
 [LNS] Successfully updated global solution with pseudo-agent local paths!
+[Current_Solution] Updating global solution for agent 35
 [Current_Solution] Global solution is consistent after updating with local path
 [LNS] Successfully updated global solution with pseudo-agent local paths!
+[Current_Solution] Updating global solution for agent 45
 [Current_Solution] Global solution is consistent after updating with local path
 [LNS] Successfully updated global solution with pseudo-agent local paths!
 [LNS] Updating path map with new local paths...
@@ -1851,61 +1895,89 @@ Input assignment size: 213
 === END DEBUG ===
 [SAT] Found 0 vertex collisions and 0 edge collisions
 [SAT] Found collision-free local solution!
+[Waiting_time_Solve] ERROR: before updating, Agent 44 does not end at the goal position with waiting time
+[Waiting_time_Solve] AGENT 44 Path (size: 97): (21, 22) (22, 22) (23, 22) (24, 22) (25, 22) (25, 21) (25, 20) (25, 19) (25, 18) (25, 17) (25, 16) (25, 15) (25, 14) (25, 13) (25, 12) (25, 11) (25, 10) (25, 9) (25, 8) (25, 7) (24, 7) (23, 7) (22, 7) (22, 6) (22, 5) (21, 5) (20, 5) (19, 5) (18, 5) (17, 5) (16, 5) (16, 6) (16, 7) (16, 8) (16, 9) (16, 10) (15, 10) (14, 10) (14, 9) (14, 8) (14, 7) (13, 7) (13, 6) (13, 5) (13, 4) (13, 3) (13, 2) (12, 2) (11, 2) (11, 3) (10, 3) (10, 4) (10, 5) (10, 6) (10, 7) (10, 8) (10, 9) (10, 10) (10, 11) (10, 12) (10, 13) (10, 14) (9, 14) (8, 14) (8, 15) (8, 16) (8, 17) (8, 17) (8, 18) (8, 19) (8, 20) (8, 21) (8, 22) (8, 23) (8, 22) (8, 21) (8, 21) (8, 22) (8, 22) (8, 23) (8, 23) (7, 23) (7, 22) (7, 23) (7, 22) (8, 22) (8, 22) (8, 21) (8, 22) (8, 21) (8, 20) (9, 20) (8, 20) (8, 20) (7, 20) (7, 20) (7, 20) 
+[Waiting_time_Solve] Waiting time: 26
+[Waiting_time_Solve] Goal: 7, 20
+[Waiting_time_Solve] ERROR: before updating, Agent 27 does not end at the goal position with waiting time
+[Waiting_time_Solve] ERROR: before updating, Agent 18 does not end at the goal position with waiting time
 [LNS] Updating global solution with pseudo-agent local paths...
+[Current_Solution] Updating global solution for agent 49
 [Current_Solution] Global solution is consistent after updating with local path
 [LNS] Successfully updated global solution with pseudo-agent local paths!
+[Current_Solution] Updating global solution for agent 48
 [Current_Solution] Global solution is consistent after updating with local path
 [LNS] Successfully updated global solution with pseudo-agent local paths!
+[Current_Solution] Updating global solution for agent 46
 [Current_Solution] Global solution is consistent after updating with local path
 [LNS] Successfully updated global solution with pseudo-agent local paths!
+[Current_Solution] Updating global solution for agent 45
 [Current_Solution] INFO: Segment 45 exit adjusted from 3 to 9 due to waiting time
 [Current_Solution] Segment 45 lengthened by 6 timesteps; shifting suffix
 [Current_Solution] Global solution is consistent before shifting suffix
 [Current_Solution] Global solution is consistent after shifting suffix
 [Current_Solution] Global solution is consistent after updating with local path
 [LNS] Successfully updated global solution with pseudo-agent local paths!
+[Current_Solution] Updating global solution for agent 43
 [Current_Solution] Global solution is consistent after updating with local path
 [LNS] Successfully updated global solution with pseudo-agent local paths!
+[Current_Solution] Updating global solution for agent 2
 [Current_Solution] Global solution is consistent after updating with local path
 [LNS] Successfully updated global solution with pseudo-agent local paths!
+[Current_Solution] Updating global solution for agent 44
 [Current_Solution] Global solution is consistent after updating with local path
 [LNS] Successfully updated global solution with pseudo-agent local paths!
+[Current_Solution] Updating global solution for agent 15
 [Current_Solution] Global solution is consistent after updating with local path
 [LNS] Successfully updated global solution with pseudo-agent local paths!
+[Current_Solution] Updating global solution for agent 35
 [Current_Solution] Global solution is consistent after updating with local path
 [LNS] Successfully updated global solution with pseudo-agent local paths!
+[Current_Solution] Updating global solution for agent 6
 [Current_Solution] Global solution is consistent after updating with local path
 [LNS] Successfully updated global solution with pseudo-agent local paths!
+[Current_Solution] Updating global solution for agent 7
 [Current_Solution] Global solution is consistent after updating with local path
 [LNS] Successfully updated global solution with pseudo-agent local paths!
+[Current_Solution] Updating global solution for agent 37
 [Current_Solution] Global solution is consistent after updating with local path
 [LNS] Successfully updated global solution with pseudo-agent local paths!
+[Current_Solution] Updating global solution for agent 8
 [Current_Solution] Global solution is consistent after updating with local path
 [LNS] Successfully updated global solution with pseudo-agent local paths!
+[Current_Solution] Updating global solution for agent 34
 [Current_Solution] Global solution is consistent after updating with local path
 [LNS] Successfully updated global solution with pseudo-agent local paths!
+[Current_Solution] Updating global solution for agent 11
 [Current_Solution] Global solution is consistent after updating with local path
 [LNS] Successfully updated global solution with pseudo-agent local paths!
+[Current_Solution] Updating global solution for agent 24
 [Current_Solution] Global solution is consistent after updating with local path
 [LNS] Successfully updated global solution with pseudo-agent local paths!
+[Current_Solution] Updating global solution for agent 13
 [Current_Solution] Global solution is consistent after updating with local path
 [LNS] Successfully updated global solution with pseudo-agent local paths!
+[Current_Solution] Updating global solution for agent 47
 [Current_Solution] Global solution is consistent after updating with local path
 [LNS] Successfully updated global solution with pseudo-agent local paths!
+[Current_Solution] Updating global solution for agent 18
 [Current_Solution] INFO: Segment 18 exit adjusted from 67 to 70 due to waiting time
 [Current_Solution] Segment 18 lengthened by 3 timesteps; shifting suffix
 [Current_Solution] Global solution is consistent before shifting suffix
 [Current_Solution] Global solution is consistent after shifting suffix
 [Current_Solution] Global solution is consistent after updating with local path
 [LNS] Successfully updated global solution with pseudo-agent local paths!
+[Current_Solution] Updating global solution for agent 23
 [Current_Solution] Global solution is consistent after updating with local path
 [LNS] Successfully updated global solution with pseudo-agent local paths!
+[Current_Solution] Updating global solution for agent 29
 [Current_Solution] INFO: Segment 29 exit adjusted from 44 to 45 due to waiting time
 [Current_Solution] Segment 29 lengthened by 1 timesteps; shifting suffix
 [Current_Solution] Global solution is consistent before shifting suffix
 [Current_Solution] Global solution is consistent after shifting suffix
 [Current_Solution] Global solution is consistent after updating with local path
 [LNS] Successfully updated global solution with pseudo-agent local paths!
+[Current_Solution] Updating global solution for agent 30
 [Current_Solution] Global solution is consistent after updating with local path
 [LNS] Successfully updated global solution with pseudo-agent local paths!
 [LNS] Updating path map with new local paths...
@@ -3932,19 +4004,3 @@ DEBUG: Adding 498348 clauses to MiniSAT
 DEBUG: CNF has 530526 clauses
 DEBUG: First clause: 1 
 DEBUG: Adding 530526 clauses to MiniSAT
-DEBUG: Clause load summary: input=530526, added=530439, tautologies_skipped=0, duplicates_skipped=87, unit_clauses=230, empties=0, intra_clause_literals_removed=0, added_but_db_unchanged=301
-DEBUG: After adding clauses, solver has 529908 clauses and 16939 variables
-DEBUG: MiniSAT found 16939 variables
-DEBUG: Assignment size: 16939
-DEBUG: First few assignment values: 1 0 1 0 1 0 1 0 1 0 
-
-=== DEBUG: cnf_assignment_to_paths ===
-Input assignment size: 16939
-
-=== END DEBUG ===
-[SAT] Found 105 vertex collisions and 46 edge collisions
-[SAT] Adding collision clauses and solving again...
-[SAT] Solving local zone with SAT iteration 2...
-DEBUG: CNF has 530677 clauses
-DEBUG: First clause: 1 
-DEBUG: Adding 530677 clauses to MiniSAT

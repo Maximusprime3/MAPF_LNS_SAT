@@ -115,6 +115,7 @@ void CurrentSolution::update_with_local_paths_and_pseudo_agents(
     }
 
     for (const auto& [agent_id, segment_indices] : local_zone_state.original_to_segments) {
+        std::cout << "[Current_Solution] Updating global solution for agent " << agent_id << std::endl;
         auto global_it = agent_paths.find(agent_id);
         if (global_it == agent_paths.end()) {
             std::cerr << "[ERROR] Missing global path for Agent " << agent_id
@@ -127,7 +128,7 @@ void CurrentSolution::update_with_local_paths_and_pseudo_agents(
                       << " has empty global path; skipping pseudo-agent update" << std::endl;
             continue;
         }
-
+        
         // Ensure chronological processing of all segments for this agent.
         std::vector<size_t> ordered_indices = segment_indices;
         std::sort(ordered_indices.begin(), ordered_indices.end(), [&](size_t a, size_t b) {
