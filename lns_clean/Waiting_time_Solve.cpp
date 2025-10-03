@@ -251,7 +251,9 @@ void apply_waiting_time_delta(
     if (waiting_time_delta <= 0) {
         return;
     }
-    std::cout << "[Waiting_time_Solve] Applying waiting time delta " << waiting_time_delta << " to segment " << segment_id << std::endl;
+
+    int amount_of_waiting_time = waiting_time_delta;
+    std::cout << "[Waiting_time_Solve] Applying waiting time delta " << amount_of_waiting_time << " to segment " << segment_id << std::endl;
     std::cout << "[Waiting_time_Solve] Original id: " << original_id << std::endl;
     //verify current solution for consistency
     if (!verify_path_consistency(current_solution.agent_paths[original_id], map)) {
@@ -309,10 +311,10 @@ void apply_waiting_time_delta(
     const auto it = std::find(segment.path.begin(), segment.path.end(), global_goal_pos);
     if (it != segment.path.end()) {
         const int idx = static_cast<int>(std::distance(segment.path.begin(), it));
-        if (segment.exit_t - idx >= waiting_time_delta) {
+        if (segment.exit_t - idx >= amount_of_waiting_time) {
             //there is enough room to apply waiting time delta inside the segment without extending the segment exit time
             //new first goal idx
-            int new_first_goal_idx = idx + waiting_time_delta;
+            int new_first_goal_idx = idx + amount_of_waiting_time;
             //move the tail beginning back without extending the segment exit time
             segment.mdd = build_segment_mdd_with_optional_wait_tail(masked_map, 
                                                                     segment.path,
@@ -323,8 +325,8 @@ void apply_waiting_time_delta(
                                                                     state.zone_end_t, 
                                                                     segment.original_id,
                                                                     new_first_goal_idx);
-        need_to_apply_waiting_time_delta = false;
-        waiting_time_delta = 0;
+            need_to_apply_waiting_time_delta = false;
+            amount_of_waiting_time = 0;
         } else {
             //else we need to extend the segment exit time but we can also move the tail beginning back
             //by doing so we already apply some of the waiting time delta
@@ -340,17 +342,17 @@ void apply_waiting_time_delta(
                                                                         state.zone_end_t, 
                                                                         segment.original_id,
                                                                         new_first_goal_idx);
-            waiting_time_delta -= usable_waiting_time_in_segment;
+            amount_of_waiting_time -= usable_waiting_time_in_segment;
         }
     }
     if (need_to_apply_waiting_time_delta) {
         //first extend the segment exit time
-        segment.exit_t += waiting_time_delta;
+        segment.exit_t += amount_of_waiting_time;
         state.zone_end_t = std::max(state.zone_end_t, segment.exit_t);
 
         if (!segment.path.empty()) {
             const auto last_position = segment.path.back();
-            for (int i = 0; i < waiting_time_delta; ++i) {
+            for (int i = 0; i < amount_of_waiting_time; ++i) {
                 segment.path.push_back(last_position);
             }
             int segment_length = segment.exit_t - segment.entry_t + 1;
@@ -407,8 +409,8 @@ void apply_waiting_time_delta(
             continue;
         }
         LocalSegment& following = state.segments[follow_index];
-        following.entry_t += waiting_time_delta;
-        following.exit_t += waiting_time_delta;
+        following.entry_t += amount_of_waiting_time;
+        following.exit_t += amount_of_waiting_time;
         filter_collisions(state, following);
         state.zone_end_t = std::max(state.zone_end_t, following.exit_t);
     }
@@ -442,7 +444,7 @@ void apply_waiting_time_delta(
     const int path_length = static_cast<int>(new_path.size());
     const int suffix_start = static_cast<int>(std::min(segment.exit_t + 1, path_length - 1));
     for (int i = path_length - 1; i >= suffix_start; --i) {
-        int src = i - waiting_time_delta;
+        int src = i - amount_of_waiting_time;
         if (src < 0) {
             src = 0;
         }
@@ -452,7 +454,7 @@ void apply_waiting_time_delta(
     if (new_path.back() != current_solution.goals[segment.original_id]) {
         std::cout << "[Waiting_time_Solve] ERROR: made room for the segment, now path does not end at the goal" << std::endl;
         //print waiting time delta
-        std::cout << "[Waiting_time_Solve] Waiting time delta: " << waiting_time_delta << std::endl;
+        std::cout << "[Waiting_time_Solve] Waiting time delta: " << amount_of_waiting_time << std::endl;
         //print agent waiting time
         std::cout << "[Waiting_time_Solve] Agent waiting time: " << current_solution.get_waiting_time(segment.original_id) << std::endl;
         //print path
@@ -529,7 +531,7 @@ void apply_waiting_time_delta(
     //we can update the path map
     current_solution.create_path_map();
 
-    if (segment.exit_t != old_exit + waiting_time_delta) {
+    if (segment.exit_t != old_exit + amount_of_waiting_time) {
         std::cout << "[Waiting_time_Solve] WARNING: Segment " << segment_id
                   << " exit time mismatch after waiting adjustment" << std::endl;
     }

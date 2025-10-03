@@ -18,6 +18,10 @@
 #include <string>
 #include <iostream>
 
+//ERRORS
+//empty bucket zones in log
+// waiting time delta not rising above 2 ? wtf
+// entry>exit error in the log
 
 //TODO:
 //very initial solution //traffic avoidance sampling from mdds
