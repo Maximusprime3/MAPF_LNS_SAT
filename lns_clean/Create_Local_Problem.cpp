@@ -151,12 +151,22 @@ namespace {
         int new_exit_t,
         const std::pair<int,int>& goal_pos) {
         
-        if (!mdd || mdd->levels.empty() || old_exit_t >= new_exit_t) {
+        if (!mdd || mdd->levels.empty() || old_exit_t > new_exit_t) {
             std::cout << "[Create_Local_Problem] ERROR: No MDD to extend" << std::endl;
             return false;
         }
+        if (old_exit_t == new_exit_t) {
+            std::cout << "[Create_Local_Problem] Old exit time is equal to new exit time, no need to extend" << std::endl;
+            return true;
+        }
         
-        auto parent_level = mdd->levels.at(old_exit_t);
+        auto parent_level_it = mdd->levels.find(old_exit_t);
+        if (parent_level_it == mdd->levels.end()) {
+            std::cout << "[Create_Local_Problem] ERROR: No MDD level found at old exit time "
+                      << old_exit_t << std::endl;
+            return false;
+        }
+        auto& parent_level = parent_level_it->second;
         if (parent_level.empty()) {
             std::cout << "[Create_Local_Problem] ERROR: Parent level is empty" << std::endl;
             return false;
@@ -176,11 +186,19 @@ namespace {
         
         for (int t = old_exit_t + 1; t <= new_exit_t; ++t) {
             auto waiting_node = std::make_shared<MDDNode>(goal_pos, t);
-            auto parent_node = mdd->levels.at(t-1).front();
+
+            auto parent_level_it = mdd->levels.find(t-1);
+            if (parent_level_it == mdd->levels.end() || parent_level_it->second.empty()) {
+                std::cout << "[Create_Local_Problem] ERROR: No MDD level found at time " << t-1 << std::endl;
+                return false;
+            }
+
+            auto& parent_level = parent_level_it->second;
+            auto parent_node = parent_level.front();
             //there should be only one node at this level but safety check
-            if (mdd->levels.at(t-1).size() != 1) {
+            if (parent_level.size() != 1) {
                 std::cout << "[Create_Local_Problem] ERROR: More than one node at final mdd level " << t-1 << std::endl;
-                for (const auto& node : mdd->levels.at(t-1)) {
+                for (const auto& node : parent_level) {
                     std::cout << "[Create_Local_Problem] Node: " << node->position.first << ", " << node->position.second << " at time " << node->time_step << std::endl;
                 }
                 return false;
@@ -190,9 +208,10 @@ namespace {
                 return false;
             }
             //current mdd level should be empty
-            if (!mdd->levels.at(t).empty()) {
+            auto& current_level = mdd->levels[t];
+            if (!current_level.empty()) {
                 std::cout << "[Create_Local_Problem] ERROR: MDD level " << t << " is not empty" << std::endl;
-                for (const auto& node : mdd->levels.at(t)) {
+                for (const auto& node : current_level) {
                     std::cout << "[Create_Local_Problem] Node: " << node->position.first << ", " << node->position.second << " at time " << node->time_step << std::endl;
                 }
                 return false;
@@ -234,7 +253,13 @@ std::shared_ptr<MDD> build_segment_mdd_with_optional_wait_tail(
         const int idx = static_cast<int>(std::distance(segment_path.begin(), it));
         MDDConstructor constructor(masked_map, start_pos, global_goal_pos, std::max(0, idx));
         auto mdd = constructor.construct_mdd();
-        align_mdd_to_time_window(mdd, segment_entry_t, idx, window_start_t, window_end_t);
+        //print mdd levels
+        std::cout << "[Create_Local_Problem] Agent " << agent_id << " MDD levels: " << mdd->levels.size() << std::endl;
+        for (const auto& [level, nodes] : mdd->levels) {
+            std::cout << "[Create_Local_Problem] Level " << level << ": " << nodes.size() << " nodes" << std::endl;
+        }
+        int start_of_waiting_suffix = segment_entry_t + idx;
+        align_mdd_to_time_window(mdd, segment_entry_t, start_of_waiting_suffix, window_start_t, window_end_t);
         // verify suffix waits at goal
         for (int i = idx + 1; i < static_cast<int>(segment_path.size()); ++i) {
             if (segment_path[i] != global_goal_pos) {
@@ -242,7 +267,8 @@ std::shared_ptr<MDD> build_segment_mdd_with_optional_wait_tail(
                 break;
             }
         }
-        bool ok = extend_waiting_suffix_in_mdd(mdd, idx, segment_exit_t, global_goal_pos);
+        
+        bool ok = extend_waiting_suffix_in_mdd(mdd, start_of_waiting_suffix, segment_exit_t, global_goal_pos);
         if (!ok) {
             std::cout << "[Create_Local_Problem] ERROR: Failed to extend waiting tail for agent " << agent_id << std::endl;
             return nullptr;
@@ -277,6 +303,11 @@ void align_mdd_to_time_window(std::shared_ptr<MDD> mdd,
 
     if (end_t < start_t) { // does start and end make sense?
         std::cout << "[Create_Local_Problem] ERROR: Invalid time window for MDD alignment (end_t < start_t)." << std::endl;
+        mdd->levels.clear();
+        return;
+    }
+    if (entry_t > exit_t) {
+        std::cout << "[Create_Local_Problem] ERROR: Invalid entry and exit times for MDD alignment (entry_t > exit_t)." << std::endl;
         mdd->levels.clear();
         return;
     }
