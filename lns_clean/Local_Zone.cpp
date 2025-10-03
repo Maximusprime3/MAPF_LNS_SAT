@@ -296,9 +296,10 @@ std::vector<DiamondBucket> build_diamond_buckets(
         diamond_bucket.latest_t = bucket_latest_t;
         diamond_bucket.masked_map = mask_map_outside_shape(map, diamond_bucket.positions);
         diamond_buckets.push_back(std::move(diamond_bucket));
-        std::cout << "[LOCAL ZONE] Built diamond bucket for conflict " << conlfict_idx << " with " 
-                  << diamond_bucket.positions.size() << " positions, " << diamond_bucket.indices.size() << " conflicts, " 
-                  << diamond_bucket.earliest_t << " - " << diamond_bucket.latest_t << " time window" << std::endl;
+        const auto& created_bucket = diamond_buckets.back();
+        std::cout << "[LOCAL ZONE] Built diamond bucket for conflict " << conlfict_idx << " with "
+                  << created_bucket.positions.size() << " positions, " << created_bucket.indices.size() << " conflicts, "
+                  << created_bucket.earliest_t << " - " << created_bucket.latest_t << " time window" << std::endl;
     }
 
     return diamond_buckets;

@@ -614,13 +614,13 @@ void refresh_zone_after_extension(
             if (was_in_the_zone_at_last_timestep) {
                 LocalSegment& segment_to_continue = last_segment;
                 if (segment_to_continue.exit_t == state.zone_end_t) {
-                    std::cout << "[Create_Local_Problem] Agent " << agent_id << "already extended to the end of the zone" << std::endl;
+                    std::cout << "[Create_Local_Problem] ERROR? Agent " << agent_id << "already extended to the end of the zone" << std::endl;
                     continue;
                 } else {
                     std::cout << "[Create_Local_Problem] Agent " << agent_id << " is continuing in the zone" << std::endl;
                     //extend the segment to the end of the first segment in the new window
                     const int old_exit = segment_to_continue.exit_t;
-                    const int new_exit = segment_info.entry_t[0];
+                    const int new_exit = segment_info.exit_t[0];
                     if (new_exit <= old_exit) {
                         std::cout << "[Create_Local_Problem] ERROR: New exit" << new_exit 
                                   << " time is less than or equal to old exit time" << old_exit 
