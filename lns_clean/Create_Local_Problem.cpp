@@ -144,10 +144,119 @@ namespace {
         return result;
     }
 
+    //extend the mdd with a waiting tail to the goal position
+    //if want to create only waiting mdd, create mdd with only goal position, then use this function
+    bool extend_waiting_suffix_in_mdd(std::shared_ptr<MDD> mdd,
+        int old_exit_t,
+        int new_exit_t,
+        const std::pair<int,int>& goal_pos) {
+        
+        if (!mdd || mdd->levels.empty() || old_exit_t >= new_exit_t) {
+            std::cout << "[Create_Local_Problem] ERROR: No MDD to extend" << std::endl;
+            return false;
+        }
+        
+        auto parent_level = mdd->levels.at(old_exit_t);
+        if (parent_level.empty()) {
+            std::cout << "[Create_Local_Problem] ERROR: Parent level is empty" << std::endl;
+            return false;
+        }
+        
+        bool has_goal_parent = false;
+        for (const auto& node : parent_level) {
+            if (node && node->position == goal_pos) {
+                has_goal_parent = true;
+                break;
+            }
+        }
+        if (!has_goal_parent) {
+            std::cout << "[Create_Local_Problem] ERROR: No goal parent found" << std::endl;
+            return false;
+        }
+        
+        for (int t = old_exit_t + 1; t <= new_exit_t; ++t) {
+            auto waiting_node = std::make_shared<MDDNode>(goal_pos, t);
+            auto parent_node = mdd->levels.at(t-1).front();
+            //there should be only one node at this level but safety check
+            if (mdd->levels.at(t-1).size() != 1) {
+                std::cout << "[Create_Local_Problem] ERROR: More than one node at final mdd level " << t-1 << std::endl;
+                for (const auto& node : mdd->levels.at(t-1)) {
+                    std::cout << "[Create_Local_Problem] Node: " << node->position.first << ", " << node->position.second << " at time " << node->time_step << std::endl;
+                }
+                return false;
+            } else if (parent_node->position != goal_pos) { //parent node should be the goal position
+                std::cout << "[Create_Local_Problem] ERROR: Parent node is not the goal position" << std::endl;
+                std::cout << "[Create_Local_Problem] Parent node: " << parent_node->position.first << ", " << parent_node->position.second << " at time " << parent_node->time_step << std::endl;
+                return false;
+            }
+            //current mdd level should be empty
+            if (!mdd->levels.at(t).empty()) {
+                std::cout << "[Create_Local_Problem] ERROR: MDD level " << t << " is not empty" << std::endl;
+                for (const auto& node : mdd->levels.at(t)) {
+                    std::cout << "[Create_Local_Problem] Node: " << node->position.first << ", " << node->position.second << " at time " << node->time_step << std::endl;
+                }
+                return false;
+            }
+            parent_node->add_child(waiting_node);
+            mdd->add_node(waiting_node);
+        }
+        return true;
+    }
+
 }
 
 
 
+
+std::shared_ptr<MDD> build_segment_mdd_with_optional_wait_tail(
+    const std::vector<std::vector<char>>& masked_map,
+    const std::vector<std::pair<int,int>>& segment_path,
+    const std::pair<int,int>& global_goal_pos,
+    int segment_entry_t,
+    int segment_exit_t,
+    int window_start_t,
+    int window_end_t,
+    int agent_id,
+    int forced_pre_tail_idx = -1) {
+
+    if (segment_path.empty()) {
+        std::cout << "[Create_Local_Problem] ERROR: Empty segment path for agent " << agent_id << std::endl;
+        return nullptr;
+    }
+    const std::pair<int,int>& start_pos = segment_path.front();
+    const std::pair<int,int>& goal_pos = segment_path.back();
+
+    const auto it = std::find(segment_path.begin(), segment_path.end(), global_goal_pos);
+    if (forced_pre_tail_idx != -1) {
+        it = segment_path.begin() + forced_pre_tail_idx; //this is used to extend mdd body before the tail begins. to use waiting time
+    }
+    if (it != segment_path.end()) {
+        const int idx = static_cast<int>(std::distance(segment_path.begin(), it));
+        MDDConstructor constructor(masked_map, start_pos, global_goal_pos, std::max(0, idx));
+        auto mdd = constructor.construct_mdd();
+        align_mdd_to_time_window(mdd, segment_entry_t, idx, window_start_t, window_end_t);
+        // verify suffix waits at goal
+        for (int i = idx + 1; i < static_cast<int>(segment_path.size()); ++i) {
+            if (segment_path[i] != global_goal_pos) {
+                std::cout << "[Create_Local_Problem] ERROR: Agent " << agent_id << " deviates after reaching global goal" << std::endl;
+                break;
+            }
+        }
+        bool ok = extend_waiting_suffix_in_mdd(mdd, idx, segment_exit_t, global_goal_pos);
+        if (!ok) {
+            std::cout << "[Create_Local_Problem] ERROR: Failed to extend waiting tail for agent " << agent_id << std::endl;
+            return nullptr;
+        }
+        return mdd;
+    }
+
+    // normal MDD to local segment goal
+    const int segment_length = std::max(0, segment_exit_t - segment_entry_t + 1);
+    MDDConstructor constructor(masked_map, start_pos, goal_pos, std::max(0, segment_length - 1));
+    auto mdd = constructor.construct_mdd();
+    align_mdd_to_time_window(mdd, segment_entry_t, segment_exit_t, window_start_t, window_end_t);
+    return mdd;
+}
 
 void align_mdd_to_time_window(std::shared_ptr<MDD> mdd,
     int entry_t, int exit_t, //agent's entry and exit times
@@ -294,16 +403,25 @@ LocalZoneState build_local_problem_for_zone(
 
             const auto& segment_path = segment.path;
             if (!segment_path.empty()) {
-                const auto& start_pos = segment_path.front();
-                const auto& goal_pos = segment_path.back();
                 int segment_length = segment.exit_t - segment.entry_t + 1;
                 if (segment_length <= 0) {
                     segment_length = static_cast<int>(segment_path.size());
                 }
-                MDDConstructor constructor(masked_map, start_pos, goal_pos, std::max(0, segment_length - 1));
-                auto segment_mdd = constructor.construct_mdd();
-                align_mdd_to_time_window(segment_mdd, segment.entry_t, segment.exit_t, start_t, end_t);
-                segment.mdd = segment_mdd;
+                // build MDD, optionally with waiting tail if global goal is in the segment
+                const auto& global_goal_pos = current_solution.goals[agent_id];
+                segment.mdd = build_segment_mdd_with_optional_wait_tail(
+                    masked_map,
+                    segment_path,
+                    global_goal_pos,
+                    segment.entry_t,
+                    segment.exit_t,
+                    start_t,
+                    end_t,
+                    agent_id);
+                if (!segment.mdd) {
+                    std::cout << "[Create_Local_Problem] ERROR: Failed to build MDD for agent " << agent_id << std::endl;
+                    continue;
+                }
             }
 
             size_t new_index = state.segments.size();
@@ -538,10 +656,19 @@ void refresh_zone_after_extension(
                         state.zone_end_t = segment_to_continue.exit_t;
                     }
                     //update the segment accordingly
-                    //make new mdd
-                    MDDConstructor constructor(masked_map, segment_to_continue.path.front(), segment_to_continue.path.back(), segment_to_continue.exit_t - segment_to_continue.entry_t);
-                    segment_to_continue.mdd = constructor.construct_mdd();
-                    align_mdd_to_time_window(segment_to_continue.mdd, segment_to_continue.entry_t, segment_to_continue.exit_t, state.zone_start_t, state.zone_end_t);
+                    //continueing the segment until the new exit time
+                    segment_to_continue.mdd = build_segment_mdd_with_optional_wait_tail(masked_map, 
+                                                                                        segment_to_continue.path, 
+                                                                                        current_solution.goals[agent_id], 
+                                                                                        segment_to_continue.entry_t, 
+                                                                                        segment_to_continue.exit_t, 
+                                                                                        state.zone_start_t, 
+                                                                                        state.zone_end_t, 
+                                                                                        agent_id);
+                    if (!segment_to_continue.mdd) {
+                        std::cout << "[Create_Local_Problem] ERROR: Failed to build MDD for agent " << agent_id << std::endl;
+                        continue;
+                    }
                     //check if there are any new conflicts in the segment?
                     // -> no we already have all conflicts in the zone
                 }
@@ -561,9 +688,19 @@ void refresh_zone_after_extension(
                 new_segment.original_exit_t = segment_info.exit_t[0];
                 new_segment.path = std::move(segment_info.zone_paths[0]);
                 //make new mdd
-                MDDConstructor constructor(masked_map, new_segment.path.front(), new_segment.path.back(), new_segment.exit_t - new_segment.entry_t);
-                new_segment.mdd = constructor.construct_mdd();
-                align_mdd_to_time_window(new_segment.mdd, new_segment.entry_t, new_segment.exit_t, state.zone_start_t, state.zone_end_t);
+                new_segment.mdd = build_segment_mdd_with_optional_wait_tail(masked_map, 
+                                                                            new_segment.path, 
+                                                                            current_solution.goals[agent_id], 
+                                                                            new_segment.entry_t, 
+                                                                            new_segment.exit_t, 
+                                                                            state.zone_start_t, 
+                                                                            state.zone_end_t, 
+                                                                            agent_id);
+                if (!new_segment.mdd) {
+                    std::cout << "[Create_Local_Problem] ERROR: Failed to build MDD for agent " << agent_id << std::endl;
+                    continue;
+                }
+
                 //check if there are any new conflicts in the segment?
                 // -> no we already have all conflicts in the zone
 
@@ -586,10 +723,18 @@ void refresh_zone_after_extension(
             new_segment.original_exit_t = segment_info.exit_t[0];
             new_segment.path = std::move(segment_info.zone_paths[0]);
             //make new mdd
-            MDDConstructor constructor(masked_map, new_segment.path.front(), new_segment.path.back(), new_segment.exit_t - new_segment.entry_t);
-            new_segment.mdd = constructor.construct_mdd();
-            align_mdd_to_time_window(new_segment.mdd, new_segment.entry_t, new_segment.exit_t, state.zone_start_t, state.zone_end_t);
-
+            new_segment.mdd = build_segment_mdd_with_optional_wait_tail(masked_map, 
+                                                                        new_segment.path, 
+                                                                        current_solution.goals[agent_id], 
+                                                                        new_segment.entry_t, 
+                                                                        new_segment.exit_t, 
+                                                                        state.zone_start_t, 
+                                                                        state.zone_end_t, 
+                                                                        agent_id);
+            if (!new_segment.mdd) {
+                std::cout << "[Create_Local_Problem] ERROR: Failed to build MDD for agent " << agent_id << std::endl;
+                continue;
+            }
             state.original_to_segments[agent_id].push_back(state.segments.size());
             state.segment_index_by_id[agent_id] = state.segments.size();
             state.segments.push_back(new_segment);
@@ -610,9 +755,18 @@ void refresh_zone_after_extension(
             new_segment.original_exit_t = segment_info.exit_t[i];
             new_segment.path = std::move(segment_info.zone_paths[i]);
             //make new mdd
-            MDDConstructor constructor(masked_map, new_segment.path.front(), new_segment.path.back(), new_segment.exit_t - new_segment.entry_t);
-            new_segment.mdd = constructor.construct_mdd();
-            align_mdd_to_time_window(new_segment.mdd, new_segment.entry_t, new_segment.exit_t, state.zone_start_t, state.zone_end_t);
+            new_segment.mdd = build_segment_mdd_with_optional_wait_tail(masked_map, 
+                                                                        new_segment.path,
+                                                                        current_solution.goals[new_segment.original_id], 
+                                                                        new_segment.entry_t, 
+                                                                        new_segment.exit_t, 
+                                                                        state.zone_start_t, 
+                                                                        state.zone_end_t, 
+                                                                        new_segment.original_id);
+            if (!new_segment.mdd) {
+                std::cout << "[Create_Local_Problem] ERROR: Failed to build MDD for agent " << new_segment.original_id << std::endl;
+                continue;
+            }
 
             state.original_to_pseudo_ids[agent_id].push_back(pseudo_agent_id);
             state.segment_index_by_id[pseudo_agent_id] = state.segments.size();

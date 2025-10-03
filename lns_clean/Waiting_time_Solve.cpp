@@ -302,29 +302,81 @@ void apply_waiting_time_delta(
     }
 
     const int old_exit = segment.exit_t;
-    segment.exit_t += waiting_time_delta;
-    state.zone_end_t = std::max(state.zone_end_t, segment.exit_t);
-
-    if (!segment.path.empty()) {
-        const auto last_position = segment.path.back();
-        for (int i = 0; i < waiting_time_delta; ++i) {
-            segment.path.push_back(last_position);
+    bool need_to_apply_waiting_time_delta = true;
+    //if the segment already containts the waiting tail, no need to extend the segment exit time but to move the tail
+    //if more movement is needed than there is tail in the segment, extend the segment exit time
+    const auto global_goal_pos = current_solution.goals[segment.original_id];
+    const auto it = std::find(segment.path.begin(), segment.path.end(), global_goal_pos);
+    if (it != segment.path.end()) {
+        const int idx = static_cast<int>(std::distance(segment.path.begin(), it));
+        if (segment.exit_t - idx >= waiting_time_delta) {
+            //there is enough room to apply waiting time delta inside the segment without extending the segment exit time
+            //new first goal idx
+            int new_first_goal_idx = idx + waiting_time_delta;
+            //move the tail beginning back without extending the segment exit time
+            segment.mdd = build_segment_mdd_with_optional_wait_tail(masked_map, 
+                                                                    segment.path,
+                                                                    current_solution.goals[segment.original_id], 
+                                                                    segment.entry_t, 
+                                                                    segment.exit_t, 
+                                                                    state.zone_start_t, 
+                                                                    state.zone_end_t, 
+                                                                    segment.original_id,
+                                                                    new_first_goal_idx);
+        need_to_apply_waiting_time_delta = false;
+        waiting_time_delta = 0;
         }
-        const auto& start_pos = segment.path.front();
-        const auto& goal_pos = segment.path.back();
-        int segment_length = segment.exit_t - segment.entry_t + 1;
-        if (segment_length <= 0) {
+        //else we need to extend the segment exit time but we can also move the tail beginning back
+        //by doing so we already apply some of the waiting time delta
+        int usable_waiting_time_in_segment = segment.exit_t - idx;
+        int new_first_goal_idx = idx + usable_waiting_time_in_segment; //remove the tail
+
+        segment.mdd = build_segment_mdd_with_optional_wait_tail(masked_map, 
+                                                                    segment.path,
+                                                                    current_solution.goals[segment.original_id], 
+                                                                    segment.entry_t, 
+                                                                    segment.exit_t, 
+                                                                    state.zone_start_t, 
+                                                                    state.zone_end_t, 
+                                                                    segment.original_id,
+                                                                    new_first_goal_idx);
+        waiting_time_delta -= usable_waiting_time_in_segment;
+    }
+    if (need_to_apply_waiting_time_delta) {
+        //first extend the segment exit time
+        segment.exit_t += waiting_time_delta;
+        state.zone_end_t = std::max(state.zone_end_t, segment.exit_t);
+
+        if (!segment.path.empty()) {
+            const auto last_position = segment.path.back();
+            for (int i = 0; i < waiting_time_delta; ++i) {
+                segment.path.push_back(last_position);
+            }
+            int segment_length = segment.exit_t - segment.entry_t + 1;
+            if (segment_length <= 0) {
+                std::cout << "[Waiting_time_Solve] ERROR: Segment " << segment_id
+                        << " has 0 length path" << std::endl;
+                segment_length = static_cast<int>(segment.path.size());
+            } 
+            segment.mdd = build_segment_mdd_with_optional_wait_tail(masked_map, 
+                                                                    segment.path, 
+                                                                    current_solution.goals[segment.original_id], 
+                                                                    segment.entry_t, 
+                                                                    segment.exit_t, 
+                                                                    state.zone_start_t, 
+                                                                    state.zone_end_t, 
+                                                                    segment.original_id);
+            if (!segment.mdd) {
+                std::cout << "[Waiting_time_Solve] ERROR: Failed to build MDD for agent " << segment.original_id << std::endl;
+                return;
+            }
+
+            //segment.path = segment.mdd->sample_random_path(rng); //initial place holder path
+        } else {
             std::cout << "[Waiting_time_Solve] ERROR: Segment " << segment_id
-                      << " has 0 length path" << std::endl;
-            segment_length = static_cast<int>(segment.path.size());
-        } 
-        MDDConstructor constructor(masked_map, start_pos, goal_pos, std::max(0, segment_length - 1));
-        segment.mdd = constructor.construct_mdd();
-        segment.path = segment.mdd->sample_random_path(rng); //initial place holder path
-    } else {
-        std::cout << "[Waiting_time_Solve] ERROR: Segment " << segment_id
-                  << " has no path" << std::endl;
-        segment.mdd.reset();
+                    << " has no path" << std::endl;
+            segment.mdd.reset();
+        }
     }
 
     auto original_it = state.original_to_segments.find(segment.original_id);
@@ -426,7 +478,7 @@ void apply_waiting_time_delta(
             continue;
         }
         LocalSegment& following = state.segments[follow_index];
-        for (int i = 0; i < following.path.size(); ++i) {
+        for (size_t i = 0; i < following.path.size(); ++i) {
             new_path[following.entry_t + i] = following.path[i];
         }
     }
@@ -542,8 +594,6 @@ LazySolveResult lazy_solve_with_waiting_time(
     //assert waiting time and make a backup so we can restore it if waiting time solve fails
     auto waiting_time_backup = current_solution.backup_waiting_times();
     auto paths_backup = current_solution.backup_paths();
-
-    int using_waiting_time = initial_waiting_time_amount; 
 
     //std::vector<ConflictMeta> current_conflicts;
     //for (int conflict_idx : local_zone_conflict_indices) {
@@ -712,16 +762,16 @@ LazySolveResult lazy_solve_with_waiting_time(
         bool extended_time_window = false;
         int previous_zone_end_t = state.zone_end_t;
         //adjust them if we use waiting time
-        auto try_apply_wait = [&](int segment_id) {
+        auto try_apply_wait = [&](int segment_id, int amount_of_waiting_time) {
             auto idx_it = state.segment_index_by_id.find(segment_id);
             if (idx_it == state.segment_index_by_id.end()) return false;
             const LocalSegment& segment = state.segments[idx_it->second];
             int original_id = segment.original_id;
-            if (current_solution.get_waiting_time(original_id) < waiting_delta) {
+            if (current_solution.get_waiting_time(original_id) < amount_of_waiting_time) {
                 return false;
             }
             //print waiting time delta
-            std::cout << "[Waiting_time_Solve] Applying " << waiting_delta << " waiting time to agent " << original_id << std::endl;
+            std::cout << "[Waiting_time_Solve] Applying " << amount_of_waiting_time << " waiting time to agent " << original_id << std::endl;
             //print agent waiting time
             std::cout << "[Waiting_time_Solve] Agent waiting time: " << current_solution.get_waiting_time(original_id) << std::endl;
             //current makespan
@@ -732,7 +782,7 @@ LazySolveResult lazy_solve_with_waiting_time(
                 std::cout << "(" << pos.first << ", " << pos.second << ") ";
             }
             std::cout << std::endl;
-            current_solution.use_waiting_time(original_id, waiting_delta);
+            current_solution.use_waiting_time(original_id, amount_of_waiting_time);
 
             //check if the path of this agent is consitent before apllying waiting time
             if (!verify_path_consistency(current_solution.agent_paths[original_id], map)) {
@@ -741,7 +791,7 @@ LazySolveResult lazy_solve_with_waiting_time(
             }
             //update local zone state segments associated with the agent            
             //TODO updating mdds
-            apply_waiting_time_delta(state, segment_id, original_id, waiting_delta, masked_map, map, current_solution, rng);
+            apply_waiting_time_delta(state, segment_id, original_id, amount_of_waiting_time, masked_map, map, current_solution, rng);
 
             //check if the path of this agent is consitent after apllying waiting time
             if (!verify_path_consistency(current_solution.agent_paths[original_id], map)) {
@@ -753,7 +803,7 @@ LazySolveResult lazy_solve_with_waiting_time(
                 extended_time_window = true;
             }
 
-            std::cout << "[Waiting_time_Solve] Applied " << waiting_delta << " waiting time to segment " << segment_id << " for agent " << original_id << std::endl;
+            std::cout << "[Waiting_time_Solve] Applied " << amount_of_waiting_time << " waiting time to segment " << segment_id << " for agent " << original_id << std::endl;
 
             applied_wait = true;
 
@@ -768,6 +818,40 @@ LazySolveResult lazy_solve_with_waiting_time(
         for (const auto& collision : pending_vertex_collisions) {
             agent1 = std::get<0>(collision);
             agent2 = std::get<1>(collision);
+            //spceial case collision happens at the global goal positin of either agent
+            std::pair<int,int> collision_pos = std::get<2>(collision);
+            if (collision_pos == current_solution.goals[agent1] || collision_pos == current_solution.goals[agent2]) {
+                //which agents global goal position is it?
+                int agent_of_concern = (collision_pos == current_solution.goals[agent1]) ? agent1 : agent2;
+                std::vector<std::pair<int,int>> path_of_concern = current_solution.agent_paths[agent_of_concern];
+                int idx_of_first_goal = std::distance(path_of_concern.begin(), std::find(path_of_concern.begin(), path_of_concern.end(), current_solution.goals[agent_of_concern]));
+                //we would need to consume as much waiting time as there is in the path up until the t of the collision
+                int idx_of_collision = std::distance(path_of_concern.begin(), std::find(path_of_concern.begin(), path_of_concern.end(), collision_pos));
+                int waiting_time_needed = idx_of_collision - idx_of_first_goal;
+                //check if we would use that much waiting time for this agent or the regular amount for the other agent
+                //which way do we use less waiting time?
+                int current_agents_left_over_waiting_time = current_solution.get_waiting_time(agent_of_concern) - waiting_time_needed;
+                int other_agent = (agent_of_concern == agent1) ? agent2 : agent1;
+                int other_agents_left_over_waiting_time = current_solution.get_waiting_time(other_agent) - waiting_delta;
+                if (current_agents_left_over_waiting_time > other_agents_left_over_waiting_time) {
+                    if (try_apply_wait(agent_of_concern, waiting_time_needed)){
+                        agents_already_used_waiting_time.insert(agent_of_concern);
+                    } else {
+                        out_of_waiting_time = true;
+                        break; //impossible to use waiting time
+                    }
+                } else {
+                    if (try_apply_wait(other_agent, waiting_delta)){
+                        agents_already_used_waiting_time.insert(other_agent);
+                    } else {
+                        out_of_waiting_time = true;
+                        break; //impossible to use waiting time
+                    }
+                }
+                continue;
+            }
+
+
             //check if we already used waiting time for one of the agents 
             if (agents_already_used_waiting_time.count(agent1) > 0 ||
                 agents_already_used_waiting_time.count(agent2) > 0) {
@@ -775,14 +859,14 @@ LazySolveResult lazy_solve_with_waiting_time(
             }
             //check which agent has more waiting time and use it
             if (current_solution.get_waiting_time(agent1) >= current_solution.get_waiting_time(agent2)) {
-                if (try_apply_wait(agent1)){
+                if (try_apply_wait(agent1, waiting_delta)){
                     agents_already_used_waiting_time.insert(agent1);
                 } else {
                     out_of_waiting_time = true;
                     break; //impossible to use waiting time
                 }
             } else {
-                if (try_apply_wait(agent2)){
+                if (try_apply_wait(agent2, waiting_delta)){
                     agents_already_used_waiting_time.insert(agent2);
                 } else {
                     out_of_waiting_time = true;
@@ -798,16 +882,54 @@ LazySolveResult lazy_solve_with_waiting_time(
                 agents_already_used_waiting_time.count(agent2) > 0) {
                 continue;
             }
+
+            //spceial case collision happens at the global goal positin of either agent
+            std::pair<int,int> collision_pos1 = std::get<2>(collision);
+            std::pair<int,int> collision_pos2 = std::get<3>(collision);
+            if (collision_pos1 == current_solution.goals[agent1] || collision_pos1 == current_solution.goals[agent2] ||
+                collision_pos2 == current_solution.goals[agent1] || collision_pos2 == current_solution.goals[agent2]) {
+                //which collision is it?
+                std::pair<int,int> collision_pos= (collision_pos1 == current_solution.goals[agent1] || collision_pos1 == current_solution.goals[agent2]) ? collision_pos1 : collision_pos2;
+                //which agents global goal position is it?
+                int agent_of_concern = (collision_pos == current_solution.goals[agent1]) ? agent1 : agent2;
+                std::vector<std::pair<int,int>> path_of_concern = current_solution.agent_paths[agent_of_concern];
+                int idx_of_first_goal = std::distance(path_of_concern.begin(), std::find(path_of_concern.begin(), path_of_concern.end(), current_solution.goals[agent_of_concern]));
+                //we would need to consume as much waiting time as there is in the path up until the t of the collision
+                int idx_of_collision = std::distance(path_of_concern.begin(), std::find(path_of_concern.begin(), path_of_concern.end(), collision_pos));
+                int waiting_time_needed = idx_of_collision - idx_of_first_goal;
+                //check if we would use that much waiting time for this agent or the regular amount for the other agent
+                //which way do we use less waiting time?
+                int current_agents_left_over_waiting_time = current_solution.get_waiting_time(agent_of_concern) - waiting_time_needed;
+                int other_agent = (agent_of_concern == agent1) ? agent2 : agent1;
+                int other_agents_left_over_waiting_time = current_solution.get_waiting_time(other_agent) - waiting_delta;
+                if (current_agents_left_over_waiting_time > other_agents_left_over_waiting_time) {
+                    if (try_apply_wait(agent_of_concern, waiting_time_needed)){
+                        agents_already_used_waiting_time.insert(agent_of_concern);
+                    } else {
+                        out_of_waiting_time = true;
+                        break; //impossible to use waiting time
+                    }
+                } else {
+                    if (try_apply_wait(other_agent, waiting_delta)){
+                        agents_already_used_waiting_time.insert(other_agent);
+                    } else {
+                        out_of_waiting_time = true;
+                        break; //impossible to use waiting time
+                    }
+                }
+                continue;
+            }
+            
             //check which agent has more waiting time and use it
             if (current_solution.get_waiting_time(agent1) >= current_solution.get_waiting_time(agent2)) {
-                if (try_apply_wait(agent1)){
+                if (try_apply_wait(agent1, waiting_delta)){
                     agents_already_used_waiting_time.insert(agent1);
                 } else {
                     out_of_waiting_time = true;
                     break; //impossible to use waiting time
                 }
             } else {
-                if (try_apply_wait(agent2)){
+                if (try_apply_wait(agent2, waiting_delta)){
                     agents_already_used_waiting_time.insert(agent2);
                 } else {
                     out_of_waiting_time = true;

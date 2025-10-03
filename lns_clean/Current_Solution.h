@@ -194,10 +194,10 @@ struct CurrentSolution {
             int new_exit_t  = it_new->second.second;
 
             auto it_old = original_entry_exit_time.find(agent_id);
-            int old_entry_t = new_entry_t;
+            //int old_entry_t = new_entry_t;
             int old_exit_t  = new_exit_t;
             if (it_old != original_entry_exit_time.end()) {
-                old_entry_t = it_old->second.first;
+                //old_entry_t = it_old->second.first;
                 old_exit_t  = it_old->second.second;
             }
 

@@ -45,6 +45,18 @@ void align_mdd_to_time_window(std::shared_ptr<MDD> mdd,
     int entry_t, int exit_t,
     int start_t, int end_t);
 
+// Builds an MDD for a segment, adding a waiting tail at the global goal if present in the segment.
+std::shared_ptr<MDD> build_segment_mdd_with_optional_wait_tail(
+    const std::vector<std::vector<char>>& masked_map,
+    const std::vector<std::pair<int,int>>& segment_path,
+    const std::pair<int,int>& global_goal_pos,
+    int segment_entry_t,
+    int segment_exit_t,
+    int window_start_t,
+    int window_end_t,
+    int agent_id,
+    int forced_pre_tail_idx = -1);
+
 LocalZoneState build_local_problem_for_zone(
     const CurrentSolution& current_solution,
     const std::set<std::pair<int,int>>& zone_positions_set,
