@@ -325,22 +325,23 @@ void apply_waiting_time_delta(
                                                                     new_first_goal_idx);
         need_to_apply_waiting_time_delta = false;
         waiting_time_delta = 0;
-        }
-        //else we need to extend the segment exit time but we can also move the tail beginning back
-        //by doing so we already apply some of the waiting time delta
-        int usable_waiting_time_in_segment = segment.exit_t - idx;
-        int new_first_goal_idx = idx + usable_waiting_time_in_segment; //remove the tail
+        } else {
+            //else we need to extend the segment exit time but we can also move the tail beginning back
+            //by doing so we already apply some of the waiting time delta
+            int usable_waiting_time_in_segment = segment.exit_t - idx;
+            int new_first_goal_idx = idx + usable_waiting_time_in_segment; //remove the tail
 
-        segment.mdd = build_segment_mdd_with_optional_wait_tail(masked_map, 
-                                                                    segment.path,
-                                                                    current_solution.goals[segment.original_id], 
-                                                                    segment.entry_t, 
-                                                                    segment.exit_t, 
-                                                                    state.zone_start_t, 
-                                                                    state.zone_end_t, 
-                                                                    segment.original_id,
-                                                                    new_first_goal_idx);
-        waiting_time_delta -= usable_waiting_time_in_segment;
+            segment.mdd = build_segment_mdd_with_optional_wait_tail(masked_map, 
+                                                                        segment.path,
+                                                                        current_solution.goals[segment.original_id], 
+                                                                        segment.entry_t, 
+                                                                        segment.exit_t, 
+                                                                        state.zone_start_t, 
+                                                                        state.zone_end_t, 
+                                                                        segment.original_id,
+                                                                        new_first_goal_idx);
+            waiting_time_delta -= usable_waiting_time_in_segment;
+        }
     }
     if (need_to_apply_waiting_time_delta) {
         //first extend the segment exit time

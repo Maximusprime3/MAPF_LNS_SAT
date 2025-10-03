@@ -89,9 +89,53 @@ std::set<std::pair<int,int>> create_shape_from_conflicts_meta( //only returns wa
         std::cout << "[LOCAL ZONE] ERROR: No conflict points found to create shape" << std::endl;
         return std::set<std::pair<int,int>>();
     }
-    return create_shape_from_conflicts(conflict_points, expansion_radius, map);
-}
+    auto zone = create_shape_from_conflicts(conflict_points, expansion_radius, map);
+    if (!zone.empty()) {
+        return zone;
+    }
 
+    // Diagnostics and fallback seeding when the expansion failed to return any cell.
+    const int rows = static_cast<int>(map.size());
+    const int cols = rows > 0 ? static_cast<int>(map[0].size()) : 0;
+    std::cout << "[LOCAL ZONE] WARNING: create_shape_from_conflicts_meta produced an empty zone for "
+              << conflict_meta.size() << " conflicts. Falling back to seeding conflict coordinates." << std::endl;
+
+    auto in_bounds = [&](int r, int c) {
+        return r >= 0 && r < rows && c >= 0 && c < cols;
+    };
+    auto is_walkable = [&](int r, int c) {
+        if (!in_bounds(r, c)) return false;
+        char cell = map[r][c];
+        return cell == '.' || cell == 'G';
+    };
+    auto try_insert = [&](const std::pair<int,int>& pos, const char* label) {
+        int r = pos.first;
+        int c = pos.second;
+        if (!in_bounds(r, c)) {
+            std::cout << "[LOCAL ZONE] WARNING: " << label << " position (" << r << "," << c
+                      << ") is outside the map bounds" << std::endl;
+            return;
+        }
+        char cell = map[r][c];
+        if (!is_walkable(r, c)) {
+            std::cout << "[LOCAL ZONE] WARNING: " << label << " position (" << r << "," << c
+                      << ") is not walkable (cell='" << cell << "')" << std::endl;
+            return;
+        }
+        zone.insert(pos);
+        std::cout << "[LOCAL ZONE] Fallback inserted " << label << " position (" << r << "," << c
+                  << ") with cell='" << cell << "'" << std::endl;
+    };
+
+    for (const auto& conflict : conflict_meta) {
+        try_insert(conflict.pos1, conflict.is_edge ? "edge-pos1" : "vertex-pos");
+        if (conflict.is_edge) {
+            try_insert(conflict.pos2, "edge-pos2");
+        }
+    }
+
+    return zone;
+}
 
 /**
  * @brief Compute newly added positions between two shapes, bounded to walkable map cells.
