@@ -620,7 +620,7 @@ LazySolveResult lazy_solve_with_waiting_time(
         start_t,
         end_t);
    
-
+    LocalZoneState baseline_state = state;
     
     auto original_entry_exit = build_original_entry_exit_time_map(state);
 
@@ -635,6 +635,10 @@ LazySolveResult lazy_solve_with_waiting_time(
     const int max_iterations = 100;
     for (int iter = 0; iter < max_iterations; iter++) {
         std::cout << "[Waiting_time_Solve] Iteration " << iter << "..." << std::endl;
+
+        current_solution.restore_paths(paths_backup);
+        current_solution.restore_waiting_times(waiting_time_backup);
+        state = baseline_state;
 
         auto mdd_map = build_segment_mdd_map(state);
         CNFConstructor cnf_constructor(mdd_map, true);
