@@ -64,13 +64,13 @@ namespace {
                     if (segment.entry_t == -1) {
                         segment.entry_t = t;
                     }
-                    std::cout << "[Create_Local_problem] Agent " << agent_id << " entered the zone at timestep " << t << std::endl;
+                    //std::cout << "[Create_Local_problem] Agent " << agent_id << " entered the zone at timestep " << t << std::endl;
                     //print path
-                    std::cout << "[Create_Local_problem] Path (size: " << path.size() << "): ";
-                    for (const auto& pos : path) {
-                        std::cout << "(" << pos.first << ", " << pos.second << ") ";
-                    }
-                    std::cout << std::endl;
+                    //std::cout << "[Create_Local_problem] Path (size: " << path.size() << "): ";
+                    //for (const auto& pos : path) {
+                        //std::cout << "(" << pos.first << ", " << pos.second << ") ";
+                    //}
+                    //std::cout << std::endl;
                     segment.contiguous_intervals.emplace_back(t, t); // start new interval
                 } else { // agent is already in the zone
                     segment.contiguous_intervals.back().second = t; // last known position in the zone
@@ -78,8 +78,8 @@ namespace {
                 segment.exit_t = t; 
             } else if (agent_in_zone) { // agent is leaving the zone
                 segment.contiguous_intervals.back().second = segment.exit_t; // end of interval in the zone
-                std::cout << "[Create_Local_problem] Agent " << agent_id << " is not in the zone at timestep " << t << std::endl;
-                std::cout << "The exit time is " << segment.exit_t << std::endl;
+                //std::cout << "[Create_Local_problem] Agent " << agent_id << " is not in the zone at timestep " << t << std::endl;
+                //std::cout << "The exit time is " << segment.exit_t << std::endl;
                 agent_in_zone = false;
             }       
         }
@@ -568,13 +568,9 @@ void refresh_zone_after_extension(
         //get the max time of the path
         int path_length = static_cast<int>(global_path.size()) - 1; //should be makespan
         //check if its makespan
-        if (path_length == current_solution.max_timestep) {
-            std::cout << "[Create_Local_Problem]  test Agent " << agent_id << " has makespan path, as it should" << std::endl;
-        } else if (path_length > current_solution.max_timestep) {
+        if (path_length > current_solution.max_timestep) {
             std::cout << "[Create_Local_Problem] ERROR: Agent " << agent_id << " has path length " << path_length << " instead of makespan " << current_solution.max_timestep << std::endl;
-        } else {
-            std::cout << "[Create_Local_Problem] ERROR: Agent " << agent_id << " has path length " << path_length << " instead of makespan " << current_solution.max_timestep << std::endl;
-        }
+        } 
 
         //clamp the start and end of the scan, cannot be negative or greater than the path length
         int scan_start = clamp_time(new_window_start, 0, path_length);
@@ -623,11 +619,11 @@ void refresh_zone_after_extension(
                               << agent_id << std::endl;
                     continue;
                 }
-                if (segment_to_continue.exit_t == state.zone_end_t) {
-                    std::cout << "[Create_Local_Problem] ERROR? Agent " << agent_id << "already extended to the end of the zone" << std::endl;
+                if (segment_to_continue.exit_t > state.zone_end_t) {
+                    std::cout << "[Create_Local_Problem] ERROR: Agent " << agent_id << "already extended to the end of the zone" << std::endl;
                     continue;
                 } else {
-                    std::cout << "[Create_Local_Problem] Agent " << agent_id << " is continuing in the zone" << std::endl;
+                    //std::cout << "[Create_Local_Problem] Agent " << agent_id << " is continuing in the zone" << std::endl;
                     //extend the segment to the end of the first segment in the new window
                     const int old_exit = segment_to_continue.exit_t;
                     const int new_exit = segment_info.exit_t[0];
@@ -637,9 +633,9 @@ void refresh_zone_after_extension(
                                   << " for agent " << agent_id << std::endl;
                         continue;
                     }
-                    if (new_exit <= old_exit) {
+                    if (new_exit < old_exit) {
                         std::cout << "[Create_Local_Problem] ERROR: New exit" << new_exit
-                                  << " time is less than or equal to old exit time" << old_exit
+                                  << " time is less than old exit time" << old_exit
                                   << "for agent " << agent_id << std::endl;
                         continue;
                     }
@@ -670,13 +666,7 @@ void refresh_zone_after_extension(
                             continue;
                         }
                         segment_to_continue.path[local_index] = global_path[i];
-                        if (!segment_info.zone_paths.empty()
-                            && i - segment_to_continue.entry_t < static_cast<int>(segment_info.zone_paths[0].size())
-                            && global_path[i] != segment_info.zone_paths[0][i-segment_to_continue.entry_t]) {
-                            std::cout << "[Create_Local_Problem] ERROR: Global path and segment path do not match at time " << i << std::endl;
-                            extension_valid = false;
-                            continue;
-                        }
+                       
                         const int relative_index = i - segment_info.entry_t[0];
                         if (relative_index >= 0 && relative_index < static_cast<int>(segment_info.zone_paths[0].size())
                             && global_path[i] != segment_info.zone_paths[0][relative_index]) {

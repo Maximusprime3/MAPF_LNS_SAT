@@ -259,8 +259,6 @@ void apply_waiting_time_delta(
     if (!verify_path_consistency(current_solution.agent_paths[original_id], map)) {
         std::cout << "[Waiting_time_Solve] ERROR: Current solution wrong, before applying waiting time" << std::endl;
         return;
-    }else{
-        std::cout << "[Waiting_time_Solve] Current solution is consistent, before applying waiting time" << std::endl;
     }
 
     auto idx_it = state.segment_index_by_id.find(segment_id);
@@ -311,7 +309,13 @@ void apply_waiting_time_delta(
     const auto it = std::find(segment.path.begin(), segment.path.end(), global_goal_pos);
     if (it != segment.path.end()) {
         const int idx = static_cast<int>(std::distance(segment.path.begin(), it));
-        if (segment.exit_t - idx >= amount_of_waiting_time) {
+
+        const int absolute_idx_time = segment.entry_t + idx;
+        int segment_waiting_slack = segment.exit_t - absolute_idx_time;
+        if (segment_waiting_slack < 0) {
+            segment_waiting_slack = 0;
+        }
+        if (segment_waiting_slack >= amount_of_waiting_time) {
             //there is enough room to apply waiting time delta inside the segment without extending the segment exit time
             //new first goal idx
             int new_first_goal_idx = idx + amount_of_waiting_time;
@@ -330,7 +334,7 @@ void apply_waiting_time_delta(
         } else {
             //else we need to extend the segment exit time but we can also move the tail beginning back
             //by doing so we already apply some of the waiting time delta
-            int usable_waiting_time_in_segment = segment.exit_t - idx;
+            int usable_waiting_time_in_segment = segment_waiting_slack;
             int new_first_goal_idx = idx + usable_waiting_time_in_segment; //remove the tail
 
             segment.mdd = build_segment_mdd_with_optional_wait_tail(masked_map, 
@@ -636,23 +640,12 @@ LazySolveResult lazy_solve_with_waiting_time(
     for (int iter = 0; iter < max_iterations; iter++) {
         std::cout << "[Waiting_time_Solve] Iteration " << iter << "..." << std::endl;
 
-        current_solution.restore_paths(paths_backup);
-        current_solution.restore_waiting_times(waiting_time_backup);
-        state = baseline_state;
+        
 
         auto mdd_map = build_segment_mdd_map(state);
         CNFConstructor cnf_constructor(mdd_map, true);
         CNF local_cnf = cnf_constructor.construct_cnf();
 
-        //add collision clauses to cnf
-        auto cached_vertex_collisions = gather_vertex_collisions(state);
-        auto cached_edge_collisions = gather_edge_collisions(state);
-        if (!cached_vertex_collisions.empty()) {
-            cnf_constructor.add_collision_clauses_to_cnf(local_cnf, cached_vertex_collisions);
-        }
-        if (!cached_edge_collisions.empty()) {
-            cnf_constructor.add_edge_collision_clauses_to_cnf(local_cnf, cached_edge_collisions);
-        }
 
         auto entry_exit_map = build_segment_entry_exit_time_map(state);
 
@@ -1023,6 +1016,8 @@ LazySolveResult lazy_solve_with_waiting_time(
     std::cout << "[Waiting_time_Solve] Restoring waiting times" << std::endl;
     current_solution.restore_waiting_times(waiting_time_backup);
     current_solution.restore_paths(paths_backup);
+
+    //state = baseline_state;
     
     return result;
 }
