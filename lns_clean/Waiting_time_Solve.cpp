@@ -645,6 +645,9 @@ LazySolveResult lazy_solve_with_waiting_time(
         auto mdd_map = build_segment_mdd_map(state);
         CNFConstructor cnf_constructor(mdd_map, true);
         CNF local_cnf = cnf_constructor.construct_cnf();
+        //add collision clauses to cnf
+        auto cached_vertex_collisions = gather_vertex_collisions(state);
+        auto cached_edge_collisions = gather_edge_collisions(state);
 
 
         auto entry_exit_map = build_segment_entry_exit_time_map(state);

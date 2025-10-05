@@ -209,7 +209,14 @@ LazySolveResult lazy_SAT_solve(
     if (!initial_edge_collisions.empty()) {
         discovered_edge_collisions_set.insert(initial_edge_collisions.begin(), initial_edge_collisions.end());
         // add them to the cnf
-        cnf_constructor.add_edge_collision_clauses_to_cnf(local_cnf, initial_edge_collisions);
+        //cnf_constructor.add_edge_collision_clauses_to_cnf(local_cnf, initial_edge_collisions);
+        for (const auto& edge_collision : discovered_edge_collisions_set) {
+            int agent1_id, agent2_id, timestep;
+            std::pair<int,int> pos1, pos2;
+            std::tie(agent1_id, agent2_id, pos1, pos2, timestep) = edge_collision;
+            std::vector<int> clause = cnf_constructor.add_single_edge_collision_clause(agent1_id, agent2_id, pos1, pos2, timestep, false);
+            local_cnf.add_clause(clause);
+        }
     }
 
 
@@ -218,16 +225,34 @@ LazySolveResult lazy_SAT_solve(
     int iteration = 0;
     std::unordered_map<int, std::vector<std::pair<int,int>>> final_local_paths;
     std::vector<int> initial_assignment;
+    MiniSatSolution minisat_result;
+    minisat_result.satisfiable = false;
+    minisat_result.num_decisions = 0;
+    minisat_result.solve_time = 0.0;
+    minisat_result.error_message = "";
 
     //main loop: solve the cnf with minisat
     while (!solution_found && iteration < max_iterations) {
         iteration++;
         std::cout << "[SAT] Solving local zone with SAT iteration " << iteration << "..." << std::endl;
         //solve with minisat
-        auto minisat_result = first_iteration
-            ? SATSolverManager::solve_cnf_with_minisat(local_cnf)
-            : SATSolverManager::solve_cnf_with_minisat(local_cnf, &initial_assignment);
+        //print local cnf
+        std::cout << "[SAT] Local CNF: " << local_cnf.get_clauses().size() << " clauses "<< std::endl;
+        for (const auto& clause : local_cnf.get_clauses()) {
+            std::cout << "[SAT] Clause: ";
+            for (const auto& lit : clause) {
+                std::cout << lit << " ,";
+            }
+        }
+        std::cout << std::endl;
+        if (first_iteration) {
+            minisat_result = SATSolverManager::solve_cnf_with_minisat(local_cnf);
+        } else {
+            minisat_result = SATSolverManager::solve_cnf_with_minisat(local_cnf, &initial_assignment);
+        }
         first_iteration = false;
+        //print minisat result
+        std::cout << "[SAT] Minisat result: " << minisat_result.satisfiable << " num decisions: " << minisat_result.num_decisions << " solve time: " << minisat_result.solve_time << " error message: " << minisat_result.error_message << std::endl;
 
         if (!minisat_result.satisfiable) {
             std::cout << "[SAT] Local problem is unsatisfiable after " << iteration << " iterations" << std::endl;
@@ -262,7 +287,14 @@ LazySolveResult lazy_SAT_solve(
         } else {
             //add new collision clauses to the cnf
             cnf_constructor.add_collision_clauses_to_cnf(local_cnf, new_collisions);
-            cnf_constructor.add_edge_collision_clauses_to_cnf(local_cnf, new_edge_collisions);
+            //cnf_constructor.add_edge_collision_clauses_to_cnf(local_cnf, new_edge_collisions);
+            for (const auto& edge_collision : new_edge_collisions) {
+                int agent1_id, agent2_id, timestep;
+                std::pair<int,int> pos1, pos2;
+                std::tie(agent1_id, agent2_id, pos1, pos2, timestep) = edge_collision;
+                std::vector<int> clause = cnf_constructor.add_single_edge_collision_clause(agent1_id, agent2_id, pos1, pos2, timestep, false);
+                local_cnf.add_clause(clause);
+            }
             //create new partial assignment from the solution and continue
             initial_assignment = minisat_result.assignment; //minisat uses polarity not hard assumptions, we can set all variables and it can still change them
 
@@ -270,7 +302,6 @@ LazySolveResult lazy_SAT_solve(
         }
     }
     if (!solution_found) {
-        std::cout << "[SAT] Failed to find local solution after " << max_iterations << " iterations" << std::endl;
         std::cout << "[SAT] Local problem appears to be unsatisfiable in current zone" << std::endl;
     }
 
