@@ -195,6 +195,7 @@ Input assignment size: 22
 === END DEBUG ===
 [SAT] Found 0 vertex collisions and 0 edge collisions
 [SAT] Found collision-free local solution!
+[Waiting_time_Solve] Solution found, updating global solution
 [LNS] Updating global solution with pseudo-agent local paths...
 [Current_Solution] Updating global solution for agent 9
 [Current_Solution] INFO: Segment 9 exit adjusted from 27 to 30 due to waiting time
@@ -387,6 +388,7 @@ Input assignment size: 47
 === END DEBUG ===
 [SAT] Found 0 vertex collisions and 0 edge collisions
 [SAT] Found collision-free local solution!
+[Waiting_time_Solve] Solution found, updating global solution
 [LNS] Updating global solution with pseudo-agent local paths...
 [Current_Solution] Updating global solution for agent 8
 [Current_Solution] INFO: Segment 8 exit adjusted from 30 to 31 due to waiting time
@@ -8806,6 +8808,7 @@ Input assignment size: 9
 === END DEBUG ===
 [SAT] Found 0 vertex collisions and 0 edge collisions
 [SAT] Found collision-free local solution!
+[Waiting_time_Solve] Solution found, updating global solution
 [LNS] Updating global solution with pseudo-agent local paths...
 [Current_Solution] Updating global solution for agent 6
 [Current_Solution] INFO: Segment 6 exit adjusted from 19 to 20 due to waiting time
@@ -8953,6 +8956,7 @@ Input assignment size: 22
 === END DEBUG ===
 [SAT] Found 0 vertex collisions and 0 edge collisions
 [SAT] Found collision-free local solution!
+[Waiting_time_Solve] Solution found, updating global solution
 [LNS] Updating global solution with pseudo-agent local paths...
 [Current_Solution] Updating global solution for agent 9
 [Current_Solution] INFO: Segment 9 exit adjusted from 27 to 30 due to waiting time
@@ -9271,6 +9275,7 @@ Input assignment size: 29
 === END DEBUG ===
 [SAT] Found 0 vertex collisions and 0 edge collisions
 [SAT] Found collision-free local solution!
+[Waiting_time_Solve] Solution found, updating global solution
 [LNS] Updating global solution with pseudo-agent local paths...
 [Current_Solution] Updating global solution for agent 8
 [Current_Solution] Global solution is consistent after updating with local path
@@ -16133,6 +16138,7 @@ Input assignment size: 28
 === END DEBUG ===
 [SAT] Found 0 vertex collisions and 0 edge collisions
 [SAT] Found collision-free local solution!
+[Waiting_time_Solve] Solution found, updating global solution
 [LNS] Updating global solution with pseudo-agent local paths...
 [Current_Solution] Updating global solution for agent 6
 [Current_Solution] INFO: Segment 6 exit adjusted from 19 to 22 due to waiting time
@@ -16284,6 +16290,7 @@ Input assignment size: 22
 === END DEBUG ===
 [SAT] Found 0 vertex collisions and 0 edge collisions
 [SAT] Found collision-free local solution!
+[Waiting_time_Solve] Solution found, updating global solution
 [LNS] Updating global solution with pseudo-agent local paths...
 [Current_Solution] Updating global solution for agent 9
 [Current_Solution] INFO: Segment 9 exit adjusted from 27 to 30 due to waiting time
@@ -16582,6 +16589,7 @@ Input assignment size: 29
 === END DEBUG ===
 [SAT] Found 0 vertex collisions and 0 edge collisions
 [SAT] Found collision-free local solution!
+[Waiting_time_Solve] Solution found, updating global solution
 [LNS] Updating global solution with pseudo-agent local paths...
 [Current_Solution] Updating global solution for agent 8
 [Current_Solution] Global solution is consistent after updating with local path
@@ -24976,6 +24984,7 @@ Input assignment size: 7
 === END DEBUG ===
 [SAT] Found 0 vertex collisions and 0 edge collisions
 [SAT] Found collision-free local solution!
+[Waiting_time_Solve] Solution found, updating global solution
 [LNS] Updating global solution with pseudo-agent local paths...
 [Current_Solution] Updating global solution for agent 5
 [Current_Solution] Global solution is consistent after updating with local path
@@ -25059,6 +25068,7 @@ Input assignment size: 9
 === END DEBUG ===
 [SAT] Found 0 vertex collisions and 0 edge collisions
 [SAT] Found collision-free local solution!
+[Waiting_time_Solve] Solution found, updating global solution
 [LNS] Updating global solution with pseudo-agent local paths...
 [Current_Solution] Updating global solution for agent 6
 [Current_Solution] INFO: Segment 6 exit adjusted from 19 to 20 due to waiting time
@@ -25206,6 +25216,7 @@ Input assignment size: 22
 === END DEBUG ===
 [SAT] Found 0 vertex collisions and 0 edge collisions
 [SAT] Found collision-free local solution!
+[Waiting_time_Solve] Solution found, updating global solution
 [LNS] Updating global solution with pseudo-agent local paths...
 [Current_Solution] Updating global solution for agent 9
 [Current_Solution] INFO: Segment 9 exit adjusted from 27 to 30 due to waiting time
@@ -25524,6 +25535,7 @@ Input assignment size: 29
 === END DEBUG ===
 [SAT] Found 0 vertex collisions and 0 edge collisions
 [SAT] Found collision-free local solution!
+[Waiting_time_Solve] Solution found, updating global solution
 [LNS] Updating global solution with pseudo-agent local paths...
 [Current_Solution] Updating global solution for agent 8
 [Current_Solution] Global solution is consistent after updating with local path
@@ -25678,6 +25690,7 @@ Input assignment size: 22
 === END DEBUG ===
 [SAT] Found 0 vertex collisions and 0 edge collisions
 [SAT] Found collision-free local solution!
+[Waiting_time_Solve] Solution found, updating global solution
 [LNS] Updating global solution with pseudo-agent local paths...
 [Current_Solution] Updating global solution for agent 9
 [Current_Solution] INFO: Segment 9 exit adjusted from 40 to 41 due to waiting time
@@ -34050,6 +34063,7 @@ Input assignment size: 7
 === END DEBUG ===
 [SAT] Found 0 vertex collisions and 0 edge collisions
 [SAT] Found collision-free local solution!
+[Waiting_time_Solve] Solution found, updating global solution
 [LNS] Updating global solution with pseudo-agent local paths...
 [Current_Solution] Updating global solution for agent 5
 [Current_Solution] Global solution is consistent after updating with local path
@@ -34358,6 +34372,7 @@ Input assignment size: 28
 === END DEBUG ===
 [SAT] Found 0 vertex collisions and 0 edge collisions
 [SAT] Found collision-free local solution!
+[Waiting_time_Solve] Solution found, updating global solution
 [LNS] Updating global solution with pseudo-agent local paths...
 [Current_Solution] Updating global solution for agent 6
 [Current_Solution] INFO: Segment 6 exit adjusted from 19 to 22 due to waiting time
@@ -34509,6 +34524,7 @@ Input assignment size: 22
 === END DEBUG ===
 [SAT] Found 0 vertex collisions and 0 edge collisions
 [SAT] Found collision-free local solution!
+[Waiting_time_Solve] Solution found, updating global solution
 [LNS] Updating global solution with pseudo-agent local paths...
 [Current_Solution] Updating global solution for agent 9
 [Current_Solution] INFO: Segment 9 exit adjusted from 27 to 30 due to waiting time
@@ -34807,6 +34823,7 @@ Input assignment size: 29
 === END DEBUG ===
 [SAT] Found 0 vertex collisions and 0 edge collisions
 [SAT] Found collision-free local solution!
+[Waiting_time_Solve] Solution found, updating global solution
 [LNS] Updating global solution with pseudo-agent local paths...
 [Current_Solution] Updating global solution for agent 8
 [Current_Solution] Global solution is consistent after updating with local path
@@ -34943,6 +34960,7 @@ Input assignment size: 24
 === END DEBUG ===
 [SAT] Found 0 vertex collisions and 0 edge collisions
 [SAT] Found collision-free local solution!
+[Waiting_time_Solve] Solution found, updating global solution
 [LNS] Updating global solution with pseudo-agent local paths...
 [Current_Solution] Updating global solution for agent 5
 [Current_Solution] INFO: Segment 5 exit adjusted from 34 to 36 due to waiting time
@@ -43583,6 +43601,7 @@ Input assignment size: 28
 === END DEBUG ===
 [SAT] Found 0 vertex collisions and 0 edge collisions
 [SAT] Found collision-free local solution!
+[Waiting_time_Solve] Solution found, updating global solution
 [LNS] Updating global solution with pseudo-agent local paths...
 [Current_Solution] Updating global solution for agent 6
 [Current_Solution] INFO: Segment 6 exit adjusted from 19 to 22 due to waiting time
@@ -43734,6 +43753,7 @@ Input assignment size: 22
 === END DEBUG ===
 [SAT] Found 0 vertex collisions and 0 edge collisions
 [SAT] Found collision-free local solution!
+[Waiting_time_Solve] Solution found, updating global solution
 [LNS] Updating global solution with pseudo-agent local paths...
 [Current_Solution] Updating global solution for agent 9
 [Current_Solution] INFO: Segment 9 exit adjusted from 27 to 30 due to waiting time
@@ -44051,6 +44071,7 @@ Input assignment size: 29
 === END DEBUG ===
 [SAT] Found 0 vertex collisions and 0 edge collisions
 [SAT] Found collision-free local solution!
+[Waiting_time_Solve] Solution found, updating global solution
 [LNS] Updating global solution with pseudo-agent local paths...
 [Current_Solution] Updating global solution for agent 8
 [Current_Solution] Global solution is consistent after updating with local path
@@ -44205,6 +44226,7 @@ Input assignment size: 22
 === END DEBUG ===
 [SAT] Found 0 vertex collisions and 0 edge collisions
 [SAT] Found collision-free local solution!
+[Waiting_time_Solve] Solution found, updating global solution
 [LNS] Updating global solution with pseudo-agent local paths...
 [Current_Solution] Updating global solution for agent 9
 [Current_Solution] INFO: Segment 9 exit adjusted from 40 to 41 due to waiting time
@@ -52764,6 +52786,7 @@ Input assignment size: 11
 === END DEBUG ===
 [SAT] Found 0 vertex collisions and 0 edge collisions
 [SAT] Found collision-free local solution!
+[Waiting_time_Solve] Solution found, updating global solution
 [LNS] Updating global solution with pseudo-agent local paths...
 [Current_Solution] Updating global solution for agent 6
 [Current_Solution] INFO: Segment 6 exit adjusted from 19 to 20 due to waiting time
@@ -52915,6 +52938,7 @@ Input assignment size: 22
 === END DEBUG ===
 [SAT] Found 0 vertex collisions and 0 edge collisions
 [SAT] Found collision-free local solution!
+[Waiting_time_Solve] Solution found, updating global solution
 [LNS] Updating global solution with pseudo-agent local paths...
 [Current_Solution] Updating global solution for agent 9
 [Current_Solution] INFO: Segment 9 exit adjusted from 27 to 30 due to waiting time
@@ -53252,6 +53276,7 @@ Input assignment size: 30
 === END DEBUG ===
 [SAT] Found 0 vertex collisions and 0 edge collisions
 [SAT] Found collision-free local solution!
+[Waiting_time_Solve] Solution found, updating global solution
 [LNS] Updating global solution with pseudo-agent local paths...
 [Current_Solution] Updating global solution for agent 8
 [Current_Solution] Global solution is consistent after updating with local path
@@ -61727,6 +61752,7 @@ Input assignment size: 22
 === END DEBUG ===
 [SAT] Found 0 vertex collisions and 0 edge collisions
 [SAT] Found collision-free local solution!
+[Waiting_time_Solve] Solution found, updating global solution
 [LNS] Updating global solution with pseudo-agent local paths...
 [Current_Solution] Updating global solution for agent 9
 [Current_Solution] INFO: Segment 9 exit adjusted from 27 to 30 due to waiting time
@@ -61818,6 +61844,7 @@ Input assignment size: 9
 === END DEBUG ===
 [SAT] Found 0 vertex collisions and 0 edge collisions
 [SAT] Found collision-free local solution!
+[Waiting_time_Solve] Solution found, updating global solution
 [LNS] Updating global solution with pseudo-agent local paths...
 [Current_Solution] Updating global solution for agent 8
 [Current_Solution] Global solution is consistent after updating with local path
@@ -62132,6 +62159,7 @@ Input assignment size: 29
 === END DEBUG ===
 [SAT] Found 0 vertex collisions and 0 edge collisions
 [SAT] Found collision-free local solution!
+[Waiting_time_Solve] Solution found, updating global solution
 [LNS] Updating global solution with pseudo-agent local paths...
 [Current_Solution] Updating global solution for agent 8
 [Current_Solution] Global solution is consistent after updating with local path
@@ -70547,6 +70575,7 @@ Input assignment size: 9
 === END DEBUG ===
 [SAT] Found 0 vertex collisions and 0 edge collisions
 [SAT] Found collision-free local solution!
+[Waiting_time_Solve] Solution found, updating global solution
 [LNS] Updating global solution with pseudo-agent local paths...
 [Current_Solution] Updating global solution for agent 6
 [Current_Solution] INFO: Segment 6 exit adjusted from 19 to 20 due to waiting time
@@ -70694,6 +70723,7 @@ Input assignment size: 22
 === END DEBUG ===
 [SAT] Found 0 vertex collisions and 0 edge collisions
 [SAT] Found collision-free local solution!
+[Waiting_time_Solve] Solution found, updating global solution
 [LNS] Updating global solution with pseudo-agent local paths...
 [Current_Solution] Updating global solution for agent 9
 [Current_Solution] INFO: Segment 9 exit adjusted from 27 to 30 due to waiting time
@@ -71031,6 +71061,7 @@ Input assignment size: 30
 === END DEBUG ===
 [SAT] Found 0 vertex collisions and 0 edge collisions
 [SAT] Found collision-free local solution!
+[Waiting_time_Solve] Solution found, updating global solution
 [LNS] Updating global solution with pseudo-agent local paths...
 [Current_Solution] Updating global solution for agent 8
 [Current_Solution] Global solution is consistent after updating with local path
@@ -79506,6 +79537,7 @@ Input assignment size: 24
 === END DEBUG ===
 [SAT] Found 0 vertex collisions and 0 edge collisions
 [SAT] Found collision-free local solution!
+[Waiting_time_Solve] Solution found, updating global solution
 [LNS] Updating global solution with pseudo-agent local paths...
 [Current_Solution] Updating global solution for agent 5
 [Current_Solution] INFO: Segment 5 exit adjusted from 5 to 6 due to waiting time
@@ -79597,6 +79629,7 @@ Input assignment size: 9
 === END DEBUG ===
 [SAT] Found 0 vertex collisions and 0 edge collisions
 [SAT] Found collision-free local solution!
+[Waiting_time_Solve] Solution found, updating global solution
 [LNS] Updating global solution with pseudo-agent local paths...
 [Current_Solution] Updating global solution for agent 6
 [Current_Solution] INFO: Segment 6 exit adjusted from 19 to 20 due to waiting time
@@ -79744,6 +79777,7 @@ Input assignment size: 22
 === END DEBUG ===
 [SAT] Found 0 vertex collisions and 0 edge collisions
 [SAT] Found collision-free local solution!
+[Waiting_time_Solve] Solution found, updating global solution
 [LNS] Updating global solution with pseudo-agent local paths...
 [Current_Solution] Updating global solution for agent 9
 [Current_Solution] INFO: Segment 9 exit adjusted from 27 to 30 due to waiting time
@@ -80062,6 +80096,7 @@ Input assignment size: 29
 === END DEBUG ===
 [SAT] Found 0 vertex collisions and 0 edge collisions
 [SAT] Found collision-free local solution!
+[Waiting_time_Solve] Solution found, updating global solution
 [LNS] Updating global solution with pseudo-agent local paths...
 [Current_Solution] Updating global solution for agent 8
 [Current_Solution] Global solution is consistent after updating with local path
@@ -88537,6 +88572,7 @@ Input assignment size: 24
 === END DEBUG ===
 [SAT] Found 0 vertex collisions and 0 edge collisions
 [SAT] Found collision-free local solution!
+[Waiting_time_Solve] Solution found, updating global solution
 [LNS] Updating global solution with pseudo-agent local paths...
 [Current_Solution] Updating global solution for agent 5
 [Current_Solution] INFO: Segment 5 exit adjusted from 5 to 6 due to waiting time
@@ -88628,6 +88664,7 @@ Input assignment size: 9
 === END DEBUG ===
 [SAT] Found 0 vertex collisions and 0 edge collisions
 [SAT] Found collision-free local solution!
+[Waiting_time_Solve] Solution found, updating global solution
 [LNS] Updating global solution with pseudo-agent local paths...
 [Current_Solution] Updating global solution for agent 6
 [Current_Solution] INFO: Segment 6 exit adjusted from 19 to 20 due to waiting time
@@ -88775,6 +88812,7 @@ Input assignment size: 22
 === END DEBUG ===
 [SAT] Found 0 vertex collisions and 0 edge collisions
 [SAT] Found collision-free local solution!
+[Waiting_time_Solve] Solution found, updating global solution
 [LNS] Updating global solution with pseudo-agent local paths...
 [Current_Solution] Updating global solution for agent 9
 [Current_Solution] INFO: Segment 9 exit adjusted from 27 to 30 due to waiting time
@@ -89093,6 +89131,7 @@ Input assignment size: 29
 === END DEBUG ===
 [SAT] Found 0 vertex collisions and 0 edge collisions
 [SAT] Found collision-free local solution!
+[Waiting_time_Solve] Solution found, updating global solution
 [LNS] Updating global solution with pseudo-agent local paths...
 [Current_Solution] Updating global solution for agent 8
 [Current_Solution] Global solution is consistent after updating with local path

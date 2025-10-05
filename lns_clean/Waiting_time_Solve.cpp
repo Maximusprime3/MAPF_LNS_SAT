@@ -13,7 +13,7 @@
 #include <tuple>
 #include <unordered_map>
 
-
+//[Current_Solution] ERROR: Segment 2 local path length (1) does not match expected length (9)
 //todos:
 //time window extension
 //collision validity checking 
@@ -636,7 +636,15 @@ LazySolveResult lazy_solve_with_waiting_time(
     
 
     
-    const int max_iterations = 100;
+    //const int max_iterations = 100;
+    //total available waiting time
+    int total_available_waiting_time = 0;
+
+    for (const auto& [agent_id, waiting_time] : current_solution.agent_waiting_time) {
+        total_available_waiting_time += waiting_time;
+    }
+    std::cout << "[Waiting_time_Solve] Total available waiting time: " << total_available_waiting_time << std::endl;
+    const int max_iterations = total_available_waiting_time;
     for (int iter = 0; iter < max_iterations; iter++) {
         std::cout << "[Waiting_time_Solve] Iteration " << iter << "..." << std::endl;
 
@@ -668,7 +676,7 @@ LazySolveResult lazy_solve_with_waiting_time(
         if (lazy_result.solution_found) {
             std::unordered_map<int, std::vector<std::pair<int,int>>> original_paths;
             std::unordered_map<int, std::pair<int,int>> new_entry_exit_time;
-
+            std::cout << "[Waiting_time_Solve] Solution found, updating global solution" << std::endl;
             //update local zone state segments paths
             for (auto& segment : state.segments) {
                 auto it_path = lazy_result.local_paths.find(segment.segment_id);
@@ -762,6 +770,7 @@ LazySolveResult lazy_solve_with_waiting_time(
             const LocalSegment& segment = state.segments[idx_it->second];
             int original_id = segment.original_id;
             if (current_solution.get_waiting_time(original_id) < amount_of_waiting_time) {
+                std::cout << "[Waiting_time_Solve] ERROR: Agent " << original_id << " has not enough waiting time to apply " << amount_of_waiting_time << std::endl;
                 return false;
             }
             //print waiting time delta

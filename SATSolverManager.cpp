@@ -577,6 +577,8 @@ MiniSatSolution SATSolverManager::solve_cnf_with_minisat(const CNF& cnf,
             std::cout << "DEBUG: First clause: ";
             for (int lit : clauses[0]) std::cout << lit << " ";
             std::cout << std::endl;
+        } else {
+            std::cout << "DEBUG: ERROR: No clauses found in CNF" << std::endl;
         }
         
         // Solve with MiniSAT
@@ -615,6 +617,8 @@ MiniSatSolution SATSolverManager::solve_cnf_with_minisat(const std::shared_ptr<C
             std::cout << "DEBUG: First clause: ";
             for (int lit : clauses[0]) std::cout << lit << " ";
             std::cout << std::endl;
+        } else {
+            std::cout << "DEBUG: ERROR: No clauses found in CNF" << std::endl;
         }
         
         // Solve with MiniSAT

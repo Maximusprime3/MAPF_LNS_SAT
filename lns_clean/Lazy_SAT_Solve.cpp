@@ -209,14 +209,7 @@ LazySolveResult lazy_SAT_solve(
     if (!initial_edge_collisions.empty()) {
         discovered_edge_collisions_set.insert(initial_edge_collisions.begin(), initial_edge_collisions.end());
         // add them to the cnf
-        //cnf_constructor.add_edge_collision_clauses_to_cnf(local_cnf, initial_edge_collisions);
-        for (const auto& edge_collision : discovered_edge_collisions_set) {
-            int agent1_id, agent2_id, timestep;
-            std::pair<int,int> pos1, pos2;
-            std::tie(agent1_id, agent2_id, pos1, pos2, timestep) = edge_collision;
-            std::vector<int> clause = cnf_constructor.add_single_edge_collision_clause(agent1_id, agent2_id, pos1, pos2, timestep, false);
-            local_cnf.add_clause(clause);
-        }
+        cnf_constructor.add_edge_collision_clauses_to_cnf(local_cnf, initial_edge_collisions);
     }
 
 
@@ -287,14 +280,7 @@ LazySolveResult lazy_SAT_solve(
         } else {
             //add new collision clauses to the cnf
             cnf_constructor.add_collision_clauses_to_cnf(local_cnf, new_collisions);
-            //cnf_constructor.add_edge_collision_clauses_to_cnf(local_cnf, new_edge_collisions);
-            for (const auto& edge_collision : new_edge_collisions) {
-                int agent1_id, agent2_id, timestep;
-                std::pair<int,int> pos1, pos2;
-                std::tie(agent1_id, agent2_id, pos1, pos2, timestep) = edge_collision;
-                std::vector<int> clause = cnf_constructor.add_single_edge_collision_clause(agent1_id, agent2_id, pos1, pos2, timestep, false);
-                local_cnf.add_clause(clause);
-            }
+            cnf_constructor.add_edge_collision_clauses_to_cnf(local_cnf, new_edge_collisions);
             //create new partial assignment from the solution and continue
             initial_assignment = minisat_result.assignment; //minisat uses polarity not hard assumptions, we can set all variables and it can still change them
 
