@@ -702,16 +702,7 @@ LazySolveResult lazy_solve_with_waiting_time(
                 if (path.back() != current_solution.goals[agent_id]) {
                     std::cout << "[Waiting_time_Solve] ERROR: before updating, Agent " << agent_id << " does not end at the goal position" << std::endl;
                 }
-                if (agent_id == 44) {
-                    //print path
-                    std::cout << "[Waiting_time_Solve] AGENT 44 Path (size: " << path.size() << "): ";
-                    for (const auto& pos : path) {
-                        std::cout << "(" << pos.first << ", " << pos.second << ") ";
-                    }
-                    std::cout << std::endl;
-                    std::cout << "[Waiting_time_Solve] Waiting time: " << waiting_time << std::endl;
-                    std::cout << "[Waiting_time_Solve] Goal: " << current_solution.goals[agent_id].first << ", " << current_solution.goals[agent_id].second << std::endl;
-                }
+
             }
 
             //update global solution
@@ -778,17 +769,17 @@ LazySolveResult lazy_solve_with_waiting_time(
                 return false;
             }
             //print waiting time delta
-            std::cout << "[Waiting_time_Solve] Applying " << amount_of_waiting_time << " waiting time to agent " << original_id << std::endl;
+            //std::cout << "[Waiting_time_Solve] Applying " << amount_of_waiting_time << " waiting time to agent " << original_id << std::endl;
             //print agent waiting time
-            std::cout << "[Waiting_time_Solve] Agent waiting time: " << current_solution.get_waiting_time(original_id) << std::endl;
+            //std::cout << "[Waiting_time_Solve] Agent waiting time: " << current_solution.get_waiting_time(original_id) << std::endl;
             //current makespan
-            std::cout << "[Waiting_time_Solve] Current makespan: " << current_solution.max_timestep << std::endl;
+            //std::cout << "[Waiting_time_Solve] Current makespan: " << current_solution.max_timestep << std::endl;
             //print path
-            std::cout << "[Waiting_time_Solve] Path (size: " << current_solution.agent_paths[original_id].size() << "): ";
-            for (const auto& pos : current_solution.agent_paths[original_id]) {
-                std::cout << "(" << pos.first << ", " << pos.second << ") ";
-            }
-            std::cout << std::endl;
+            //std::cout << "[Waiting_time_Solve] Path (size: " << current_solution.agent_paths[original_id].size() << "): ";
+            //for (const auto& pos : current_solution.agent_paths[original_id]) {
+            //    std::cout << "(" << pos.first << ", " << pos.second << ") ";
+            //}
+            //std::cout << std::endl;
             current_solution.use_waiting_time(original_id, amount_of_waiting_time);
 
             //check if the path of this agent is consitent before apllying waiting time

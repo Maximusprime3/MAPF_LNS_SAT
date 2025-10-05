@@ -284,13 +284,13 @@ void align_mdd_to_time_window(std::shared_ptr<MDD> mdd,
     int entry_t, int exit_t, //agent's entry and exit times
     int start_t, int end_t) { //time window of problem zone start and end
 
-    std::cout << "[Create_Local_Problem] Starting to align MDD to the time window: [" << start_t << ", " << end_t << "]" << std::endl;
+    //std::cout << "[Create_Local_Problem] Starting to align MDD to the time window: [" << start_t << ", " << end_t << "]" << std::endl;
     if (!mdd) { // do we have an mdd?
         std::cout << "[Create_Local_Problem] ERROR: No MDD to align" << std::endl;
         return;
     }
 
-    std::cout << "[Create_Local_Problem] MDD levels: " << mdd->levels.size() << std::endl;
+    //std::cout << "[Create_Local_Problem] MDD levels: " << mdd->levels.size() << std::endl;
     //is it empty?
     if (mdd->levels.empty()) {
         std::cout << "[Create_Local_Problem] ERROR: MDD is empty" << std::endl;
@@ -361,7 +361,7 @@ void align_mdd_to_time_window(std::shared_ptr<MDD> mdd,
         }
     }
 
-    std::cout << "[Create_Local_Problem] Aligned MDD to the time window" << std::endl;
+    //std::cout << "[Create_Local_Problem] Aligned MDD to the time window" << std::endl;
     mdd->levels = std::move(aligned_levels);
 }
 
@@ -613,6 +613,16 @@ void refresh_zone_after_extension(
             //continueing agent
             if (was_in_the_zone_at_last_timestep) {
                 LocalSegment& segment_to_continue = last_segment;
+                if (segment_info.entry_t.empty() || segment_info.exit_t.empty()) {
+                    std::cout << "[Create_Local_Problem] ERROR: Missing entry/exit info for continuing agent "
+                              << agent_id << std::endl;
+                    continue;
+                }
+                if (segment_info.entry_t.size() != segment_info.exit_t.size()) {
+                    std::cout << "[Create_Local_Problem] ERROR: Mismatched entry/exit counts for continuing agent "
+                              << agent_id << std::endl;
+                    continue;
+                }
                 if (segment_to_continue.exit_t == state.zone_end_t) {
                     std::cout << "[Create_Local_Problem] ERROR? Agent " << agent_id << "already extended to the end of the zone" << std::endl;
                     continue;
@@ -621,9 +631,15 @@ void refresh_zone_after_extension(
                     //extend the segment to the end of the first segment in the new window
                     const int old_exit = segment_to_continue.exit_t;
                     const int new_exit = segment_info.exit_t[0];
+                    if (new_exit < segment_info.entry_t[0]) {
+                        std::cout << "[Create_Local_Problem] ERROR: Segment exit " << new_exit
+                                  << " is earlier than entry " << segment_info.entry_t[0]
+                                  << " for agent " << agent_id << std::endl;
+                        continue;
+                    }
                     if (new_exit <= old_exit) {
-                        std::cout << "[Create_Local_Problem] ERROR: New exit" << new_exit 
-                                  << " time is less than or equal to old exit time" << old_exit 
+                        std::cout << "[Create_Local_Problem] ERROR: New exit" << new_exit
+                                  << " time is less than or equal to old exit time" << old_exit
                                   << "for agent " << agent_id << std::endl;
                         continue;
                     }
@@ -709,6 +725,11 @@ void refresh_zone_after_extension(
                 LocalSegment new_segment;
                 new_segment.segment_id = pseudo_agent_id;
                 new_segment.original_id = agent_id;
+                if (segment_info.entry_t.empty() || segment_info.exit_t.empty()) {
+                    std::cout << "[Create_Local_Problem] ERROR: Missing entry/exit info for returning agent "
+                              << agent_id << std::endl;
+                    continue;
+                }
                 new_segment.entry_t = segment_info.entry_t[0];
                 new_segment.exit_t = segment_info.exit_t[0];
                 new_segment.original_entry_t = segment_info.entry_t[0];
@@ -744,6 +765,11 @@ void refresh_zone_after_extension(
             LocalSegment new_segment;
             new_segment.segment_id = agent_id;
             new_segment.original_id = agent_id;
+            if (segment_info.entry_t.empty() || segment_info.exit_t.empty()) {
+                std::cout << "[Create_Local_Problem] ERROR: Missing entry/exit info for new agent "
+                          << agent_id << std::endl;
+                continue;
+            }
             new_segment.entry_t = segment_info.entry_t[0];
             new_segment.exit_t = segment_info.exit_t[0];
             new_segment.original_entry_t = segment_info.entry_t[0];
