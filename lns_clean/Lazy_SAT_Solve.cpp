@@ -240,7 +240,7 @@ LazySolveResult lazy_SAT_solve(
         }
         first_iteration = false;
         //print minisat result
-        std::cout << "[SAT] Minisat result: " << minisat_result.satisfiable << " num decisions: " << minisat_result.num_decisions << " solve time: " << minisat_result.solve_time << " error message: " << minisat_result.error_message << std::endl;
+        //std::cout << "[SAT] Minisat result: " << minisat_result.satisfiable << " num decisions: " << minisat_result.num_decisions << " solve time: " << minisat_result.solve_time << " error message: " << minisat_result.error_message << std::endl;
 
         if (!minisat_result.satisfiable) {
             std::cout << "[SAT] Local problem is unsatisfiable after " << iteration << " iterations" << std::endl;

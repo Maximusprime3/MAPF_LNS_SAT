@@ -120,7 +120,6 @@ namespace {
             if (segment_info.contiguous_intervals.size() > 1) {
                 std::cout << "[Create_Local_problem] Agent " << agent_id << " returned to the zone "
                         << (segment_info.contiguous_intervals.size() - 1) << " times within time window" << std::endl;
-                std::cout << "[Create_Local_problem] NEED TO HANDLE RETURNING AGENTS AS PSEUDO AGENTS" << std::endl;
             }
             //create seperate paths for the returning agent
             for (const auto& interval : segment_info.contiguous_intervals) {

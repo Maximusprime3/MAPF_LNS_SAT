@@ -662,6 +662,18 @@ LazySolveResult lazy_solve_with_waiting_time(
 
         auto entry_exit_map = build_segment_entry_exit_time_map(state);
 
+        //print all agents with all corresponding pseudo agents in one line per agent
+        for (const auto& [original_id, pseudo_ids] : state.original_to_pseudo_ids) {
+            if (pseudo_ids.empty()) {
+                continue;
+            }
+            std::cout << "[Waiting_time_Solve] Agent " << original_id << " pseudo agents: ";
+            for (const auto& pseudo_id : pseudo_ids) {
+                std::cout << pseudo_id << " ";
+            }
+            std::cout << std::endl;
+        }
+
         //try lazy sat solve
         auto lazy_result = lazy_SAT_solve(
             local_cnf,

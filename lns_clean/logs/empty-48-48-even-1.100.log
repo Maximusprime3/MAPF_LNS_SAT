@@ -286,7 +286,6 @@
 [Create_Local_problem] Agent 74 exited the zone at exit time 48
 [Create_Local_problem] Agent 75 exited the zone at exit time 9
 [Create_Local_problem] Agent 75 returned to the zone 1 times within time window
-[Create_Local_problem] NEED TO HANDLE RETURNING AGENTS AS PSEUDO AGENTS
 [Create_Local_problem] Agent 76 exited the zone at exit time 31
 [Create_Local_problem] Agent 84 exited the zone at exit time 16
 [Create_Local_problem] Agent 87 exited the zone at exit time 1
@@ -297,6 +296,7 @@
 [Create_Local_Problem] MDD already aligned to the time window
 [Waiting_time_Solve] Total available waiting time: 3374
 [Waiting_time_Solve] Iteration 0...
+[Waiting_time_Solve] Agent 75 pseudo agents: 100 
 [SAT] Start solving CNF: 433 clauses and 226 variables
 [SAT] Solving local zone with SAT iteration 1...
 [SAT] Local CNF: 433 clauses 
@@ -309,7 +309,6 @@ DEBUG: After adding clauses, solver has 69 clauses and 226 variables
 DEBUG: MiniSAT found 226 variables
 DEBUG: Assignment size: 226
 DEBUG: First few assignment values: 1 1 1 1 1 1 1 1 1 1 
-[SAT] Minisat result: 1 num decisions: 10 solve time: 0 error message: 
 
 === DEBUG: cnf_assignment_to_paths ===
 Input assignment size: 226
@@ -323,7 +322,6 @@ Input assignment size: 226
 DEBUG: CNF has 443 clauses
 DEBUG: First clause: 1 
 DEBUG: Adding 443 clauses to MiniSAT
-[SAT] Minisat result: 0 num decisions: 0 solve time: 0 error message: Failed to add clause to MiniSAT solver
 [SAT] Local problem is unsatisfiable after 2 iterations
 [SAT] Local problem appears to be unsatisfiable in current zone
 [Waiting_time_Solve] No solution found, trying to apply waiting time:1
@@ -358,6 +356,7 @@ DEBUG: Adding 443 clauses to MiniSAT
 [Waiting_time_Solve] Applied 1 waiting time to segment 93 for agent 93
 [Waiting_time_Solve] Waiting time applied
 [Waiting_time_Solve] Iteration 1...
+[Waiting_time_Solve] Agent 75 pseudo agents: 100 
 [SAT] Start solving CNF: 456 clauses and 235 variables
 [SAT] Solving local zone with SAT iteration 1...
 [SAT] Local CNF: 466 clauses 
@@ -365,7 +364,6 @@ DEBUG: Adding 443 clauses to MiniSAT
 DEBUG: CNF has 466 clauses
 DEBUG: First clause: 1 
 DEBUG: Adding 466 clauses to MiniSAT
-[SAT] Minisat result: 0 num decisions: 0 solve time: 0 error message: Failed to add clause to MiniSAT solver
 [SAT] Local problem is unsatisfiable after 1 iterations
 [SAT] Local problem appears to be unsatisfiable in current zone
 [Waiting_time_Solve] No solution found, trying to apply waiting time:2
@@ -425,7 +423,6 @@ DEBUG: After adding clauses, solver has 328 clauses and 449 variables
 DEBUG: MiniSAT found 449 variables
 DEBUG: Assignment size: 449
 DEBUG: First few assignment values: 1 1 1 1 1 1 1 1 0 1 
-[SAT] Minisat result: 1 num decisions: 28 solve time: 0 error message: 
 
 === DEBUG: cnf_assignment_to_paths ===
 Input assignment size: 449
@@ -439,7 +436,6 @@ Input assignment size: 449
 DEBUG: CNF has 928 clauses
 DEBUG: First clause: 1 
 DEBUG: Adding 928 clauses to MiniSAT
-[SAT] Minisat result: 0 num decisions: 0 solve time: 0 error message: Failed to add clause to MiniSAT solver
 [SAT] Local problem is unsatisfiable after 2 iterations
 [SAT] Local problem appears to be unsatisfiable in current zone
 [Waiting_time_Solve] No solution found, trying to apply waiting time:1
@@ -477,7 +473,6 @@ DEBUG: Adding 928 clauses to MiniSAT
 DEBUG: CNF has 962 clauses
 DEBUG: First clause: 1 
 DEBUG: Adding 962 clauses to MiniSAT
-[SAT] Minisat result: 0 num decisions: 0 solve time: 0 error message: Failed to add clause to MiniSAT solver
 [SAT] Local problem is unsatisfiable after 1 iterations
 [SAT] Local problem appears to be unsatisfiable in current zone
 [Waiting_time_Solve] No solution found, trying to apply waiting time:2
@@ -517,19 +512,15 @@ DEBUG: Adding 962 clauses to MiniSAT
 [Create_Local_Problem] MDD already aligned to the time window
 [Create_Local_problem] Agent 37 exited the zone at exit time 33
 [Create_Local_problem] Agent 37 returned to the zone 1 times within time window
-[Create_Local_problem] NEED TO HANDLE RETURNING AGENTS AS PSEUDO AGENTS
 [Create_Local_problem] Agent 40 exited the zone at exit time 29
 [Create_Local_problem] Agent 40 returned to the zone 1 times within time window
-[Create_Local_problem] NEED TO HANDLE RETURNING AGENTS AS PSEUDO AGENTS
 [Create_Local_problem] Agent 42 exited the zone at exit time 16
 [Create_Local_problem] Agent 42 returned to the zone 2 times within time window
-[Create_Local_problem] NEED TO HANDLE RETURNING AGENTS AS PSEUDO AGENTS
 [Create_Local_problem] Agent 43 exited the zone at exit time 58
 [Create_Local_problem] Agent 48 exited the zone at exit time 9
 [Create_Local_problem] Agent 50 exited the zone at exit time 15
 [Create_Local_problem] Agent 52 exited the zone at exit time 22
 [Create_Local_problem] Agent 52 returned to the zone 1 times within time window
-[Create_Local_problem] NEED TO HANDLE RETURNING AGENTS AS PSEUDO AGENTS
 [Create_Local_problem] Agent 53 exited the zone at exit time 58
 [Create_Local_problem] Agent 58 exited the zone at exit time 28
 [Create_Local_problem] Agent 59 exited the zone at exit time 58
@@ -538,28 +529,32 @@ DEBUG: Adding 962 clauses to MiniSAT
 [Create_Local_problem] Agent 69 exited the zone at exit time 33
 [Create_Local_problem] Agent 74 exited the zone at exit time 58
 [Create_Local_problem] Agent 74 returned to the zone 1 times within time window
-[Create_Local_problem] NEED TO HANDLE RETURNING AGENTS AS PSEUDO AGENTS
 [Create_Local_problem] Agent 75 exited the zone at exit time 13
 [Create_Local_problem] Agent 75 returned to the zone 1 times within time window
-[Create_Local_problem] NEED TO HANDLE RETURNING AGENTS AS PSEUDO AGENTS
 [Create_Local_problem] Agent 76 exited the zone at exit time 35
 [Create_Local_problem] Agent 80 exited the zone at exit time 32
 [Create_Local_problem] Agent 84 exited the zone at exit time 24
 [Create_Local_problem] Agent 84 returned to the zone 1 times within time window
-[Create_Local_problem] NEED TO HANDLE RETURNING AGENTS AS PSEUDO AGENTS
 [Create_Local_problem] Agent 87 exited the zone at exit time 9
 [Create_Local_problem] Agent 87 returned to the zone 1 times within time window
-[Create_Local_problem] NEED TO HANDLE RETURNING AGENTS AS PSEUDO AGENTS
 [Create_Local_Problem] MDD already aligned to the time window
 [Create_Local_problem] Agent 89 exited the zone at exit time 23
 [Create_Local_problem] Agent 89 returned to the zone 1 times within time window
-[Create_Local_problem] NEED TO HANDLE RETURNING AGENTS AS PSEUDO AGENTS
 [Create_Local_problem] Agent 92 exited the zone at exit time 11
 [Create_Local_problem] Agent 93 exited the zone at exit time 21
 [Create_Local_problem] Agent 99 exited the zone at exit time 5
 [Create_Local_Problem] MDD already aligned to the time window
 [Waiting_time_Solve] Total available waiting time: 3374
 [Waiting_time_Solve] Iteration 0...
+[Waiting_time_Solve] Agent 87 pseudo agents: 108 
+[Waiting_time_Solve] Agent 84 pseudo agents: 107 
+[Waiting_time_Solve] Agent 40 pseudo agents: 101 
+[Waiting_time_Solve] Agent 89 pseudo agents: 109 
+[Waiting_time_Solve] Agent 75 pseudo agents: 106 
+[Waiting_time_Solve] Agent 37 pseudo agents: 100 
+[Waiting_time_Solve] Agent 42 pseudo agents: 102 103 
+[Waiting_time_Solve] Agent 52 pseudo agents: 104 
+[Waiting_time_Solve] Agent 74 pseudo agents: 105 
 [SAT] Start solving CNF: 2366 clauses and 1005 variables
 [SAT] Solving local zone with SAT iteration 1...
 [SAT] Local CNF: 2366 clauses 
@@ -572,7 +567,6 @@ DEBUG: After adding clauses, solver has 1572 clauses and 1005 variables
 DEBUG: MiniSAT found 1005 variables
 DEBUG: Assignment size: 1005
 DEBUG: First few assignment values: 1 1 1 1 1 1 1 1 1 0 
-[SAT] Minisat result: 1 num decisions: 95 solve time: 0 error message: 
 
 === DEBUG: cnf_assignment_to_paths ===
 Input assignment size: 1005
@@ -586,7 +580,6 @@ Input assignment size: 1005
 DEBUG: CNF has 2380 clauses
 DEBUG: First clause: 1 
 DEBUG: Adding 2380 clauses to MiniSAT
-[SAT] Minisat result: 0 num decisions: 0 solve time: 0 error message: Failed to add clause to MiniSAT solver
 [SAT] Local problem is unsatisfiable after 2 iterations
 [SAT] Local problem appears to be unsatisfiable in current zone
 [Waiting_time_Solve] No solution found, trying to apply waiting time:1
@@ -646,6 +639,15 @@ DEBUG: Adding 2380 clauses to MiniSAT
 [Waiting_time_Solve] Applied 1 waiting time to segment 37 for agent 37
 [Waiting_time_Solve] Waiting time applied
 [Waiting_time_Solve] Iteration 1...
+[Waiting_time_Solve] Agent 87 pseudo agents: 108 
+[Waiting_time_Solve] Agent 84 pseudo agents: 107 
+[Waiting_time_Solve] Agent 40 pseudo agents: 101 
+[Waiting_time_Solve] Agent 89 pseudo agents: 109 
+[Waiting_time_Solve] Agent 75 pseudo agents: 106 
+[Waiting_time_Solve] Agent 37 pseudo agents: 100 
+[Waiting_time_Solve] Agent 42 pseudo agents: 102 103 
+[Waiting_time_Solve] Agent 52 pseudo agents: 104 
+[Waiting_time_Solve] Agent 74 pseudo agents: 105 
 [SAT] Start solving CNF: 3146 clauses and 1153 variables
 [SAT] Solving local zone with SAT iteration 1...
 [SAT] Local CNF: 3160 clauses 
@@ -653,7 +655,6 @@ DEBUG: Adding 2380 clauses to MiniSAT
 DEBUG: CNF has 3160 clauses
 DEBUG: First clause: 1 
 DEBUG: Adding 3160 clauses to MiniSAT
-[SAT] Minisat result: 0 num decisions: 0 solve time: 0 error message: Failed to add clause to MiniSAT solver
 [SAT] Local problem is unsatisfiable after 1 iterations
 [SAT] Local problem appears to be unsatisfiable in current zone
 [Waiting_time_Solve] No solution found, trying to apply waiting time:2
@@ -709,11 +710,9 @@ DEBUG: Adding 3160 clauses to MiniSAT
 [Create_Local_problem] Agent 24 exited the zone at exit time 18
 [Create_Local_problem] Agent 25 exited the zone at exit time 37
 [Create_Local_problem] Agent 25 returned to the zone 1 times within time window
-[Create_Local_problem] NEED TO HANDLE RETURNING AGENTS AS PSEUDO AGENTS
 [Create_Local_problem] Agent 27 exited the zone at exit time 34
 [Create_Local_problem] Agent 30 exited the zone at exit time 44
 [Create_Local_problem] Agent 30 returned to the zone 1 times within time window
-[Create_Local_problem] NEED TO HANDLE RETURNING AGENTS AS PSEUDO AGENTS
 [Create_Local_problem] Agent 32 exited the zone at exit time 3
 [Create_Local_Problem] MDD already aligned to the time window
 [Create_Local_problem] Agent 33 exited the zone at exit time 28
@@ -724,15 +723,12 @@ DEBUG: Adding 3160 clauses to MiniSAT
 [Create_Local_problem] Agent 37 exited the zone at exit time 44
 [Create_Local_problem] Agent 40 exited the zone at exit time 30
 [Create_Local_problem] Agent 40 returned to the zone 1 times within time window
-[Create_Local_problem] NEED TO HANDLE RETURNING AGENTS AS PSEUDO AGENTS
 [Create_Local_problem] Agent 42 exited the zone at exit time 26
 [Create_Local_problem] Agent 43 exited the zone at exit time 59
 [Create_Local_problem] Agent 45 exited the zone at exit time 24
 [Create_Local_problem] Agent 45 returned to the zone 1 times within time window
-[Create_Local_problem] NEED TO HANDLE RETURNING AGENTS AS PSEUDO AGENTS
 [Create_Local_problem] Agent 47 exited the zone at exit time 15
 [Create_Local_problem] Agent 47 returned to the zone 1 times within time window
-[Create_Local_problem] NEED TO HANDLE RETURNING AGENTS AS PSEUDO AGENTS
 [Create_Local_Problem] MDD already aligned to the time window
 [Create_Local_problem] Agent 48 exited the zone at exit time 10
 [Create_Local_Problem] MDD already aligned to the time window
@@ -749,35 +745,29 @@ DEBUG: Adding 3160 clauses to MiniSAT
 [Create_Local_problem] Agent 59 exited the zone at exit time 59
 [Create_Local_problem] Agent 61 exited the zone at exit time 46
 [Create_Local_problem] Agent 61 returned to the zone 4 times within time window
-[Create_Local_problem] NEED TO HANDLE RETURNING AGENTS AS PSEUDO AGENTS
 [Create_Local_problem] Agent 62 exited the zone at exit time 15
 [Create_Local_problem] Agent 64 exited the zone at exit time 59
 [Create_Local_problem] Agent 65 exited the zone at exit time 27
 [Create_Local_Problem] MDD already aligned to the time window
 [Create_Local_problem] Agent 67 exited the zone at exit time 41
 [Create_Local_problem] Agent 67 returned to the zone 1 times within time window
-[Create_Local_problem] NEED TO HANDLE RETURNING AGENTS AS PSEUDO AGENTS
 [Create_Local_problem] Agent 69 exited the zone at exit time 42
 [Create_Local_problem] Agent 70 exited the zone at exit time 23
 [Create_Local_problem] Agent 72 exited the zone at exit time 59
 [Create_Local_problem] Agent 72 returned to the zone 1 times within time window
-[Create_Local_problem] NEED TO HANDLE RETURNING AGENTS AS PSEUDO AGENTS
 [Create_Local_problem] Agent 74 exited the zone at exit time 59
 [Create_Local_problem] Agent 75 exited the zone at exit time 59
 [Create_Local_Problem] MDD already aligned to the time window
 [Create_Local_problem] Agent 76 exited the zone at exit time 36
 [Create_Local_problem] Agent 77 exited the zone at exit time 14
 [Create_Local_problem] Agent 77 returned to the zone 1 times within time window
-[Create_Local_problem] NEED TO HANDLE RETURNING AGENTS AS PSEUDO AGENTS
 [Create_Local_problem] Agent 80 exited the zone at exit time 33
 [Create_Local_problem] Agent 82 exited the zone at exit time 16
 [Create_Local_problem] Agent 82 returned to the zone 2 times within time window
-[Create_Local_problem] NEED TO HANDLE RETURNING AGENTS AS PSEUDO AGENTS
 [Create_Local_problem] Agent 84 exited the zone at exit time 25
 [Create_Local_Problem] MDD already aligned to the time window
 [Create_Local_problem] Agent 87 exited the zone at exit time 11
 [Create_Local_problem] Agent 87 returned to the zone 1 times within time window
-[Create_Local_problem] NEED TO HANDLE RETURNING AGENTS AS PSEUDO AGENTS
 [Create_Local_Problem] MDD already aligned to the time window
 [Create_Local_problem] Agent 89 exited the zone at exit time 24
 [Create_Local_problem] Agent 92 exited the zone at exit time 12
@@ -792,6 +782,17 @@ DEBUG: Adding 3160 clauses to MiniSAT
 [Create_Local_Problem] MDD already aligned to the time window
 [Waiting_time_Solve] Total available waiting time: 3374
 [Waiting_time_Solve] Iteration 0...
+[Waiting_time_Solve] Agent 30 pseudo agents: 101 
+[Waiting_time_Solve] Agent 25 pseudo agents: 100 
+[Waiting_time_Solve] Agent 72 pseudo agents: 110 
+[Waiting_time_Solve] Agent 47 pseudo agents: 104 
+[Waiting_time_Solve] Agent 77 pseudo agents: 111 
+[Waiting_time_Solve] Agent 40 pseudo agents: 102 
+[Waiting_time_Solve] Agent 45 pseudo agents: 103 
+[Waiting_time_Solve] Agent 61 pseudo agents: 105 106 107 108 
+[Waiting_time_Solve] Agent 67 pseudo agents: 109 
+[Waiting_time_Solve] Agent 82 pseudo agents: 112 113 
+[Waiting_time_Solve] Agent 87 pseudo agents: 114 
 [SAT] Start solving CNF: 13570 clauses and 3925 variables
 [SAT] Solving local zone with SAT iteration 1...
 [SAT] Local CNF: 13570 clauses 
@@ -804,7 +805,6 @@ DEBUG: After adding clauses, solver has 11946 clauses and 3925 variables
 DEBUG: MiniSAT found 3925 variables
 DEBUG: Assignment size: 3925
 DEBUG: First few assignment values: 1 0 1 0 1 0 0 1 0 0 
-[SAT] Minisat result: 1 num decisions: 326 solve time: 0 error message: 
 
 === DEBUG: cnf_assignment_to_paths ===
 Input assignment size: 3925
@@ -818,7 +818,6 @@ Input assignment size: 3925
 DEBUG: CNF has 13625 clauses
 DEBUG: First clause: 1 
 DEBUG: Adding 13625 clauses to MiniSAT
-[SAT] Minisat result: 0 num decisions: 0 solve time: 0 error message: Failed to add clause to MiniSAT solver
 [SAT] Local problem is unsatisfiable after 2 iterations
 [SAT] Local problem appears to be unsatisfiable in current zone
 [Waiting_time_Solve] No solution found, trying to apply waiting time:1
@@ -926,6 +925,17 @@ DEBUG: Adding 13625 clauses to MiniSAT
 [Waiting_time_Solve] Applied 1 waiting time to segment 70 for agent 70
 [Waiting_time_Solve] Waiting time applied
 [Waiting_time_Solve] Iteration 1...
+[Waiting_time_Solve] Agent 30 pseudo agents: 101 
+[Waiting_time_Solve] Agent 25 pseudo agents: 100 
+[Waiting_time_Solve] Agent 72 pseudo agents: 110 
+[Waiting_time_Solve] Agent 47 pseudo agents: 104 
+[Waiting_time_Solve] Agent 77 pseudo agents: 111 
+[Waiting_time_Solve] Agent 40 pseudo agents: 102 
+[Waiting_time_Solve] Agent 45 pseudo agents: 103 
+[Waiting_time_Solve] Agent 61 pseudo agents: 105 106 107 108 
+[Waiting_time_Solve] Agent 67 pseudo agents: 109 
+[Waiting_time_Solve] Agent 82 pseudo agents: 112 113 
+[Waiting_time_Solve] Agent 87 pseudo agents: 114 
 [SAT] Start solving CNF: 27412 clauses and 5210 variables
 [SAT] Solving local zone with SAT iteration 1...
 [SAT] Local CNF: 27467 clauses 
@@ -933,7 +943,6 @@ DEBUG: Adding 13625 clauses to MiniSAT
 DEBUG: CNF has 27467 clauses
 DEBUG: First clause: 1 
 DEBUG: Adding 27467 clauses to MiniSAT
-[SAT] Minisat result: 0 num decisions: 0 solve time: 0 error message: Failed to add clause to MiniSAT solver
 [SAT] Local problem is unsatisfiable after 1 iterations
 [SAT] Local problem appears to be unsatisfiable in current zone
 [Waiting_time_Solve] No solution found, trying to apply waiting time:2
@@ -978,7 +987,6 @@ DEBUG: Adding 27467 clauses to MiniSAT
 [Create_Local_problem] Agent 5 exited the zone at exit time 60
 [Create_Local_problem] Agent 7 exited the zone at exit time 33
 [Create_Local_problem] Agent 7 returned to the zone 1 times within time window
-[Create_Local_problem] NEED TO HANDLE RETURNING AGENTS AS PSEUDO AGENTS
 [Create_Local_problem] Agent 9 exited the zone at exit time 60
 [Create_Local_problem] Agent 10 exited the zone at exit time 0
 [Create_Local_Problem] MDD already aligned to the time window
@@ -992,7 +1000,6 @@ DEBUG: Adding 27467 clauses to MiniSAT
 [Create_Local_problem] Agent 15 exited the zone at exit time 1
 [Create_Local_problem] Agent 16 exited the zone at exit time 60
 [Create_Local_problem] Agent 16 returned to the zone 2 times within time window
-[Create_Local_problem] NEED TO HANDLE RETURNING AGENTS AS PSEUDO AGENTS
 [Create_Local_problem] Agent 17 exited the zone at exit time 32
 [Create_Local_Problem] MDD already aligned to the time window
 [Create_Local_problem] Agent 18 exited the zone at exit time 43
@@ -1000,10 +1007,8 @@ DEBUG: Adding 27467 clauses to MiniSAT
 [Create_Local_Problem] MDD already aligned to the time window
 [Create_Local_problem] Agent 20 exited the zone at exit time 48
 [Create_Local_problem] Agent 20 returned to the zone 1 times within time window
-[Create_Local_problem] NEED TO HANDLE RETURNING AGENTS AS PSEUDO AGENTS
 [Create_Local_problem] Agent 21 exited the zone at exit time 38
 [Create_Local_problem] Agent 21 returned to the zone 1 times within time window
-[Create_Local_problem] NEED TO HANDLE RETURNING AGENTS AS PSEUDO AGENTS
 [Create_Local_problem] Agent 22 exited the zone at exit time 60
 [Create_Local_problem] Agent 23 exited the zone at exit time 60
 [Create_Local_problem] Agent 24 exited the zone at exit time 33
@@ -1011,32 +1016,25 @@ DEBUG: Adding 27467 clauses to MiniSAT
 [Create_Local_Problem] MDD already aligned to the time window
 [Create_Local_problem] Agent 26 exited the zone at exit time 35
 [Create_Local_problem] Agent 26 returned to the zone 2 times within time window
-[Create_Local_problem] NEED TO HANDLE RETURNING AGENTS AS PSEUDO AGENTS
 [Create_Local_problem] Agent 27 exited the zone at exit time 35
 [Create_Local_problem] Agent 27 returned to the zone 2 times within time window
-[Create_Local_problem] NEED TO HANDLE RETURNING AGENTS AS PSEUDO AGENTS
 [Create_Local_problem] Agent 29 exited the zone at exit time 33
 [Create_Local_problem] Agent 29 returned to the zone 2 times within time window
-[Create_Local_problem] NEED TO HANDLE RETURNING AGENTS AS PSEUDO AGENTS
 [Create_Local_problem] Agent 30 exited the zone at exit time 45
 [Create_Local_problem] Agent 30 returned to the zone 2 times within time window
-[Create_Local_problem] NEED TO HANDLE RETURNING AGENTS AS PSEUDO AGENTS
 [Create_Local_problem] Agent 32 exited the zone at exit time 4
 [Create_Local_Problem] MDD already aligned to the time window
 [Create_Local_problem] Agent 33 exited the zone at exit time 29
 [Create_Local_problem] Agent 34 exited the zone at exit time 60
 [Create_Local_problem] Agent 34 returned to the zone 2 times within time window
-[Create_Local_problem] NEED TO HANDLE RETURNING AGENTS AS PSEUDO AGENTS
 [Create_Local_problem] Agent 35 exited the zone at exit time 2
 [Create_Local_Problem] MDD already aligned to the time window
 [Create_Local_problem] Agent 36 exited the zone at exit time 60
 [Create_Local_Problem] MDD already aligned to the time window
 [Create_Local_problem] Agent 37 exited the zone at exit time 45
 [Create_Local_problem] Agent 37 returned to the zone 2 times within time window
-[Create_Local_problem] NEED TO HANDLE RETURNING AGENTS AS PSEUDO AGENTS
 [Create_Local_problem] Agent 39 exited the zone at exit time 6
 [Create_Local_problem] Agent 39 returned to the zone 1 times within time window
-[Create_Local_problem] NEED TO HANDLE RETURNING AGENTS AS PSEUDO AGENTS
 [Create_Local_Problem] MDD already aligned to the time window
 [Create_Local_problem] Agent 40 exited the zone at exit time 60
 [Create_Local_problem] Agent 42 exited the zone at exit time 27
@@ -1047,23 +1045,18 @@ DEBUG: Adding 27467 clauses to MiniSAT
 [Create_Local_problem] Agent 45 exited the zone at exit time 25
 [Create_Local_problem] Agent 46 exited the zone at exit time 38
 [Create_Local_problem] Agent 46 returned to the zone 1 times within time window
-[Create_Local_problem] NEED TO HANDLE RETURNING AGENTS AS PSEUDO AGENTS
 [Create_Local_problem] Agent 47 exited the zone at exit time 19
 [Create_Local_problem] Agent 47 returned to the zone 1 times within time window
-[Create_Local_problem] NEED TO HANDLE RETURNING AGENTS AS PSEUDO AGENTS
 [Create_Local_Problem] MDD already aligned to the time window
 [Create_Local_problem] Agent 48 exited the zone at exit time 15
 [Create_Local_problem] Agent 48 returned to the zone 2 times within time window
-[Create_Local_problem] NEED TO HANDLE RETURNING AGENTS AS PSEUDO AGENTS
 [Create_Local_Problem] MDD already aligned to the time window
 [Create_Local_problem] Agent 49 exited the zone at exit time 40
 [Create_Local_problem] Agent 49 returned to the zone 2 times within time window
-[Create_Local_problem] NEED TO HANDLE RETURNING AGENTS AS PSEUDO AGENTS
 [Create_Local_Problem] MDD already aligned to the time window
 [Create_Local_problem] Agent 50 exited the zone at exit time 60
 [Create_Local_problem] Agent 51 exited the zone at exit time 37
 [Create_Local_problem] Agent 51 returned to the zone 1 times within time window
-[Create_Local_problem] NEED TO HANDLE RETURNING AGENTS AS PSEUDO AGENTS
 [Create_Local_problem] Agent 52 exited the zone at exit time 34
 [Create_Local_Problem] MDD already aligned to the time window
 [Create_Local_problem] Agent 53 exited the zone at exit time 60
@@ -1072,7 +1065,6 @@ DEBUG: Adding 27467 clauses to MiniSAT
 [Create_Local_Problem] MDD already aligned to the time window
 [Create_Local_problem] Agent 58 exited the zone at exit time 33
 [Create_Local_problem] Agent 58 returned to the zone 1 times within time window
-[Create_Local_problem] NEED TO HANDLE RETURNING AGENTS AS PSEUDO AGENTS
 [Create_Local_problem] Agent 59 exited the zone at exit time 60
 [Create_Local_Problem] MDD already aligned to the time window
 [Create_Local_problem] Agent 61 exited the zone at exit time 60
@@ -1087,10 +1079,8 @@ DEBUG: Adding 27467 clauses to MiniSAT
 [Create_Local_Problem] MDD already aligned to the time window
 [Create_Local_problem] Agent 69 exited the zone at exit time 43
 [Create_Local_problem] Agent 69 returned to the zone 1 times within time window
-[Create_Local_problem] NEED TO HANDLE RETURNING AGENTS AS PSEUDO AGENTS
 [Create_Local_problem] Agent 70 exited the zone at exit time 26
 [Create_Local_problem] Agent 70 returned to the zone 2 times within time window
-[Create_Local_problem] NEED TO HANDLE RETURNING AGENTS AS PSEUDO AGENTS
 [Create_Local_Problem] MDD already aligned to the time window
 [Create_Local_problem] Agent 71 exited the zone at exit time 36
 [Create_Local_problem] Agent 72 exited the zone at exit time 60
@@ -1099,17 +1089,14 @@ DEBUG: Adding 27467 clauses to MiniSAT
 [Create_Local_Problem] MDD already aligned to the time window
 [Create_Local_problem] Agent 76 exited the zone at exit time 42
 [Create_Local_problem] Agent 76 returned to the zone 1 times within time window
-[Create_Local_problem] NEED TO HANDLE RETURNING AGENTS AS PSEUDO AGENTS
 [Create_Local_problem] Agent 77 exited the zone at exit time 15
 [Create_Local_Problem] MDD already aligned to the time window
 [Create_Local_problem] Agent 78 exited the zone at exit time 7
 [Create_Local_Problem] MDD already aligned to the time window
 [Create_Local_problem] Agent 80 exited the zone at exit time 60
 [Create_Local_problem] Agent 80 returned to the zone 2 times within time window
-[Create_Local_problem] NEED TO HANDLE RETURNING AGENTS AS PSEUDO AGENTS
 [Create_Local_problem] Agent 82 exited the zone at exit time 19
 [Create_Local_problem] Agent 82 returned to the zone 1 times within time window
-[Create_Local_problem] NEED TO HANDLE RETURNING AGENTS AS PSEUDO AGENTS
 [Create_Local_problem] Agent 83 exited the zone at exit time 60
 [Create_Local_problem] Agent 84 exited the zone at exit time 60
 [Create_Local_Problem] MDD already aligned to the time window
@@ -1117,12 +1104,10 @@ DEBUG: Adding 27467 clauses to MiniSAT
 [Create_Local_Problem] MDD already aligned to the time window
 [Create_Local_problem] Agent 86 exited the zone at exit time 21
 [Create_Local_problem] Agent 86 returned to the zone 2 times within time window
-[Create_Local_problem] NEED TO HANDLE RETURNING AGENTS AS PSEUDO AGENTS
 [Create_Local_problem] Agent 87 exited the zone at exit time 15
 [Create_Local_Problem] MDD already aligned to the time window
 [Create_Local_problem] Agent 89 exited the zone at exit time 46
 [Create_Local_problem] Agent 89 returned to the zone 1 times within time window
-[Create_Local_problem] NEED TO HANDLE RETURNING AGENTS AS PSEUDO AGENTS
 [Create_Local_problem] Agent 91 exited the zone at exit time 33
 [Create_Local_problem] Agent 92 exited the zone at exit time 25
 [Create_Local_Problem] MDD already aligned to the time window
@@ -1139,6 +1124,30 @@ DEBUG: Adding 27467 clauses to MiniSAT
 [Create_Local_Problem] MDD already aligned to the time window
 [Waiting_time_Solve] Total available waiting time: 3374
 [Waiting_time_Solve] Iteration 0...
+[Waiting_time_Solve] Agent 89 pseudo agents: 135 
+[Waiting_time_Solve] Agent 86 pseudo agents: 133 134 
+[Waiting_time_Solve] Agent 82 pseudo agents: 132 
+[Waiting_time_Solve] Agent 80 pseudo agents: 130 131 
+[Waiting_time_Solve] Agent 76 pseudo agents: 129 
+[Waiting_time_Solve] Agent 30 pseudo agents: 111 112 
+[Waiting_time_Solve] Agent 27 pseudo agents: 107 108 
+[Waiting_time_Solve] Agent 26 pseudo agents: 105 106 
+[Waiting_time_Solve] Agent 21 pseudo agents: 104 
+[Waiting_time_Solve] Agent 20 pseudo agents: 103 
+[Waiting_time_Solve] Agent 29 pseudo agents: 109 110 
+[Waiting_time_Solve] Agent 34 pseudo agents: 113 114 
+[Waiting_time_Solve] Agent 7 pseudo agents: 100 
+[Waiting_time_Solve] Agent 69 pseudo agents: 126 
+[Waiting_time_Solve] Agent 70 pseudo agents: 127 128 
+[Waiting_time_Solve] Agent 16 pseudo agents: 101 102 
+[Waiting_time_Solve] Agent 37 pseudo agents: 115 116 
+[Waiting_time_Solve] Agent 39 pseudo agents: 117 
+[Waiting_time_Solve] Agent 46 pseudo agents: 118 
+[Waiting_time_Solve] Agent 47 pseudo agents: 119 
+[Waiting_time_Solve] Agent 48 pseudo agents: 120 121 
+[Waiting_time_Solve] Agent 49 pseudo agents: 122 123 
+[Waiting_time_Solve] Agent 51 pseudo agents: 124 
+[Waiting_time_Solve] Agent 58 pseudo agents: 125 
 [SAT] Start solving CNF: 35707 clauses and 8612 variables
 [SAT] Solving local zone with SAT iteration 1...
 [SAT] Local CNF: 35707 clauses 
@@ -1151,7 +1160,6 @@ DEBUG: After adding clauses, solver has 33129 clauses and 8612 variables
 DEBUG: MiniSAT found 8612 variables
 DEBUG: Assignment size: 8612
 DEBUG: First few assignment values: 1 0 1 0 1 0 0 1 0 0 
-[SAT] Minisat result: 1 num decisions: 661 solve time: 0.001 error message: 
 
 === DEBUG: cnf_assignment_to_paths ===
 Input assignment size: 8612
@@ -1165,7 +1173,6 @@ Input assignment size: 8612
 DEBUG: CNF has 35802 clauses
 DEBUG: First clause: 1 
 DEBUG: Adding 35802 clauses to MiniSAT
-[SAT] Minisat result: 0 num decisions: 0 solve time: 0 error message: Failed to add clause to MiniSAT solver
 [SAT] Local problem is unsatisfiable after 2 iterations
 [SAT] Local problem appears to be unsatisfiable in current zone
 [Waiting_time_Solve] No solution found, trying to apply waiting time:1
@@ -1346,6 +1353,30 @@ DEBUG: Adding 35802 clauses to MiniSAT
 [Waiting_time_Solve] Applied 1 waiting time to segment 133 for agent 86
 [Waiting_time_Solve] Waiting time applied
 [Waiting_time_Solve] Iteration 1...
+[Waiting_time_Solve] Agent 89 pseudo agents: 135 
+[Waiting_time_Solve] Agent 86 pseudo agents: 133 134 
+[Waiting_time_Solve] Agent 82 pseudo agents: 132 
+[Waiting_time_Solve] Agent 80 pseudo agents: 130 131 
+[Waiting_time_Solve] Agent 76 pseudo agents: 129 
+[Waiting_time_Solve] Agent 30 pseudo agents: 111 112 
+[Waiting_time_Solve] Agent 27 pseudo agents: 107 108 
+[Waiting_time_Solve] Agent 26 pseudo agents: 105 106 
+[Waiting_time_Solve] Agent 21 pseudo agents: 104 
+[Waiting_time_Solve] Agent 20 pseudo agents: 103 
+[Waiting_time_Solve] Agent 29 pseudo agents: 109 110 
+[Waiting_time_Solve] Agent 34 pseudo agents: 113 114 
+[Waiting_time_Solve] Agent 7 pseudo agents: 100 
+[Waiting_time_Solve] Agent 69 pseudo agents: 126 
+[Waiting_time_Solve] Agent 70 pseudo agents: 127 128 
+[Waiting_time_Solve] Agent 16 pseudo agents: 101 102 
+[Waiting_time_Solve] Agent 37 pseudo agents: 115 116 
+[Waiting_time_Solve] Agent 39 pseudo agents: 117 
+[Waiting_time_Solve] Agent 46 pseudo agents: 118 
+[Waiting_time_Solve] Agent 47 pseudo agents: 119 
+[Waiting_time_Solve] Agent 48 pseudo agents: 120 121 
+[Waiting_time_Solve] Agent 49 pseudo agents: 122 123 
+[Waiting_time_Solve] Agent 51 pseudo agents: 124 
+[Waiting_time_Solve] Agent 58 pseudo agents: 125 
 [SAT] Start solving CNF: 72347 clauses and 11598 variables
 [SAT] Solving local zone with SAT iteration 1...
 [SAT] Local CNF: 72441 clauses 
@@ -1353,7 +1384,6 @@ DEBUG: Adding 35802 clauses to MiniSAT
 DEBUG: CNF has 72441 clauses
 DEBUG: First clause: 1 
 DEBUG: Adding 72441 clauses to MiniSAT
-[SAT] Minisat result: 0 num decisions: 0 solve time: 0 error message: Failed to add clause to MiniSAT solver
 [SAT] Local problem is unsatisfiable after 1 iterations
 [SAT] Local problem appears to be unsatisfiable in current zone
 [Waiting_time_Solve] No solution found, trying to apply waiting time:2
@@ -1393,10 +1423,8 @@ DEBUG: Adding 72441 clauses to MiniSAT
 [Create_Local_Problem] MDD already aligned to the time window
 [Create_Local_problem] Agent 2 exited the zone at exit time 46
 [Create_Local_problem] Agent 2 returned to the zone 4 times within time window
-[Create_Local_problem] NEED TO HANDLE RETURNING AGENTS AS PSEUDO AGENTS
 [Create_Local_problem] Agent 4 exited the zone at exit time 61
 [Create_Local_problem] Agent 4 returned to the zone 1 times within time window
-[Create_Local_problem] NEED TO HANDLE RETURNING AGENTS AS PSEUDO AGENTS
 [Create_Local_Problem] MDD already aligned to the time window
 [Create_Local_problem] Agent 5 exited the zone at exit time 61
 [Create_Local_problem] Agent 6 exited the zone at exit time 10
@@ -1426,7 +1454,6 @@ DEBUG: Adding 72441 clauses to MiniSAT
 [Create_Local_problem] Agent 20 exited the zone at exit time 49
 [Create_Local_problem] Agent 21 exited the zone at exit time 55
 [Create_Local_problem] Agent 21 returned to the zone 1 times within time window
-[Create_Local_problem] NEED TO HANDLE RETURNING AGENTS AS PSEUDO AGENTS
 [Create_Local_problem] Agent 22 exited the zone at exit time 61
 [Create_Local_problem] Agent 23 exited the zone at exit time 61
 [Create_Local_Problem] MDD already aligned to the time window
@@ -1438,11 +1465,9 @@ DEBUG: Adding 72441 clauses to MiniSAT
 [Create_Local_Problem] MDD already aligned to the time window
 [Create_Local_problem] Agent 27 exited the zone at exit time 61
 [Create_Local_problem] Agent 27 returned to the zone 1 times within time window
-[Create_Local_problem] NEED TO HANDLE RETURNING AGENTS AS PSEUDO AGENTS
 [Create_Local_problem] Agent 28 exited the zone at exit time 34
 [Create_Local_problem] Agent 29 exited the zone at exit time 54
 [Create_Local_problem] Agent 29 returned to the zone 1 times within time window
-[Create_Local_problem] NEED TO HANDLE RETURNING AGENTS AS PSEUDO AGENTS
 [Create_Local_problem] Agent 30 exited the zone at exit time 46
 [Create_Local_problem] Agent 32 exited the zone at exit time 5
 [Create_Local_Problem] MDD already aligned to the time window
@@ -1457,12 +1482,10 @@ DEBUG: Adding 72441 clauses to MiniSAT
 [Create_Local_problem] Agent 38 exited the zone at exit time 25
 [Create_Local_problem] Agent 39 exited the zone at exit time 7
 [Create_Local_problem] Agent 39 returned to the zone 1 times within time window
-[Create_Local_problem] NEED TO HANDLE RETURNING AGENTS AS PSEUDO AGENTS
 [Create_Local_Problem] MDD already aligned to the time window
 [Create_Local_problem] Agent 40 exited the zone at exit time 61
 [Create_Local_problem] Agent 42 exited the zone at exit time 30
 [Create_Local_problem] Agent 42 returned to the zone 1 times within time window
-[Create_Local_problem] NEED TO HANDLE RETURNING AGENTS AS PSEUDO AGENTS
 [Create_Local_Problem] MDD already aligned to the time window
 [Create_Local_problem] Agent 43 exited the zone at exit time 61
 [Create_Local_Problem] MDD already aligned to the time window
@@ -1470,23 +1493,19 @@ DEBUG: Adding 72441 clauses to MiniSAT
 [Create_Local_Problem] MDD already aligned to the time window
 [Create_Local_problem] Agent 45 exited the zone at exit time 61
 [Create_Local_problem] Agent 45 returned to the zone 2 times within time window
-[Create_Local_problem] NEED TO HANDLE RETURNING AGENTS AS PSEUDO AGENTS
 [Create_Local_problem] Agent 46 exited the zone at exit time 45
 [Create_Local_problem] Agent 46 returned to the zone 4 times within time window
-[Create_Local_problem] NEED TO HANDLE RETURNING AGENTS AS PSEUDO AGENTS
 [Create_Local_problem] Agent 47 exited the zone at exit time 61
 [Create_Local_Problem] MDD already aligned to the time window
 [Create_Local_problem] Agent 48 exited the zone at exit time 26
 [Create_Local_Problem] MDD already aligned to the time window
 [Create_Local_problem] Agent 49 exited the zone at exit time 41
 [Create_Local_problem] Agent 49 returned to the zone 2 times within time window
-[Create_Local_problem] NEED TO HANDLE RETURNING AGENTS AS PSEUDO AGENTS
 [Create_Local_Problem] MDD already aligned to the time window
 [Create_Local_problem] Agent 50 exited the zone at exit time 61
 [Create_Local_Problem] MDD already aligned to the time window
 [Create_Local_problem] Agent 51 exited the zone at exit time 40
 [Create_Local_problem] Agent 51 returned to the zone 2 times within time window
-[Create_Local_problem] NEED TO HANDLE RETURNING AGENTS AS PSEUDO AGENTS
 [Create_Local_problem] Agent 52 exited the zone at exit time 35
 [Create_Local_Problem] MDD already aligned to the time window
 [Create_Local_problem] Agent 53 exited the zone at exit time 61
@@ -1522,20 +1541,16 @@ DEBUG: Adding 72441 clauses to MiniSAT
 [Create_Local_Problem] MDD already aligned to the time window
 [Create_Local_problem] Agent 76 exited the zone at exit time 51
 [Create_Local_problem] Agent 76 returned to the zone 1 times within time window
-[Create_Local_problem] NEED TO HANDLE RETURNING AGENTS AS PSEUDO AGENTS
 [Create_Local_problem] Agent 77 exited the zone at exit time 16
 [Create_Local_Problem] MDD already aligned to the time window
 [Create_Local_problem] Agent 78 exited the zone at exit time 21
 [Create_Local_Problem] MDD already aligned to the time window
 [Create_Local_problem] Agent 80 exited the zone at exit time 61
 [Create_Local_problem] Agent 80 returned to the zone 1 times within time window
-[Create_Local_problem] NEED TO HANDLE RETURNING AGENTS AS PSEUDO AGENTS
 [Create_Local_problem] Agent 81 exited the zone at exit time 61
 [Create_Local_problem] Agent 81 returned to the zone 1 times within time window
-[Create_Local_problem] NEED TO HANDLE RETURNING AGENTS AS PSEUDO AGENTS
 [Create_Local_problem] Agent 82 exited the zone at exit time 49
 [Create_Local_problem] Agent 82 returned to the zone 2 times within time window
-[Create_Local_problem] NEED TO HANDLE RETURNING AGENTS AS PSEUDO AGENTS
 [Create_Local_problem] Agent 83 exited the zone at exit time 61
 [Create_Local_Problem] MDD already aligned to the time window
 [Create_Local_problem] Agent 84 exited the zone at exit time 61
@@ -1544,7 +1559,6 @@ DEBUG: Adding 72441 clauses to MiniSAT
 [Create_Local_Problem] MDD already aligned to the time window
 [Create_Local_problem] Agent 86 exited the zone at exit time 25
 [Create_Local_problem] Agent 86 returned to the zone 1 times within time window
-[Create_Local_problem] NEED TO HANDLE RETURNING AGENTS AS PSEUDO AGENTS
 [Create_Local_Problem] MDD already aligned to the time window
 [Create_Local_problem] Agent 87 exited the zone at exit time 61
 [Create_Local_Problem] MDD already aligned to the time window
@@ -1568,6 +1582,22 @@ DEBUG: Adding 72441 clauses to MiniSAT
 [Create_Local_Problem] MDD already aligned to the time window
 [Waiting_time_Solve] Total available waiting time: 3374
 [Waiting_time_Solve] Iteration 0...
+[Waiting_time_Solve] Agent 86 pseudo agents: 125 
+[Waiting_time_Solve] Agent 82 pseudo agents: 123 124 
+[Waiting_time_Solve] Agent 81 pseudo agents: 122 
+[Waiting_time_Solve] Agent 80 pseudo agents: 121 
+[Waiting_time_Solve] Agent 76 pseudo agents: 120 
+[Waiting_time_Solve] Agent 27 pseudo agents: 106 
+[Waiting_time_Solve] Agent 21 pseudo agents: 105 
+[Waiting_time_Solve] Agent 29 pseudo agents: 107 
+[Waiting_time_Solve] Agent 2 pseudo agents: 100 101 102 103 
+[Waiting_time_Solve] Agent 4 pseudo agents: 104 
+[Waiting_time_Solve] Agent 39 pseudo agents: 108 
+[Waiting_time_Solve] Agent 42 pseudo agents: 109 
+[Waiting_time_Solve] Agent 45 pseudo agents: 110 111 
+[Waiting_time_Solve] Agent 46 pseudo agents: 112 113 114 115 
+[Waiting_time_Solve] Agent 49 pseudo agents: 116 117 
+[Waiting_time_Solve] Agent 51 pseudo agents: 118 119 
 [SAT] Start solving CNF: 77296 clauses and 14881 variables
 [SAT] Solving local zone with SAT iteration 1...
 [SAT] Local CNF: 77296 clauses 
@@ -1580,7 +1610,6 @@ DEBUG: After adding clauses, solver has 73955 clauses and 14881 variables
 DEBUG: MiniSAT found 14881 variables
 DEBUG: Assignment size: 14881
 DEBUG: First few assignment values: 1 0 1 0 1 0 0 1 0 0 
-[SAT] Minisat result: 1 num decisions: 902 solve time: 0.002 error message: 
 
 === DEBUG: cnf_assignment_to_paths ===
 Input assignment size: 14881
@@ -1594,7 +1623,6 @@ Input assignment size: 14881
 DEBUG: CNF has 77389 clauses
 DEBUG: First clause: 1 
 DEBUG: Adding 77389 clauses to MiniSAT
-[SAT] Minisat result: 0 num decisions: 0 solve time: 0 error message: Failed to add clause to MiniSAT solver
 [SAT] Local problem is unsatisfiable after 2 iterations
 [SAT] Local problem appears to be unsatisfiable in current zone
 [Waiting_time_Solve] No solution found, trying to apply waiting time:1
@@ -1872,6 +1900,22 @@ DEBUG: Adding 77389 clauses to MiniSAT
 [Waiting_time_Solve] Applied 1 waiting time to segment 85 for agent 85
 [Waiting_time_Solve] Waiting time applied
 [Waiting_time_Solve] Iteration 1...
+[Waiting_time_Solve] Agent 86 pseudo agents: 125 
+[Waiting_time_Solve] Agent 82 pseudo agents: 123 124 
+[Waiting_time_Solve] Agent 81 pseudo agents: 122 
+[Waiting_time_Solve] Agent 80 pseudo agents: 121 
+[Waiting_time_Solve] Agent 76 pseudo agents: 120 
+[Waiting_time_Solve] Agent 27 pseudo agents: 106 
+[Waiting_time_Solve] Agent 21 pseudo agents: 105 
+[Waiting_time_Solve] Agent 29 pseudo agents: 107 
+[Waiting_time_Solve] Agent 2 pseudo agents: 100 101 102 103 
+[Waiting_time_Solve] Agent 4 pseudo agents: 104 
+[Waiting_time_Solve] Agent 39 pseudo agents: 108 
+[Waiting_time_Solve] Agent 42 pseudo agents: 109 
+[Waiting_time_Solve] Agent 45 pseudo agents: 110 111 
+[Waiting_time_Solve] Agent 46 pseudo agents: 112 113 114 115 
+[Waiting_time_Solve] Agent 49 pseudo agents: 116 117 
+[Waiting_time_Solve] Agent 51 pseudo agents: 118 119 
 [SAT] Start solving CNF: 159687 clauses and 20396 variables
 [DEBUG] Missing variable(s) for agent 123 expecting pos1=(10,16)@t=30, pos2=(10,17)@t=31. var1=-1, var2=-1
 [DEBUG] Variable map for agent 123:
