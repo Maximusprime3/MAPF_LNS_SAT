@@ -231,12 +231,7 @@ LazySolveResult lazy_SAT_solve(
         //solve with minisat
         //print local cnf
         std::cout << "[SAT] Local CNF: " << local_cnf.get_clauses().size() << " clauses "<< std::endl;
-        for (const auto& clause : local_cnf.get_clauses()) {
-            std::cout << "[SAT] Clause: ";
-            for (const auto& lit : clause) {
-                std::cout << lit << " ,";
-            }
-        }
+        
         std::cout << std::endl;
         if (first_iteration) {
             minisat_result = SATSolverManager::solve_cnf_with_minisat(local_cnf);

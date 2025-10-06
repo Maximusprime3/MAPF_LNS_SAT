@@ -14,6 +14,8 @@
 #include <unordered_map>
 
 //[Current_Solution] ERROR: Segment 2 local path length (1) does not match expected length (9)
+// entry exit time not updated? ->rebuild mdds?
+
 //todos:
 //time window extension
 //collision validity checking 
@@ -1023,11 +1025,11 @@ LazySolveResult lazy_solve_with_waiting_time(
     if (!result.solution_found) {
         std::cout << "[Waiting_time_Solve] No solution found" << std::endl;
         std::cout << "[Waiting_time_Solve] Restoring original paths" << std::endl;
-
+        std::cout << "[Waiting_time_Solve] Restoring waiting times" << std::endl;
+        current_solution.restore_waiting_times(waiting_time_backup);
+        current_solution.restore_paths(paths_backup);
     }
-    std::cout << "[Waiting_time_Solve] Restoring waiting times" << std::endl;
-    current_solution.restore_waiting_times(waiting_time_backup);
-    current_solution.restore_paths(paths_backup);
+    
 
     //state = baseline_state;
     

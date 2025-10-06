@@ -384,8 +384,24 @@ LocalZoneState build_local_problem_for_zone(
     state.zone_end_t = end_t;
     state.original_to_pseudo_ids = agent_to_pseudo_agent_id;
     state.next_pseudo_id = static_cast<int>(agent_to_pseudo_agent_id.size());
+
+    const int real_agent_count = static_cast<int>(current_solution.starts.size());
+    int max_real_agent_id = real_agent_count > 0 ? real_agent_count - 1 : -1;
+    int max_existing_agent_id = -1;
+    for (const auto& [agent_id, _] : current_solution.agent_paths) {
+        max_existing_agent_id = std::max(max_existing_agent_id, agent_id);
+        if (agent_id < real_agent_count) {
+            max_real_agent_id = std::max(max_real_agent_id, agent_id);
+        }
+    }
+    state.next_pseudo_id = std::max(max_existing_agent_id + 1, max_real_agent_id + 1);
     for (const auto& [agent_id, pseudo_ids] : agent_to_pseudo_agent_id) {
         for (int pseudo_id : pseudo_ids) {
+            if (pseudo_id <= max_real_agent_id) {
+                std::cout << "[Create_Local_Problem] ERROR: Pseudo agent ID " << pseudo_id
+                          << " overlaps with real agent range (max real ID " << max_real_agent_id
+                          << ")" << std::endl;
+            }
             state.next_pseudo_id = std::max(state.next_pseudo_id, pseudo_id + 1);
         }
     }
@@ -413,6 +429,12 @@ LocalZoneState build_local_problem_for_zone(
                 if (pseudo_cursor < pseudo_list.size()) {
                     segment_id = pseudo_list[pseudo_cursor++];
                 }else{
+                    if (state.next_pseudo_id <= max_real_agent_id) {
+                        std::cerr << "[Create_Local_Problem] WARNING: Assigning pseudo ID "
+                                  << state.next_pseudo_id
+                                  << " that overlaps with real agent range (max real ID "
+                                  << max_real_agent_id << ")" << std::endl;
+                    }
                     segment_id = state.next_pseudo_id++;
                     pseudo_list.push_back(segment_id);
                     ++pseudo_cursor;

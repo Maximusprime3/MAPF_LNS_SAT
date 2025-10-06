@@ -61,9 +61,9 @@ LocalZoneResult solve_local_zone(
         //Step 1: create local problem
         auto local_masked_map = mask_map_outside_shape(map, local_zone_positions);//all positions outside the local zone are not walkable
         //set start and end time for the local zone
-
-        int start_t = std::max(0, earliest_conflict_t - offset);
-        int end_t = std::min(current_max_timesteps, latest_conflict_t + offset);
+        int expanded_offset = offset + expansion_factor;
+        int start_t = std::max(0, earliest_conflict_t - expanded_offset);
+        int end_t = std::min(current_max_timesteps, latest_conflict_t + expanded_offset);
         std::cout << "[Solve_local_zone] Local zone time window: [" << start_t << ", " << end_t << "]" << std::endl;
         
         //Step 2: solve the local problem
@@ -76,7 +76,7 @@ LocalZoneResult solve_local_zone(
             local_zone_conflict_indices,
             conflict_map,
             start_t, end_t,
-            offset,
+            expanded_offset,
             0, //initial waiting time amount
             rng);
         
@@ -95,7 +95,7 @@ LocalZoneResult solve_local_zone(
         // Expansion attempts: increase bucket offset and try again
         std::cout << "[Solve_local_zone] Zone with expansion factor " << expansion_factor << "failed" << std::endl;
         expansion_factor++;
-        int expanded_offset = offset + expansion_factor;
+        expanded_offset = offset + expansion_factor;
         std::cout << "[Solve_local_zone] Expanding zone with offset " << expanded_offset << " (original: " << offset << ")" << std::endl;
         // Recreate the bucket conflicts from the original bucket indices
         // Use helper to expand zone and gather expanded conflict indices

@@ -1,0 +1,1890 @@
+[LNS] Loaded map 48x48, agents: 100
+[LNS] Map:
+................................................
+................................................
+................................................
+................................................
+................................................
+................................................
+................................................
+................................................
+................................................
+................................................
+................................................
+................................................
+................................................
+................................................
+................................................
+................................................
+................................................
+................................................
+................................................
+................................................
+................................................
+................................................
+................................................
+................................................
+................................................
+................................................
+................................................
+................................................
+................................................
+................................................
+................................................
+................................................
+................................................
+................................................
+................................................
+................................................
+................................................
+................................................
+................................................
+................................................
+................................................
+................................................
+................................................
+................................................
+................................................
+................................................
+................................................
+................................................
+[LNS] Number of agents: 100
+[LNS] Agents (start -> goal):
+  Agent 0: (15,42) -> (22,25)
+  Agent 1: (40,3) -> (27,2)
+  Agent 2: (32,0) -> (2,37)
+  Agent 3: (15,5) -> (27,3)
+  Agent 4: (4,28) -> (27,23)
+  Agent 5: (37,1) -> (20,29)
+  Agent 6: (9,24) -> (5,44)
+  Agent 7: (11,8) -> (42,17)
+  Agent 8: (0,16) -> (15,20)
+  Agent 9: (10,31) -> (31,33)
+  Agent 10: (37,39) -> (40,40)
+  Agent 11: (19,26) -> (10,12)
+  Agent 12: (28,25) -> (11,21)
+  Agent 13: (42,6) -> (30,23)
+  Agent 14: (21,26) -> (33,16)
+  Agent 15: (38,19) -> (21,3)
+  Agent 16: (10,29) -> (33,19)
+  Agent 17: (27,42) -> (26,10)
+  Agent 18: (42,39) -> (7,10)
+  Agent 19: (19,30) -> (37,0)
+  Agent 20: (1,27) -> (38,41)
+  Agent 21: (41,44) -> (1,25)
+  Agent 22: (31,7) -> (23,20)
+  Agent 23: (11,34) -> (31,34)
+  Agent 24: (16,21) -> (42,34)
+  Agent 25: (19,41) -> (46,23)
+  Agent 26: (9,25) -> (41,47)
+  Agent 27: (29,47) -> (16,22)
+  Agent 28: (28,1) -> (45,22)
+  Agent 29: (35,45) -> (1,13)
+  Agent 30: (6,38) -> (23,8)
+  Agent 31: (0,33) -> (6,46)
+  Agent 32: (22,15) -> (8,0)
+  Agent 33: (13,22) -> (43,24)
+  Agent 34: (14,44) -> (34,37)
+  Agent 35: (16,27) -> (3,13)
+  Agent 36: (19,28) -> (27,26)
+  Agent 37: (9,36) -> (41,21)
+  Agent 38: (3,38) -> (8,4)
+  Agent 39: (21,12) -> (42,3)
+  Agent 40: (41,14) -> (26,30)
+  Agent 41: (20,1) -> (31,11)
+  Agent 42: (23,34) -> (43,1)
+  Agent 43: (14,18) -> (29,27)
+  Agent 44: (31,35) -> (16,39)
+  Agent 45: (32,11) -> (39,36)
+  Agent 46: (1,31) -> (35,43)
+  Agent 47: (27,15) -> (10,24)
+  Agent 48: (23,17) -> (3,25)
+  Agent 49: (39,27) -> (12,44)
+  Agent 50: (8,23) -> (23,22)
+  Agent 51: (23,44) -> (41,12)
+  Agent 52: (16,32) -> (44,22)
+  Agent 53: (45,8) -> (25,25)
+  Agent 54: (9,4) -> (14,13)
+  Agent 55: (3,14) -> (1,45)
+  Agent 56: (45,36) -> (4,14)
+  Agent 57: (27,16) -> (23,6)
+  Agent 58: (11,46) -> (18,11)
+  Agent 59: (25,34) -> (30,28)
+  Agent 60: (44,16) -> (44,26)
+  Agent 61: (46,2) -> (24,36)
+  Agent 62: (33,13) -> (13,15)
+  Agent 63: (15,19) -> (35,2)
+  Agent 64: (17,29) -> (28,27)
+  Agent 65: (39,22) -> (11,0)
+  Agent 66: (28,40) -> (9,5)
+  Agent 67: (15,39) -> (47,19)
+  Agent 68: (12,16) -> (45,5)
+  Agent 69: (17,44) -> (28,4)
+  Agent 70: (30,38) -> (40,9)
+  Agent 71: (42,43) -> (4,36)
+  Agent 72: (41,35) -> (32,18)
+  Agent 73: (19,1) -> (6,23)
+  Agent 74: (0,3) -> (30,29)
+  Agent 75: (34,27) -> (24,11)
+  Agent 76: (20,6) -> (45,40)
+  Agent 77: (32,31) -> (44,19)
+  Agent 78: (16,40) -> (4,30)
+  Agent 79: (22,0) -> (46,3)
+  Agent 80: (28,6) -> (17,30)
+  Agent 81: (28,3) -> (9,28)
+  Agent 82: (29,5) -> (5,39)
+  Agent 83: (12,26) -> (22,33)
+  Agent 84: (30,15) -> (16,44)
+  Agent 85: (19,38) -> (10,11)
+  Agent 86: (39,34) -> (23,45)
+  Agent 87: (26,26) -> (15,31)
+  Agent 88: (7,21) -> (34,6)
+  Agent 89: (12,18) -> (39,41)
+  Agent 90: (2,2) -> (23,0)
+  Agent 91: (42,38) -> (7,33)
+  Agent 92: (30,21) -> (27,47)
+  Agent 93: (23,10) -> (26,33)
+  Agent 94: (28,16) -> (34,45)
+  Agent 95: (19,20) -> (16,23)
+  Agent 96: (6,44) -> (13,47)
+  Agent 97: (15,1) -> (32,20)
+  Agent 98: (26,31) -> (28,34)
+  Agent 99: (26,25) -> (35,22)
+[LNS] Base makespan: 67
+
+[LNS] === Attempt with max_timesteps=67 ===
+[SAT] Creating MDDs with shortest paths + waiting time...
+[SAT] Created 100 MDDs with waiting time structure
+[LNS] Built MDDs with waiting time structure for 100 agents at makespan 67
+[Current_Solution] Calculating waiting times for agents...
+[Current_Solution] Agent 99 reaches goal at t=12, waiting time=55
+[Current_Solution] Agent 98 reaches goal at t=5, waiting time=62
+[Current_Solution] Agent 97 reaches goal at t=36, waiting time=31
+[Current_Solution] Agent 96 reaches goal at t=10, waiting time=57
+[Current_Solution] Agent 95 reaches goal at t=6, waiting time=61
+[Current_Solution] Agent 94 reaches goal at t=35, waiting time=32
+[Current_Solution] Agent 93 reaches goal at t=26, waiting time=41
+[Current_Solution] Agent 92 reaches goal at t=29, waiting time=38
+[Current_Solution] Agent 91 reaches goal at t=40, waiting time=27
+[Current_Solution] Agent 90 reaches goal at t=23, waiting time=44
+[Current_Solution] Agent 89 reaches goal at t=50, waiting time=17
+[Current_Solution] Agent 88 reaches goal at t=42, waiting time=25
+[Current_Solution] Agent 87 reaches goal at t=16, waiting time=51
+[Current_Solution] Agent 86 reaches goal at t=27, waiting time=40
+[Current_Solution] Agent 85 reaches goal at t=36, waiting time=31
+[Current_Solution] Agent 84 reaches goal at t=43, waiting time=24
+[Current_Solution] Agent 83 reaches goal at t=17, waiting time=50
+[Current_Solution] Agent 82 reaches goal at t=58, waiting time=9
+[Current_Solution] Agent 81 reaches goal at t=44, waiting time=23
+[Current_Solution] Agent 80 reaches goal at t=35, waiting time=32
+[Current_Solution] Agent 79 reaches goal at t=27, waiting time=40
+[Current_Solution] Agent 78 reaches goal at t=22, waiting time=45
+[Current_Solution] Agent 77 reaches goal at t=24, waiting time=43
+[Current_Solution] Agent 76 reaches goal at t=59, waiting time=8
+[Current_Solution] Agent 75 reaches goal at t=26, waiting time=41
+[Current_Solution] Agent 74 reaches goal at t=56, waiting time=11
+[Current_Solution] Agent 73 reaches goal at t=35, waiting time=32
+[Current_Solution] Agent 72 reaches goal at t=26, waiting time=41
+[Current_Solution] Agent 71 reaches goal at t=45, waiting time=22
+[Current_Solution] Agent 70 reaches goal at t=39, waiting time=28
+[Current_Solution] Agent 69 reaches goal at t=51, waiting time=16
+[Current_Solution] Agent 68 reaches goal at t=44, waiting time=23
+[Current_Solution] Agent 67 reaches goal at t=52, waiting time=15
+[Current_Solution] Agent 66 reaches goal at t=54, waiting time=13
+[Current_Solution] Agent 65 reaches goal at t=50, waiting time=17
+[Current_Solution] Agent 64 reaches goal at t=13, waiting time=54
+[Current_Solution] Agent 63 reaches goal at t=37, waiting time=30
+[Current_Solution] Agent 62 reaches goal at t=22, waiting time=45
+[Current_Solution] Agent 61 reaches goal at t=56, waiting time=11
+[Current_Solution] Agent 60 reaches goal at t=10, waiting time=57
+[Current_Solution] Agent 59 reaches goal at t=11, waiting time=56
+[Current_Solution] Agent 58 reaches goal at t=42, waiting time=25
+[Current_Solution] Agent 57 reaches goal at t=14, waiting time=53
+[Current_Solution] Agent 56 reaches goal at t=63, waiting time=4
+[Current_Solution] Agent 55 reaches goal at t=33, waiting time=34
+[Current_Solution] Agent 54 reaches goal at t=14, waiting time=53
+[Current_Solution] Agent 53 reaches goal at t=37, waiting time=30
+[Current_Solution] Agent 52 reaches goal at t=38, waiting time=29
+[Current_Solution] Agent 51 reaches goal at t=50, waiting time=17
+[Current_Solution] Agent 50 reaches goal at t=16, waiting time=51
+[Current_Solution] Agent 49 reaches goal at t=44, waiting time=23
+[Current_Solution] Agent 48 reaches goal at t=28, waiting time=39
+[Current_Solution] Agent 47 reaches goal at t=26, waiting time=41
+[Current_Solution] Agent 46 reaches goal at t=46, waiting time=21
+[Current_Solution] Agent 45 reaches goal at t=32, waiting time=35
+[Current_Solution] Agent 44 reaches goal at t=19, waiting time=48
+[Current_Solution] Agent 43 reaches goal at t=24, waiting time=43
+[Current_Solution] Agent 42 reaches goal at t=53, waiting time=14
+[Current_Solution] Agent 41 reaches goal at t=21, waiting time=46
+[Current_Solution] Agent 40 reaches goal at t=31, waiting time=36
+[Current_Solution] Agent 39 reaches goal at t=30, waiting time=37
+[Current_Solution] Agent 38 reaches goal at t=39, waiting time=28
+[Current_Solution] Agent 37 reaches goal at t=47, waiting time=20
+[Current_Solution] Agent 36 reaches goal at t=10, waiting time=57
+[Current_Solution] Agent 35 reaches goal at t=27, waiting time=40
+[Current_Solution] Agent 34 reaches goal at t=27, waiting time=40
+[Current_Solution] Agent 33 reaches goal at t=32, waiting time=35
+[Current_Solution] Agent 32 reaches goal at t=29, waiting time=38
+[Current_Solution] Agent 31 reaches goal at t=19, waiting time=48
+[Current_Solution] Agent 30 reaches goal at t=47, waiting time=20
+[Current_Solution] Agent 29 reaches goal at t=66, waiting time=1
+[Current_Solution] Agent 28 reaches goal at t=38, waiting time=29
+[Current_Solution] Agent 27 reaches goal at t=38, waiting time=29
+[Current_Solution] Agent 26 reaches goal at t=54, waiting time=13
+[Current_Solution] Agent 25 reaches goal at t=45, waiting time=22
+[Current_Solution] Agent 24 reaches goal at t=39, waiting time=28
+[Current_Solution] Agent 23 reaches goal at t=20, waiting time=47
+[Current_Solution] Agent 22 reaches goal at t=21, waiting time=46
+[Current_Solution] Agent 21 reaches goal at t=59, waiting time=8
+[Current_Solution] Agent 20 reaches goal at t=51, waiting time=16
+[Current_Solution] Agent 19 reaches goal at t=48, waiting time=19
+[Current_Solution] Agent 18 reaches goal at t=64, waiting time=3
+[Current_Solution] Agent 17 reaches goal at t=33, waiting time=34
+[Current_Solution] Agent 16 reaches goal at t=33, waiting time=34
+[Current_Solution] Agent 15 reaches goal at t=33, waiting time=34
+[Current_Solution] Agent 14 reaches goal at t=22, waiting time=45
+[Current_Solution] Agent 13 reaches goal at t=29, waiting time=38
+[Current_Solution] Agent 12 reaches goal at t=21, waiting time=46
+[Current_Solution] Agent 11 reaches goal at t=23, waiting time=44
+[Current_Solution] Agent 10 reaches goal at t=4, waiting time=63
+[Current_Solution] Agent 9 reaches goal at t=23, waiting time=44
+[Current_Solution] Agent 8 reaches goal at t=19, waiting time=48
+[Current_Solution] Agent 7 reaches goal at t=40, waiting time=27
+[Current_Solution] Agent 6 reaches goal at t=24, waiting time=43
+[Current_Solution] Agent 5 reaches goal at t=45, waiting time=22
+[Current_Solution] Agent 4 reaches goal at t=28, waiting time=39
+[Current_Solution] Agent 3 reaches goal at t=14, waiting time=53
+[Current_Solution] Agent 2 reaches goal at t=67, waiting time=0
+[Current_Solution] Agent 1 reaches goal at t=14, waiting time=53
+[Current_Solution] Agent 0 reaches goal at t=24, waiting time=43
+[Current_Solution] Waiting time calculation complete
+[LNS] Created current solution with 100 agent paths on a map of size 48x48
+[LNS] Analyzing conflicts...
+[LNS] Current solution: vertex collisions=94, edge collisions=17
+[LNS] Creating conflict buckets...
+[LOCAL ZONE] Building diamond bucket for conflict 0
+[LOCAL ZONE] Built diamond bucket for conflict 0 with 8 positions, 2 conflicts, 1 - 2 time window
+[LOCAL ZONE] Building diamond bucket for conflict 1
+[LOCAL ZONE] Built diamond bucket for conflict 1 with 21 positions, 15 conflicts, 1 - 47 time window
+[LNS] Selected most relevant bucket 1 with time window: 1 - 47, 15 conflicts and 21 positions.
+[LNS] Solving the best bucket Local Zone...
+[Solve_local_zone] Current local zone size: 21 (0.911458% of all walkable positions)
+[Solve_local_zone] Local zone time window: [0, 48]
+[Create_Local_problem] Agent 4 exited the zone at exit time 48
+[Create_Local_problem] Agent 12 exited the zone at exit time 3
+[Create_Local_Problem] MDD already aligned to the time window
+[Create_Local_problem] Agent 17 exited the zone at exit time 19
+[Create_Local_problem] Agent 18 exited the zone at exit time 32
+[Create_Local_problem] Agent 19 exited the zone at exit time 15
+[Create_Local_problem] Agent 33 exited the zone at exit time 17
+[Create_Local_problem] Agent 36 exited the zone at exit time 48
+[Create_Local_problem] Agent 43 exited the zone at exit time 48
+[Create_Local_problem] Agent 53 exited the zone at exit time 48
+[Create_Local_problem] Agent 64 exited the zone at exit time 48
+[Create_Local_problem] Agent 67 exited the zone at exit time 27
+[Create_Local_problem] Agent 69 exited the zone at exit time 31
+[Create_Local_problem] Agent 74 exited the zone at exit time 48
+[Create_Local_problem] Agent 75 exited the zone at exit time 9
+[Create_Local_problem] Agent 75 returned to the zone 1 times within time window
+[Create_Local_problem] NEED TO HANDLE RETURNING AGENTS AS PSEUDO AGENTS
+[Create_Local_problem] Agent 76 exited the zone at exit time 31
+[Create_Local_problem] Agent 84 exited the zone at exit time 16
+[Create_Local_problem] Agent 87 exited the zone at exit time 1
+[Create_Local_Problem] MDD already aligned to the time window
+[Create_Local_problem] Agent 92 exited the zone at exit time 9
+[Create_Local_problem] Agent 93 exited the zone at exit time 19
+[Create_Local_problem] Agent 99 exited the zone at exit time 3
+[Create_Local_Problem] MDD already aligned to the time window
+[Waiting_time_Solve] Total available waiting time: 3374
+[Waiting_time_Solve] Iteration 0...
+[SAT] Start solving CNF: 433 clauses and 226 variables
+[SAT] Solving local zone with SAT iteration 1...
+[SAT] Local CNF: 433 clauses 
+
+DEBUG: CNF has 433 clauses
+DEBUG: First clause: 1 
+DEBUG: Adding 433 clauses to MiniSAT
+DEBUG: Clause load summary: input=433, added=433, tautologies_skipped=0, duplicates_skipped=0, unit_clauses=190, empties=0, intra_clause_literals_removed=0, added_but_db_unchanged=174
+DEBUG: After adding clauses, solver has 69 clauses and 226 variables
+DEBUG: MiniSAT found 226 variables
+DEBUG: Assignment size: 226
+DEBUG: First few assignment values: 1 1 1 1 1 1 1 1 1 1 
+[SAT] Minisat result: 1 num decisions: 10 solve time: 0 error message: 
+
+=== DEBUG: cnf_assignment_to_paths ===
+Input assignment size: 226
+
+=== END DEBUG ===
+[SAT] Found 10 vertex collisions and 0 edge collisions
+[SAT] Adding collision clauses and solving again...
+[SAT] Solving local zone with SAT iteration 2...
+[SAT] Local CNF: 443 clauses 
+
+DEBUG: CNF has 443 clauses
+DEBUG: First clause: 1 
+DEBUG: Adding 443 clauses to MiniSAT
+[SAT] Minisat result: 0 num decisions: 0 solve time: 0 error message: Failed to add clause to MiniSAT solver
+[SAT] Local problem is unsatisfiable after 2 iterations
+[SAT] Local problem appears to be unsatisfiable in current zone
+[Waiting_time_Solve] No solution found, trying to apply waiting time:1
+[Current_Solution] Agent 99 used 1 waiting timesteps, 54 remaining
+[Waiting_time_Solve] Applying waiting time delta 1 to segment 99
+[Waiting_time_Solve] Original id: 99
+[Create_Local_Problem] MDD already aligned to the time window
+[Create_Local_Problem] MDD already aligned to the time window
+[Waiting_time_Solve] New path is consistent after applying waiting time for agent 99
+[Waiting_time_Solve] Applied 1 waiting time to segment 99 for agent 99
+[Current_Solution] Agent 36 used 0 waiting timesteps, 57 remaining
+[Waiting_time_Solve] Applied 0 waiting time to segment 36 for agent 36
+[Current_Solution] Agent 64 used 0 waiting timesteps, 54 remaining
+[Waiting_time_Solve] Applied 0 waiting time to segment 64 for agent 64
+[Current_Solution] Agent 43 used 0 waiting timesteps, 43 remaining
+[Waiting_time_Solve] Applied 0 waiting time to segment 43 for agent 43
+[Current_Solution] Agent 64 used 0 waiting timesteps, 54 remaining
+[Waiting_time_Solve] Applied 0 waiting time to segment 64 for agent 64
+[Current_Solution] Agent 64 used 0 waiting timesteps, 54 remaining
+[Waiting_time_Solve] Applied 0 waiting time to segment 64 for agent 64
+[Current_Solution] Agent 64 used 0 waiting timesteps, 54 remaining
+[Waiting_time_Solve] Applied 0 waiting time to segment 64 for agent 64
+[Current_Solution] Agent 53 used 0 waiting timesteps, 30 remaining
+[Waiting_time_Solve] Applied 0 waiting time to segment 53 for agent 53
+[Current_Solution] Agent 43 used 0 waiting timesteps, 43 remaining
+[Waiting_time_Solve] Applied 0 waiting time to segment 43 for agent 43
+[Current_Solution] Agent 93 used 1 waiting timesteps, 40 remaining
+[Waiting_time_Solve] Applying waiting time delta 1 to segment 93
+[Waiting_time_Solve] Original id: 93
+[Create_Local_Problem] MDD already aligned to the time window
+[Waiting_time_Solve] New path is consistent after applying waiting time for agent 93
+[Waiting_time_Solve] Applied 1 waiting time to segment 93 for agent 93
+[Waiting_time_Solve] Waiting time applied
+[Waiting_time_Solve] Iteration 1...
+[SAT] Start solving CNF: 456 clauses and 235 variables
+[SAT] Solving local zone with SAT iteration 1...
+[SAT] Local CNF: 466 clauses 
+
+DEBUG: CNF has 466 clauses
+DEBUG: First clause: 1 
+DEBUG: Adding 466 clauses to MiniSAT
+[SAT] Minisat result: 0 num decisions: 0 solve time: 0 error message: Failed to add clause to MiniSAT solver
+[SAT] Local problem is unsatisfiable after 1 iterations
+[SAT] Local problem appears to be unsatisfiable in current zone
+[Waiting_time_Solve] No solution found, trying to apply waiting time:2
+[Waiting_time_Solve] No waiting time applied
+[Waiting_time_Solve] No solution found
+[Waiting_time_Solve] Restoring original paths
+[Waiting_time_Solve] Restoring waiting times
+[Current_Solution] Restored waiting times from backup
+[Current_Solution] Restored paths from backup
+[Solve_local_zone] Zone with expansion factor 0failed
+[Solve_local_zone] Expanding zone with offset 2 (original: 1)
+[LOCAL ZONE] Found newly touched conflict 76 at position (30,28)
+[LOCAL ZONE] Found newly touched conflict 92 at position (30,28)
+[Solve_local_zone] Final expanded zone contains 43 positions with 17 conflicts 
+[Solve_local_zone] New time window: [0, 48]
+[Solve_local_zone] Current local zone size: 43 (1.86632% of all walkable positions)
+[Solve_local_zone] Local zone time window: [0, 57]
+[Create_Local_problem] Agent 4 exited the zone at exit time 57
+[Create_Local_problem] Agent 12 exited the zone at exit time 4
+[Create_Local_Problem] MDD already aligned to the time window
+[Create_Local_problem] Agent 17 exited the zone at exit time 20
+[Create_Local_problem] Agent 18 exited the zone at exit time 33
+[Create_Local_problem] Agent 19 exited the zone at exit time 16
+[Create_Local_problem] Agent 33 exited the zone at exit time 18
+[Create_Local_problem] Agent 36 exited the zone at exit time 57
+[Create_Local_problem] Agent 37 exited the zone at exit time 30
+[Create_Local_problem] Agent 40 exited the zone at exit time 27
+[Create_Local_problem] Agent 42 exited the zone at exit time 13
+[Create_Local_problem] Agent 43 exited the zone at exit time 57
+[Create_Local_problem] Agent 52 exited the zone at exit time 21
+[Create_Local_problem] Agent 53 exited the zone at exit time 57
+[Create_Local_problem] Agent 59 exited the zone at exit time 57
+[Create_Local_problem] Agent 64 exited the zone at exit time 57
+[Create_Local_problem] Agent 67 exited the zone at exit time 28
+[Create_Local_problem] Agent 69 exited the zone at exit time 32
+[Create_Local_problem] Agent 74 exited the zone at exit time 57
+[Create_Local_problem] Agent 75 exited the zone at exit time 10
+[Create_Local_problem] Agent 76 exited the zone at exit time 34
+[Create_Local_problem] Agent 84 exited the zone at exit time 17
+[Create_Local_problem] Agent 87 exited the zone at exit time 2
+[Create_Local_Problem] MDD already aligned to the time window
+[Create_Local_problem] Agent 92 exited the zone at exit time 10
+[Create_Local_problem] Agent 93 exited the zone at exit time 20
+[Create_Local_problem] Agent 99 exited the zone at exit time 4
+[Create_Local_Problem] MDD already aligned to the time window
+[Waiting_time_Solve] Total available waiting time: 3374
+[Waiting_time_Solve] Iteration 0...
+[SAT] Start solving CNF: 920 clauses and 449 variables
+[SAT] Solving local zone with SAT iteration 1...
+[SAT] Local CNF: 920 clauses 
+
+DEBUG: CNF has 920 clauses
+DEBUG: First clause: 1 
+DEBUG: Adding 920 clauses to MiniSAT
+DEBUG: Clause load summary: input=920, added=920, tautologies_skipped=0, duplicates_skipped=0, unit_clauses=304, empties=0, intra_clause_literals_removed=0, added_but_db_unchanged=288
+DEBUG: After adding clauses, solver has 328 clauses and 449 variables
+DEBUG: MiniSAT found 449 variables
+DEBUG: Assignment size: 449
+DEBUG: First few assignment values: 1 1 1 1 1 1 1 1 0 1 
+[SAT] Minisat result: 1 num decisions: 28 solve time: 0 error message: 
+
+=== DEBUG: cnf_assignment_to_paths ===
+Input assignment size: 449
+
+=== END DEBUG ===
+[SAT] Found 8 vertex collisions and 0 edge collisions
+[SAT] Adding collision clauses and solving again...
+[SAT] Solving local zone with SAT iteration 2...
+[SAT] Local CNF: 928 clauses 
+
+DEBUG: CNF has 928 clauses
+DEBUG: First clause: 1 
+DEBUG: Adding 928 clauses to MiniSAT
+[SAT] Minisat result: 0 num decisions: 0 solve time: 0 error message: Failed to add clause to MiniSAT solver
+[SAT] Local problem is unsatisfiable after 2 iterations
+[SAT] Local problem appears to be unsatisfiable in current zone
+[Waiting_time_Solve] No solution found, trying to apply waiting time:1
+[Current_Solution] Agent 93 used 1 waiting timesteps, 40 remaining
+[Waiting_time_Solve] Applying waiting time delta 1 to segment 93
+[Waiting_time_Solve] Original id: 93
+[Create_Local_Problem] MDD already aligned to the time window
+[Waiting_time_Solve] New path is consistent after applying waiting time for agent 93
+[Waiting_time_Solve] Applied 1 waiting time to segment 93 for agent 93
+[Current_Solution] Agent 36 used 0 waiting timesteps, 57 remaining
+[Waiting_time_Solve] Applied 0 waiting time to segment 36 for agent 36
+[Current_Solution] Agent 64 used 0 waiting timesteps, 54 remaining
+[Waiting_time_Solve] Applied 0 waiting time to segment 64 for agent 64
+[Current_Solution] Agent 43 used 0 waiting timesteps, 43 remaining
+[Waiting_time_Solve] Applied 0 waiting time to segment 43 for agent 43
+[Current_Solution] Agent 59 used 0 waiting timesteps, 56 remaining
+[Waiting_time_Solve] Applied 0 waiting time to segment 59 for agent 59
+[Current_Solution] Agent 64 used 0 waiting timesteps, 54 remaining
+[Waiting_time_Solve] Applied 0 waiting time to segment 64 for agent 64
+[Current_Solution] Agent 64 used 0 waiting timesteps, 54 remaining
+[Waiting_time_Solve] Applied 0 waiting time to segment 64 for agent 64
+[Current_Solution] Agent 99 used 1 waiting timesteps, 54 remaining
+[Waiting_time_Solve] Applying waiting time delta 1 to segment 99
+[Waiting_time_Solve] Original id: 99
+[Create_Local_Problem] MDD already aligned to the time window
+[Create_Local_Problem] MDD already aligned to the time window
+[Waiting_time_Solve] New path is consistent after applying waiting time for agent 99
+[Waiting_time_Solve] Applied 1 waiting time to segment 99 for agent 99
+[Waiting_time_Solve] Waiting time applied
+[Waiting_time_Solve] Iteration 1...
+[SAT] Start solving CNF: 954 clauses and 462 variables
+[SAT] Solving local zone with SAT iteration 1...
+[SAT] Local CNF: 962 clauses 
+
+DEBUG: CNF has 962 clauses
+DEBUG: First clause: 1 
+DEBUG: Adding 962 clauses to MiniSAT
+[SAT] Minisat result: 0 num decisions: 0 solve time: 0 error message: Failed to add clause to MiniSAT solver
+[SAT] Local problem is unsatisfiable after 1 iterations
+[SAT] Local problem appears to be unsatisfiable in current zone
+[Waiting_time_Solve] No solution found, trying to apply waiting time:2
+[Waiting_time_Solve] No waiting time applied
+[Waiting_time_Solve] No solution found
+[Waiting_time_Solve] Restoring original paths
+[Waiting_time_Solve] Restoring waiting times
+[Current_Solution] Restored waiting times from backup
+[Current_Solution] Restored paths from backup
+[Solve_local_zone] Zone with expansion factor 1failed
+[Solve_local_zone] Expanding zone with offset 3 (original: 1)
+[LOCAL ZONE] Found newly touched conflict 85 at position (22,25)
+[LOCAL ZONE] Found newly touched conflict 101 at position (24,27)
+[LOCAL ZONE] Found newly touched conflict 96 at position (20,26)
+[LOCAL ZONE] Found newly touched conflict 42 at position (22,28)
+[Solve_local_zone] Final expanded zone contains 112 positions with 21 conflicts 
+[Solve_local_zone] New time window: [0, 57]
+[Solve_local_zone] Current local zone size: 112 (4.86111% of all walkable positions)
+[Solve_local_zone] Local zone time window: [0, 58]
+[Create_Local_problem] Agent 0 exited the zone at exit time 58
+[Create_Local_problem] Agent 4 exited the zone at exit time 58
+[Create_Local_problem] Agent 5 exited the zone at exit time 58
+[Create_Local_problem] Agent 11 exited the zone at exit time 2
+[Create_Local_Problem] MDD already aligned to the time window
+[Create_Local_problem] Agent 12 exited the zone at exit time 5
+[Create_Local_Problem] MDD already aligned to the time window
+[Create_Local_problem] Agent 14 exited the zone at exit time 6
+[Create_Local_Problem] MDD already aligned to the time window
+[Create_Local_problem] Agent 17 exited the zone at exit time 21
+[Create_Local_problem] Agent 18 exited the zone at exit time 35
+[Create_Local_problem] Agent 19 exited the zone at exit time 17
+[Create_Local_problem] Agent 24 exited the zone at exit time 17
+[Create_Local_problem] Agent 25 exited the zone at exit time 27
+[Create_Local_problem] Agent 30 exited the zone at exit time 25
+[Create_Local_problem] Agent 33 exited the zone at exit time 19
+[Create_Local_problem] Agent 36 exited the zone at exit time 58
+[Create_Local_Problem] MDD already aligned to the time window
+[Create_Local_problem] Agent 37 exited the zone at exit time 33
+[Create_Local_problem] Agent 37 returned to the zone 1 times within time window
+[Create_Local_problem] NEED TO HANDLE RETURNING AGENTS AS PSEUDO AGENTS
+[Create_Local_problem] Agent 40 exited the zone at exit time 29
+[Create_Local_problem] Agent 40 returned to the zone 1 times within time window
+[Create_Local_problem] NEED TO HANDLE RETURNING AGENTS AS PSEUDO AGENTS
+[Create_Local_problem] Agent 42 exited the zone at exit time 16
+[Create_Local_problem] Agent 42 returned to the zone 2 times within time window
+[Create_Local_problem] NEED TO HANDLE RETURNING AGENTS AS PSEUDO AGENTS
+[Create_Local_problem] Agent 43 exited the zone at exit time 58
+[Create_Local_problem] Agent 48 exited the zone at exit time 9
+[Create_Local_problem] Agent 50 exited the zone at exit time 15
+[Create_Local_problem] Agent 52 exited the zone at exit time 22
+[Create_Local_problem] Agent 52 returned to the zone 1 times within time window
+[Create_Local_problem] NEED TO HANDLE RETURNING AGENTS AS PSEUDO AGENTS
+[Create_Local_problem] Agent 53 exited the zone at exit time 58
+[Create_Local_problem] Agent 58 exited the zone at exit time 28
+[Create_Local_problem] Agent 59 exited the zone at exit time 58
+[Create_Local_problem] Agent 64 exited the zone at exit time 58
+[Create_Local_problem] Agent 67 exited the zone at exit time 29
+[Create_Local_problem] Agent 69 exited the zone at exit time 33
+[Create_Local_problem] Agent 74 exited the zone at exit time 58
+[Create_Local_problem] Agent 74 returned to the zone 1 times within time window
+[Create_Local_problem] NEED TO HANDLE RETURNING AGENTS AS PSEUDO AGENTS
+[Create_Local_problem] Agent 75 exited the zone at exit time 13
+[Create_Local_problem] Agent 75 returned to the zone 1 times within time window
+[Create_Local_problem] NEED TO HANDLE RETURNING AGENTS AS PSEUDO AGENTS
+[Create_Local_problem] Agent 76 exited the zone at exit time 35
+[Create_Local_problem] Agent 80 exited the zone at exit time 32
+[Create_Local_problem] Agent 84 exited the zone at exit time 24
+[Create_Local_problem] Agent 84 returned to the zone 1 times within time window
+[Create_Local_problem] NEED TO HANDLE RETURNING AGENTS AS PSEUDO AGENTS
+[Create_Local_problem] Agent 87 exited the zone at exit time 9
+[Create_Local_problem] Agent 87 returned to the zone 1 times within time window
+[Create_Local_problem] NEED TO HANDLE RETURNING AGENTS AS PSEUDO AGENTS
+[Create_Local_Problem] MDD already aligned to the time window
+[Create_Local_problem] Agent 89 exited the zone at exit time 23
+[Create_Local_problem] Agent 89 returned to the zone 1 times within time window
+[Create_Local_problem] NEED TO HANDLE RETURNING AGENTS AS PSEUDO AGENTS
+[Create_Local_problem] Agent 92 exited the zone at exit time 11
+[Create_Local_problem] Agent 93 exited the zone at exit time 21
+[Create_Local_problem] Agent 99 exited the zone at exit time 5
+[Create_Local_Problem] MDD already aligned to the time window
+[Waiting_time_Solve] Total available waiting time: 3374
+[Waiting_time_Solve] Iteration 0...
+[SAT] Start solving CNF: 2366 clauses and 1005 variables
+[SAT] Solving local zone with SAT iteration 1...
+[SAT] Local CNF: 2366 clauses 
+
+DEBUG: CNF has 2366 clauses
+DEBUG: First clause: 1 
+DEBUG: Adding 2366 clauses to MiniSAT
+DEBUG: Clause load summary: input=2366, added=2366, tautologies_skipped=0, duplicates_skipped=0, unit_clauses=409, empties=0, intra_clause_literals_removed=0, added_but_db_unchanged=385
+DEBUG: After adding clauses, solver has 1572 clauses and 1005 variables
+DEBUG: MiniSAT found 1005 variables
+DEBUG: Assignment size: 1005
+DEBUG: First few assignment values: 1 1 1 1 1 1 1 1 1 0 
+[SAT] Minisat result: 1 num decisions: 95 solve time: 0 error message: 
+
+=== DEBUG: cnf_assignment_to_paths ===
+Input assignment size: 1005
+
+=== END DEBUG ===
+[SAT] Found 14 vertex collisions and 0 edge collisions
+[SAT] Adding collision clauses and solving again...
+[SAT] Solving local zone with SAT iteration 2...
+[SAT] Local CNF: 2380 clauses 
+
+DEBUG: CNF has 2380 clauses
+DEBUG: First clause: 1 
+DEBUG: Adding 2380 clauses to MiniSAT
+[SAT] Minisat result: 0 num decisions: 0 solve time: 0 error message: Failed to add clause to MiniSAT solver
+[SAT] Local problem is unsatisfiable after 2 iterations
+[SAT] Local problem appears to be unsatisfiable in current zone
+[Waiting_time_Solve] No solution found, trying to apply waiting time:1
+[Current_Solution] Agent 92 used 1 waiting timesteps, 37 remaining
+[Waiting_time_Solve] Applying waiting time delta 1 to segment 92
+[Waiting_time_Solve] Original id: 92
+[Create_Local_Problem] MDD already aligned to the time window
+[Waiting_time_Solve] New path is consistent after applying waiting time for agent 92
+[Waiting_time_Solve] Applied 1 waiting time to segment 92 for agent 92
+[Current_Solution] Agent 0 used 1 waiting timesteps, 42 remaining
+[Waiting_time_Solve] Applying waiting time delta 1 to segment 0
+[Waiting_time_Solve] Original id: 0
+[Create_Local_Problem] MDD already aligned to the time window
+[Waiting_time_Solve] New path is consistent after applying waiting time for agent 0
+[Waiting_time_Solve] Applied 1 waiting time to segment 0 for agent 0
+[Current_Solution] Agent 43 used 1 waiting timesteps, 42 remaining
+[Waiting_time_Solve] Applying waiting time delta 1 to segment 43
+[Waiting_time_Solve] Original id: 43
+[Create_Local_Problem] MDD already aligned to the time window
+[Waiting_time_Solve] New path is consistent after applying waiting time for agent 43
+[Waiting_time_Solve] Applied 1 waiting time to segment 43 for agent 43
+[Current_Solution] Agent 4 used 0 waiting timesteps, 39 remaining
+[Waiting_time_Solve] Applied 0 waiting time to segment 4 for agent 4
+[Current_Solution] Agent 53 used 1 waiting timesteps, 29 remaining
+[Waiting_time_Solve] Applying waiting time delta 1 to segment 53
+[Waiting_time_Solve] Original id: 53
+[Create_Local_Problem] MDD already aligned to the time window
+[Waiting_time_Solve] New path is consistent after applying waiting time for agent 53
+[Waiting_time_Solve] Applied 1 waiting time to segment 53 for agent 53
+[Current_Solution] Agent 59 used 0 waiting timesteps, 56 remaining
+[Waiting_time_Solve] Applied 0 waiting time to segment 59 for agent 59
+[Current_Solution] Agent 59 used 0 waiting timesteps, 56 remaining
+[Waiting_time_Solve] Applied 0 waiting time to segment 59 for agent 59
+[Current_Solution] Agent 64 used 0 waiting timesteps, 54 remaining
+[Waiting_time_Solve] Applied 0 waiting time to segment 64 for agent 64
+[Current_Solution] Agent 93 used 1 waiting timesteps, 40 remaining
+[Waiting_time_Solve] Applying waiting time delta 1 to segment 93
+[Waiting_time_Solve] Original id: 93
+[Create_Local_Problem] MDD already aligned to the time window
+[Waiting_time_Solve] New path is consistent after applying waiting time for agent 93
+[Waiting_time_Solve] Applied 1 waiting time to segment 93 for agent 93
+[Current_Solution] Agent 99 used 1 waiting timesteps, 54 remaining
+[Waiting_time_Solve] Applying waiting time delta 1 to segment 99
+[Waiting_time_Solve] Original id: 99
+[Create_Local_Problem] MDD already aligned to the time window
+[Create_Local_Problem] MDD already aligned to the time window
+[Waiting_time_Solve] New path is consistent after applying waiting time for agent 99
+[Waiting_time_Solve] Applied 1 waiting time to segment 99 for agent 99
+[Current_Solution] Agent 4 used 0 waiting timesteps, 39 remaining
+[Waiting_time_Solve] Applied 0 waiting time to segment 4 for agent 4
+[Current_Solution] Agent 37 used 1 waiting timesteps, 19 remaining
+[Waiting_time_Solve] Applying waiting time delta 1 to segment 37
+[Waiting_time_Solve] Original id: 37
+[Create_Local_Problem] MDD already aligned to the time window
+[Create_Local_Problem] ERROR: MDD level 67 exceeds time window length 59; truncating.
+[Waiting_time_Solve] New path is consistent after applying waiting time for agent 37
+[Waiting_time_Solve] Applied 1 waiting time to segment 37 for agent 37
+[Waiting_time_Solve] Waiting time applied
+[Waiting_time_Solve] Iteration 1...
+[SAT] Start solving CNF: 3146 clauses and 1153 variables
+[SAT] Solving local zone with SAT iteration 1...
+[SAT] Local CNF: 3160 clauses 
+
+DEBUG: CNF has 3160 clauses
+DEBUG: First clause: 1 
+DEBUG: Adding 3160 clauses to MiniSAT
+[SAT] Minisat result: 0 num decisions: 0 solve time: 0 error message: Failed to add clause to MiniSAT solver
+[SAT] Local problem is unsatisfiable after 1 iterations
+[SAT] Local problem appears to be unsatisfiable in current zone
+[Waiting_time_Solve] No solution found, trying to apply waiting time:2
+[Waiting_time_Solve] No waiting time applied
+[Waiting_time_Solve] No solution found
+[Waiting_time_Solve] Restoring original paths
+[Waiting_time_Solve] Restoring waiting times
+[Current_Solution] Restored waiting times from backup
+[Current_Solution] Restored paths from backup
+[Solve_local_zone] Zone with expansion factor 2failed
+[Solve_local_zone] Expanding zone with offset 4 (original: 1)
+[LOCAL ZONE] Found newly touched conflict 31 at position (23,22)
+[LOCAL ZONE] Found newly touched conflict 82 at position (23,22)
+[LOCAL ZONE] Found newly touched conflict 86 at position (23,22)
+[LOCAL ZONE] Found newly touched conflict 21 at position (26,21)
+[LOCAL ZONE] Found newly touched conflict 79 at position (28,21)
+[LOCAL ZONE] Found newly touched conflict 73 at position (30,23)
+[LOCAL ZONE] Found newly touched conflict 78 at position (23,20)
+[LOCAL ZONE] Found newly touched conflict 9 at position (24,21)
+[LOCAL ZONE] Found newly touched conflict 38 at position (25,20)
+[LOCAL ZONE] Found newly touched conflict 107 at position (26,17)
+[LOCAL ZONE] Found newly touched conflict 29 at position (28,17)
+[LOCAL ZONE] Found newly touched conflict 60 at position (32,22)
+[LOCAL ZONE] Found newly touched conflict 106 at position (32,22)
+[LOCAL ZONE] Found newly touched conflict 45 at position (24,14)
+[LOCAL ZONE] Found newly touched conflict 43 at position (24,15)
+[LOCAL ZONE] Found newly touched conflict 39 at position (24,16)
+[LOCAL ZONE] Found newly touched conflict 48 at position (34,24)
+[LOCAL ZONE] Found newly touched conflict 68 at position (35,22)
+[LOCAL ZONE] Found newly touched conflict 25 at position (34,26)
+[LOCAL ZONE] Found newly touched conflict 77 at position (37,26)
+[Solve_local_zone] Final expanded zone contains 339 positions with 41 conflicts 
+[Solve_local_zone] New time window: [0, 58]
+[Solve_local_zone] Current local zone size: 339 (14.7135% of all walkable positions)
+[Solve_local_zone] Local zone time window: [0, 59]
+[Create_Local_problem] Agent 0 exited the zone at exit time 59
+[Create_Local_problem] Agent 4 exited the zone at exit time 59
+[Create_Local_problem] Agent 5 exited the zone at exit time 59
+[Create_Local_problem] Agent 7 exited the zone at exit time 30
+[Create_Local_problem] Agent 11 exited the zone at exit time 3
+[Create_Local_Problem] MDD already aligned to the time window
+[Create_Local_problem] Agent 12 exited the zone at exit time 12
+[Create_Local_Problem] MDD already aligned to the time window
+[Create_Local_problem] Agent 13 exited the zone at exit time 59
+[Create_Local_problem] Agent 14 exited the zone at exit time 20
+[Create_Local_Problem] MDD already aligned to the time window
+[Create_Local_problem] Agent 16 exited the zone at exit time 59
+[Create_Local_problem] Agent 17 exited the zone at exit time 31
+[Create_Local_problem] Agent 18 exited the zone at exit time 42
+[Create_Local_problem] Agent 19 exited the zone at exit time 28
+[Create_Local_Problem] MDD already aligned to the time window
+[Create_Local_problem] Agent 22 exited the zone at exit time 59
+[Create_Local_problem] Agent 24 exited the zone at exit time 18
+[Create_Local_problem] Agent 25 exited the zone at exit time 37
+[Create_Local_problem] Agent 25 returned to the zone 1 times within time window
+[Create_Local_problem] NEED TO HANDLE RETURNING AGENTS AS PSEUDO AGENTS
+[Create_Local_problem] Agent 27 exited the zone at exit time 34
+[Create_Local_problem] Agent 30 exited the zone at exit time 44
+[Create_Local_problem] Agent 30 returned to the zone 1 times within time window
+[Create_Local_problem] NEED TO HANDLE RETURNING AGENTS AS PSEUDO AGENTS
+[Create_Local_problem] Agent 32 exited the zone at exit time 3
+[Create_Local_Problem] MDD already aligned to the time window
+[Create_Local_problem] Agent 33 exited the zone at exit time 28
+[Create_Local_problem] Agent 35 exited the zone at exit time 1
+[Create_Local_Problem] MDD already aligned to the time window
+[Create_Local_problem] Agent 36 exited the zone at exit time 59
+[Create_Local_Problem] MDD already aligned to the time window
+[Create_Local_problem] Agent 37 exited the zone at exit time 44
+[Create_Local_problem] Agent 40 exited the zone at exit time 30
+[Create_Local_problem] Agent 40 returned to the zone 1 times within time window
+[Create_Local_problem] NEED TO HANDLE RETURNING AGENTS AS PSEUDO AGENTS
+[Create_Local_problem] Agent 42 exited the zone at exit time 26
+[Create_Local_problem] Agent 43 exited the zone at exit time 59
+[Create_Local_problem] Agent 45 exited the zone at exit time 24
+[Create_Local_problem] Agent 45 returned to the zone 1 times within time window
+[Create_Local_problem] NEED TO HANDLE RETURNING AGENTS AS PSEUDO AGENTS
+[Create_Local_problem] Agent 47 exited the zone at exit time 15
+[Create_Local_problem] Agent 47 returned to the zone 1 times within time window
+[Create_Local_problem] NEED TO HANDLE RETURNING AGENTS AS PSEUDO AGENTS
+[Create_Local_Problem] MDD already aligned to the time window
+[Create_Local_problem] Agent 48 exited the zone at exit time 10
+[Create_Local_Problem] MDD already aligned to the time window
+[Create_Local_problem] Agent 49 exited the zone at exit time 5
+[Create_Local_Problem] MDD already aligned to the time window
+[Create_Local_problem] Agent 50 exited the zone at exit time 59
+[Create_Local_problem] Agent 51 exited the zone at exit time 36
+[Create_Local_problem] Agent 52 exited the zone at exit time 33
+[Create_Local_problem] Agent 53 exited the zone at exit time 59
+[Create_Local_problem] Agent 56 exited the zone at exit time 47
+[Create_Local_problem] Agent 57 exited the zone at exit time 9
+[Create_Local_Problem] MDD already aligned to the time window
+[Create_Local_problem] Agent 58 exited the zone at exit time 29
+[Create_Local_problem] Agent 59 exited the zone at exit time 59
+[Create_Local_problem] Agent 61 exited the zone at exit time 46
+[Create_Local_problem] Agent 61 returned to the zone 4 times within time window
+[Create_Local_problem] NEED TO HANDLE RETURNING AGENTS AS PSEUDO AGENTS
+[Create_Local_problem] Agent 62 exited the zone at exit time 15
+[Create_Local_problem] Agent 64 exited the zone at exit time 59
+[Create_Local_problem] Agent 65 exited the zone at exit time 27
+[Create_Local_Problem] MDD already aligned to the time window
+[Create_Local_problem] Agent 67 exited the zone at exit time 41
+[Create_Local_problem] Agent 67 returned to the zone 1 times within time window
+[Create_Local_problem] NEED TO HANDLE RETURNING AGENTS AS PSEUDO AGENTS
+[Create_Local_problem] Agent 69 exited the zone at exit time 42
+[Create_Local_problem] Agent 70 exited the zone at exit time 23
+[Create_Local_problem] Agent 72 exited the zone at exit time 59
+[Create_Local_problem] Agent 72 returned to the zone 1 times within time window
+[Create_Local_problem] NEED TO HANDLE RETURNING AGENTS AS PSEUDO AGENTS
+[Create_Local_problem] Agent 74 exited the zone at exit time 59
+[Create_Local_problem] Agent 75 exited the zone at exit time 59
+[Create_Local_Problem] MDD already aligned to the time window
+[Create_Local_problem] Agent 76 exited the zone at exit time 36
+[Create_Local_problem] Agent 77 exited the zone at exit time 14
+[Create_Local_problem] Agent 77 returned to the zone 1 times within time window
+[Create_Local_problem] NEED TO HANDLE RETURNING AGENTS AS PSEUDO AGENTS
+[Create_Local_problem] Agent 80 exited the zone at exit time 33
+[Create_Local_problem] Agent 82 exited the zone at exit time 16
+[Create_Local_problem] Agent 82 returned to the zone 2 times within time window
+[Create_Local_problem] NEED TO HANDLE RETURNING AGENTS AS PSEUDO AGENTS
+[Create_Local_problem] Agent 84 exited the zone at exit time 25
+[Create_Local_Problem] MDD already aligned to the time window
+[Create_Local_problem] Agent 87 exited the zone at exit time 11
+[Create_Local_problem] Agent 87 returned to the zone 1 times within time window
+[Create_Local_problem] NEED TO HANDLE RETURNING AGENTS AS PSEUDO AGENTS
+[Create_Local_Problem] MDD already aligned to the time window
+[Create_Local_problem] Agent 89 exited the zone at exit time 24
+[Create_Local_problem] Agent 92 exited the zone at exit time 12
+[Create_Local_Problem] MDD already aligned to the time window
+[Create_Local_problem] Agent 93 exited the zone at exit time 22
+[Create_Local_problem] Agent 94 exited the zone at exit time 20
+[Create_Local_Problem] MDD already aligned to the time window
+[Create_Local_problem] Agent 95 exited the zone at exit time 0
+[Create_Local_Problem] MDD already aligned to the time window
+[Create_Local_problem] Agent 97 exited the zone at exit time 59
+[Create_Local_problem] Agent 99 exited the zone at exit time 59
+[Create_Local_Problem] MDD already aligned to the time window
+[Waiting_time_Solve] Total available waiting time: 3374
+[Waiting_time_Solve] Iteration 0...
+[SAT] Start solving CNF: 13570 clauses and 3925 variables
+[SAT] Solving local zone with SAT iteration 1...
+[SAT] Local CNF: 13570 clauses 
+
+DEBUG: CNF has 13570 clauses
+DEBUG: First clause: 1 
+DEBUG: Adding 13570 clauses to MiniSAT
+DEBUG: Clause load summary: input=13570, added=13570, tautologies_skipped=0, duplicates_skipped=0, unit_clauses=828, empties=0, intra_clause_literals_removed=0, added_but_db_unchanged=796
+DEBUG: After adding clauses, solver has 11946 clauses and 3925 variables
+DEBUG: MiniSAT found 3925 variables
+DEBUG: Assignment size: 3925
+DEBUG: First few assignment values: 1 0 1 0 1 0 0 1 0 0 
+[SAT] Minisat result: 1 num decisions: 326 solve time: 0 error message: 
+
+=== DEBUG: cnf_assignment_to_paths ===
+Input assignment size: 3925
+
+=== END DEBUG ===
+[SAT] Found 49 vertex collisions and 6 edge collisions
+[SAT] Adding collision clauses and solving again...
+[SAT] Solving local zone with SAT iteration 2...
+[SAT] Local CNF: 13625 clauses 
+
+DEBUG: CNF has 13625 clauses
+DEBUG: First clause: 1 
+DEBUG: Adding 13625 clauses to MiniSAT
+[SAT] Minisat result: 0 num decisions: 0 solve time: 0 error message: Failed to add clause to MiniSAT solver
+[SAT] Local problem is unsatisfiable after 2 iterations
+[SAT] Local problem appears to be unsatisfiable in current zone
+[Waiting_time_Solve] No solution found, trying to apply waiting time:1
+[Current_Solution] Agent 0 used 1 waiting timesteps, 42 remaining
+[Waiting_time_Solve] Applying waiting time delta 1 to segment 0
+[Waiting_time_Solve] Original id: 0
+[Create_Local_Problem] MDD already aligned to the time window
+[Waiting_time_Solve] New path is consistent after applying waiting time for agent 0
+[Waiting_time_Solve] Applied 1 waiting time to segment 0 for agent 0
+[Current_Solution] Agent 12 used 1 waiting timesteps, 45 remaining
+[Waiting_time_Solve] Applying waiting time delta 1 to segment 12
+[Waiting_time_Solve] Original id: 12
+[Create_Local_Problem] MDD already aligned to the time window
+[Create_Local_Problem] MDD already aligned to the time window
+[Waiting_time_Solve] New path is consistent after applying waiting time for agent 12
+[Waiting_time_Solve] Applied 1 waiting time to segment 12 for agent 12
+[Current_Solution] Agent 13 used 1 waiting timesteps, 37 remaining
+[Waiting_time_Solve] Applying waiting time delta 1 to segment 13
+[Waiting_time_Solve] Original id: 13
+[Create_Local_Problem] MDD already aligned to the time window
+[Waiting_time_Solve] New path is consistent after applying waiting time for agent 13
+[Waiting_time_Solve] Applied 1 waiting time to segment 13 for agent 13
+[Current_Solution] Agent 16 used 1 waiting timesteps, 33 remaining
+[Waiting_time_Solve] Applying waiting time delta 1 to segment 16
+[Waiting_time_Solve] Original id: 16
+[Create_Local_Problem] MDD already aligned to the time window
+[Waiting_time_Solve] New path is consistent after applying waiting time for agent 16
+[Waiting_time_Solve] Applied 1 waiting time to segment 16 for agent 16
+[Current_Solution] Agent 56 used 1 waiting timesteps, 3 remaining
+[Waiting_time_Solve] Applying waiting time delta 1 to segment 56
+[Waiting_time_Solve] Original id: 56
+[Create_Local_Problem] MDD already aligned to the time window
+[Waiting_time_Solve] New path is consistent after applying waiting time for agent 56
+[Waiting_time_Solve] Applied 1 waiting time to segment 56 for agent 56
+[Current_Solution] Agent 19 used 1 waiting timesteps, 18 remaining
+[Waiting_time_Solve] Applying waiting time delta 1 to segment 19
+[Waiting_time_Solve] Original id: 19
+[Create_Local_Problem] MDD already aligned to the time window
+[Create_Local_Problem] MDD already aligned to the time window
+[Waiting_time_Solve] New path is consistent after applying waiting time for agent 19
+[Waiting_time_Solve] Applied 1 waiting time to segment 19 for agent 19
+[Current_Solution] Agent 99 used 0 waiting timesteps, 55 remaining
+[Waiting_time_Solve] Applied 0 waiting time to segment 99 for agent 99
+[Current_Solution] Agent 22 used 0 waiting timesteps, 46 remaining
+[Waiting_time_Solve] Applied 0 waiting time to segment 22 for agent 22
+[Current_Solution] Agent 36 used 1 waiting timesteps, 56 remaining
+[Waiting_time_Solve] Applying waiting time delta 1 to segment 36
+[Waiting_time_Solve] Original id: 36
+[Create_Local_Problem] MDD already aligned to the time window
+[Create_Local_Problem] MDD already aligned to the time window
+[Waiting_time_Solve] New path is consistent after applying waiting time for agent 36
+[Waiting_time_Solve] Applied 1 waiting time to segment 36 for agent 36
+[Current_Solution] Agent 50 used 0 waiting timesteps, 51 remaining
+[Waiting_time_Solve] Applied 0 waiting time to segment 50 for agent 50
+[Current_Solution] Agent 59 used 0 waiting timesteps, 56 remaining
+[Waiting_time_Solve] Applied 0 waiting time to segment 59 for agent 59
+[Current_Solution] Agent 59 used 0 waiting timesteps, 56 remaining
+[Waiting_time_Solve] Applied 0 waiting time to segment 59 for agent 59
+[Current_Solution] Agent 37 used 1 waiting timesteps, 19 remaining
+[Waiting_time_Solve] Applying waiting time delta 1 to segment 37
+[Waiting_time_Solve] Original id: 37
+[Create_Local_Problem] MDD already aligned to the time window
+[Waiting_time_Solve] New path is consistent after applying waiting time for agent 37
+[Waiting_time_Solve] Applied 1 waiting time to segment 37 for agent 37
+[Current_Solution] Agent 64 used 0 waiting timesteps, 54 remaining
+[Waiting_time_Solve] Applied 0 waiting time to segment 64 for agent 64
+[Current_Solution] Agent 13 used 0 waiting timesteps, 37 remaining
+[Waiting_time_Solve] Applied 0 waiting time to segment 13 for agent 13
+[Current_Solution] Agent 75 used 1 waiting timesteps, 40 remaining
+[Waiting_time_Solve] Applying waiting time delta 1 to segment 75
+[Waiting_time_Solve] Original id: 75
+[Create_Local_Problem] MDD already aligned to the time window
+[Create_Local_Problem] MDD already aligned to the time window
+[Waiting_time_Solve] New path is consistent after applying waiting time for agent 75
+[Waiting_time_Solve] Applied 1 waiting time to segment 75 for agent 75
+[Current_Solution] Agent 93 used 1 waiting timesteps, 40 remaining
+[Waiting_time_Solve] Applying waiting time delta 1 to segment 93
+[Waiting_time_Solve] Original id: 93
+[Create_Local_Problem] MDD already aligned to the time window
+[Waiting_time_Solve] New path is consistent after applying waiting time for agent 93
+[Waiting_time_Solve] Applied 1 waiting time to segment 93 for agent 93
+[Current_Solution] Agent 97 used 1 waiting timesteps, 30 remaining
+[Waiting_time_Solve] Applying waiting time delta 1 to segment 97
+[Waiting_time_Solve] Original id: 97
+[Create_Local_Problem] MDD already aligned to the time window
+[Waiting_time_Solve] New path is consistent after applying waiting time for agent 97
+[Waiting_time_Solve] Applied 1 waiting time to segment 97 for agent 97
+[Current_Solution] Agent 42 used 1 waiting timesteps, 13 remaining
+[Waiting_time_Solve] Applying waiting time delta 1 to segment 42
+[Waiting_time_Solve] Original id: 42
+[Create_Local_Problem] MDD already aligned to the time window
+[Waiting_time_Solve] New path is consistent after applying waiting time for agent 42
+[Waiting_time_Solve] Applied 1 waiting time to segment 42 for agent 42
+[Current_Solution] Agent 76 used 1 waiting timesteps, 7 remaining
+[Waiting_time_Solve] Applying waiting time delta 1 to segment 76
+[Waiting_time_Solve] Original id: 76
+[Create_Local_Problem] MDD already aligned to the time window
+[Waiting_time_Solve] New path is consistent after applying waiting time for agent 76
+[Waiting_time_Solve] Applied 1 waiting time to segment 76 for agent 76
+[Current_Solution] Agent 70 used 1 waiting timesteps, 27 remaining
+[Waiting_time_Solve] Applying waiting time delta 1 to segment 70
+[Waiting_time_Solve] Original id: 70
+[Create_Local_Problem] MDD already aligned to the time window
+[Waiting_time_Solve] New path is consistent after applying waiting time for agent 70
+[Waiting_time_Solve] Applied 1 waiting time to segment 70 for agent 70
+[Waiting_time_Solve] Waiting time applied
+[Waiting_time_Solve] Iteration 1...
+[SAT] Start solving CNF: 27412 clauses and 5210 variables
+[SAT] Solving local zone with SAT iteration 1...
+[SAT] Local CNF: 27467 clauses 
+
+DEBUG: CNF has 27467 clauses
+DEBUG: First clause: 1 
+DEBUG: Adding 27467 clauses to MiniSAT
+[SAT] Minisat result: 0 num decisions: 0 solve time: 0 error message: Failed to add clause to MiniSAT solver
+[SAT] Local problem is unsatisfiable after 1 iterations
+[SAT] Local problem appears to be unsatisfiable in current zone
+[Waiting_time_Solve] No solution found, trying to apply waiting time:2
+[Waiting_time_Solve] No waiting time applied
+[Waiting_time_Solve] No solution found
+[Waiting_time_Solve] Restoring original paths
+[Waiting_time_Solve] Restoring waiting times
+[Current_Solution] Restored waiting times from backup
+[Current_Solution] Restored paths from backup
+[Solve_local_zone] Zone with expansion factor 3failed
+[Solve_local_zone] Expanding zone with offset 5 (original: 1)
+[LOCAL ZONE] Found newly touched conflict 50 at position (22,33)
+[LOCAL ZONE] Found newly touched conflict 51 at position (22,33)
+[LOCAL ZONE] Found newly touched conflict 52 at position (22,33)
+[LOCAL ZONE] Found newly touched conflict 56 at position (22,33)
+[LOCAL ZONE] Found newly touched conflict 100 at position (22,33)
+[LOCAL ZONE] Found newly touched conflict 102 at position (18,34)
+[LOCAL ZONE] Found newly touched conflict 72 at position (19,36)
+[LOCAL ZONE] Found newly touched conflict 23 at position (20,33)
+[LOCAL ZONE] Found newly touched conflict 69 at position (20,36)
+[LOCAL ZONE] Found newly touched conflict 105 at position (26,33)
+[LOCAL ZONE] Found newly touched conflict 104 at position (27,33)
+[LOCAL ZONE] Found newly touched conflict 75 at position (18,36)
+[LOCAL ZONE] Found newly touched conflict 28 at position (27,34)
+[LOCAL ZONE] Found newly touched conflict 103 at position (27,37)
+[LOCAL ZONE] Found newly touched conflict 33 at position (28,34)
+[LOCAL ZONE] Found newly touched conflict 54 at position (28,34)
+[LOCAL ZONE] Found newly touched conflict 89 at position (28,34)
+[LOCAL ZONE] Found newly touched conflict 32 at position (30,35)
+[LOCAL ZONE] Found newly touched conflict 64 at position (31,34)
+[LOCAL ZONE] Found newly touched conflict 41 at position (16,39)
+[LOCAL ZONE] Found newly touched conflict 27 at position (25,39)
+[LOCAL ZONE] Found newly touched conflict 30 at position (32,36)
+[LOCAL ZONE] Found newly touched conflict 62 at position (34,37)
+[Solve_local_zone] Final expanded zone contains 663 positions with 64 conflicts 
+[Solve_local_zone] New time window: [0, 59]
+[Solve_local_zone] Current local zone size: 663 (28.776% of all walkable positions)
+[Solve_local_zone] Local zone time window: [0, 60]
+[Create_Local_problem] Agent 0 exited the zone at exit time 60
+[Create_Local_Problem] MDD already aligned to the time window
+[Create_Local_problem] Agent 4 exited the zone at exit time 60
+[Create_Local_problem] Agent 5 exited the zone at exit time 60
+[Create_Local_problem] Agent 7 exited the zone at exit time 33
+[Create_Local_problem] Agent 7 returned to the zone 1 times within time window
+[Create_Local_problem] NEED TO HANDLE RETURNING AGENTS AS PSEUDO AGENTS
+[Create_Local_problem] Agent 9 exited the zone at exit time 60
+[Create_Local_problem] Agent 10 exited the zone at exit time 0
+[Create_Local_Problem] MDD already aligned to the time window
+[Create_Local_problem] Agent 11 exited the zone at exit time 4
+[Create_Local_Problem] MDD already aligned to the time window
+[Create_Local_problem] Agent 12 exited the zone at exit time 13
+[Create_Local_Problem] MDD already aligned to the time window
+[Create_Local_problem] Agent 13 exited the zone at exit time 60
+[Create_Local_problem] Agent 14 exited the zone at exit time 21
+[Create_Local_Problem] MDD already aligned to the time window
+[Create_Local_problem] Agent 15 exited the zone at exit time 1
+[Create_Local_problem] Agent 16 exited the zone at exit time 60
+[Create_Local_problem] Agent 16 returned to the zone 2 times within time window
+[Create_Local_problem] NEED TO HANDLE RETURNING AGENTS AS PSEUDO AGENTS
+[Create_Local_problem] Agent 17 exited the zone at exit time 32
+[Create_Local_Problem] MDD already aligned to the time window
+[Create_Local_problem] Agent 18 exited the zone at exit time 43
+[Create_Local_problem] Agent 19 exited the zone at exit time 29
+[Create_Local_Problem] MDD already aligned to the time window
+[Create_Local_problem] Agent 20 exited the zone at exit time 48
+[Create_Local_problem] Agent 20 returned to the zone 1 times within time window
+[Create_Local_problem] NEED TO HANDLE RETURNING AGENTS AS PSEUDO AGENTS
+[Create_Local_problem] Agent 21 exited the zone at exit time 38
+[Create_Local_problem] Agent 21 returned to the zone 1 times within time window
+[Create_Local_problem] NEED TO HANDLE RETURNING AGENTS AS PSEUDO AGENTS
+[Create_Local_problem] Agent 22 exited the zone at exit time 60
+[Create_Local_problem] Agent 23 exited the zone at exit time 60
+[Create_Local_problem] Agent 24 exited the zone at exit time 33
+[Create_Local_problem] Agent 25 exited the zone at exit time 38
+[Create_Local_Problem] MDD already aligned to the time window
+[Create_Local_problem] Agent 26 exited the zone at exit time 35
+[Create_Local_problem] Agent 26 returned to the zone 2 times within time window
+[Create_Local_problem] NEED TO HANDLE RETURNING AGENTS AS PSEUDO AGENTS
+[Create_Local_problem] Agent 27 exited the zone at exit time 35
+[Create_Local_problem] Agent 27 returned to the zone 2 times within time window
+[Create_Local_problem] NEED TO HANDLE RETURNING AGENTS AS PSEUDO AGENTS
+[Create_Local_problem] Agent 29 exited the zone at exit time 33
+[Create_Local_problem] Agent 29 returned to the zone 2 times within time window
+[Create_Local_problem] NEED TO HANDLE RETURNING AGENTS AS PSEUDO AGENTS
+[Create_Local_problem] Agent 30 exited the zone at exit time 45
+[Create_Local_problem] Agent 30 returned to the zone 2 times within time window
+[Create_Local_problem] NEED TO HANDLE RETURNING AGENTS AS PSEUDO AGENTS
+[Create_Local_problem] Agent 32 exited the zone at exit time 4
+[Create_Local_Problem] MDD already aligned to the time window
+[Create_Local_problem] Agent 33 exited the zone at exit time 29
+[Create_Local_problem] Agent 34 exited the zone at exit time 60
+[Create_Local_problem] Agent 34 returned to the zone 2 times within time window
+[Create_Local_problem] NEED TO HANDLE RETURNING AGENTS AS PSEUDO AGENTS
+[Create_Local_problem] Agent 35 exited the zone at exit time 2
+[Create_Local_Problem] MDD already aligned to the time window
+[Create_Local_problem] Agent 36 exited the zone at exit time 60
+[Create_Local_Problem] MDD already aligned to the time window
+[Create_Local_problem] Agent 37 exited the zone at exit time 45
+[Create_Local_problem] Agent 37 returned to the zone 2 times within time window
+[Create_Local_problem] NEED TO HANDLE RETURNING AGENTS AS PSEUDO AGENTS
+[Create_Local_problem] Agent 39 exited the zone at exit time 6
+[Create_Local_problem] Agent 39 returned to the zone 1 times within time window
+[Create_Local_problem] NEED TO HANDLE RETURNING AGENTS AS PSEUDO AGENTS
+[Create_Local_Problem] MDD already aligned to the time window
+[Create_Local_problem] Agent 40 exited the zone at exit time 60
+[Create_Local_problem] Agent 42 exited the zone at exit time 27
+[Create_Local_Problem] MDD already aligned to the time window
+[Create_Local_problem] Agent 43 exited the zone at exit time 60
+[Create_Local_problem] Agent 44 exited the zone at exit time 60
+[Create_Local_Problem] MDD already aligned to the time window
+[Create_Local_problem] Agent 45 exited the zone at exit time 25
+[Create_Local_problem] Agent 46 exited the zone at exit time 38
+[Create_Local_problem] Agent 46 returned to the zone 1 times within time window
+[Create_Local_problem] NEED TO HANDLE RETURNING AGENTS AS PSEUDO AGENTS
+[Create_Local_problem] Agent 47 exited the zone at exit time 19
+[Create_Local_problem] Agent 47 returned to the zone 1 times within time window
+[Create_Local_problem] NEED TO HANDLE RETURNING AGENTS AS PSEUDO AGENTS
+[Create_Local_Problem] MDD already aligned to the time window
+[Create_Local_problem] Agent 48 exited the zone at exit time 15
+[Create_Local_problem] Agent 48 returned to the zone 2 times within time window
+[Create_Local_problem] NEED TO HANDLE RETURNING AGENTS AS PSEUDO AGENTS
+[Create_Local_Problem] MDD already aligned to the time window
+[Create_Local_problem] Agent 49 exited the zone at exit time 40
+[Create_Local_problem] Agent 49 returned to the zone 2 times within time window
+[Create_Local_problem] NEED TO HANDLE RETURNING AGENTS AS PSEUDO AGENTS
+[Create_Local_Problem] MDD already aligned to the time window
+[Create_Local_problem] Agent 50 exited the zone at exit time 60
+[Create_Local_problem] Agent 51 exited the zone at exit time 37
+[Create_Local_problem] Agent 51 returned to the zone 1 times within time window
+[Create_Local_problem] NEED TO HANDLE RETURNING AGENTS AS PSEUDO AGENTS
+[Create_Local_problem] Agent 52 exited the zone at exit time 34
+[Create_Local_Problem] MDD already aligned to the time window
+[Create_Local_problem] Agent 53 exited the zone at exit time 60
+[Create_Local_problem] Agent 56 exited the zone at exit time 48
+[Create_Local_problem] Agent 57 exited the zone at exit time 10
+[Create_Local_Problem] MDD already aligned to the time window
+[Create_Local_problem] Agent 58 exited the zone at exit time 33
+[Create_Local_problem] Agent 58 returned to the zone 1 times within time window
+[Create_Local_problem] NEED TO HANDLE RETURNING AGENTS AS PSEUDO AGENTS
+[Create_Local_problem] Agent 59 exited the zone at exit time 60
+[Create_Local_Problem] MDD already aligned to the time window
+[Create_Local_problem] Agent 61 exited the zone at exit time 60
+[Create_Local_problem] Agent 62 exited the zone at exit time 16
+[Create_Local_problem] Agent 64 exited the zone at exit time 60
+[Create_Local_Problem] MDD already aligned to the time window
+[Create_Local_problem] Agent 65 exited the zone at exit time 28
+[Create_Local_Problem] MDD already aligned to the time window
+[Create_Local_problem] Agent 66 exited the zone at exit time 21
+[Create_Local_Problem] MDD already aligned to the time window
+[Create_Local_problem] Agent 67 exited the zone at exit time 42
+[Create_Local_Problem] MDD already aligned to the time window
+[Create_Local_problem] Agent 69 exited the zone at exit time 43
+[Create_Local_problem] Agent 69 returned to the zone 1 times within time window
+[Create_Local_problem] NEED TO HANDLE RETURNING AGENTS AS PSEUDO AGENTS
+[Create_Local_problem] Agent 70 exited the zone at exit time 26
+[Create_Local_problem] Agent 70 returned to the zone 2 times within time window
+[Create_Local_problem] NEED TO HANDLE RETURNING AGENTS AS PSEUDO AGENTS
+[Create_Local_Problem] MDD already aligned to the time window
+[Create_Local_problem] Agent 71 exited the zone at exit time 36
+[Create_Local_problem] Agent 72 exited the zone at exit time 60
+[Create_Local_problem] Agent 74 exited the zone at exit time 60
+[Create_Local_problem] Agent 75 exited the zone at exit time 60
+[Create_Local_Problem] MDD already aligned to the time window
+[Create_Local_problem] Agent 76 exited the zone at exit time 42
+[Create_Local_problem] Agent 76 returned to the zone 1 times within time window
+[Create_Local_problem] NEED TO HANDLE RETURNING AGENTS AS PSEUDO AGENTS
+[Create_Local_problem] Agent 77 exited the zone at exit time 15
+[Create_Local_Problem] MDD already aligned to the time window
+[Create_Local_problem] Agent 78 exited the zone at exit time 7
+[Create_Local_Problem] MDD already aligned to the time window
+[Create_Local_problem] Agent 80 exited the zone at exit time 60
+[Create_Local_problem] Agent 80 returned to the zone 2 times within time window
+[Create_Local_problem] NEED TO HANDLE RETURNING AGENTS AS PSEUDO AGENTS
+[Create_Local_problem] Agent 82 exited the zone at exit time 19
+[Create_Local_problem] Agent 82 returned to the zone 1 times within time window
+[Create_Local_problem] NEED TO HANDLE RETURNING AGENTS AS PSEUDO AGENTS
+[Create_Local_problem] Agent 83 exited the zone at exit time 60
+[Create_Local_problem] Agent 84 exited the zone at exit time 60
+[Create_Local_Problem] MDD already aligned to the time window
+[Create_Local_problem] Agent 85 exited the zone at exit time 10
+[Create_Local_Problem] MDD already aligned to the time window
+[Create_Local_problem] Agent 86 exited the zone at exit time 21
+[Create_Local_problem] Agent 86 returned to the zone 2 times within time window
+[Create_Local_problem] NEED TO HANDLE RETURNING AGENTS AS PSEUDO AGENTS
+[Create_Local_problem] Agent 87 exited the zone at exit time 15
+[Create_Local_Problem] MDD already aligned to the time window
+[Create_Local_problem] Agent 89 exited the zone at exit time 46
+[Create_Local_problem] Agent 89 returned to the zone 1 times within time window
+[Create_Local_problem] NEED TO HANDLE RETURNING AGENTS AS PSEUDO AGENTS
+[Create_Local_problem] Agent 91 exited the zone at exit time 33
+[Create_Local_problem] Agent 92 exited the zone at exit time 25
+[Create_Local_Problem] MDD already aligned to the time window
+[Create_Local_problem] Agent 93 exited the zone at exit time 60
+[Create_Local_Problem] MDD already aligned to the time window
+[Create_Local_problem] Agent 94 exited the zone at exit time 32
+[Create_Local_Problem] MDD already aligned to the time window
+[Create_Local_problem] Agent 95 exited the zone at exit time 1
+[Create_Local_Problem] MDD already aligned to the time window
+[Create_Local_problem] Agent 97 exited the zone at exit time 60
+[Create_Local_problem] Agent 98 exited the zone at exit time 60
+[Create_Local_Problem] MDD already aligned to the time window
+[Create_Local_problem] Agent 99 exited the zone at exit time 60
+[Create_Local_Problem] MDD already aligned to the time window
+[Waiting_time_Solve] Total available waiting time: 3374
+[Waiting_time_Solve] Iteration 0...
+[SAT] Start solving CNF: 35707 clauses and 8612 variables
+[SAT] Solving local zone with SAT iteration 1...
+[SAT] Local CNF: 35707 clauses 
+
+DEBUG: CNF has 35707 clauses
+DEBUG: First clause: 1 
+DEBUG: Adding 35707 clauses to MiniSAT
+DEBUG: Clause load summary: input=35707, added=35707, tautologies_skipped=0, duplicates_skipped=0, unit_clauses=1312, empties=0, intra_clause_literals_removed=0, added_but_db_unchanged=1266
+DEBUG: After adding clauses, solver has 33129 clauses and 8612 variables
+DEBUG: MiniSAT found 8612 variables
+DEBUG: Assignment size: 8612
+DEBUG: First few assignment values: 1 0 1 0 1 0 0 1 0 0 
+[SAT] Minisat result: 1 num decisions: 661 solve time: 0.001 error message: 
+
+=== DEBUG: cnf_assignment_to_paths ===
+Input assignment size: 8612
+
+=== END DEBUG ===
+[SAT] Found 81 vertex collisions and 14 edge collisions
+[SAT] Adding collision clauses and solving again...
+[SAT] Solving local zone with SAT iteration 2...
+[SAT] Local CNF: 35802 clauses 
+
+DEBUG: CNF has 35802 clauses
+DEBUG: First clause: 1 
+DEBUG: Adding 35802 clauses to MiniSAT
+[SAT] Minisat result: 0 num decisions: 0 solve time: 0 error message: Failed to add clause to MiniSAT solver
+[SAT] Local problem is unsatisfiable after 2 iterations
+[SAT] Local problem appears to be unsatisfiable in current zone
+[Waiting_time_Solve] No solution found, trying to apply waiting time:1
+[Current_Solution] Agent 22 used 0 waiting timesteps, 46 remaining
+[Waiting_time_Solve] Applied 0 waiting time to segment 22 for agent 22
+[Current_Solution] Agent 25 used 1 waiting timesteps, 21 remaining
+[Waiting_time_Solve] Applying waiting time delta 1 to segment 25
+[Waiting_time_Solve] Original id: 25
+[Create_Local_Problem] MDD already aligned to the time window
+[Create_Local_Problem] MDD already aligned to the time window
+[Waiting_time_Solve] New path is consistent after applying waiting time for agent 25
+[Waiting_time_Solve] Applied 1 waiting time to segment 25 for agent 25
+[Current_Solution] Agent 40 used 1 waiting timesteps, 35 remaining
+[Waiting_time_Solve] Applying waiting time delta 1 to segment 40
+[Waiting_time_Solve] Original id: 40
+[Create_Local_Problem] MDD already aligned to the time window
+[Waiting_time_Solve] New path is consistent after applying waiting time for agent 40
+[Waiting_time_Solve] Applied 1 waiting time to segment 40 for agent 40
+[Current_Solution] Agent 19 used 1 waiting timesteps, 18 remaining
+[Waiting_time_Solve] Applying waiting time delta 1 to segment 19
+[Waiting_time_Solve] Original id: 19
+[Create_Local_Problem] MDD already aligned to the time window
+[Create_Local_Problem] MDD already aligned to the time window
+[Waiting_time_Solve] New path is consistent after applying waiting time for agent 19
+[Waiting_time_Solve] Applied 1 waiting time to segment 19 for agent 19
+[Current_Solution] Agent 44 used 0 waiting timesteps, 48 remaining
+[Waiting_time_Solve] Applied 0 waiting time to segment 44 for agent 44
+[Current_Solution] Agent 50 used 1 waiting timesteps, 50 remaining
+[Waiting_time_Solve] Applying waiting time delta 1 to segment 50
+[Waiting_time_Solve] Original id: 50
+[Create_Local_Problem] MDD already aligned to the time window
+[Waiting_time_Solve] New path is consistent after applying waiting time for agent 50
+[Waiting_time_Solve] Applied 1 waiting time to segment 50 for agent 50
+[Current_Solution] Agent 50 used 0 waiting timesteps, 50 remaining
+[Waiting_time_Solve] Applied 0 waiting time to segment 50 for agent 50
+[Current_Solution] Agent 71 used 1 waiting timesteps, 21 remaining
+[Waiting_time_Solve] Applying waiting time delta 1 to segment 71
+[Waiting_time_Solve] Original id: 71
+[Create_Local_Problem] MDD already aligned to the time window
+[Waiting_time_Solve] New path is consistent after applying waiting time for agent 71
+[Waiting_time_Solve] Applied 1 waiting time to segment 71 for agent 71
+[Current_Solution] Agent 86 used 1 waiting timesteps, 39 remaining
+[Waiting_time_Solve] Applying waiting time delta 1 to segment 86
+[Waiting_time_Solve] Original id: 86
+[Create_Local_Problem] MDD already aligned to the time window
+[Waiting_time_Solve] New path is consistent after applying waiting time for agent 86
+[Waiting_time_Solve] Applied 1 waiting time to segment 86 for agent 86
+[Current_Solution] Agent 94 used 1 waiting timesteps, 31 remaining
+[Waiting_time_Solve] Applying waiting time delta 1 to segment 94
+[Waiting_time_Solve] Original id: 94
+[Create_Local_Problem] MDD already aligned to the time window
+[Create_Local_Problem] MDD already aligned to the time window
+[Waiting_time_Solve] New path is consistent after applying waiting time for agent 94
+[Waiting_time_Solve] Applied 1 waiting time to segment 94 for agent 94
+[Current_Solution] Agent 53 used 1 waiting timesteps, 29 remaining
+[Waiting_time_Solve] Applying waiting time delta 1 to segment 53
+[Waiting_time_Solve] Original id: 53
+[Create_Local_Problem] MDD already aligned to the time window
+[Waiting_time_Solve] New path is consistent after applying waiting time for agent 53
+[Waiting_time_Solve] Applied 1 waiting time to segment 53 for agent 53
+[Current_Solution] Agent 56 used 1 waiting timesteps, 3 remaining
+[Waiting_time_Solve] Applying waiting time delta 1 to segment 56
+[Waiting_time_Solve] Original id: 56
+[Create_Local_Problem] MDD already aligned to the time window
+[Waiting_time_Solve] New path is consistent after applying waiting time for agent 56
+[Waiting_time_Solve] Applied 1 waiting time to segment 56 for agent 56
+[Current_Solution] Agent 59 used 0 waiting timesteps, 56 remaining
+[Waiting_time_Solve] Applied 0 waiting time to segment 59 for agent 59
+[Current_Solution] Agent 59 used 0 waiting timesteps, 56 remaining
+[Waiting_time_Solve] Applied 0 waiting time to segment 59 for agent 59
+[Current_Solution] Agent 64 used 0 waiting timesteps, 54 remaining
+[Waiting_time_Solve] Applied 0 waiting time to segment 64 for agent 64
+[Current_Solution] Agent 24 used 1 waiting timesteps, 27 remaining
+[Waiting_time_Solve] Applying waiting time delta 1 to segment 24
+[Waiting_time_Solve] Original id: 24
+[Create_Local_Problem] MDD already aligned to the time window
+[Waiting_time_Solve] New path is consistent after applying waiting time for agent 24
+[Waiting_time_Solve] Applied 1 waiting time to segment 24 for agent 24
+[Current_Solution] Agent 75 used 1 waiting timesteps, 40 remaining
+[Waiting_time_Solve] Applying waiting time delta 1 to segment 75
+[Waiting_time_Solve] Original id: 75
+[Create_Local_Problem] MDD already aligned to the time window
+[Create_Local_Problem] MDD already aligned to the time window
+[Waiting_time_Solve] New path is consistent after applying waiting time for agent 75
+[Waiting_time_Solve] Applied 1 waiting time to segment 75 for agent 75
+[Current_Solution] Agent 0 used 1 waiting timesteps, 42 remaining
+[Waiting_time_Solve] Applying waiting time delta 1 to segment 0
+[Waiting_time_Solve] Original id: 0
+[Create_Local_Problem] MDD already aligned to the time window
+[Create_Local_Problem] MDD already aligned to the time window
+[Waiting_time_Solve] New path is consistent after applying waiting time for agent 0
+[Waiting_time_Solve] Applied 1 waiting time to segment 0 for agent 0
+[Current_Solution] Agent 13 used 0 waiting timesteps, 38 remaining
+[Waiting_time_Solve] Applied 0 waiting time to segment 13 for agent 13
+[Current_Solution] Agent 44 used 0 waiting timesteps, 48 remaining
+[Waiting_time_Solve] Applied 0 waiting time to segment 44 for agent 44
+[Current_Solution] Agent 9 used 1 waiting timesteps, 43 remaining
+[Waiting_time_Solve] Applying waiting time delta 1 to segment 9
+[Waiting_time_Solve] Original id: 9
+[Create_Local_Problem] MDD already aligned to the time window
+[Waiting_time_Solve] New path is consistent after applying waiting time for agent 9
+[Waiting_time_Solve] Applied 1 waiting time to segment 9 for agent 9
+[Current_Solution] Agent 36 used 0 waiting timesteps, 57 remaining
+[Waiting_time_Solve] Applied 0 waiting time to segment 36 for agent 36
+[Current_Solution] Agent 83 used 0 waiting timesteps, 50 remaining
+[Waiting_time_Solve] Applied 0 waiting time to segment 83 for agent 83
+[Current_Solution] Agent 92 used 1 waiting timesteps, 37 remaining
+[Waiting_time_Solve] Applying waiting time delta 1 to segment 92
+[Waiting_time_Solve] Original id: 92
+[Create_Local_Problem] MDD already aligned to the time window
+[Create_Local_Problem] MDD already aligned to the time window
+[Waiting_time_Solve] New path is consistent after applying waiting time for agent 92
+[Waiting_time_Solve] Applied 1 waiting time to segment 92 for agent 92
+[Current_Solution] Agent 93 used 1 waiting timesteps, 40 remaining
+[Waiting_time_Solve] Applying waiting time delta 1 to segment 93
+[Waiting_time_Solve] Original id: 93
+[Create_Local_Problem] MDD already aligned to the time window
+[Create_Local_Problem] MDD already aligned to the time window
+[Waiting_time_Solve] New path is consistent after applying waiting time for agent 93
+[Waiting_time_Solve] Applied 1 waiting time to segment 93 for agent 93
+[Current_Solution] Agent 72 used 0 waiting timesteps, 41 remaining
+[Waiting_time_Solve] Applied 0 waiting time to segment 72 for agent 72
+[Current_Solution] Agent 98 used 0 waiting timesteps, 62 remaining
+[Waiting_time_Solve] Applied 0 waiting time to segment 98 for agent 98
+[Current_Solution] Agent 98 used 0 waiting timesteps, 62 remaining
+[Waiting_time_Solve] Applied 0 waiting time to segment 98 for agent 98
+[Current_Solution] Agent 52 used 1 waiting timesteps, 28 remaining
+[Waiting_time_Solve] Applying waiting time delta 1 to segment 52
+[Waiting_time_Solve] Original id: 52
+[Create_Local_Problem] MDD already aligned to the time window
+[Create_Local_Problem] MDD already aligned to the time window
+[Waiting_time_Solve] New path is consistent after applying waiting time for agent 52
+[Waiting_time_Solve] Applied 1 waiting time to segment 52 for agent 52
+[Current_Solution] Agent 83 used 0 waiting timesteps, 50 remaining
+[Waiting_time_Solve] Applied 0 waiting time to segment 83 for agent 83
+[Current_Solution] Agent 98 used 0 waiting timesteps, 62 remaining
+[Waiting_time_Solve] Applied 0 waiting time to segment 98 for agent 98
+[Current_Solution] Agent 69 used 1 waiting timesteps, 15 remaining
+[Waiting_time_Solve] Applying waiting time delta 1 to segment 126
+[Waiting_time_Solve] Original id: 69
+[Create_Local_Problem] MDD already aligned to the time window
+[Waiting_time_Solve] New path is consistent after applying waiting time for agent 69
+[Waiting_time_Solve] Applied 1 waiting time to segment 126 for agent 69
+[Current_Solution] Agent 5 used 1 waiting timesteps, 21 remaining
+[Waiting_time_Solve] Applying waiting time delta 1 to segment 5
+[Waiting_time_Solve] Original id: 5
+[Create_Local_Problem] MDD already aligned to the time window
+[Waiting_time_Solve] New path is consistent after applying waiting time for agent 5
+[Waiting_time_Solve] Applied 1 waiting time to segment 5 for agent 5
+[Current_Solution] Agent 51 used 1 waiting timesteps, 16 remaining
+[Waiting_time_Solve] Applying waiting time delta 1 to segment 51
+[Waiting_time_Solve] Original id: 51
+[Create_Local_Problem] MDD already aligned to the time window
+[Create_Local_Problem] ERROR: MDD level 71 exceeds time window length 61; truncating.
+[Create_Local_Problem] ERROR: MDD level 72 exceeds time window length 61; truncating.
+[Create_Local_Problem] ERROR: MDD level 73 exceeds time window length 61; truncating.
+[Waiting_time_Solve] New path is consistent after applying waiting time for agent 51
+[Waiting_time_Solve] Applied 1 waiting time to segment 51 for agent 51
+[Current_Solution] Agent 87 used 1 waiting timesteps, 50 remaining
+[Waiting_time_Solve] Applying waiting time delta 1 to segment 87
+[Waiting_time_Solve] Original id: 87
+[Create_Local_Problem] MDD already aligned to the time window
+[Create_Local_Problem] MDD already aligned to the time window
+[Waiting_time_Solve] New path is consistent after applying waiting time for agent 87
+[Waiting_time_Solve] Applied 1 waiting time to segment 87 for agent 87
+[Current_Solution] Agent 45 used 1 waiting timesteps, 34 remaining
+[Waiting_time_Solve] Applying waiting time delta 1 to segment 45
+[Waiting_time_Solve] Original id: 45
+[Create_Local_Problem] MDD already aligned to the time window
+[Waiting_time_Solve] New path is consistent after applying waiting time for agent 45
+[Waiting_time_Solve] Applied 1 waiting time to segment 45 for agent 45
+[Current_Solution] Agent 86 used 1 waiting timesteps, 38 remaining
+[Waiting_time_Solve] Applying waiting time delta 1 to segment 133
+[Waiting_time_Solve] Original id: 86
+[Create_Local_Problem] MDD already aligned to the time window
+[Create_Local_Problem] ERROR: MDD level 66 exceeds time window length 61; truncating.
+[Waiting_time_Solve] New path is consistent after applying waiting time for agent 86
+[Waiting_time_Solve] Applied 1 waiting time to segment 133 for agent 86
+[Waiting_time_Solve] Waiting time applied
+[Waiting_time_Solve] Iteration 1...
+[SAT] Start solving CNF: 72347 clauses and 11598 variables
+[SAT] Solving local zone with SAT iteration 1...
+[SAT] Local CNF: 72441 clauses 
+
+DEBUG: CNF has 72441 clauses
+DEBUG: First clause: 1 
+DEBUG: Adding 72441 clauses to MiniSAT
+[SAT] Minisat result: 0 num decisions: 0 solve time: 0 error message: Failed to add clause to MiniSAT solver
+[SAT] Local problem is unsatisfiable after 1 iterations
+[SAT] Local problem appears to be unsatisfiable in current zone
+[Waiting_time_Solve] No solution found, trying to apply waiting time:2
+[Waiting_time_Solve] No waiting time applied
+[Waiting_time_Solve] No solution found
+[Waiting_time_Solve] Restoring original paths
+[Waiting_time_Solve] Restoring waiting times
+[Current_Solution] Restored waiting times from backup
+[Current_Solution] Restored paths from backup
+[Solve_local_zone] Zone with expansion factor 4failed
+[Solve_local_zone] Expanding zone with offset 6 (original: 1)
+[LOCAL ZONE] Found newly touched conflict 80 at position (13,33)
+[LOCAL ZONE] Found newly touched conflict 97 at position (15,25)
+[LOCAL ZONE] Found newly touched conflict 14 at position (15,31)
+[LOCAL ZONE] Found newly touched conflict 26 at position (15,31)
+[LOCAL ZONE] Found newly touched conflict 98 at position (15,31)
+[LOCAL ZONE] Found newly touched conflict 99 at position (15,31)
+[LOCAL ZONE] Found newly touched conflict 6 at position (16,24)
+[LOCAL ZONE] Found newly touched conflict 36 at position (17,23)
+[LOCAL ZONE] Found newly touched conflict 12 at position (36,33)
+[LOCAL ZONE] Found newly touched conflict 94 at position (14,28)
+[LOCAL ZONE] Found newly touched conflict 10 at position (15,22)
+[LOCAL ZONE] Found newly touched conflict 18 at position (15,30)
+[LOCAL ZONE] Found newly touched conflict 8 at position (16,23)
+[LOCAL ZONE] Found newly touched conflict 19 at position (16,23)
+[LOCAL ZONE] Found newly touched conflict 34 at position (16,23)
+[LOCAL ZONE] Found newly touched conflict 84 at position (16,23)
+[LOCAL ZONE] Found newly touched conflict 24 at position (17,21)
+[LOCAL ZONE] Found newly touched conflict 110 at position (9,27)
+[LOCAL ZONE] Found newly touched conflict 55 at position (11,21)
+[LOCAL ZONE] Found newly touched conflict 83 at position (11,21)
+[Solve_local_zone] Final expanded zone contains 971 positions with 84 conflicts 
+[Solve_local_zone] New time window: [0, 60]
+[Solve_local_zone] Current local zone size: 971 (42.1441% of all walkable positions)
+[Solve_local_zone] Local zone time window: [0, 61]
+[Create_Local_problem] Agent 0 exited the zone at exit time 61
+[Create_Local_Problem] MDD already aligned to the time window
+[Create_Local_problem] Agent 2 exited the zone at exit time 46
+[Create_Local_problem] Agent 2 returned to the zone 4 times within time window
+[Create_Local_problem] NEED TO HANDLE RETURNING AGENTS AS PSEUDO AGENTS
+[Create_Local_problem] Agent 4 exited the zone at exit time 61
+[Create_Local_problem] Agent 4 returned to the zone 1 times within time window
+[Create_Local_problem] NEED TO HANDLE RETURNING AGENTS AS PSEUDO AGENTS
+[Create_Local_Problem] MDD already aligned to the time window
+[Create_Local_problem] Agent 5 exited the zone at exit time 61
+[Create_Local_problem] Agent 6 exited the zone at exit time 10
+[Create_Local_Problem] MDD already aligned to the time window
+[Create_Local_problem] Agent 7 exited the zone at exit time 34
+[Create_Local_problem] Agent 8 exited the zone at exit time 61
+[Create_Local_problem] Agent 9 exited the zone at exit time 61
+[Create_Local_Problem] MDD already aligned to the time window
+[Create_Local_problem] Agent 10 exited the zone at exit time 1
+[Create_Local_Problem] MDD already aligned to the time window
+[Create_Local_problem] Agent 11 exited the zone at exit time 19
+[Create_Local_Problem] MDD already aligned to the time window
+[Create_Local_problem] Agent 12 exited the zone at exit time 61
+[Create_Local_Problem] MDD already aligned to the time window
+[Create_Local_problem] Agent 13 exited the zone at exit time 61
+[Create_Local_problem] Agent 14 exited the zone at exit time 61
+[Create_Local_Problem] MDD already aligned to the time window
+[Create_Local_problem] Agent 15 exited the zone at exit time 2
+[Create_Local_Problem] MDD already aligned to the time window
+[Create_Local_problem] Agent 16 exited the zone at exit time 61
+[Create_Local_Problem] MDD already aligned to the time window
+[Create_Local_problem] Agent 17 exited the zone at exit time 61
+[Create_Local_Problem] MDD already aligned to the time window
+[Create_Local_problem] Agent 18 exited the zone at exit time 49
+[Create_Local_problem] Agent 19 exited the zone at exit time 30
+[Create_Local_Problem] MDD already aligned to the time window
+[Create_Local_problem] Agent 20 exited the zone at exit time 49
+[Create_Local_problem] Agent 21 exited the zone at exit time 55
+[Create_Local_problem] Agent 21 returned to the zone 1 times within time window
+[Create_Local_problem] NEED TO HANDLE RETURNING AGENTS AS PSEUDO AGENTS
+[Create_Local_problem] Agent 22 exited the zone at exit time 61
+[Create_Local_problem] Agent 23 exited the zone at exit time 61
+[Create_Local_Problem] MDD already aligned to the time window
+[Create_Local_problem] Agent 24 exited the zone at exit time 38
+[Create_Local_Problem] MDD already aligned to the time window
+[Create_Local_problem] Agent 25 exited the zone at exit time 39
+[Create_Local_Problem] MDD already aligned to the time window
+[Create_Local_problem] Agent 26 exited the zone at exit time 36
+[Create_Local_Problem] MDD already aligned to the time window
+[Create_Local_problem] Agent 27 exited the zone at exit time 61
+[Create_Local_problem] Agent 27 returned to the zone 1 times within time window
+[Create_Local_problem] NEED TO HANDLE RETURNING AGENTS AS PSEUDO AGENTS
+[Create_Local_problem] Agent 28 exited the zone at exit time 34
+[Create_Local_problem] Agent 29 exited the zone at exit time 54
+[Create_Local_problem] Agent 29 returned to the zone 1 times within time window
+[Create_Local_problem] NEED TO HANDLE RETURNING AGENTS AS PSEUDO AGENTS
+[Create_Local_problem] Agent 30 exited the zone at exit time 46
+[Create_Local_problem] Agent 32 exited the zone at exit time 5
+[Create_Local_Problem] MDD already aligned to the time window
+[Create_Local_problem] Agent 33 exited the zone at exit time 30
+[Create_Local_Problem] MDD already aligned to the time window
+[Create_Local_problem] Agent 34 exited the zone at exit time 61
+[Create_Local_problem] Agent 35 exited the zone at exit time 13
+[Create_Local_Problem] MDD already aligned to the time window
+[Create_Local_problem] Agent 36 exited the zone at exit time 61
+[Create_Local_Problem] MDD already aligned to the time window
+[Create_Local_problem] Agent 37 exited the zone at exit time 46
+[Create_Local_problem] Agent 38 exited the zone at exit time 25
+[Create_Local_problem] Agent 39 exited the zone at exit time 7
+[Create_Local_problem] Agent 39 returned to the zone 1 times within time window
+[Create_Local_problem] NEED TO HANDLE RETURNING AGENTS AS PSEUDO AGENTS
+[Create_Local_Problem] MDD already aligned to the time window
+[Create_Local_problem] Agent 40 exited the zone at exit time 61
+[Create_Local_problem] Agent 42 exited the zone at exit time 30
+[Create_Local_problem] Agent 42 returned to the zone 1 times within time window
+[Create_Local_problem] NEED TO HANDLE RETURNING AGENTS AS PSEUDO AGENTS
+[Create_Local_Problem] MDD already aligned to the time window
+[Create_Local_problem] Agent 43 exited the zone at exit time 61
+[Create_Local_Problem] MDD already aligned to the time window
+[Create_Local_problem] Agent 44 exited the zone at exit time 61
+[Create_Local_Problem] MDD already aligned to the time window
+[Create_Local_problem] Agent 45 exited the zone at exit time 61
+[Create_Local_problem] Agent 45 returned to the zone 2 times within time window
+[Create_Local_problem] NEED TO HANDLE RETURNING AGENTS AS PSEUDO AGENTS
+[Create_Local_problem] Agent 46 exited the zone at exit time 45
+[Create_Local_problem] Agent 46 returned to the zone 4 times within time window
+[Create_Local_problem] NEED TO HANDLE RETURNING AGENTS AS PSEUDO AGENTS
+[Create_Local_problem] Agent 47 exited the zone at exit time 61
+[Create_Local_Problem] MDD already aligned to the time window
+[Create_Local_problem] Agent 48 exited the zone at exit time 26
+[Create_Local_Problem] MDD already aligned to the time window
+[Create_Local_problem] Agent 49 exited the zone at exit time 41
+[Create_Local_problem] Agent 49 returned to the zone 2 times within time window
+[Create_Local_problem] NEED TO HANDLE RETURNING AGENTS AS PSEUDO AGENTS
+[Create_Local_Problem] MDD already aligned to the time window
+[Create_Local_problem] Agent 50 exited the zone at exit time 61
+[Create_Local_Problem] MDD already aligned to the time window
+[Create_Local_problem] Agent 51 exited the zone at exit time 40
+[Create_Local_problem] Agent 51 returned to the zone 2 times within time window
+[Create_Local_problem] NEED TO HANDLE RETURNING AGENTS AS PSEUDO AGENTS
+[Create_Local_problem] Agent 52 exited the zone at exit time 35
+[Create_Local_Problem] MDD already aligned to the time window
+[Create_Local_problem] Agent 53 exited the zone at exit time 61
+[Create_Local_problem] Agent 56 exited the zone at exit time 49
+[Create_Local_problem] Agent 57 exited the zone at exit time 11
+[Create_Local_Problem] MDD already aligned to the time window
+[Create_Local_problem] Agent 58 exited the zone at exit time 39
+[Create_Local_problem] Agent 59 exited the zone at exit time 61
+[Create_Local_Problem] MDD already aligned to the time window
+[Create_Local_problem] Agent 61 exited the zone at exit time 61
+[Create_Local_problem] Agent 62 exited the zone at exit time 18
+[Create_Local_problem] Agent 63 exited the zone at exit time 6
+[Create_Local_Problem] MDD already aligned to the time window
+[Create_Local_problem] Agent 64 exited the zone at exit time 61
+[Create_Local_Problem] MDD already aligned to the time window
+[Create_Local_problem] Agent 65 exited the zone at exit time 29
+[Create_Local_Problem] MDD already aligned to the time window
+[Create_Local_problem] Agent 66 exited the zone at exit time 42
+[Create_Local_Problem] MDD already aligned to the time window
+[Create_Local_problem] Agent 67 exited the zone at exit time 43
+[Create_Local_Problem] MDD already aligned to the time window
+[Create_Local_problem] Agent 68 exited the zone at exit time 0
+[Create_Local_Problem] MDD already aligned to the time window
+[Create_Local_problem] Agent 69 exited the zone at exit time 44
+[Create_Local_Problem] MDD already aligned to the time window
+[Create_Local_problem] Agent 70 exited the zone at exit time 27
+[Create_Local_Problem] MDD already aligned to the time window
+[Create_Local_problem] Agent 71 exited the zone at exit time 39
+[Create_Local_problem] Agent 72 exited the zone at exit time 61
+[Create_Local_problem] Agent 73 exited the zone at exit time 34
+[Create_Local_problem] Agent 74 exited the zone at exit time 61
+[Create_Local_problem] Agent 75 exited the zone at exit time 61
+[Create_Local_Problem] MDD already aligned to the time window
+[Create_Local_problem] Agent 76 exited the zone at exit time 51
+[Create_Local_problem] Agent 76 returned to the zone 1 times within time window
+[Create_Local_problem] NEED TO HANDLE RETURNING AGENTS AS PSEUDO AGENTS
+[Create_Local_problem] Agent 77 exited the zone at exit time 16
+[Create_Local_Problem] MDD already aligned to the time window
+[Create_Local_problem] Agent 78 exited the zone at exit time 21
+[Create_Local_Problem] MDD already aligned to the time window
+[Create_Local_problem] Agent 80 exited the zone at exit time 61
+[Create_Local_problem] Agent 80 returned to the zone 1 times within time window
+[Create_Local_problem] NEED TO HANDLE RETURNING AGENTS AS PSEUDO AGENTS
+[Create_Local_problem] Agent 81 exited the zone at exit time 61
+[Create_Local_problem] Agent 81 returned to the zone 1 times within time window
+[Create_Local_problem] NEED TO HANDLE RETURNING AGENTS AS PSEUDO AGENTS
+[Create_Local_problem] Agent 82 exited the zone at exit time 49
+[Create_Local_problem] Agent 82 returned to the zone 2 times within time window
+[Create_Local_problem] NEED TO HANDLE RETURNING AGENTS AS PSEUDO AGENTS
+[Create_Local_problem] Agent 83 exited the zone at exit time 61
+[Create_Local_Problem] MDD already aligned to the time window
+[Create_Local_problem] Agent 84 exited the zone at exit time 61
+[Create_Local_Problem] MDD already aligned to the time window
+[Create_Local_problem] Agent 85 exited the zone at exit time 31
+[Create_Local_Problem] MDD already aligned to the time window
+[Create_Local_problem] Agent 86 exited the zone at exit time 25
+[Create_Local_problem] Agent 86 returned to the zone 1 times within time window
+[Create_Local_problem] NEED TO HANDLE RETURNING AGENTS AS PSEUDO AGENTS
+[Create_Local_Problem] MDD already aligned to the time window
+[Create_Local_problem] Agent 87 exited the zone at exit time 61
+[Create_Local_Problem] MDD already aligned to the time window
+[Create_Local_problem] Agent 88 exited the zone at exit time 8
+[Create_Local_Problem] MDD already aligned to the time window
+[Create_Local_problem] Agent 89 exited the zone at exit time 47
+[Create_Local_Problem] MDD already aligned to the time window
+[Create_Local_problem] Agent 91 exited the zone at exit time 61
+[Create_Local_problem] Agent 92 exited the zone at exit time 26
+[Create_Local_Problem] MDD already aligned to the time window
+[Create_Local_problem] Agent 93 exited the zone at exit time 61
+[Create_Local_Problem] MDD already aligned to the time window
+[Create_Local_problem] Agent 94 exited the zone at exit time 33
+[Create_Local_Problem] MDD already aligned to the time window
+[Create_Local_problem] Agent 95 exited the zone at exit time 61
+[Create_Local_Problem] MDD already aligned to the time window
+[Create_Local_problem] Agent 97 exited the zone at exit time 61
+[Create_Local_problem] Agent 98 exited the zone at exit time 61
+[Create_Local_Problem] MDD already aligned to the time window
+[Create_Local_problem] Agent 99 exited the zone at exit time 61
+[Create_Local_Problem] MDD already aligned to the time window
+[Waiting_time_Solve] Total available waiting time: 3374
+[Waiting_time_Solve] Iteration 0...
+[SAT] Start solving CNF: 77296 clauses and 14881 variables
+[SAT] Solving local zone with SAT iteration 1...
+[SAT] Local CNF: 77296 clauses 
+
+DEBUG: CNF has 77296 clauses
+DEBUG: First clause: 1 
+DEBUG: Adding 77296 clauses to MiniSAT
+DEBUG: Clause load summary: input=77296, added=77296, tautologies_skipped=0, duplicates_skipped=0, unit_clauses=1688, empties=0, intra_clause_literals_removed=0, added_but_db_unchanged=1653
+DEBUG: After adding clauses, solver has 73955 clauses and 14881 variables
+DEBUG: MiniSAT found 14881 variables
+DEBUG: Assignment size: 14881
+DEBUG: First few assignment values: 1 0 1 0 1 0 0 1 0 0 
+[SAT] Minisat result: 1 num decisions: 902 solve time: 0.002 error message: 
+
+=== DEBUG: cnf_assignment_to_paths ===
+Input assignment size: 14881
+
+=== END DEBUG ===
+[SAT] Found 71 vertex collisions and 22 edge collisions
+[SAT] Adding collision clauses and solving again...
+[SAT] Solving local zone with SAT iteration 2...
+[SAT] Local CNF: 77389 clauses 
+
+DEBUG: CNF has 77389 clauses
+DEBUG: First clause: 1 
+DEBUG: Adding 77389 clauses to MiniSAT
+[SAT] Minisat result: 0 num decisions: 0 solve time: 0 error message: Failed to add clause to MiniSAT solver
+[SAT] Local problem is unsatisfiable after 2 iterations
+[SAT] Local problem appears to be unsatisfiable in current zone
+[Waiting_time_Solve] No solution found, trying to apply waiting time:1
+[Current_Solution] Agent 14 used 0 waiting timesteps, 45 remaining
+[Waiting_time_Solve] Applied 0 waiting time to segment 14 for agent 14
+[Current_Solution] Agent 75 used 1 waiting timesteps, 40 remaining
+[Waiting_time_Solve] Applying waiting time delta 1 to segment 75
+[Waiting_time_Solve] Original id: 75
+[Create_Local_Problem] MDD already aligned to the time window
+[Create_Local_Problem] MDD already aligned to the time window
+[Waiting_time_Solve] New path is consistent after applying waiting time for agent 75
+[Waiting_time_Solve] Applied 1 waiting time to segment 75 for agent 75
+[Current_Solution] Agent 9 used 0 waiting timesteps, 44 remaining
+[Waiting_time_Solve] Applied 0 waiting time to segment 9 for agent 9
+[Current_Solution] Agent 25 used 1 waiting timesteps, 21 remaining
+[Waiting_time_Solve] Applying waiting time delta 1 to segment 25
+[Waiting_time_Solve] Original id: 25
+[Create_Local_Problem] MDD already aligned to the time window
+[Create_Local_Problem] MDD already aligned to the time window
+[Waiting_time_Solve] New path is consistent after applying waiting time for agent 25
+[Waiting_time_Solve] Applied 1 waiting time to segment 25 for agent 25
+[Current_Solution] Agent 34 used 1 waiting timesteps, 39 remaining
+[Waiting_time_Solve] Applying waiting time delta 1 to segment 34
+[Waiting_time_Solve] Original id: 34
+[Create_Local_Problem] MDD already aligned to the time window
+[Waiting_time_Solve] New path is consistent after applying waiting time for agent 34
+[Waiting_time_Solve] Applied 1 waiting time to segment 34 for agent 34
+[Current_Solution] Agent 22 used 0 waiting timesteps, 46 remaining
+[Waiting_time_Solve] Applied 0 waiting time to segment 22 for agent 22
+[Current_Solution] Agent 44 used 1 waiting timesteps, 47 remaining
+[Waiting_time_Solve] Applying waiting time delta 1 to segment 44
+[Waiting_time_Solve] Original id: 44
+[Create_Local_Problem] MDD already aligned to the time window
+[Create_Local_Problem] MDD already aligned to the time window
+[Waiting_time_Solve] New path is consistent after applying waiting time for agent 44
+[Waiting_time_Solve] Applied 1 waiting time to segment 44 for agent 44
+[Current_Solution] Agent 33 used 1 waiting timesteps, 34 remaining
+[Waiting_time_Solve] Applying waiting time delta 1 to segment 33
+[Waiting_time_Solve] Original id: 33
+[Create_Local_Problem] MDD already aligned to the time window
+[Create_Local_Problem] MDD already aligned to the time window
+[Waiting_time_Solve] New path is consistent after applying waiting time for agent 33
+[Waiting_time_Solve] Applied 1 waiting time to segment 33 for agent 33
+[Current_Solution] Agent 0 used 1 waiting timesteps, 42 remaining
+[Waiting_time_Solve] Applying waiting time delta 1 to segment 0
+[Waiting_time_Solve] Original id: 0
+[Create_Local_Problem] MDD already aligned to the time window
+[Create_Local_Problem] MDD already aligned to the time window
+[Waiting_time_Solve] New path is consistent after applying waiting time for agent 0
+[Waiting_time_Solve] Applied 1 waiting time to segment 0 for agent 0
+[Current_Solution] Agent 37 used 1 waiting timesteps, 19 remaining
+[Waiting_time_Solve] Applying waiting time delta 1 to segment 37
+[Waiting_time_Solve] Original id: 37
+[Create_Local_Problem] MDD already aligned to the time window
+[Waiting_time_Solve] New path is consistent after applying waiting time for agent 37
+[Waiting_time_Solve] Applied 1 waiting time to segment 37 for agent 37
+[Current_Solution] Agent 40 used 1 waiting timesteps, 35 remaining
+[Waiting_time_Solve] Applying waiting time delta 1 to segment 40
+[Waiting_time_Solve] Original id: 40
+[Create_Local_Problem] MDD already aligned to the time window
+[Waiting_time_Solve] New path is consistent after applying waiting time for agent 40
+[Waiting_time_Solve] Applied 1 waiting time to segment 40 for agent 40
+[Current_Solution] Agent 83 used 0 waiting timesteps, 50 remaining
+[Waiting_time_Solve] Applied 0 waiting time to segment 83 for agent 83
+[Current_Solution] Agent 91 used 1 waiting timesteps, 26 remaining
+[Waiting_time_Solve] Applying waiting time delta 1 to segment 91
+[Waiting_time_Solve] Original id: 91
+[Create_Local_Problem] MDD already aligned to the time window
+[Waiting_time_Solve] New path is consistent after applying waiting time for agent 91
+[Waiting_time_Solve] Applied 1 waiting time to segment 91 for agent 91
+[Current_Solution] Agent 50 used 0 waiting timesteps, 51 remaining
+[Waiting_time_Solve] Applied 0 waiting time to segment 50 for agent 50
+[Current_Solution] Agent 50 used 0 waiting timesteps, 51 remaining
+[Waiting_time_Solve] Applied 0 waiting time to segment 50 for agent 50
+[Current_Solution] Agent 95 used 0 waiting timesteps, 61 remaining
+[Waiting_time_Solve] Applied 0 waiting time to segment 95 for agent 95
+[Current_Solution] Agent 23 used 1 waiting timesteps, 46 remaining
+[Waiting_time_Solve] Applying waiting time delta 1 to segment 23
+[Waiting_time_Solve] Original id: 23
+[Create_Local_Problem] MDD already aligned to the time window
+[Create_Local_Problem] MDD already aligned to the time window
+[Waiting_time_Solve] New path is consistent after applying waiting time for agent 23
+[Waiting_time_Solve] Applied 1 waiting time to segment 23 for agent 23
+[Current_Solution] Agent 42 used 1 waiting timesteps, 13 remaining
+[Waiting_time_Solve] Applying waiting time delta 1 to segment 42
+[Waiting_time_Solve] Original id: 42
+[Create_Local_Problem] MDD already aligned to the time window
+[Create_Local_Problem] MDD already aligned to the time window
+[Waiting_time_Solve] New path is consistent after applying waiting time for agent 42
+[Waiting_time_Solve] Applied 1 waiting time to segment 42 for agent 42
+[Current_Solution] Agent 98 used 0 waiting timesteps, 62 remaining
+[Waiting_time_Solve] Applied 0 waiting time to segment 98 for agent 98
+[Current_Solution] Agent 59 used 0 waiting timesteps, 56 remaining
+[Waiting_time_Solve] Applied 0 waiting time to segment 59 for agent 59
+[Current_Solution] Agent 43 used 1 waiting timesteps, 42 remaining
+[Waiting_time_Solve] Applying waiting time delta 1 to segment 43
+[Waiting_time_Solve] Original id: 43
+[Create_Local_Problem] MDD already aligned to the time window
+[Create_Local_Problem] MDD already aligned to the time window
+[Waiting_time_Solve] New path is consistent after applying waiting time for agent 43
+[Waiting_time_Solve] Applied 1 waiting time to segment 43 for agent 43
+[Current_Solution] Agent 64 used 0 waiting timesteps, 54 remaining
+[Waiting_time_Solve] Applied 0 waiting time to segment 64 for agent 64
+[Current_Solution] Agent 98 used 0 waiting timesteps, 62 remaining
+[Waiting_time_Solve] Applied 0 waiting time to segment 98 for agent 98
+[Current_Solution] Agent 86 used 1 waiting timesteps, 39 remaining
+[Waiting_time_Solve] Applying waiting time delta 1 to segment 86
+[Waiting_time_Solve] Original id: 86
+[Create_Local_Problem] MDD already aligned to the time window
+[Create_Local_Problem] MDD already aligned to the time window
+[Waiting_time_Solve] New path is consistent after applying waiting time for agent 86
+[Waiting_time_Solve] Applied 1 waiting time to segment 86 for agent 86
+[Current_Solution] Agent 71 used 1 waiting timesteps, 21 remaining
+[Waiting_time_Solve] Applying waiting time delta 1 to segment 71
+[Waiting_time_Solve] Original id: 71
+[Create_Local_Problem] MDD already aligned to the time window
+[Waiting_time_Solve] New path is consistent after applying waiting time for agent 71
+[Waiting_time_Solve] Applied 1 waiting time to segment 71 for agent 71
+[Current_Solution] Agent 72 used 0 waiting timesteps, 41 remaining
+[Waiting_time_Solve] Applied 0 waiting time to segment 72 for agent 72
+[Current_Solution] Agent 13 used 0 waiting timesteps, 38 remaining
+[Waiting_time_Solve] Applied 0 waiting time to segment 13 for agent 13
+[Current_Solution] Agent 14 used 0 waiting timesteps, 45 remaining
+[Waiting_time_Solve] Applied 0 waiting time to segment 14 for agent 14
+[Current_Solution] Agent 82 used 1 waiting timesteps, 8 remaining
+[Waiting_time_Solve] Applying waiting time delta 1 to segment 82
+[Waiting_time_Solve] Original id: 82
+[Create_Local_Problem] MDD already aligned to the time window
+[Create_Local_Problem] ERROR: MDD level 62 exceeds time window length 62; truncating.
+[Create_Local_Problem] ERROR: MDD level 63 exceeds time window length 62; truncating.
+[Create_Local_Problem] ERROR: MDD level 64 exceeds time window length 62; truncating.
+[Create_Local_Problem] ERROR: MDD level 65 exceeds time window length 62; truncating.
+[Create_Local_Problem] ERROR: MDD level 66 exceeds time window length 62; truncating.
+[Create_Local_Problem] ERROR: MDD level 67 exceeds time window length 62; truncating.
+[Create_Local_Problem] ERROR: MDD level 68 exceeds time window length 62; truncating.
+[Create_Local_Problem] ERROR: MDD level 69 exceeds time window length 62; truncating.
+[Create_Local_Problem] ERROR: MDD level 89 exceeds time window length 62; truncating.
+[Create_Local_Problem] ERROR: MDD level 90 exceeds time window length 62; truncating.
+[Create_Local_Problem] ERROR: MDD level 91 exceeds time window length 62; truncating.
+[Create_Local_Problem] ERROR: MDD level 92 exceeds time window length 62; truncating.
+[Create_Local_Problem] ERROR: MDD level 93 exceeds time window length 62; truncating.
+[Create_Local_Problem] ERROR: MDD level 94 exceeds time window length 62; truncating.
+[Waiting_time_Solve] New path is consistent after applying waiting time for agent 82
+[Waiting_time_Solve] Applied 1 waiting time to segment 82 for agent 82
+[Current_Solution] Agent 83 used 0 waiting timesteps, 50 remaining
+[Waiting_time_Solve] Applied 0 waiting time to segment 83 for agent 83
+[Current_Solution] Agent 7 used 1 waiting timesteps, 26 remaining
+[Waiting_time_Solve] Applying waiting time delta 1 to segment 7
+[Waiting_time_Solve] Original id: 7
+[Create_Local_Problem] MDD already aligned to the time window
+[Waiting_time_Solve] New path is consistent after applying waiting time for agent 7
+[Waiting_time_Solve] Applied 1 waiting time to segment 7 for agent 7
+[Current_Solution] Agent 44 used 0 waiting timesteps, 47 remaining
+[Waiting_time_Solve] Applied 0 waiting time to segment 44 for agent 44
+[Current_Solution] Agent 91 used 0 waiting timesteps, 26 remaining
+[Waiting_time_Solve] Applied 0 waiting time to segment 91 for agent 91
+[Current_Solution] Agent 98 used 0 waiting timesteps, 62 remaining
+[Waiting_time_Solve] Applied 0 waiting time to segment 98 for agent 98
+[Current_Solution] Agent 91 used 0 waiting timesteps, 26 remaining
+[Waiting_time_Solve] Applied 0 waiting time to segment 91 for agent 91
+[Current_Solution] Agent 92 used 1 waiting timesteps, 37 remaining
+[Waiting_time_Solve] Applying waiting time delta 1 to segment 92
+[Waiting_time_Solve] Original id: 92
+[Create_Local_Problem] MDD already aligned to the time window
+[Create_Local_Problem] MDD already aligned to the time window
+[Waiting_time_Solve] New path is consistent after applying waiting time for agent 92
+[Waiting_time_Solve] Applied 1 waiting time to segment 92 for agent 92
+[Current_Solution] Agent 93 used 1 waiting timesteps, 40 remaining
+[Waiting_time_Solve] Applying waiting time delta 1 to segment 93
+[Waiting_time_Solve] Original id: 93
+[Create_Local_Problem] MDD already aligned to the time window
+[Create_Local_Problem] MDD already aligned to the time window
+[Waiting_time_Solve] New path is consistent after applying waiting time for agent 93
+[Waiting_time_Solve] Applied 1 waiting time to segment 93 for agent 93
+[Current_Solution] Agent 93 used 0 waiting timesteps, 40 remaining
+[Waiting_time_Solve] Applied 0 waiting time to segment 93 for agent 93
+[Current_Solution] Agent 34 used 0 waiting timesteps, 39 remaining
+[Waiting_time_Solve] Applied 0 waiting time to segment 34 for agent 34
+[Current_Solution] Agent 95 used 0 waiting timesteps, 61 remaining
+[Waiting_time_Solve] Applied 0 waiting time to segment 95 for agent 95
+[Current_Solution] Agent 95 used 0 waiting timesteps, 61 remaining
+[Waiting_time_Solve] Applied 0 waiting time to segment 95 for agent 95
+[Current_Solution] Agent 95 used 0 waiting timesteps, 61 remaining
+[Waiting_time_Solve] Applied 0 waiting time to segment 95 for agent 95
+[Current_Solution] Agent 98 used 0 waiting timesteps, 62 remaining
+[Waiting_time_Solve] Applied 0 waiting time to segment 98 for agent 98
+[Current_Solution] Agent 98 used 0 waiting timesteps, 62 remaining
+[Waiting_time_Solve] Applied 0 waiting time to segment 98 for agent 98
+[Current_Solution] Agent 98 used 0 waiting timesteps, 62 remaining
+[Waiting_time_Solve] Applied 0 waiting time to segment 98 for agent 98
+[Current_Solution] Agent 99 used 0 waiting timesteps, 55 remaining
+[Waiting_time_Solve] Applied 0 waiting time to segment 99 for agent 99
+[Current_Solution] Agent 44 used 0 waiting timesteps, 47 remaining
+[Waiting_time_Solve] Applied 0 waiting time to segment 44 for agent 44
+[Current_Solution] Agent 12 used 1 waiting timesteps, 45 remaining
+[Waiting_time_Solve] Applying waiting time delta 1 to segment 12
+[Waiting_time_Solve] Original id: 12
+[Create_Local_Problem] MDD already aligned to the time window
+[Create_Local_Problem] MDD already aligned to the time window
+[Waiting_time_Solve] New path is consistent after applying waiting time for agent 12
+[Waiting_time_Solve] Applied 1 waiting time to segment 12 for agent 12
+[Current_Solution] Agent 17 used 1 waiting timesteps, 33 remaining
+[Waiting_time_Solve] Applying waiting time delta 1 to segment 17
+[Waiting_time_Solve] Original id: 17
+[Create_Local_Problem] MDD already aligned to the time window
+[Create_Local_Problem] MDD already aligned to the time window
+[Waiting_time_Solve] New path is consistent after applying waiting time for agent 17
+[Waiting_time_Solve] Applied 1 waiting time to segment 17 for agent 17
+[Current_Solution] Agent 47 used 1 waiting timesteps, 40 remaining
+[Waiting_time_Solve] Applying waiting time delta 1 to segment 47
+[Waiting_time_Solve] Original id: 47
+[Create_Local_Problem] MDD already aligned to the time window
+[Create_Local_Problem] MDD already aligned to the time window
+[Waiting_time_Solve] New path is consistent after applying waiting time for agent 47
+[Waiting_time_Solve] Applied 1 waiting time to segment 47 for agent 47
+[Current_Solution] Agent 51 used 1 waiting timesteps, 16 remaining
+[Waiting_time_Solve] Applying waiting time delta 1 to segment 51
+[Waiting_time_Solve] Original id: 51
+[Create_Local_Problem] MDD already aligned to the time window
+[Create_Local_Problem] ERROR: MDD level 69 exceeds time window length 62; truncating.
+[Create_Local_Problem] ERROR: MDD level 70 exceeds time window length 62; truncating.
+[Create_Local_Problem] ERROR: MDD level 71 exceeds time window length 62; truncating.
+[Create_Local_Problem] ERROR: MDD level 72 exceeds time window length 62; truncating.
+[Create_Local_Problem] ERROR: MDD level 73 exceeds time window length 62; truncating.
+[Create_Local_Problem] ERROR: MDD level 81 exceeds time window length 62; truncating.
+[Waiting_time_Solve] New path is consistent after applying waiting time for agent 51
+[Waiting_time_Solve] Applied 1 waiting time to segment 51 for agent 51
+[Current_Solution] Agent 52 used 1 waiting timesteps, 28 remaining
+[Waiting_time_Solve] Applying waiting time delta 1 to segment 52
+[Waiting_time_Solve] Original id: 52
+[Create_Local_Problem] MDD already aligned to the time window
+[Create_Local_Problem] MDD already aligned to the time window
+[Waiting_time_Solve] New path is consistent after applying waiting time for agent 52
+[Waiting_time_Solve] Applied 1 waiting time to segment 52 for agent 52
+[Current_Solution] Agent 69 used 1 waiting timesteps, 15 remaining
+[Waiting_time_Solve] Applying waiting time delta 1 to segment 69
+[Waiting_time_Solve] Original id: 69
+[Create_Local_Problem] MDD already aligned to the time window
+[Create_Local_Problem] MDD already aligned to the time window
+[Waiting_time_Solve] New path is consistent after applying waiting time for agent 69
+[Waiting_time_Solve] Applied 1 waiting time to segment 69 for agent 69
+[Current_Solution] Agent 19 used 1 waiting timesteps, 18 remaining
+[Waiting_time_Solve] Applying waiting time delta 1 to segment 19
+[Waiting_time_Solve] Original id: 19
+[Create_Local_Problem] MDD already aligned to the time window
+[Create_Local_Problem] MDD already aligned to the time window
+[Waiting_time_Solve] New path is consistent after applying waiting time for agent 19
+[Waiting_time_Solve] Applied 1 waiting time to segment 19 for agent 19
+[Current_Solution] Agent 84 used 1 waiting timesteps, 23 remaining
+[Waiting_time_Solve] Applying waiting time delta 1 to segment 84
+[Waiting_time_Solve] Original id: 84
+[Create_Local_Problem] MDD already aligned to the time window
+[Create_Local_Problem] MDD already aligned to the time window
+[Waiting_time_Solve] New path is consistent after applying waiting time for agent 84
+[Waiting_time_Solve] Applied 1 waiting time to segment 84 for agent 84
+[Current_Solution] Agent 18 used 1 waiting timesteps, 2 remaining
+[Waiting_time_Solve] Applying waiting time delta 1 to segment 18
+[Waiting_time_Solve] Original id: 18
+[Create_Local_Problem] MDD already aligned to the time window
+[Waiting_time_Solve] New path is consistent after applying waiting time for agent 18
+[Waiting_time_Solve] Applied 1 waiting time to segment 18 for agent 18
+[Current_Solution] Agent 66 used 1 waiting timesteps, 12 remaining
+[Waiting_time_Solve] Applying waiting time delta 1 to segment 66
+[Waiting_time_Solve] Original id: 66
+[Create_Local_Problem] MDD already aligned to the time window
+[Create_Local_Problem] MDD already aligned to the time window
+[Waiting_time_Solve] New path is consistent after applying waiting time for agent 66
+[Waiting_time_Solve] Applied 1 waiting time to segment 66 for agent 66
+[Current_Solution] Agent 85 used 1 waiting timesteps, 30 remaining
+[Waiting_time_Solve] Applying waiting time delta 1 to segment 85
+[Waiting_time_Solve] Original id: 85
+[Create_Local_Problem] MDD already aligned to the time window
+[Create_Local_Problem] MDD already aligned to the time window
+[Waiting_time_Solve] New path is consistent after applying waiting time for agent 85
+[Waiting_time_Solve] Applied 1 waiting time to segment 85 for agent 85
+[Waiting_time_Solve] Waiting time applied
+[Waiting_time_Solve] Iteration 1...
+[SAT] Start solving CNF: 159687 clauses and 20396 variables
+[DEBUG] Missing variable(s) for agent 123 expecting pos1=(10,16)@t=30, pos2=(10,17)@t=31. var1=-1, var2=-1
+[DEBUG] Variable map for agent 123:
+  Var 3484: agent 123, pos (12,19), t=60
+  Var 3485: agent 123, pos (9,17), t=61
+  Var 3487: agent 123, pos (11,19), t=61
+  Var 3483: agent 123, pos (11,18), t=60
+  Var 3480: agent 123, pos (11,17), t=59
+  Var 3477: agent 123, pos (11,16), t=58
+  Var 3479: agent 123, pos (10,16), t=59
+  Var 3488: agent 123, pos (12,20), t=61
+  Var 3481: agent 123, pos (12,18), t=59
+  Var 3476: agent 123, pos (12,16), t=57
+  Var 3478: agent 123, pos (12,17), t=58
+  Var 3486: agent 123, pos (10,18), t=61
+  Var 3482: agent 123, pos (10,17), t=60
