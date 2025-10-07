@@ -442,6 +442,10 @@ void apply_waiting_time_delta(
     //update global solution with the stretched and displaced paths
     //have the stretched segment longer than before need to shift the suffix first
     auto& new_path = current_solution.agent_paths.at(segment.original_id);
+    if (new_path.empty()) {
+        std::cout << "[Waiting_time_Solve] ERROR: Agent path is empty before applying waiting time" << std::endl;
+        return;
+    }
     //safety check if the path ends at the goal
     if (!verify_path_consistency(new_path, map)) {
         std::cout << "[Waiting_time_Solve] ERROR: Path is not consistent before updating with waiting time" << std::endl;
@@ -451,9 +455,16 @@ void apply_waiting_time_delta(
         std::cout << "[Waiting_time_Solve] ERROR: Path does not end at the goal before updating with waiting time" << std::endl;
     }
     
+    //path can be longer than before, need to find last segment exit_t and resize path if needed
+
+
     //before the segment entry time, the path is the same
     //after the segment exit time, the path is the same but delayed by the waiting time delta
     const int path_length = static_cast<int>(new_path.size());
+    //print path length and makespan
+    std::cout << "[Waiting_time_Solve] Path length: " << path_length << std::endl;
+    std::cout << "[Waiting_time_Solve] Makespan: " << current_solution.max_timestep << std::endl;
+    std::cout << "[Waiting_time_Solve] Segment exit time: " << segment.exit_t << std::endl;
     const int suffix_start = static_cast<int>(std::min(segment.exit_t + 1, path_length - 1));
     for (int i = path_length - 1; i >= suffix_start; --i) {
         int src = i - amount_of_waiting_time;
@@ -462,6 +473,7 @@ void apply_waiting_time_delta(
         }
         new_path[i] = new_path[src];
     }
+    std::cout << "[Waiting_time_Solve] Path length after shifting suffix: " << new_path.size() << std::endl;
     //check goal
     if (new_path.back() != current_solution.goals[segment.original_id]) {
         std::cout << "[Waiting_time_Solve] ERROR: made room for the segment, now path does not end at the goal" << std::endl;
@@ -476,14 +488,25 @@ void apply_waiting_time_delta(
         }
         std::cout << std::endl;
     }
+    std::cout << "[Waiting_time_Solve] inserting segment path" << std::endl;
     //during the segment the path is the segment path
     for (int i = segment.entry_t; i <= segment.exit_t; ++i) {
+        std::cout << "[Waiting_time_Solve] inserting segment path at time " << i << std::endl;
+        std::cout << "[Waiting_time_Solve] segment path: " << segment.path[i - segment.entry_t].first << ", " << segment.path[i - segment.entry_t].second << std::endl;
         new_path[i] = segment.path[i - segment.entry_t];
     }
+    std::cout << "[Waiting_time_Solve] path length after inserting segment path: " << new_path.size() << std::endl;
     //check goal
     if (new_path.back() != current_solution.goals[segment.original_id]) {
         std::cout << "[Waiting_time_Solve] ERROR: placed the segment, now path does not end at the goal" << std::endl;
     }
+    std::cout << "[Waiting_time_Solve] inserting following segments" << std::endl;
+    std::cout << "[Waiting_time_Solve] curren pos_it: " << *pos_it << std::endl;
+    //if we have next pos_it, print it
+    if (std::next(pos_it) != indices.end()) {
+        std::cout << "[Waiting_time_Solve] next pos_it: " << *(std::next(pos_it)) << std::endl;
+    }
+
     //now place all following segments into the new path, they do not come with extra delays and can replaced one to one
     for (auto follow_it = std::next(pos_it); follow_it != indices.end(); ++follow_it) {
         size_t follow_index = *follow_it;
@@ -492,10 +515,14 @@ void apply_waiting_time_delta(
                       << " out of range while shifting agent " << segment.original_id << std::endl;
             continue;
         }
+        std::cout << "[Waiting_time_Solve] inserting following segment at index " << follow_index << std::endl;
         LocalSegment& following = state.segments[follow_index];
         for (size_t i = 0; i < following.path.size(); ++i) {
+            std::cout << "[Waiting_time_Solve] inserting following segment path at time " << following.entry_t + i << std::endl;
+            std::cout << "[Waiting_time_Solve] following segment path: " << following.path[i].first << ", " << following.path[i].second << std::endl;
             new_path[following.entry_t + i] = following.path[i];
         }
+        std::cout << "[Waiting_time_Solve] path length after inserting following segment: " << new_path.size() << std::endl;
     }
     //verify path validity
     if (!verify_path_consistency(new_path, map)) {
@@ -524,7 +551,7 @@ void apply_waiting_time_delta(
     if (!verify_path_consistency(current_solution.agent_paths[segment.original_id], map)) {
         std::cout << "[Waiting_time_Solve] ERROR: Current solution wrong, before pushing new path " << segment.original_id << std::endl;
     }
-
+    std::cout << "[Waiting_time_Solve] pushing new path into current solution" << std::endl;
     //puth new path into current solution
     current_solution.agent_paths[segment.original_id] = new_path;
 
