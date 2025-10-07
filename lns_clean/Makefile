@@ -11,6 +11,10 @@ MAIN_SRC := main_clean_lns.cpp
 
 CXXFLAGS := -std=gnu++17 -O2 -Wall -Wextra -pedantic -pthread -fpermissive
 CFLAGS := -O2 -Wall -Wextra -pedantic
+
+# Optional instrumentation helpers used for debugging memory issues
+DEBUG_FLAGS := -O0 -g
+SANITIZE_FLAGS := -fsanitize=address -fno-omit-frame-pointer
 CPPFLAGS := -D__STDC_FORMAT_MACROS -I. -I.. -I../cnf -I../mdd -I../minisat -I../minisat/minisat-master -I../probSAT-master
 DEPFLAGS := -MMD -MP
 LDFLAGS := -pthread
@@ -54,7 +58,7 @@ C_OBJS := $(foreach src,$(C_SOURCES),$(call make_obj,$(src)))
 OBJS := $(LOCAL_OBJS) $(SHARED_OBJS) $(C_OBJS)
 DEPS := $(OBJS:.o=.d)
 
-.PHONY: all clean
+.PHONY: all clean asan
 
 all: $(LIB) $(MAIN)
 
@@ -83,5 +87,11 @@ $(foreach src,$(C_SOURCES),$(eval $(call c_rule,$(src))))
 
 clean:
 	rm -rf $(OBJ_DIR) $(LIB) $(MAIN)
+
+asan:
+	$(MAKE) clean
+	$(MAKE) CXXFLAGS="$(filter-out -O%,$(CXXFLAGS)) $(DEBUG_FLAGS) $(SANITIZE_FLAGS)" \
+		CFLAGS="$(filter-out -O%,$(CFLAGS)) $(DEBUG_FLAGS) $(SANITIZE_FLAGS)" \
+		LDFLAGS="$(LDFLAGS) $(SANITIZE_FLAGS)"
 
 -include $(DEPS)
