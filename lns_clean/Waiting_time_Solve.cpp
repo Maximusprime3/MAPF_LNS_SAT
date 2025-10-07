@@ -417,7 +417,13 @@ void apply_waiting_time_delta(
         LocalSegment& following = state.segments[follow_index];
         following.entry_t += amount_of_waiting_time;
         following.exit_t += amount_of_waiting_time;
-        filter_collisions(state, following);
+        RemovedCollisions removed = filter_collisions(state, following);
+        if (!removed.empty()) {
+            std::cout << "[Waiting_time_Solve] Pruned "
+                      << removed.vertex.size() << " vertex and "
+                      << removed.edge.size() << " edge collisions from segment "
+                      << following.segment_id << std::endl;
+        }
         state.zone_end_t = std::max(state.zone_end_t, following.exit_t);
     }
 
@@ -655,6 +661,23 @@ LazySolveResult lazy_solve_with_waiting_time(
         auto mdd_map = build_segment_mdd_map(state);
         CNFConstructor cnf_constructor(mdd_map, true);
         CNF local_cnf = cnf_constructor.construct_cnf();
+
+        // Before constructing the SAT instance, purge any collisions whose
+        // timestamps no longer align with the updated segment MDDs. Without
+        // this, stale collisions can reference timesteps that the MDD no
+        // longer supports, leading to missing CNF variables (e.g., pseudo
+        // agents appearing one timestep off in the logs).
+        for (size_t seg_idx = 0; seg_idx < state.segments.size(); ++seg_idx) {
+            auto& segment = state.segments[seg_idx];
+            auto removed = filter_collisions(state, segment);
+            if (!removed.empty()) {
+                std::cout << "[Waiting_time_Solve] Pruned "
+                          << removed.vertex.size() << " vertex and "
+                          << removed.edge.size() << " edge collisions from segment "
+                          << segment.segment_id << std::endl;
+            }
+        }
+
         //add collision clauses to cnf
         auto cached_vertex_collisions = gather_vertex_collisions(state);
         auto cached_edge_collisions = gather_edge_collisions(state);
