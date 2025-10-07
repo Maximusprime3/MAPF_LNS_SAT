@@ -851,63 +851,121 @@ LazySolveResult lazy_solve_with_waiting_time(
         };
 
         //use waiting time for the agents with unresolved conflicts
-        std::set<int> agents_already_used_waiting_time; //to avoid using waiting time for the same agent twice
+        std::set<int> agents_already_used_waiting_time; // original agent ids that already consumed waiting time
         bool out_of_waiting_time = false;
         int agent1 = 0;
         int agent2 = 0;
+        auto get_original_agent_id = [&](int segment_id) -> std::optional<int> {
+            auto idx_it = state.segment_index_by_id.find(segment_id);
+            if (idx_it != state.segment_index_by_id.end()) {
+                int original_id = state.segments[idx_it->second].original_id;
+                if (original_id >= 0 && original_id < static_cast<int>(current_solution.goals.size())) {
+                    return original_id;
+                }
+                std::cout << "[Waiting_time_Solve] WARNING: Original agent id " << original_id
+                          << " out of bounds while resolving segment " << segment_id << std::endl;
+                return std::nullopt;
+            }
+            if (segment_id >= 0 && segment_id < static_cast<int>(current_solution.goals.size())) {
+                // Already an original agent id
+                return segment_id;
+            }
+            std::cout << "[Waiting_time_Solve] WARNING: Unable to resolve segment " << segment_id
+                      << " to a valid original agent" << std::endl;
+            return std::nullopt;
+        };
+        auto get_agent_path = [&](int original_id) -> const std::vector<std::pair<int,int>>* {
+            auto path_it = current_solution.agent_paths.find(original_id);
+            if (path_it == current_solution.agent_paths.end()) {
+                std::cout << "[Waiting_time_Solve] WARNING: Missing path for agent " << original_id
+                          << " when attempting to use waiting time" << std::endl;
+                return nullptr;
+            }
+            return &path_it->second;
+        };
+        auto apply_waiting_time_for_goal_collision = [&](int segment_of_concern,
+                                                         int original_of_concern,
+                                                         int other_segment,
+                                                         int other_original,
+                                                         const std::pair<int,int>& collision_pos) -> bool {
+            const auto* path_ptr = get_agent_path(original_of_concern);
+            if (!path_ptr) {
+                return false;
+            }
+            const auto& path = *path_ptr;
+            auto goal = current_solution.goals[original_of_concern];
+            auto goal_it = std::find(path.begin(), path.end(), goal);
+            auto collision_it = std::find(path.begin(), path.end(), collision_pos);
+            if (goal_it == path.end() || collision_it == path.end()) {
+                std::cout << "[Waiting_time_Solve] WARNING: Unable to locate goal or collision position in path for agent "
+                          << original_of_concern << std::endl;
+                return false;
+            }
+            int idx_of_first_goal = static_cast<int>(std::distance(path.begin(), goal_it));
+            int idx_of_collision = static_cast<int>(std::distance(path.begin(), collision_it));
+            int waiting_time_needed = std::max(0, idx_of_collision - idx_of_first_goal);
+
+            int current_agents_left_over_waiting_time = current_solution.get_waiting_time(original_of_concern) - waiting_time_needed;
+            int other_agents_left_over_waiting_time = current_solution.get_waiting_time(other_original) - waiting_delta;
+
+            if (current_agents_left_over_waiting_time > other_agents_left_over_waiting_time) {
+                if (try_apply_wait(segment_of_concern, waiting_time_needed)) {
+                    agents_already_used_waiting_time.insert(original_of_concern);
+                    return true;
+                }
+                return false;
+            }
+            if (try_apply_wait(other_segment, waiting_delta)) {
+                agents_already_used_waiting_time.insert(other_original);
+                return true;
+            }
+            return false;
+        };
         for (const auto& collision : pending_vertex_collisions) {
             agent1 = std::get<0>(collision);
             agent2 = std::get<1>(collision);
+            auto original_agent1 = get_original_agent_id(agent1);
+            auto original_agent2 = get_original_agent_id(agent2);
+            if (!original_agent1 || !original_agent2) {
+                continue;
+            }
+            //check if we already used waiting time for one of the agents 
+            if (agents_already_used_waiting_time.count(*original_agent1) > 0 ||
+                agents_already_used_waiting_time.count(*original_agent2) > 0) {
+                continue;
+            }
+
             //spceial case collision happens at the global goal positin of either agent
             std::pair<int,int> collision_pos = std::get<2>(collision);
-            if (collision_pos == current_solution.goals[agent1] || collision_pos == current_solution.goals[agent2]) {
-                //which agents global goal position is it?
-                int agent_of_concern = (collision_pos == current_solution.goals[agent1]) ? agent1 : agent2;
-                std::vector<std::pair<int,int>> path_of_concern = current_solution.agent_paths[agent_of_concern];
-                int idx_of_first_goal = std::distance(path_of_concern.begin(), std::find(path_of_concern.begin(), path_of_concern.end(), current_solution.goals[agent_of_concern]));
-                //we would need to consume as much waiting time as there is in the path up until the t of the collision
-                int idx_of_collision = std::distance(path_of_concern.begin(), std::find(path_of_concern.begin(), path_of_concern.end(), collision_pos));
-                int waiting_time_needed = idx_of_collision - idx_of_first_goal;
-                //check if we would use that much waiting time for this agent or the regular amount for the other agent
-                //which way do we use less waiting time?
-                int current_agents_left_over_waiting_time = current_solution.get_waiting_time(agent_of_concern) - waiting_time_needed;
-                int other_agent = (agent_of_concern == agent1) ? agent2 : agent1;
-                int other_agents_left_over_waiting_time = current_solution.get_waiting_time(other_agent) - waiting_delta;
-                if (current_agents_left_over_waiting_time > other_agents_left_over_waiting_time) {
-                    if (try_apply_wait(agent_of_concern, waiting_time_needed)){
-                        agents_already_used_waiting_time.insert(agent_of_concern);
-                    } else {
-                        out_of_waiting_time = true;
-                        break; //impossible to use waiting time
-                    }
-                } else {
-                    if (try_apply_wait(other_agent, waiting_delta)){
-                        agents_already_used_waiting_time.insert(other_agent);
-                    } else {
-                        out_of_waiting_time = true;
-                        break; //impossible to use waiting time
-                    }
+            const auto& goal1 = current_solution.goals[*original_agent1];
+            const auto& goal2 = current_solution.goals[*original_agent2];
+            if (collision_pos == goal1 || collision_pos == goal2) {
+                int segment_of_concern = (collision_pos == goal1) ? agent1 : agent2;
+                int original_of_concern = (segment_of_concern == agent1) ? *original_agent1 : *original_agent2;
+                int other_segment = (segment_of_concern == agent1) ? agent2 : agent1;
+                int other_original = (segment_of_concern == agent1) ? *original_agent2 : *original_agent1;
+                if (!apply_waiting_time_for_goal_collision(segment_of_concern,
+                                                           original_of_concern,
+                                                           other_segment,
+                                                           other_original,
+                                                           collision_pos)) {
+                    out_of_waiting_time = true;
+                    break;
                 }
                 continue;
             }
 
-
-            //check if we already used waiting time for one of the agents 
-            if (agents_already_used_waiting_time.count(agent1) > 0 ||
-                agents_already_used_waiting_time.count(agent2) > 0) {
-                continue;
-            }
             //check which agent has more waiting time and use it
-            if (current_solution.get_waiting_time(agent1) >= current_solution.get_waiting_time(agent2)) {
+            if (current_solution.get_waiting_time(*original_agent1) >= current_solution.get_waiting_time(*original_agent2)) {
                 if (try_apply_wait(agent1, waiting_delta)){
-                    agents_already_used_waiting_time.insert(agent1);
+                    agents_already_used_waiting_time.insert(*original_agent1);
                 } else {
                     out_of_waiting_time = true;
                     break; //impossible to use waiting time
                 }
             } else {
                 if (try_apply_wait(agent2, waiting_delta)){
-                    agents_already_used_waiting_time.insert(agent2);
+                    agents_already_used_waiting_time.insert(*original_agent2);
                 } else {
                     out_of_waiting_time = true;
                     break; //impossible to use waiting time
@@ -917,60 +975,51 @@ LazySolveResult lazy_solve_with_waiting_time(
         for (const auto& collision : pending_edge_collisions) {
             agent1 = std::get<0>(collision);
             agent2 = std::get<1>(collision);
-            //check if we already used waiting time for one of the agents 
-            if (agents_already_used_waiting_time.count(agent1) > 0 ||
-                agents_already_used_waiting_time.count(agent2) > 0) {
+            auto original_agent1 = get_original_agent_id(agent1);
+            auto original_agent2 = get_original_agent_id(agent2);
+            if (!original_agent1 || !original_agent2) {
+                continue;
+            }
+            //check if we already used waiting time for one of the agents
+            if (agents_already_used_waiting_time.count(*original_agent1) > 0 ||
+                agents_already_used_waiting_time.count(*original_agent2) > 0) {
                 continue;
             }
 
             //spceial case collision happens at the global goal positin of either agent
             std::pair<int,int> collision_pos1 = std::get<2>(collision);
             std::pair<int,int> collision_pos2 = std::get<3>(collision);
-            if (collision_pos1 == current_solution.goals[agent1] || collision_pos1 == current_solution.goals[agent2] ||
-                collision_pos2 == current_solution.goals[agent1] || collision_pos2 == current_solution.goals[agent2]) {
-                //which collision is it?
-                std::pair<int,int> collision_pos= (collision_pos1 == current_solution.goals[agent1] || collision_pos1 == current_solution.goals[agent2]) ? collision_pos1 : collision_pos2;
-                //which agents global goal position is it?
-                int agent_of_concern = (collision_pos == current_solution.goals[agent1]) ? agent1 : agent2;
-                std::vector<std::pair<int,int>> path_of_concern = current_solution.agent_paths[agent_of_concern];
-                int idx_of_first_goal = std::distance(path_of_concern.begin(), std::find(path_of_concern.begin(), path_of_concern.end(), current_solution.goals[agent_of_concern]));
-                //we would need to consume as much waiting time as there is in the path up until the t of the collision
-                int idx_of_collision = std::distance(path_of_concern.begin(), std::find(path_of_concern.begin(), path_of_concern.end(), collision_pos));
-                int waiting_time_needed = idx_of_collision - idx_of_first_goal;
-                //check if we would use that much waiting time for this agent or the regular amount for the other agent
-                //which way do we use less waiting time?
-                int current_agents_left_over_waiting_time = current_solution.get_waiting_time(agent_of_concern) - waiting_time_needed;
-                int other_agent = (agent_of_concern == agent1) ? agent2 : agent1;
-                int other_agents_left_over_waiting_time = current_solution.get_waiting_time(other_agent) - waiting_delta;
-                if (current_agents_left_over_waiting_time > other_agents_left_over_waiting_time) {
-                    if (try_apply_wait(agent_of_concern, waiting_time_needed)){
-                        agents_already_used_waiting_time.insert(agent_of_concern);
-                    } else {
-                        out_of_waiting_time = true;
-                        break; //impossible to use waiting time
-                    }
-                } else {
-                    if (try_apply_wait(other_agent, waiting_delta)){
-                        agents_already_used_waiting_time.insert(other_agent);
-                    } else {
-                        out_of_waiting_time = true;
-                        break; //impossible to use waiting time
-                    }
+            const auto& goal1 = current_solution.goals[*original_agent1];
+            const auto& goal2 = current_solution.goals[*original_agent2];
+            if (collision_pos1 == goal1 || collision_pos1 == goal2 ||
+                collision_pos2 == goal1 || collision_pos2 == goal2) {
+                std::pair<int,int> collision_pos = (collision_pos1 == goal1 || collision_pos1 == goal2) ? collision_pos1 : collision_pos2;
+                int segment_of_concern = (collision_pos == goal1) ? agent1 : agent2;
+                int original_of_concern = (segment_of_concern == agent1) ? *original_agent1 : *original_agent2;
+                int other_segment = (segment_of_concern == agent1) ? agent2 : agent1;
+                int other_original = (segment_of_concern == agent1) ? *original_agent2 : *original_agent1;
+                if (!apply_waiting_time_for_goal_collision(segment_of_concern,
+                                                           original_of_concern,
+                                                           other_segment,
+                                                           other_original,
+                                                           collision_pos)) {
+                    out_of_waiting_time = true;
+                    break;
                 }
                 continue;
             }
             
             //check which agent has more waiting time and use it
-            if (current_solution.get_waiting_time(agent1) >= current_solution.get_waiting_time(agent2)) {
+            if (current_solution.get_waiting_time(*original_agent1) >= current_solution.get_waiting_time(*original_agent2)) {
                 if (try_apply_wait(agent1, waiting_delta)){
-                    agents_already_used_waiting_time.insert(agent1);
+                    agents_already_used_waiting_time.insert(*original_agent1);
                 } else {
                     out_of_waiting_time = true;
                     break; //impossible to use waiting time
                 }
             } else {
                 if (try_apply_wait(agent2, waiting_delta)){
-                    agents_already_used_waiting_time.insert(agent2);
+                    agents_already_used_waiting_time.insert(*original_agent2);
                 } else {
                     out_of_waiting_time = true;
                     break; //impossible to use waiting time
