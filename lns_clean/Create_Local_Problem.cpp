@@ -339,16 +339,30 @@ void align_mdd_to_time_window(std::shared_ptr<MDD> mdd,
         std::cout << "[Create_Local_Problem] MDD already aligned to the time window" << std::endl;
         return;
     }
+    // Shift the agent's MDD levels to the correct position. Some MDDs already use
+    // absolute timesteps (their first level matches the agent's entry time), while
+    // others are stored relative to 0.  We therefore compute the offset required to
+    // place the first level at the agent's entry time and then clip anything outside
+    // of the zone's window.
+    int first_level = original_levels.begin()->first;
+    int offset = entry_t - first_level;
+    int max_allowed_level = std::min(exit_t, start_t + zone_mdd_length - 1);
+    if(exit_t > start_t + zone_mdd_length - 1) {
+        std::cout << "[Create_Local_Problem] ERROR: Exit time " << exit_t << " exceeds zone MDD length " << start_t + zone_mdd_length - 1 << std::endl;
+    }
 
-    // Shift the agent's MDD levels to the correct position
-    //std::cout << "[Create_Local_Problem] Aligning now" << std::endl;
     for (const auto& [level, nodes] : original_levels) {
+        int new_level = level + offset;
 
-        int new_level = level + relative_entry + start_t; //shift the level to the correct position in the window
-
-        if (new_level >= zone_mdd_length + start_t) {
+        if (new_level < start_t) {
             std::cout << "[Create_Local_Problem] ERROR: MDD level " << new_level
-                      << " exceeds time window length " << zone_mdd_length + start_t
+                      << " is less than start time " << start_t << "; truncating." << std::endl;
+            continue;
+        }
+
+        if (new_level > max_allowed_level) {
+            std::cout << "[Create_Local_Problem] ERROR: MDD level " << new_level
+                      << " exceeds time window length " << max_allowed_level
                       << "; truncating." << std::endl;
             continue;
         }

@@ -634,7 +634,6 @@ DEBUG: Adding 2380 clauses to MiniSAT
 [Waiting_time_Solve] Applying waiting time delta 1 to segment 37
 [Waiting_time_Solve] Original id: 37
 [Create_Local_Problem] MDD already aligned to the time window
-[Create_Local_Problem] ERROR: MDD level 67 exceeds time window length 59; truncating.
 [Waiting_time_Solve] New path is consistent after applying waiting time for agent 37
 [Waiting_time_Solve] Applied 1 waiting time to segment 37 for agent 37
 [Waiting_time_Solve] Waiting time applied
@@ -648,13 +647,13 @@ DEBUG: Adding 2380 clauses to MiniSAT
 [Waiting_time_Solve] Agent 42 pseudo agents: 102 103 
 [Waiting_time_Solve] Agent 52 pseudo agents: 104 
 [Waiting_time_Solve] Agent 74 pseudo agents: 105 
-[SAT] Start solving CNF: 3146 clauses and 1153 variables
+[SAT] Start solving CNF: 3147 clauses and 1154 variables
 [SAT] Solving local zone with SAT iteration 1...
-[SAT] Local CNF: 3160 clauses 
+[SAT] Local CNF: 3161 clauses 
 
-DEBUG: CNF has 3160 clauses
+DEBUG: CNF has 3161 clauses
 DEBUG: First clause: 1 
-DEBUG: Adding 3160 clauses to MiniSAT
+DEBUG: Adding 3161 clauses to MiniSAT
 [SAT] Local problem is unsatisfiable after 1 iterations
 [SAT] Local problem appears to be unsatisfiable in current zone
 [Waiting_time_Solve] No solution found, trying to apply waiting time:2
@@ -1326,9 +1325,6 @@ DEBUG: Adding 35802 clauses to MiniSAT
 [Waiting_time_Solve] Applying waiting time delta 1 to segment 51
 [Waiting_time_Solve] Original id: 51
 [Create_Local_Problem] MDD already aligned to the time window
-[Create_Local_Problem] ERROR: MDD level 71 exceeds time window length 61; truncating.
-[Create_Local_Problem] ERROR: MDD level 72 exceeds time window length 61; truncating.
-[Create_Local_Problem] ERROR: MDD level 73 exceeds time window length 61; truncating.
 [Waiting_time_Solve] New path is consistent after applying waiting time for agent 51
 [Waiting_time_Solve] Applied 1 waiting time to segment 51 for agent 51
 [Current_Solution] Agent 87 used 1 waiting timesteps, 50 remaining
@@ -1348,7 +1344,6 @@ DEBUG: Adding 35802 clauses to MiniSAT
 [Waiting_time_Solve] Applying waiting time delta 1 to segment 133
 [Waiting_time_Solve] Original id: 86
 [Create_Local_Problem] MDD already aligned to the time window
-[Create_Local_Problem] ERROR: MDD level 66 exceeds time window length 61; truncating.
 [Waiting_time_Solve] New path is consistent after applying waiting time for agent 86
 [Waiting_time_Solve] Applied 1 waiting time to segment 133 for agent 86
 [Waiting_time_Solve] Waiting time applied
@@ -1377,13 +1372,13 @@ DEBUG: Adding 35802 clauses to MiniSAT
 [Waiting_time_Solve] Agent 49 pseudo agents: 122 123 
 [Waiting_time_Solve] Agent 51 pseudo agents: 124 
 [Waiting_time_Solve] Agent 58 pseudo agents: 125 
-[SAT] Start solving CNF: 72347 clauses and 11598 variables
+[SAT] Start solving CNF: 72353 clauses and 11602 variables
 [SAT] Solving local zone with SAT iteration 1...
-[SAT] Local CNF: 72441 clauses 
+[SAT] Local CNF: 72447 clauses 
 
-DEBUG: CNF has 72441 clauses
+DEBUG: CNF has 72447 clauses
 DEBUG: First clause: 1 
-DEBUG: Adding 72441 clauses to MiniSAT
+DEBUG: Adding 72447 clauses to MiniSAT
 [SAT] Local problem is unsatisfiable after 1 iterations
 [SAT] Local problem appears to be unsatisfiable in current zone
 [Waiting_time_Solve] No solution found, trying to apply waiting time:2
@@ -1751,20 +1746,6 @@ DEBUG: Adding 77389 clauses to MiniSAT
 [Waiting_time_Solve] Applying waiting time delta 1 to segment 82
 [Waiting_time_Solve] Original id: 82
 [Create_Local_Problem] MDD already aligned to the time window
-[Create_Local_Problem] ERROR: MDD level 62 exceeds time window length 62; truncating.
-[Create_Local_Problem] ERROR: MDD level 63 exceeds time window length 62; truncating.
-[Create_Local_Problem] ERROR: MDD level 64 exceeds time window length 62; truncating.
-[Create_Local_Problem] ERROR: MDD level 65 exceeds time window length 62; truncating.
-[Create_Local_Problem] ERROR: MDD level 66 exceeds time window length 62; truncating.
-[Create_Local_Problem] ERROR: MDD level 67 exceeds time window length 62; truncating.
-[Create_Local_Problem] ERROR: MDD level 68 exceeds time window length 62; truncating.
-[Create_Local_Problem] ERROR: MDD level 69 exceeds time window length 62; truncating.
-[Create_Local_Problem] ERROR: MDD level 89 exceeds time window length 62; truncating.
-[Create_Local_Problem] ERROR: MDD level 90 exceeds time window length 62; truncating.
-[Create_Local_Problem] ERROR: MDD level 91 exceeds time window length 62; truncating.
-[Create_Local_Problem] ERROR: MDD level 92 exceeds time window length 62; truncating.
-[Create_Local_Problem] ERROR: MDD level 93 exceeds time window length 62; truncating.
-[Create_Local_Problem] ERROR: MDD level 94 exceeds time window length 62; truncating.
 [Waiting_time_Solve] New path is consistent after applying waiting time for agent 82
 [Waiting_time_Solve] Applied 1 waiting time to segment 82 for agent 82
 [Current_Solution] Agent 83 used 0 waiting timesteps, 50 remaining
@@ -1842,12 +1823,6 @@ DEBUG: Adding 77389 clauses to MiniSAT
 [Waiting_time_Solve] Applying waiting time delta 1 to segment 51
 [Waiting_time_Solve] Original id: 51
 [Create_Local_Problem] MDD already aligned to the time window
-[Create_Local_Problem] ERROR: MDD level 69 exceeds time window length 62; truncating.
-[Create_Local_Problem] ERROR: MDD level 70 exceeds time window length 62; truncating.
-[Create_Local_Problem] ERROR: MDD level 71 exceeds time window length 62; truncating.
-[Create_Local_Problem] ERROR: MDD level 72 exceeds time window length 62; truncating.
-[Create_Local_Problem] ERROR: MDD level 73 exceeds time window length 62; truncating.
-[Create_Local_Problem] ERROR: MDD level 81 exceeds time window length 62; truncating.
 [Waiting_time_Solve] New path is consistent after applying waiting time for agent 51
 [Waiting_time_Solve] Applied 1 waiting time to segment 51 for agent 51
 [Current_Solution] Agent 52 used 1 waiting timesteps, 28 remaining
@@ -1916,19 +1891,45 @@ DEBUG: Adding 77389 clauses to MiniSAT
 [Waiting_time_Solve] Agent 46 pseudo agents: 112 113 114 115 
 [Waiting_time_Solve] Agent 49 pseudo agents: 116 117 
 [Waiting_time_Solve] Agent 51 pseudo agents: 118 119 
-[SAT] Start solving CNF: 159687 clauses and 20396 variables
+[SAT] Start solving CNF: 159780 clauses and 20434 variables
 [DEBUG] Missing variable(s) for agent 123 expecting pos1=(10,16)@t=30, pos2=(10,17)@t=31. var1=-1, var2=-1
 [DEBUG] Variable map for agent 123:
-  Var 3484: agent 123, pos (12,19), t=60
-  Var 3485: agent 123, pos (9,17), t=61
-  Var 3487: agent 123, pos (11,19), t=61
-  Var 3483: agent 123, pos (11,18), t=60
-  Var 3480: agent 123, pos (11,17), t=59
-  Var 3477: agent 123, pos (11,16), t=58
-  Var 3479: agent 123, pos (10,16), t=59
-  Var 3488: agent 123, pos (12,20), t=61
-  Var 3481: agent 123, pos (12,18), t=59
-  Var 3476: agent 123, pos (12,16), t=57
-  Var 3478: agent 123, pos (12,17), t=58
-  Var 3486: agent 123, pos (10,18), t=61
-  Var 3482: agent 123, pos (10,17), t=60
+  Var 3487: agent 123, pos (12,18), t=31
+  Var 3482: agent 123, pos (12,16), t=29
+  Var 3486: agent 123, pos (11,17), t=31
+  Var 3483: agent 123, pos (11,16), t=30
+  Var 3485: agent 123, pos (10,16), t=31
+  Var 3484: agent 123, pos (12,17), t=30
+  Var 3516: agent 123, pos (7,21), t=39
+  Var 3512: agent 123, pos (7,20), t=38
+  Var 3502: agent 123, pos (11,21), t=35
+  Var 3497: agent 123, pos (11,20), t=34
+  Var 3508: agent 123, pos (7,19), t=37
+  Var 3514: agent 123, pos (9,22), t=38
+  Var 3510: agent 123, pos (9,21), t=37
+  Var 3505: agent 123, pos (9,20), t=36
+  Var 3500: agent 123, pos (9,19), t=35
+  Var 3495: agent 123, pos (9,18), t=34
+  Var 3491: agent 123, pos (9,17), t=33
+  Var 3507: agent 123, pos (11,22), t=36
+  Var 3493: agent 123, pos (11,19), t=33
+  Var 3489: agent 123, pos (11,18), t=32
+  Var 3519: agent 123, pos (7,22), t=40
+  Var 3518: agent 123, pos (6,21), t=40
+  Var 3511: agent 123, pos (10,22), t=37
+  Var 3492: agent 123, pos (10,18), t=33
+  Var 3513: agent 123, pos (8,21), t=38
+  Var 3506: agent 123, pos (10,21), t=36
+  Var 3496: agent 123, pos (10,19), t=34
+  Var 3488: agent 123, pos (10,17), t=32
+  Var 3517: agent 123, pos (8,22), t=39
+  Var 3509: agent 123, pos (8,20), t=37
+  Var 3499: agent 123, pos (8,18), t=35
+  Var 3490: agent 123, pos (12,19), t=32
+  Var 3501: agent 123, pos (10,20), t=35
+  Var 3504: agent 123, pos (8,19), t=36
+  Var 3503: agent 123, pos (12,22), t=35
+  Var 3494: agent 123, pos (12,20), t=33
+  Var 3515: agent 123, pos (6,20), t=39
+  Var 3498: agent 123, pos (12,21), t=34
+  Var 3520: agent 123, pos (6,22), t=41
