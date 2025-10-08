@@ -269,6 +269,18 @@ public:
                                                  const std::vector<int>* initial_assignment = nullptr);
 
     /**
+     * Solves a CNF formula incrementally using MiniSAT. Only clauses that have
+     * not been seen by the provided MiniSatWrapper instance are added to the
+     * solver, allowing it to reuse learnt clauses and the internal search
+     * state.
+     */
+     static MiniSatSolution solve_cnf_with_minisat_incremental(const CNF& cnf,
+        MiniSatWrapper& minisat_wrapper,
+        const std::vector<int>* initial_assignment = nullptr,
+        bool reset_solver = false);
+
+
+    /**
      * Extracts agent paths from a ProbSAT solution using CNFConstructor.
      * @param cnf_constructor The CNFConstructor used to create the CNF.
      * @param assignment The variable assignment from ProbSAT.

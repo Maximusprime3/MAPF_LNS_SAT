@@ -631,6 +631,16 @@ MiniSatSolution SATSolverManager::solve_cnf_with_minisat(const std::shared_ptr<C
     return result;
 }
 
+MiniSatSolution SATSolverManager::solve_cnf_with_minisat_incremental(const CNF& cnf,
+                                                                    MiniSatWrapper& minisat_wrapper,
+                                                                    const std::vector<int>* initial_assignment,
+                                                                    bool reset_solver) {
+    if (reset_solver) {
+        minisat_wrapper.reset_incremental();
+    }
+    return minisat_wrapper.solve_cnf_incremental(cnf.get_clauses(), initial_assignment);
+}
+
 /**
  * Solves a CNF formula using ProbSAT's in-memory API via CNFProbSATConstructor.
  * @param cnf_constructor The CNFProbSATConstructor to use.

@@ -12,7 +12,7 @@
 
 using namespace Minisat;
 
-MiniSatWrapper::MiniSatWrapper() : solver(nullptr) {
+MiniSatWrapper::MiniSatWrapper() : solver(nullptr), clauses_loaded(0), incremental_mode(false) {
     reset_solver();
 }
 
@@ -28,10 +28,46 @@ void MiniSatWrapper::reset_solver() {
         delete solver;
     }
     solver = new Solver();
+    clauses_loaded = 0;
+    incremental_mode = false;
 }
 
-MiniSatSolution MiniSatWrapper::solve_cnf(const std::vector<std::vector<int>>& clauses, 
-                                         const std::vector<int>* initial_assignment) {
+MiniSatSolution MiniSatWrapper::solve_cnf(const std::vector<std::vector<int>>& clauses,
+                                          const std::vector<int>* initial_assignment) {
+    incremental_mode = false;
+    clauses_loaded = 0;
+    return solve_with_clause_range(clauses, initial_assignment, 0, false);
+}
+
+MiniSatSolution MiniSatWrapper::solve_cnf_incremental(const std::vector<std::vector<int>>& clauses,
+                                                      const std::vector<int>* initial_assignment) {
+    if (!incremental_mode) {
+        reset_solver();
+        incremental_mode = true;
+        clauses_loaded = 0;
+    }
+
+    if (clauses_loaded > clauses.size()) {
+        // CNF was rebuilt; restart incremental session from scratch.
+        reset_solver();
+        incremental_mode = true;
+    }
+
+    std::size_t start_index = clauses_loaded;
+    auto result = solve_with_clause_range(clauses, initial_assignment, start_index, true);
+    clauses_loaded = clauses.size();
+    return result;
+}
+
+void MiniSatWrapper::reset_incremental() {
+    reset_solver();
+}
+
+
+MiniSatSolution MiniSatWrapper::solve_with_clause_range(const std::vector<std::vector<int>>& clauses,
+                                                        const std::vector<int>* initial_assignment,
+                                                        std::size_t start_index,
+                                                        bool incremental_run) {
     MiniSatSolution result;
     result.satisfiable = false;
     result.num_decisions = 0;
@@ -40,10 +76,16 @@ MiniSatSolution MiniSatWrapper::solve_cnf(const std::vector<std::vector<int>>& c
     result.error_message = "";
     
     try {
-        reset_solver();
+        if (!solver) {
+            reset_solver();
+        }
         
         // Add clauses to the solver with diagnostics
-        std::cout << "DEBUG: Adding " << clauses.size() << " clauses to MiniSAT" << std::endl;
+        std::cout << "DEBUG: Adding "
+                  << (clauses.size() - start_index)
+                  << " new clauses to MiniSAT"
+                  << (incremental_run ? " (incremental run)" : "")
+                  << std::endl;
 
         auto normalize_clause = [](const std::vector<int>& raw,
                                    bool& tautology,
@@ -69,7 +111,7 @@ MiniSatSolution MiniSatWrapper::solve_cnf(const std::vector<std::vector<int>>& c
         size_t num_simplified_literals = 0;
         size_t num_added_but_no_db_increase = 0; // clauses accepted but didn't increase nClauses()
 
-        for (size_t i = 0; i < clauses.size(); ++i) {
+        for (size_t i = start_index; i < clauses.size(); ++i) {
             const auto& clause = clauses[i];
 
             bool is_tauto = false;
@@ -100,7 +142,7 @@ MiniSatSolution MiniSatWrapper::solve_cnf(const std::vector<std::vector<int>>& c
             }
             num_added++;
         }
-        std::cout << "DEBUG: Clause load summary: input=" << clauses.size()
+        std::cout << "DEBUG: Clause load summary: input=" << (clauses.size() - start_index)
                   << ", added=" << num_added
                   << ", tautologies_skipped=" << num_tautologies
                   << ", duplicates_skipped=" << num_duplicates
