@@ -19,11 +19,14 @@
 #include <iostream>
 
 //ERRORS
-//empty bucket zones in log
 // waiting time delta not rising above 2 ? wtf
-// entry>exit error in the log
+
+
+
 
 //TODO:
+//incremental sat solve, when solution found -> keep solving after adding new constraints
+//minisat can do that, no need to re-solve from scratch
 //very initial solution //traffic avoidance sampling from mdds
 
 //final check before makespan increase

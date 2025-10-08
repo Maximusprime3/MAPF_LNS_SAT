@@ -1,4 +1,5 @@
 #include "../SATSolverManager.h" //EdgeAgentMap
+#include "../minisat/minisat-wrapper.h"
 #include "Lazy_SAT_Solve.h"
 #include <unordered_map>
 #include <vector>
@@ -6,6 +7,7 @@
 #include <set>
 #include <iostream>
 #include <utility>
+
 
 
 
@@ -218,6 +220,7 @@ LazySolveResult lazy_SAT_solve(
     int iteration = 0;
     std::unordered_map<int, std::vector<std::pair<int,int>>> final_local_paths;
     std::vector<int> initial_assignment;
+    MiniSatWrapper minisat_wrapper;
     MiniSatSolution minisat_result;
     minisat_result.satisfiable = false;
     minisat_result.num_decisions = 0;
@@ -234,9 +237,9 @@ LazySolveResult lazy_SAT_solve(
         
         std::cout << std::endl;
         if (first_iteration) {
-            minisat_result = SATSolverManager::solve_cnf_with_minisat(local_cnf);
+            minisat_result = SATSolverManager::solve_cnf_with_minisat_incremental(local_cnf, minisat_wrapper, nullptr, true);
         } else {
-            minisat_result = SATSolverManager::solve_cnf_with_minisat(local_cnf, &initial_assignment);
+            minisat_result = SATSolverManager::solve_cnf_with_minisat_incremental(local_cnf, minisat_wrapper, &initial_assignment);
         }
         first_iteration = false;
         //print minisat result

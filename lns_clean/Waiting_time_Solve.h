@@ -8,7 +8,7 @@
 #include <set>
 #include <vector>
 
-void apply_waiting_time_delta(
+bool apply_waiting_time_delta(
     LocalZoneState& state,
     int segment_id,
     int original_id,

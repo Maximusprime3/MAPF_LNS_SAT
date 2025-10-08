@@ -53,7 +53,16 @@ LocalZoneResult solve_local_zone(
 
     int expansion_factor = 0;
     //loop until solution found or the local zone reached the size of the map and still no solution found
-    while (local_zone_result.solution_found == false && local_zone_positions.size() <= all_walkable_positions+1) {
+    while (local_zone_result.solution_found == false && local_zone_positions.size() <= all_walkable_positions) {
+        
+        if (local_zone_positions.size() == all_walkable_positions) {
+            std::cout << "[Solve_local_zone] Local zone size reached all walkable positions" << std::endl;
+            break;
+        }
+        if(local_zone_positions.size() == 0.95*all_walkable_positions) {
+            std::cout << "[Solve_local_zone] Local zone size reached 95% of all walkable positions" << std::endl;
+            //todo: expand zone to 100% of all walkable positions
+        }
         //current local zone size and % or all walkable positions
         std::cout << "[Solve_local_zone] Current local zone size: " << local_zone_positions.size() << " (" 
         << (double)local_zone_positions.size() / all_walkable_positions * 100 << "% of all walkable positions)" << std::endl;
