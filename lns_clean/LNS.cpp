@@ -19,7 +19,9 @@
 #include <iostream>
 
 //ERRORS
-// waiting time delta not rising above 2 ? wtf
+// untailed try before zone expansion
+// zone expansion growth based on number of attempts 
+
 
 
 

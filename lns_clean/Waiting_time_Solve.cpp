@@ -1327,6 +1327,38 @@ LazySolveResult lazy_solve_with_waiting_time(
 
     if (!result.solution_found) {
         std::cout << "[Waiting_time_Solve] No solution found" << std::endl;
+        std::cout << "[Waiting_time_Solve] One last try without tailed mdds" << std::endl;
+        bool there_are_tailed_mdds = false;
+        for (const auto& segment : state.segments) {
+            //check if the segment has a tailed mdd
+            //check by checking if the path reaches the global goal position
+            if (segment.path.back() == current_solution.goals[segment.original_id]) {
+                //get tail position -> thats the waiting time we will use
+                int tail_idx = std::distance(segment.path.begin(), std::find(segment.path.begin(), segment.path.end(), current_solution.goals[segment.original_id]));
+                //its more than one position ahead of the exit time
+                if (tail_idx < segment.exit_t) {
+                    there_are_tailed_mdds = true;
+                    //make a new mdd from entry to exit time
+                    MDDConstructor constructor(masked_map, segment.path.front(), segment.path.back(), segment.exit_t - segment.entry_t + 1);
+                    auto mdd = constructor.construct_mdd();
+                    if (!mdd) {
+                        std::cout << "[Waiting_time_Solve] ERROR: Failed to construct mdd for segment " << segment.segment_id << std::endl;
+                        return result;
+                    }
+                    segment.mdd = mdd;
+                    //update waiting time used, end_t-tail_idx
+                }
+            }
+        }
+        if (there_are_tailed_mdds) {
+            std::cout << "[Waiting_time_Solve] There are tailed mdds" << std::endl;
+            //SAT solve the local zone
+            //if successful, return the result
+            //if not try giving all waiting time?
+            
+        }
+
+        //restore original paths and waiting times
         std::cout << "[Waiting_time_Solve] Restoring original paths" << std::endl;
         std::cout << "[Waiting_time_Solve] Restoring waiting times" << std::endl;
         current_solution.restore_waiting_times(waiting_time_backup);
