@@ -1330,6 +1330,8 @@ LazySolveResult lazy_solve_with_waiting_time(
         std::cout << "[Waiting_time_Solve] One last try without tailed mdds" << std::endl;
         bool there_are_tailed_mdds = false;
         for (const auto& segment : state.segments) {
+            //RESTART WHOLE waiting time solve without using tails ever
+            //update waiting time current solution accordingly
             //check if the segment has a tailed mdd
             //check by checking if the path reaches the global goal position
             if (segment.path.back() == current_solution.goals[segment.original_id]) {

@@ -20,6 +20,10 @@
 
 //ERRORS
 // untailed try before zone expansion
+
+// made this build_segment_mdd --> use instead of build_segment_mdd_with_optional_wait_tail
+// every time
+
 // zone expansion growth based on number of attempts 
 
 

@@ -279,6 +279,48 @@ std::shared_ptr<MDD> build_segment_mdd_with_optional_wait_tail(
     return mdd;
 }
 
+std::shared_ptr<MDD> build_segment_mdd(
+    Current_Solution current_solution,
+    LocalSegment segment,
+    const std::vector<std::vector<char>>& masked_map,
+    int window_start_t,
+    int window_end_t){
+    
+    const std::vector<std::pair<int,int>>& segment_path = segment.path;
+    int segment_entry_t = segment.entry_t;
+    int segment_exit_t = segment.exti_t;
+    int agent_id = segment.original_id;
+    const std::pair<int,int>& global_goal_pos = ccurrent_solution.goals[agent_id];
+
+    if (segment_path.empty()) {
+        std::cout << "[Create_Local_Problem] ERROR: Empty segment path for agent " << agent_id << std::endl;
+        return nullptr;
+    }
+    const std::pair<int,int>& start_pos = segment_path.front();
+    const std::pair<int,int>& goal_pos = segment_path.back();
+
+    const int segment_length = std::max(0, segment_exit_t - segment_entry_t + 1);
+
+    const auto it = std::find(segment_path.begin(), segment_path.end(), global_goal_pos);
+    //if the goal is on the segment path
+    if (it != segment_path.end()) {
+        //where in the path is it
+        const int idx = static_cast<int>(std::distance(segment_path.begin(), it));
+        //how much waiting time will be used
+        const int used_waiting_time = segment_exit_t - segment_entry_t - idx;
+        //use that much waiting time
+        current_solution.use_waiting_time(agent_id, used_waiting_time);
+    }
+    // normal MDD to local segment goal
+    
+    MDDConstructor constructor(masked_map, start_pos, goal_pos, std::max(0, segment_length - 1));
+    auto mdd = constructor.construct_mdd();
+    align_mdd_to_time_window(mdd, segment_entry_t, segment_exit_t, window_start_t, window_end_t);
+    return mdd;
+    
+}
+
+
 void align_mdd_to_time_window(std::shared_ptr<MDD> mdd,
     int entry_t, int exit_t, //agent's entry and exit times
     int start_t, int end_t) { //time window of problem zone start and end
