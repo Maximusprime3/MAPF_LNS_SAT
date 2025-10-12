@@ -322,7 +322,6 @@ std::shared_ptr<MDD> build_segment_mdd(
             segment_path.end(),
             [&](const std::pair<int,int>& pos) { return pos == global_goal_pos; });
 
-        bool path_waits_at_goal_after_segment = false;
         if (segment_waits_at_goal_until_exit) {
             const int goal_suffix_entry_t = segment_entry_t + goal_suffix_start_idx;
             auto full_path_it = current_solution.agent_paths.find(agent_id);
@@ -335,17 +334,25 @@ std::shared_ptr<MDD> build_segment_mdd(
                     std::cout << "[Create_Local_Problem] ERROR: Invalid goal timestep "
                               << goal_suffix_entry_t << " for agent " << agent_id << std::endl;
                 } else {
-                    path_waits_at_goal_after_segment = std::all_of(
+                    const bool path_waits_at_goal_after_segment = std::all_of(
                         full_path.begin() + goal_suffix_entry_t,
                         full_path.end(),
                         [&](const std::pair<int,int>& pos) { return pos == global_goal_pos; });
-                }
-            }
-            //use that much waiting time if we actually wait at the goal
-            if (segment_waits_at_goal_until_exit && path_waits_at_goal_after_segment) {
-                const int used_waiting_time = std::max(0, segment_exit_t - goal_suffix_entry_t);
-                if (used_waiting_time > 0) {
-                    current_solution.use_waiting_time(agent_id, used_waiting_time);
+                        
+                    if (path_waits_at_goal_after_segment) {
+                        const int path_last_t = static_cast<int>(full_path.size()) - 1;
+                        if (segment_exit_t > path_last_t) {
+                            std::cout << "[Create_Local_Problem] ERROR: Segment exit " << segment_exit_t
+                                        << " exceeds global path for agent " << agent_id << std::endl;
+                        } else {
+                            const int remaining_wait_after_segment = std::max(0, path_last_t - segment_exit_t);
+                            const int current_waiting_time = current_solution.get_waiting_time(agent_id);
+                            const int waiting_to_consume = std::max(0, current_waiting_time - remaining_wait_after_segment);
+                            if (waiting_to_consume > 0) {
+                                current_solution.use_waiting_time(agent_id, waiting_to_consume);
+                            }
+                        }
+                    }
                 }
             }
         }

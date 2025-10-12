@@ -1,0 +1,587 @@
+[LNS] Loaded map 64x64, agents: 100
+[LNS] Map:
+@.@@@@@@@@@@.@@@@@@@@@@@@.@.@@@@@@@@@@@@.@@.@@@@@@@@@@@@@@@..@@@
+@...............@...............@...............@...............
+@...............@...............@...............@...............
+@...............@...............@...............................
+@...............@...............@...............@...............
+@...............@...............@...............@...............
+@...............@...............@...............@...............
+@...............@...............@...............................
+@...............@...............@...............@...............
+@...............................@...............@...............
+@...............@...............@...............@...............
+@...............................................@...............
+@...............@...............@...............@...............
+@...............@...............@...............@...............
+@...............@...............................@...............
+@...............@...............@...............@...............
+@.@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@.@@@.@@@@@@@@@@.@@@@@@@@@@.
+@...............@...............@...............@...............
+................@...............@...............@...............
+@...............@...............@...............@...............
+................@...............................@...............
+@...............@...............@...............@...............
+@...............@...............@...............................
+@...............@...............@...............@...............
+@...............@...............@...............@...............
+@...............@...............@...............@...............
+@...............@...............@...............@...............
+@...............@...............@...............@...............
+@...............@...............@...............@...............
+@...............@...............@...............................
+@...............@...............@...............@...............
+@...............@...............@...............@...............
+@@@@@@@.@.@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@.@@.@@@@@@@@@@@@@@@@
+@...............@...............@...............................
+................@...............@...............@...............
+@...............@...............@...............@...............
+@...............@...............@...............@...............
+@...............@...............................@...............
+@...............@...............@...............@...............
+@...............@...............@...............@...............
+@...............@...............@...............@...............
+@...............@...............................@...............
+@...............@...............@...............@...............
+................@...............@...............@...............
+@...............@...............@...............................
+@...............@...............@...............@...............
+@...............@...............@...............@...............
+@...............@...............@...............@...............
+@.@@@@.@@@@@@@@@@@@@@@@@@@@@@@@@@..@@@@@@@@@@@@@@@@@@@@@@.@.@@@@
+@...............@...............@...............@...............
+@...............@...............@...............@...............
+@...............@...............@...............@...............
+@...............@...............@...............@...............
+@...............@...............@...............@...............
+@...............@...............@...............@...............
+@...............@...............@...............................
+@...............@...............@...............@...............
+@...............................@...............@...............
+................@...............@...............@...............
+@...............@...............@...............@...............
+@...............@...............@...............@...............
+@...............@...............@...............@...............
+@...............@...............@...............................
+................................@...............@...............
+[LNS] Number of agents: 100
+[LNS] Agents (start -> goal):
+  Agent 0: (7,45) -> (56,4)
+  Agent 1: (36,54) -> (55,3)
+  Agent 2: (23,7) -> (26,50)
+  Agent 3: (59,23) -> (59,39)
+  Agent 4: (33,54) -> (33,44)
+  Agent 5: (7,29) -> (20,44)
+  Agent 6: (31,58) -> (26,1)
+  Agent 7: (24,44) -> (15,20)
+  Agent 8: (38,20) -> (26,7)
+  Agent 9: (57,60) -> (49,26)
+  Agent 10: (62,46) -> (62,21)
+  Agent 11: (12,23) -> (53,6)
+  Agent 12: (24,31) -> (62,34)
+  Agent 13: (62,48) -> (50,17)
+  Agent 14: (12,4) -> (51,27)
+  Agent 15: (21,42) -> (17,61)
+  Agent 16: (57,33) -> (47,47)
+  Agent 17: (15,51) -> (7,40)
+  Agent 18: (23,20) -> (41,19)
+  Agent 19: (0,43) -> (59,46)
+  Agent 20: (53,19) -> (45,27)
+  Agent 21: (43,3) -> (20,47)
+  Agent 22: (47,28) -> (12,23)
+  Agent 23: (52,35) -> (3,3)
+  Agent 24: (56,19) -> (13,8)
+  Agent 25: (42,38) -> (33,58)
+  Agent 26: (49,11) -> (6,61)
+  Agent 27: (46,30) -> (62,18)
+  Agent 28: (38,50) -> (5,8)
+  Agent 29: (25,46) -> (60,15)
+  Agent 30: (38,19) -> (49,31)
+  Agent 31: (63,30) -> (54,34)
+  Agent 32: (62,57) -> (10,20)
+  Agent 33: (9,38) -> (26,2)
+  Agent 34: (58,0) -> (50,50)
+  Agent 35: (46,3) -> (55,7)
+  Agent 36: (60,20) -> (31,35)
+  Agent 37: (29,56) -> (33,1)
+  Agent 38: (53,31) -> (46,26)
+  Agent 39: (53,15) -> (40,40)
+  Agent 40: (22,61) -> (50,24)
+  Agent 41: (29,1) -> (26,41)
+  Agent 42: (5,18) -> (43,2)
+  Agent 43: (6,18) -> (27,57)
+  Agent 44: (3,54) -> (11,52)
+  Agent 45: (62,60) -> (63,26)
+  Agent 46: (57,22) -> (14,8)
+  Agent 47: (62,19) -> (60,40)
+  Agent 48: (54,46) -> (57,38)
+  Agent 49: (46,33) -> (61,12)
+  Agent 50: (45,49) -> (60,10)
+  Agent 51: (22,18) -> (17,17)
+  Agent 52: (9,22) -> (25,56)
+  Agent 53: (61,14) -> (43,24)
+  Agent 54: (6,10) -> (29,21)
+  Agent 55: (6,59) -> (10,51)
+  Agent 56: (58,61) -> (59,12)
+  Agent 57: (10,18) -> (49,37)
+  Agent 58: (53,20) -> (38,42)
+  Agent 59: (48,59) -> (12,11)
+  Agent 60: (56,20) -> (13,27)
+  Agent 61: (14,14) -> (39,44)
+  Agent 62: (44,25) -> (38,54)
+  Agent 63: (5,50) -> (42,36)
+  Agent 64: (46,14) -> (5,19)
+  Agent 65: (38,59) -> (61,18)
+  Agent 66: (59,2) -> (7,21)
+  Agent 67: (58,13) -> (39,28)
+  Agent 68: (53,3) -> (18,25)
+  Agent 69: (44,19) -> (24,9)
+  Agent 70: (40,51) -> (4,61)
+  Agent 71: (21,20) -> (54,19)
+  Agent 72: (42,25) -> (34,14)
+  Agent 73: (17,11) -> (37,4)
+  Agent 74: (60,33) -> (60,34)
+  Agent 75: (45,57) -> (35,11)
+  Agent 76: (38,13) -> (54,52)
+  Agent 77: (21,9) -> (8,50)
+  Agent 78: (3,45) -> (24,10)
+  Agent 79: (60,54) -> (59,11)
+  Agent 80: (53,21) -> (60,44)
+  Agent 81: (8,18) -> (29,26)
+  Agent 82: (30,41) -> (23,44)
+  Agent 83: (63,1) -> (39,59)
+  Agent 84: (8,59) -> (39,14)
+  Agent 85: (26,62) -> (5,28)
+  Agent 86: (34,44) -> (5,36)
+  Agent 87: (9,3) -> (55,58)
+  Agent 88: (8,36) -> (51,15)
+  Agent 89: (17,34) -> (23,8)
+  Agent 90: (27,35) -> (52,1)
+  Agent 91: (42,52) -> (38,28)
+  Agent 92: (52,6) -> (11,18)
+  Agent 93: (29,25) -> (19,23)
+  Agent 94: (51,53) -> (57,25)
+  Agent 95: (44,22) -> (12,56)
+  Agent 96: (39,12) -> (2,52)
+  Agent 97: (50,37) -> (32,9)
+  Agent 98: (27,58) -> (63,31)
+  Agent 99: (54,21) -> (5,45)
+[LNS] Base makespan: 189
+
+[LNS] === Attempt with max_timesteps=189 ===
+[SAT] Creating MDDs with shortest paths + waiting time...
+[SAT] Created 100 MDDs with waiting time structure
+[LNS] Built MDDs with waiting time structure for 100 agents at makespan 189
+[Current_Solution] Calculating waiting times for agents...
+[Current_Solution] Agent 99 reaches goal at t=121, waiting time=68
+[Current_Solution] Agent 98 reaches goal at t=157, waiting time=32
+[Current_Solution] Agent 97 reaches goal at t=124, waiting time=65
+[Current_Solution] Agent 96 reaches goal at t=99, waiting time=90
+[Current_Solution] Agent 95 reaches goal at t=66, waiting time=123
+[Current_Solution] Agent 94 reaches goal at t=172, waiting time=17
+[Current_Solution] Agent 93 reaches goal at t=12, waiting time=177
+[Current_Solution] Agent 92 reaches goal at t=65, waiting time=124
+[Current_Solution] Agent 91 reaches goal at t=32, waiting time=157
+[Current_Solution] Agent 90 reaches goal at t=107, waiting time=82
+[Current_Solution] Agent 89 reaches goal at t=64, waiting time=125
+[Current_Solution] Agent 88 reaches goal at t=94, waiting time=95
+[Current_Solution] Agent 87 reaches goal at t=101, waiting time=88
+[Current_Solution] Agent 86 reaches goal at t=37, waiting time=152
+[Current_Solution] Agent 85 reaches goal at t=55, waiting time=134
+[Current_Solution] Agent 84 reaches goal at t=104, waiting time=85
+[Current_Solution] Agent 83 reaches goal at t=150, waiting time=39
+[Current_Solution] Agent 82 reaches goal at t=10, waiting time=179
+[Current_Solution] Agent 81 reaches goal at t=51, waiting time=138
+[Current_Solution] Agent 80 reaches goal at t=184, waiting time=5
+[Current_Solution] Agent 79 reaches goal at t=168, waiting time=21
+[Current_Solution] Agent 78 reaches goal at t=74, waiting time=115
+[Current_Solution] Agent 77 reaches goal at t=72, waiting time=117
+[Current_Solution] Agent 76 reaches goal at t=143, waiting time=46
+[Current_Solution] Agent 75 reaches goal at t=124, waiting time=65
+[Current_Solution] Agent 74 reaches goal at t=1, waiting time=188
+[Current_Solution] Agent 73 reaches goal at t=27, waiting time=162
+[Current_Solution] Agent 72 reaches goal at t=129, waiting time=60
+[Current_Solution] Agent 71 reaches goal at t=132, waiting time=57
+[Current_Solution] Agent 70 reaches goal at t=54, waiting time=135
+[Current_Solution] Agent 69 reaches goal at t=122, waiting time=67
+[Current_Solution] Agent 68 reaches goal at t=111, waiting time=78
+[Current_Solution] Agent 67 reaches goal at t=148, waiting time=41
+[Current_Solution] Agent 66 reaches goal at t=83, waiting time=106
+[Current_Solution] Agent 65 reaches goal at t=154, waiting time=35
+[Current_Solution] Agent 64 reaches goal at t=72, waiting time=117
+[Current_Solution] Agent 63 reaches goal at t=55, waiting time=134
+[Current_Solution] Agent 62 reaches goal at t=41, waiting time=148
+[Current_Solution] Agent 61 reaches goal at t=61, waiting time=128
+[Current_Solution] Agent 60 reaches goal at t=96, waiting time=93
+[Current_Solution] Agent 59 reaches goal at t=86, waiting time=103
+[Current_Solution] Agent 58 reaches goal at t=143, waiting time=46
+[Current_Solution] Agent 57 reaches goal at t=78, waiting time=111
+[Current_Solution] Agent 56 reaches goal at t=168, waiting time=21
+[Current_Solution] Agent 55 reaches goal at t=12, waiting time=177
+[Current_Solution] Agent 54 reaches goal at t=66, waiting time=123
+[Current_Solution] Agent 53 reaches goal at t=160, waiting time=29
+[Current_Solution] Agent 52 reaches goal at t=50, waiting time=139
+[Current_Solution] Agent 51 reaches goal at t=6, waiting time=183
+[Current_Solution] Agent 50 reaches goal at t=142, waiting time=47
+[Current_Solution] Agent 49 reaches goal at t=152, waiting time=37
+[Current_Solution] Agent 48 reaches goal at t=11, waiting time=178
+[Current_Solution] Agent 47 reaches goal at t=179, waiting time=10
+[Current_Solution] Agent 46 reaches goal at t=73, waiting time=116
+[Current_Solution] Agent 45 reaches goal at t=189, waiting time=0
+[Current_Solution] Agent 44 reaches goal at t=10, waiting time=179
+[Current_Solution] Agent 43 reaches goal at t=60, waiting time=129
+[Current_Solution] Agent 42 reaches goal at t=66, waiting time=123
+[Current_Solution] Agent 41 reaches goal at t=73, waiting time=116
+[Current_Solution] Agent 40 reaches goal at t=149, waiting time=40
+[Current_Solution] Agent 39 reaches goal at t=134, waiting time=55
+[Current_Solution] Agent 38 reaches goal at t=178, waiting time=11
+[Current_Solution] Agent 37 reaches goal at t=107, waiting time=82
+[Current_Solution] Agent 36 reaches goal at t=128, waiting time=61
+[Current_Solution] Agent 35 reaches goal at t=13, waiting time=176
+[Current_Solution] Agent 34 reaches goal at t=162, waiting time=27
+[Current_Solution] Agent 33 reaches goal at t=55, waiting time=134
+[Current_Solution] Agent 32 reaches goal at t=89, waiting time=100
+[Current_Solution] Agent 31 reaches goal at t=179, waiting time=10
+[Current_Solution] Agent 30 reaches goal at t=181, waiting time=8
+[Current_Solution] Agent 29 reaches goal at t=124, waiting time=65
+[Current_Solution] Agent 28 reaches goal at t=75, waiting time=114
+[Current_Solution] Agent 27 reaches goal at t=162, waiting time=27
+[Current_Solution] Agent 26 reaches goal at t=115, waiting time=74
+[Current_Solution] Agent 25 reaches goal at t=29, waiting time=160
+[Current_Solution] Agent 24 reaches goal at t=72, waiting time=117
+[Current_Solution] Agent 23 reaches goal at t=101, waiting time=88
+[Current_Solution] Agent 22 reaches goal at t=72, waiting time=117
+[Current_Solution] Agent 21 reaches goal at t=97, waiting time=92
+[Current_Solution] Agent 20 reaches goal at t=164, waiting time=25
+[Current_Solution] Agent 19 reaches goal at t=86, waiting time=103
+[Current_Solution] Agent 18 reaches goal at t=73, waiting time=116
+[Current_Solution] Agent 17 reaches goal at t=19, waiting time=170
+[Current_Solution] Agent 16 reaches goal at t=24, waiting time=165
+[Current_Solution] Agent 15 reaches goal at t=25, waiting time=164
+[Current_Solution] Agent 14 reaches goal at t=82, waiting time=107
+[Current_Solution] Agent 13 reaches goal at t=187, waiting time=2
+[Current_Solution] Agent 12 reaches goal at t=69, waiting time=120
+[Current_Solution] Agent 11 reaches goal at t=72, waiting time=117
+[Current_Solution] Agent 10 reaches goal at t=189, waiting time=0
+[Current_Solution] Agent 9 reaches goal at t=186, waiting time=3
+[Current_Solution] Agent 8 reaches goal at t=115, waiting time=74
+[Current_Solution] Agent 7 reaches goal at t=35, waiting time=154
+[Current_Solution] Agent 6 reaches goal at t=92, waiting time=97
+[Current_Solution] Agent 5 reaches goal at t=28, waiting time=161
+[Current_Solution] Agent 4 reaches goal at t=10, waiting time=179
+[Current_Solution] Agent 3 reaches goal at t=178, waiting time=11
+[Current_Solution] Agent 2 reaches goal at t=82, waiting time=107
+[Current_Solution] Agent 1 reaches goal at t=132, waiting time=57
+[Current_Solution] Agent 0 reaches goal at t=102, waiting time=87
+[Current_Solution] Waiting time calculation complete
+[LNS] Created current solution with 100 agent paths on a map of size 64x64
+[LNS] Analyzing conflicts...
+[LNS] Current solution: vertex collisions=1317, edge collisions=143
+[LNS] Creating conflict buckets...
+[LOCAL ZONE] Building diamond bucket for conflict 0
+[LOCAL ZONE] Built diamond bucket for conflict 0 with 10 positions, 3 conflicts, 1 - 174 time window
+[LOCAL ZONE] Building diamond bucket for conflict 1
+[LOCAL ZONE] Built diamond bucket for conflict 1 with 8 positions, 2 conflicts, 1 - 2 time window
+[LNS] Selected most relevant bucket 0 with time window: 1 - 174, 3 conflicts and 10 positions.
+[LNS] Solving the best bucket Local Zone...
+[Solve_local_zone] Current local zone size: 10 (0.274273% of all walkable positions)
+[Solve_local_zone] Local zone time window: [0, 175]
+[Create_Local_problem] Agent 9 exited the zone at exit time 175
+[Create_Local_problem] Agent 14 exited the zone at exit time 73
+[Create_Local_problem] Agent 20 exited the zone at exit time 2
+[Create_Local_Problem] MDD already aligned to the time window
+[Create_Local_problem] Agent 30 exited the zone at exit time 166
+[Create_Local_problem] Agent 40 exited the zone at exit time 142
+[Create_Local_problem] Agent 58 exited the zone at exit time 3
+[Create_Local_Problem] MDD already aligned to the time window
+[Create_Local_problem] Agent 60 exited the zone at exit time 0
+[Create_Local_Problem] MDD already aligned to the time window
+[Create_Local_problem] Agent 71 exited the zone at exit time 175
+[Current_Solution] Agent 71 used 43 waiting timesteps, 14 remaining
+[Create_Local_problem] Agent 80 exited the zone at exit time 4
+[Create_Local_problem] Agent 99 exited the zone at exit time 3
+[Create_Local_Problem] MDD already aligned to the time window
+[Waiting_time_Solve] Total available waiting time: 9289
+[Waiting_time_Solve] Iteration 0...
+[SAT] Start solving CNF: 2308 clauses and 448 variables
+[SAT] Solving local zone with SAT iteration 1...
+[SAT] Local CNF: 2308 clauses 
+
+DEBUG: Adding 2308 new clauses to MiniSAT (incremental run)
+DEBUG: Clause load summary: input=2308, added=2308, tautologies_skipped=0, duplicates_skipped=0, unit_clauses=26, empties=0, intra_clause_literals_removed=0, added_but_db_unchanged=25
+DEBUG: After adding clauses, solver has 2257 clauses and 448 variables
+DEBUG: MiniSAT found 448 variables
+DEBUG: Assignment size: 448
+DEBUG: First few assignment values: 1 0 1 1 1 1 1 0 1 1 
+
+=== DEBUG: cnf_assignment_to_paths ===
+Input assignment size: 448
+
+=== END DEBUG ===
+[SAT] Found 4 vertex collisions and 0 edge collisions
+[SAT] Adding collision clauses and solving again...
+[SAT] Solving local zone with SAT iteration 2...
+[SAT] Local CNF: 2312 clauses 
+
+DEBUG: Adding 4 new clauses to MiniSAT (incremental run)
+DEBUG: Clause load summary: input=4, added=4, tautologies_skipped=0, duplicates_skipped=0, unit_clauses=0, empties=0, intra_clause_literals_removed=0, added_but_db_unchanged=1
+DEBUG: After adding clauses, solver has 2260 clauses and 448 variables
+DEBUG: MiniSAT found 448 variables
+DEBUG: Assignment size: 448
+DEBUG: First few assignment values: 1 1 0 1 1 1 0 1 1 1 
+
+=== DEBUG: cnf_assignment_to_paths ===
+Input assignment size: 448
+
+=== END DEBUG ===
+[SAT] Found 0 vertex collisions and 0 edge collisions
+[SAT] Found collision-free local solution!
+[Waiting_time_Solve] Solution found, updating global solution
+[LNS] Updating global solution with pseudo-agent local paths...
+[Current_Solution] Updating global solution for agent 80
+[Current_Solution] Global solution is consistent after updating with local path
+[LNS] Successfully updated global solution with pseudo-agent local paths!
+[Current_Solution] Updating global solution for agent 99
+[Current_Solution] Global solution is consistent after updating with local path
+[LNS] Successfully updated global solution with pseudo-agent local paths!
+[Current_Solution] Updating global solution for agent 60
+[Current_Solution] Global solution is consistent after updating with local path
+[LNS] Successfully updated global solution with pseudo-agent local paths!
+[Current_Solution] Updating global solution for agent 71
+[Current_Solution] Global solution is consistent after updating with local path
+[LNS] Successfully updated global solution with pseudo-agent local paths!
+[Current_Solution] Updating global solution for agent 58
+[Current_Solution] Global solution is consistent after updating with local path
+[LNS] Successfully updated global solution with pseudo-agent local paths!
+[Current_Solution] Updating global solution for agent 30
+[Current_Solution] Global solution is consistent after updating with local path
+[LNS] Successfully updated global solution with pseudo-agent local paths!
+[Current_Solution] Updating global solution for agent 20
+[Current_Solution] Global solution is consistent after updating with local path
+[LNS] Successfully updated global solution with pseudo-agent local paths!
+[Current_Solution] Updating global solution for agent 40
+[Current_Solution] Global solution is consistent after updating with local path
+[LNS] Successfully updated global solution with pseudo-agent local paths!
+[Current_Solution] Updating global solution for agent 14
+[Current_Solution] Global solution is consistent after updating with local path
+[LNS] Successfully updated global solution with pseudo-agent local paths!
+[Current_Solution] Updating global solution for agent 9
+[Current_Solution] Global solution is consistent after updating with local path
+[LNS] Successfully updated global solution with pseudo-agent local paths!
+[LNS] Updating path map with new local paths...
+[LNS] Successfully updated global solution with local paths and pseudo agents!
+[Solve_local_zone] Successfully solved local zone
+[LNS] Successfully solved local zone
+[LNS] Analyzing conflicts...
+[LNS] Current solution: vertex collisions=1314, edge collisions=143
+[LNS] Creating conflict buckets...
+[LOCAL ZONE] Building diamond bucket for conflict 0
+[LOCAL ZONE] Built diamond bucket for conflict 0 with 8 positions, 2 conflicts, 1 - 2 time window
+[LNS] Selected most relevant bucket 0 with time window: 1 - 2, 2 conflicts and 8 positions.
+[LNS] Solving the best bucket Local Zone...
+[Solve_local_zone] Current local zone size: 8 (0.219419% of all walkable positions)
+[Solve_local_zone] Local zone time window: [0, 3]
+[Create_Local_problem] Agent 55 exited the zone at exit time 3
+[Create_Local_Problem] MDD already aligned to the time window
+[Create_Local_problem] Agent 84 exited the zone at exit time 3
+[Create_Local_Problem] MDD already aligned to the time window
+[Waiting_time_Solve] Total available waiting time: 9289
+[Waiting_time_Solve] Iteration 0...
+[SAT] Start solving CNF: 20 clauses and 11 variables
+[SAT] Solving local zone with SAT iteration 1...
+[SAT] Local CNF: 20 clauses 
+
+DEBUG: Adding 20 new clauses to MiniSAT (incremental run)
+DEBUG: Clause load summary: input=20, added=20, tautologies_skipped=0, duplicates_skipped=0, unit_clauses=5, empties=0, intra_clause_literals_removed=0, added_but_db_unchanged=5
+DEBUG: After adding clauses, solver has 10 clauses and 11 variables
+DEBUG: MiniSAT found 11 variables
+DEBUG: Assignment size: 11
+DEBUG: First few assignment values: 1 0 1 1 1 1 1 0 1 0 
+
+=== DEBUG: cnf_assignment_to_paths ===
+Input assignment size: 11
+
+=== END DEBUG ===
+[SAT] Found 0 vertex collisions and 0 edge collisions
+[SAT] Found collision-free local solution!
+[Waiting_time_Solve] Solution found, updating global solution
+[LNS] Updating global solution with pseudo-agent local paths...
+[Current_Solution] Updating global solution for agent 84
+[Current_Solution] Global solution is consistent after updating with local path
+[LNS] Successfully updated global solution with pseudo-agent local paths!
+[Current_Solution] Updating global solution for agent 55
+[Current_Solution] Global solution is consistent after updating with local path
+[LNS] Successfully updated global solution with pseudo-agent local paths!
+[LNS] Updating path map with new local paths...
+[LNS] Successfully updated global solution with local paths and pseudo agents!
+[Solve_local_zone] Successfully solved local zone
+[LNS] Successfully solved local zone
+[LNS] Analyzing conflicts...
+[LNS] Current solution: vertex collisions=1312, edge collisions=143
+[LNS] Creating conflict buckets...
+[LOCAL ZONE] Building diamond bucket for conflict 0
+[LOCAL ZONE] Built diamond bucket for conflict 0 with 18 positions, 6 conflicts, 3 - 8 time window
+[LOCAL ZONE] Building diamond bucket for conflict 1312
+[LOCAL ZONE] Built diamond bucket for conflict 1312 with 383 positions, 1112 conflicts, 3 - 148 time window
+[LNS] Selected most relevant bucket 41 with time window: 3 - 148, 1112 conflicts and 383 positions.
+[LNS] Solving the best bucket Local Zone...
+[Solve_local_zone] Current local zone size: 383 (10.5047% of all walkable positions)
+[Solve_local_zone] Local zone time window: [2, 149]
+[Create_Local_problem] Agent 0 exited the zone at exit time 59
+[Create_Local_problem] Agent 0 returned to the zone 1 times within time window
+[Create_Local_problem] Agent 1 exited the zone at exit time 89
+[Create_Local_problem] Agent 1 returned to the zone 1 times within time window
+[Create_Local_problem] Agent 2 exited the zone at exit time 73
+[Create_Local_problem] Agent 2 returned to the zone 1 times within time window
+[Create_Local_problem] Agent 3 exited the zone at exit time 145
+[Create_Local_problem] Agent 4 exited the zone at exit time 149
+[Current_Solution] Agent 4 used 139 waiting timesteps, 40 remaining
+[Create_Local_problem] Agent 5 exited the zone at exit time 149
+[Current_Solution] Agent 5 used 121 waiting timesteps, 40 remaining
+[Create_Local_problem] Agent 6 exited the zone at exit time 149
+[Create_Local_problem] Agent 6 returned to the zone 1 times within time window
+[Current_Solution] Agent 6 used 57 waiting timesteps, 40 remaining
+[Create_Local_problem] Agent 7 exited the zone at exit time 149
+[Create_Local_problem] Agent 7 returned to the zone 3 times within time window
+[Current_Solution] Agent 7 used 114 waiting timesteps, 40 remaining
+[Create_Local_problem] Agent 8 exited the zone at exit time 105
+[Create_Local_problem] Agent 8 returned to the zone 2 times within time window
+[Create_Local_problem] Agent 9 exited the zone at exit time 116
+[Create_Local_problem] Agent 9 returned to the zone 1 times within time window
+[Create_Local_problem] Agent 10 exited the zone at exit time 127
+[Create_Local_problem] Agent 10 returned to the zone 2 times within time window
+[Create_Local_problem] Agent 11 exited the zone at exit time 39
+[Create_Local_problem] Agent 11 returned to the zone 3 times within time window
+[Create_Local_problem] Agent 12 exited the zone at exit time 37
+[Create_Local_problem] Agent 12 returned to the zone 1 times within time window
+[Create_Local_problem] Agent 13 exited the zone at exit time 127
+[Create_Local_problem] Agent 13 returned to the zone 2 times within time window
+[Create_Local_problem] Agent 14 exited the zone at exit time 13
+[Create_Local_problem] Agent 15 exited the zone at exit time 3
+[Create_Local_problem] Agent 18 exited the zone at exit time 47
+[Create_Local_problem] Agent 18 returned to the zone 2 times within time window
+[Create_Local_problem] Agent 19 exited the zone at exit time 46
+[Create_Local_problem] Agent 20 exited the zone at exit time 142
+[Create_Local_problem] Agent 21 exited the zone at exit time 95
+[Create_Local_problem] Agent 21 returned to the zone 2 times within time window
+[Create_Local_problem] Agent 22 exited the zone at exit time 149
+[Create_Local_problem] Agent 22 returned to the zone 1 times within time window
+[Current_Solution] Agent 22 used 77 waiting timesteps, 40 remaining
+[Create_Local_problem] Agent 23 exited the zone at exit time 69
+[Create_Local_problem] Agent 23 returned to the zone 1 times within time window
+[Create_Local_problem] Agent 24 exited the zone at exit time 149
+[Current_Solution] Agent 24 used 77 waiting timesteps, 40 remaining
+[Create_Local_problem] Agent 26 exited the zone at exit time 83
+[Create_Local_problem] Agent 27 exited the zone at exit time 103
+[Create_Local_problem] Agent 27 returned to the zone 3 times within time window
+[Create_Local_problem] Agent 28 exited the zone at exit time 49
+[Create_Local_problem] Agent 28 returned to the zone 1 times within time window
+[Create_Local_problem] Agent 29 exited the zone at exit time 75
+[Create_Local_problem] Agent 29 returned to the zone 3 times within time window
+[Create_Local_problem] Agent 30 exited the zone at exit time 106
+[Create_Local_problem] Agent 30 returned to the zone 1 times within time window
+[Create_Local_problem] Agent 31 exited the zone at exit time 149
+[Create_Local_problem] Agent 31 returned to the zone 2 times within time window
+[Create_Local_problem] Agent 32 exited the zone at exit time 149
+[Create_Local_problem] Agent 32 returned to the zone 2 times within time window
+[Current_Solution] Agent 32 used 60 waiting timesteps, 40 remaining
+[Create_Local_problem] Agent 33 exited the zone at exit time 54
+[Create_Local_problem] Agent 33 returned to the zone 1 times within time window
+[Create_Local_problem] Agent 34 exited the zone at exit time 117
+[Create_Local_problem] Agent 34 returned to the zone 2 times within time window
+[Create_Local_problem] Agent 36 exited the zone at exit time 116
+[Create_Local_problem] Agent 37 exited the zone at exit time 84
+[Create_Local_problem] Agent 37 returned to the zone 1 times within time window
+[Create_Local_problem] Agent 38 exited the zone at exit time 149
+[Create_Local_problem] Agent 38 returned to the zone 4 times within time window
+[Create_Local_problem] Agent 39 exited the zone at exit time 130
+[Create_Local_problem] Agent 39 returned to the zone 4 times within time window
+[Create_Local_problem] Agent 40 exited the zone at exit time 84
+[Create_Local_problem] Agent 40 returned to the zone 2 times within time window
+[Create_Local_problem] Agent 41 exited the zone at exit time 149
+[Create_Local_problem] Agent 41 returned to the zone 2 times within time window
+[Current_Solution] Agent 41 used 76 waiting timesteps, 40 remaining
+[Create_Local_problem] Agent 42 exited the zone at exit time 34
+[Create_Local_problem] Agent 42 returned to the zone 1 times within time window
+[Create_Local_problem] Agent 43 exited the zone at exit time 43
+[Create_Local_problem] Agent 43 returned to the zone 1 times within time window
+[Create_Local_problem] Agent 45 exited the zone at exit time 121
+[Create_Local_problem] Agent 45 returned to the zone 1 times within time window
+[Create_Local_problem] Agent 46 exited the zone at exit time 149
+[Current_Solution] Agent 46 used 76 waiting timesteps, 40 remaining
+[Create_Local_problem] Agent 47 exited the zone at exit time 143
+[Create_Local_problem] Agent 47 returned to the zone 1 times within time window
+[Create_Local_problem] Agent 49 exited the zone at exit time 104
+[Create_Local_problem] Agent 49 returned to the zone 3 times within time window
+[Create_Local_problem] Agent 50 exited the zone at exit time 93
+[Create_Local_problem] Agent 50 returned to the zone 3 times within time window
+[Create_Local_problem] Agent 52 exited the zone at exit time 35
+[Create_Local_problem] Agent 53 exited the zone at exit time 138
+[Create_Local_problem] Agent 53 returned to the zone 2 times within time window
+[Create_Local_problem] Agent 54 exited the zone at exit time 39
+[Create_Local_problem] Agent 56 exited the zone at exit time 118
+[Create_Local_problem] Agent 56 returned to the zone 1 times within time window
+[Create_Local_problem] Agent 57 exited the zone at exit time 57
+[Create_Local_problem] Agent 57 returned to the zone 1 times within time window
+[Create_Local_problem] Agent 58 exited the zone at exit time 149
+[Create_Local_problem] Agent 58 returned to the zone 1 times within time window
+[Current_Solution] Agent 58 used 6 waiting timesteps, 40 remaining
+[Create_Local_problem] Agent 59 exited the zone at exit time 149
+[Current_Solution] Agent 59 used 63 waiting timesteps, 40 remaining
+[Create_Local_problem] Agent 60 exited the zone at exit time 149
+[Current_Solution] Agent 60 used 53 waiting timesteps, 40 remaining
+[Create_Local_problem] Agent 61 exited the zone at exit time 57
+[Create_Local_problem] Agent 61 returned to the zone 2 times within time window
+[Create_Local_problem] Agent 63 exited the zone at exit time 46
+[Create_Local_problem] Agent 64 exited the zone at exit time 51
+[Create_Local_problem] Agent 65 exited the zone at exit time 96
+[Create_Local_problem] Agent 65 returned to the zone 2 times within time window
+[Create_Local_problem] Agent 66 exited the zone at exit time 67
+[Create_Local_problem] Agent 67 exited the zone at exit time 134
+[Create_Local_problem] Agent 67 returned to the zone 1 times within time window
+[Create_Local_problem] Agent 68 exited the zone at exit time 97
+[Create_Local_problem] Agent 69 exited the zone at exit time 112
+[Create_Local_problem] Agent 69 returned to the zone 2 times within time window
+[Create_Local_problem] Agent 71 exited the zone at exit time 73
+[Create_Local_problem] Agent 72 exited the zone at exit time 109
+[Create_Local_problem] Agent 72 returned to the zone 2 times within time window
+[Create_Local_problem] Agent 75 exited the zone at exit time 101
+[Create_Local_problem] Agent 75 returned to the zone 1 times within time window
+[Create_Local_problem] Agent 76 exited the zone at exit time 100
+[Create_Local_problem] Agent 76 returned to the zone 1 times within time window
+[Create_Local_problem] Agent 77 exited the zone at exit time 53
+[Create_Local_problem] Agent 78 exited the zone at exit time 63
+[Create_Local_problem] Agent 78 returned to the zone 2 times within time window
+[Create_Local_problem] Agent 79 exited the zone at exit time 119
+[Create_Local_problem] Agent 79 returned to the zone 1 times within time window
+[Create_Local_problem] Agent 80 exited the zone at exit time 145
+[Create_Local_problem] Agent 80 returned to the zone 2 times within time window
+[Create_Local_problem] Agent 81 exited the zone at exit time 31
+[Create_Local_problem] Agent 82 exited the zone at exit time 149
+[Current_Solution] Agent 82 used 139 waiting timesteps, 40 remaining
+[Create_Local_problem] Agent 83 exited the zone at exit time 117
+[Create_Local_problem] Agent 83 returned to the zone 1 times within time window
+[Create_Local_problem] Agent 84 exited the zone at exit time 74
+[Create_Local_problem] Agent 85 exited the zone at exit time 47
+[Create_Local_problem] Agent 85 returned to the zone 1 times within time window
+[Create_Local_problem] Agent 86 exited the zone at exit time 31
+[Create_Local_problem] Agent 86 returned to the zone 1 times within time window
+[Create_Local_problem] Agent 87 exited the zone at exit time 61
+[Create_Local_problem] Agent 87 returned to the zone 2 times within time window
+[Create_Local_problem] Agent 88 exited the zone at exit time 54
+[Create_Local_problem] Agent 89 exited the zone at exit time 56
+[Create_Local_problem] Agent 89 returned to the zone 1 times within time window
+[Create_Local_problem] Agent 90 exited the zone at exit time 65
+[Create_Local_problem] Agent 92 exited the zone at exit time 149
+[Current_Solution] Agent 92 used 84 waiting timesteps, 40 remaining
+[Create_Local_problem] Agent 94 exited the zone at exit time 109
+[Create_Local_problem] Agent 94 returned to the zone 1 times within time window
+[Create_Local_problem] Agent 95 exited the zone at exit time 35
+[Create_Local_problem] Agent 96 exited the zone at exit time 74
+[Create_Local_problem] Agent 97 exited the zone at exit time 110
+[Create_Local_problem] Agent 97 returned to the zone 2 times within time window
+[Create_Local_problem] Agent 98 exited the zone at exit time 84
+[Create_Local_problem] Agent 98 returned to the zone 2 times within time window
+[Create_Local_problem] Agent 99 exited the zone at exit time 105
+[Waiting_time_Solve] Total available waiting time: 8147
+[Waiting_time_Solve] Iteration 0...

@@ -904,7 +904,7 @@ LazySolveResult lazy_solve_with_waiting_time(
             entry_exit_map,
             state.zone_start_t,
             state.zone_end_t,
-            1000, // max_iterations
+            1000000, // max_iterations
             cached_vertex_collisions,
             cached_edge_collisions);
         
