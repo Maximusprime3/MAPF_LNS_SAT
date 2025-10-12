@@ -971,6 +971,15 @@ LazySolveResult lazy_solve_with_waiting_time(
                         std::cout << "(" << pos.first << ", " << pos.second << ") ";
                     }
                     std::cout << std::endl;
+                    //goal pos
+                    std::cout << "[Waiting_time_Solve] Goal position: " << current_solution.goals[agent_id].first << ", " << current_solution.goals[agent_id].second << std::endl;
+                    //actual wating time found
+                    for (int i = path.size() - 1; i >= 0    ; i--) {
+                        if (path[i] != current_solution.goals[agent_id]) {
+                            std::cout << "[Waiting_time_Solve] Actual waiting time: " << path.size() - i - 1 << std::endl;
+                            break;
+                        }
+                    }
                 }
             }
 
