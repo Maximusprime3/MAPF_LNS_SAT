@@ -56,7 +56,7 @@ bool trim_segment_tail(LocalZoneState& state,
     LocalSegment& segment,
     int trim_amount,
     const std::vector<std::vector<char>>& masked_map,
-    const CurrentSolution& current_solution) {
+    CurrentSolution& current_solution) {
     if (trim_amount <= 0) {
         return true;
     }
@@ -97,14 +97,12 @@ bool trim_segment_tail(LocalZoneState& state,
         return false;
     }
 
-    segment.mdd = build_segment_mdd_with_optional_wait_tail(masked_map,
-                                                            segment.path,
-                                                            current_solution.goals[segment.original_id],
-                                                            segment.entry_t,
-                                                            segment.exit_t,
-                                                            state.zone_start_t,
-                                                            state.zone_end_t,
-                                                            segment.original_id);
+    segment.mdd = build_segment_mdd(current_solution,
+                                        segment,
+                                        masked_map,
+                                        state.zone_start_t,
+                                        state.zone_end_t);
+
     if (!segment.mdd) {
         std::cout << "[Waiting_time_Solve] ERROR: Failed to rebuild MDD for segment "
                   << segment.segment_id << " after trimming" << std::endl;
@@ -185,13 +183,13 @@ bool can_apply_waiting_time_delta(const LocalZoneState& state,
         prospective_last_exit = segment.exit_t + remaining_wait;
     }
 
-    int overflow = prospective_last_exit - path_last_index;
-    if (overflow <= 0) {
-        return true;
+    if (prospective_last_exit > path_last_index) {
+        std::cout << "[Waiting_time_Solve] ERROR: Applying waiting time delta would push agent "
+                  << original_id << " beyond its global path (no tail to trim)" << std::endl;
+        return false;
     }
 
-    int available_tail = count_goal_tail(last_segment.path, current_solution.goals[original_id]);
-    return available_tail >= overflow;
+    return true;
 }
 
 
@@ -480,15 +478,11 @@ bool apply_waiting_time_delta(
             //new first goal idx
             int new_first_goal_idx = idx + amount_of_waiting_time;
             //move the tail beginning back without extending the segment exit time
-            segment.mdd = build_segment_mdd_with_optional_wait_tail(masked_map, 
-                                                                    segment.path,
-                                                                    current_solution.goals[segment.original_id], 
-                                                                    segment.entry_t, 
-                                                                    segment.exit_t, 
-                                                                    state.zone_start_t, 
-                                                                    state.zone_end_t, 
-                                                                    segment.original_id,
-                                                                    new_first_goal_idx);
+            segment.mdd = build_segment_mdd(current_solution,
+                                            segment,
+                                            masked_map,
+                                            state.zone_start_t,
+                                            state.zone_end_t);
             need_to_apply_waiting_time_delta = false;
             amount_of_waiting_time = 0;
         } else {
@@ -497,15 +491,11 @@ bool apply_waiting_time_delta(
             int usable_waiting_time_in_segment = segment_waiting_slack;
             int new_first_goal_idx = idx + usable_waiting_time_in_segment; //remove the tail
 
-            segment.mdd = build_segment_mdd_with_optional_wait_tail(masked_map, 
-                                                                        segment.path,
-                                                                        current_solution.goals[segment.original_id], 
-                                                                        segment.entry_t, 
-                                                                        segment.exit_t, 
-                                                                        state.zone_start_t, 
-                                                                        state.zone_end_t, 
-                                                                        segment.original_id,
-                                                                        new_first_goal_idx);
+            segment.mdd = build_segment_mdd(current_solution,
+                                            segment,
+                                            masked_map,
+                                            state.zone_start_t,
+                                            state.zone_end_t);
             amount_of_waiting_time -= usable_waiting_time_in_segment;
         }
     }
@@ -525,14 +515,11 @@ bool apply_waiting_time_delta(
                         << " has 0 length path" << std::endl;
                 segment_length = static_cast<int>(segment.path.size());
             } 
-            segment.mdd = build_segment_mdd_with_optional_wait_tail(masked_map, 
-                                                                    segment.path, 
-                                                                    current_solution.goals[segment.original_id], 
-                                                                    segment.entry_t, 
-                                                                    segment.exit_t, 
-                                                                    state.zone_start_t, 
-                                                                    state.zone_end_t, 
-                                                                    segment.original_id);
+            segment.mdd = build_segment_mdd(current_solution,
+                                            segment,
+                                            masked_map,
+                                            state.zone_start_t,
+                                            state.zone_end_t);
             if (!segment.mdd) {
                 std::cout << "[Waiting_time_Solve] ERROR: Failed to build MDD for agent " << segment.original_id << std::endl;
                 return false;
@@ -566,7 +553,7 @@ bool apply_waiting_time_delta(
         return false;
     }
     const int path_last_index = static_cast<int>(agent_path_reference.size()) - 1;
-    int trimmed_from_segment = 0;
+    //int trimmed_from_segment = 0;
 
     for (auto follow_it = std::next(pos_it); follow_it != indices.end(); ++follow_it) {
         size_t follow_index = *follow_it;
@@ -596,9 +583,9 @@ bool apply_waiting_time_delta(
         if (is_last_segment) {
             int overflow = following.exit_t - path_last_index;
             if (overflow > 0) {
-                if (!trim_segment_tail(state, following, overflow, masked_map, current_solution)) {
-                    return false;
-                }
+                std::cout << "[Waiting_time_Solve] ERROR: Following segment " << following.segment_id
+                          << " would exceed global path after waiting adjustment" << std::endl;
+                return false;
             }
         }
     }
@@ -606,10 +593,10 @@ bool apply_waiting_time_delta(
     if (std::next(pos_it) == indices.end()) {
         int overflow = segment.exit_t - path_last_index;
         if (overflow > 0) {
-            if (!trim_segment_tail(state, segment, overflow, masked_map, current_solution)) {
-                return false;
-            }
-            trimmed_from_segment = overflow;
+            std::cout << "[Waiting_time_Solve] ERROR: Segment " << segment.segment_id
+                      << " would exceed global path after waiting adjustment" << std::endl;
+            return false;
+            //trimmed_from_segment = overflow;
         }
     }
 
@@ -754,11 +741,11 @@ bool apply_waiting_time_delta(
     //we can update the path map
     current_solution.create_path_map();
 
-    if (segment.exit_t != old_exit + amount_of_waiting_time - trimmed_from_segment) {
+    /*if (segment.exit_t != old_exit + amount_of_waiting_time - trimmed_from_segment) {
         std::cout << "[Waiting_time_Solve] ERROR: Segment " << segment_id
                   << " exit time mismatch after waiting adjustment" << std::endl;
         return false;
-    }
+    }*/
     return true;
 }
 
@@ -1327,39 +1314,6 @@ LazySolveResult lazy_solve_with_waiting_time(
 
     if (!result.solution_found) {
         std::cout << "[Waiting_time_Solve] No solution found" << std::endl;
-        std::cout << "[Waiting_time_Solve] One last try without tailed mdds" << std::endl;
-        bool there_are_tailed_mdds = false;
-        for (const auto& segment : state.segments) {
-            //RESTART WHOLE waiting time solve without using tails ever
-            //update waiting time current solution accordingly
-            //check if the segment has a tailed mdd
-            //check by checking if the path reaches the global goal position
-            if (segment.path.back() == current_solution.goals[segment.original_id]) {
-                //get tail position -> thats the waiting time we will use
-                int tail_idx = std::distance(segment.path.begin(), std::find(segment.path.begin(), segment.path.end(), current_solution.goals[segment.original_id]));
-                //its more than one position ahead of the exit time
-                if (tail_idx < segment.exit_t) {
-                    there_are_tailed_mdds = true;
-                    //make a new mdd from entry to exit time
-                    MDDConstructor constructor(masked_map, segment.path.front(), segment.path.back(), segment.exit_t - segment.entry_t + 1);
-                    auto mdd = constructor.construct_mdd();
-                    if (!mdd) {
-                        std::cout << "[Waiting_time_Solve] ERROR: Failed to construct mdd for segment " << segment.segment_id << std::endl;
-                        return result;
-                    }
-                    segment.mdd = mdd;
-                    //update waiting time used, end_t-tail_idx
-                }
-            }
-        }
-        if (there_are_tailed_mdds) {
-            std::cout << "[Waiting_time_Solve] There are tailed mdds" << std::endl;
-            //SAT solve the local zone
-            //if successful, return the result
-            //if not try giving all waiting time?
-            
-        }
-
         //restore original paths and waiting times
         std::cout << "[Waiting_time_Solve] Restoring original paths" << std::endl;
         std::cout << "[Waiting_time_Solve] Restoring waiting times" << std::endl;

@@ -280,40 +280,80 @@ std::shared_ptr<MDD> build_segment_mdd_with_optional_wait_tail(
 }
 
 std::shared_ptr<MDD> build_segment_mdd(
-    Current_Solution current_solution,
-    LocalSegment segment,
+    CurrentSolution& current_solution,
+    const LocalSegment& segment,
     const std::vector<std::vector<char>>& masked_map,
     int window_start_t,
-    int window_end_t){
+    int window_end_t) {
     
     const std::vector<std::pair<int,int>>& segment_path = segment.path;
-    int segment_entry_t = segment.entry_t;
-    int segment_exit_t = segment.exti_t;
-    int agent_id = segment.original_id;
-    const std::pair<int,int>& global_goal_pos = ccurrent_solution.goals[agent_id];
+    const int segment_entry_t = segment.entry_t;
+    const int segment_exit_t = segment.exit_t;
+    const int agent_id = segment.original_id;
 
     if (segment_path.empty()) {
         std::cout << "[Create_Local_Problem] ERROR: Empty segment path for agent " << agent_id << std::endl;
         return nullptr;
     }
-    const std::pair<int,int>& start_pos = segment_path.front();
-    const std::pair<int,int>& goal_pos = segment_path.back();
+    if (agent_id < 0 || agent_id >= static_cast<int>(current_solution.goals.size())) {
+        std::cout << "[Create_Local_Problem] ERROR: Invalid agent id " << agent_id
+                  << " when building segment MDD" << std::endl;
+        return nullptr;
+    }
+    const std::pair<int,int>& segment_start_pos = segment_path.front();
+    const std::pair<int,int>& segment_goal_pos = segment_path.back();
+    const std::pair<int,int>& global_goal_pos = current_solution.goals[agent_id];
 
     const int segment_length = std::max(0, segment_exit_t - segment_entry_t + 1);
-
-    const auto it = std::find(segment_path.begin(), segment_path.end(), global_goal_pos);
+    auto it = std::find(segment_path.begin(), segment_path.end(), global_goal_pos);
     //if the goal is on the segment path
-    if (it != segment_path.end()) {
-        //where in the path is it
-        const int idx = static_cast<int>(std::distance(segment_path.begin(), it));
-        //how much waiting time will be used
-        const int used_waiting_time = segment_exit_t - segment_entry_t - idx;
-        //use that much waiting time
-        current_solution.use_waiting_time(agent_id, used_waiting_time);
+    int goal_suffix_start_idx = -1;
+    for (int idx = static_cast<int>(segment_path.size()) - 1; idx >= 0; --idx) {
+        if (segment_path[idx] == global_goal_pos) {
+            goal_suffix_start_idx = idx;
+        } else if (goal_suffix_start_idx != -1) {
+            break;
+        }
     }
+    //if the goal is not on the segment path, check if the agent stays there (is this the wating time slack)
+    if (goal_suffix_start_idx != -1) {
+        const bool segment_waits_at_goal_until_exit = std::all_of(
+            segment_path.begin() + goal_suffix_start_idx,
+            segment_path.end(),
+            [&](const std::pair<int,int>& pos) { return pos == global_goal_pos; });
+
+        bool path_waits_at_goal_after_segment = false;
+        if (segment_waits_at_goal_until_exit) {
+            const int goal_suffix_entry_t = segment_entry_t + goal_suffix_start_idx;
+            auto full_path_it = current_solution.agent_paths.find(agent_id);
+            if (full_path_it == current_solution.agent_paths.end()) {
+                std::cout << "[Create_Local_Problem] ERROR: Missing global path for agent "
+                          << agent_id << " when evaluating waiting time" << std::endl;
+            } else {
+                const auto& full_path = full_path_it->second;
+                if (goal_suffix_entry_t < 0 || goal_suffix_entry_t >= static_cast<int>(full_path.size())) {
+                    std::cout << "[Create_Local_Problem] ERROR: Invalid goal timestep "
+                              << goal_suffix_entry_t << " for agent " << agent_id << std::endl;
+                } else {
+                    path_waits_at_goal_after_segment = std::all_of(
+                        full_path.begin() + goal_suffix_entry_t,
+                        full_path.end(),
+                        [&](const std::pair<int,int>& pos) { return pos == global_goal_pos; });
+                }
+            }
+            //use that much waiting time if we actually wait at the goal
+            if (segment_waits_at_goal_until_exit && path_waits_at_goal_after_segment) {
+                const int used_waiting_time = std::max(0, segment_exit_t - goal_suffix_entry_t);
+                if (used_waiting_time > 0) {
+                    current_solution.use_waiting_time(agent_id, used_waiting_time);
+                }
+            }
+        }
+    }
+
     // normal MDD to local segment goal
     
-    MDDConstructor constructor(masked_map, start_pos, goal_pos, std::max(0, segment_length - 1));
+    MDDConstructor constructor(masked_map, segment_start_pos, segment_goal_pos, std::max(0, segment_length - 1));
     auto mdd = constructor.construct_mdd();
     align_mdd_to_time_window(mdd, segment_entry_t, segment_exit_t, window_start_t, window_end_t);
     return mdd;
@@ -423,7 +463,7 @@ void align_mdd_to_time_window(std::shared_ptr<MDD> mdd,
 
 
 LocalZoneState build_local_problem_for_zone(
-    const CurrentSolution& current_solution,
+    CurrentSolution& current_solution,
     const std::set<std::pair<int,int>>& zone_positions_set,
     const std::vector<std::vector<char>>& masked_map,
     const std::vector<std::vector<char>>& grid,
@@ -507,21 +547,14 @@ LocalZoneState build_local_problem_for_zone(
 
             const auto& segment_path = segment.path;
             if (!segment_path.empty()) {
-                int segment_length = segment.exit_t - segment.entry_t + 1;
-                if (segment_length <= 0) {
-                    segment_length = static_cast<int>(segment_path.size());
-                }
-                // build MDD, optionally with waiting tail if global goal is in the segment
-                const auto& global_goal_pos = current_solution.goals[agent_id];
-                segment.mdd = build_segment_mdd_with_optional_wait_tail(
+                // build MDD, if global goal is in the , check if we need to use waiting time
+                segment.mdd = build_segment_mdd(
+                    current_solution,
+                    segment,
                     masked_map,
-                    segment_path,
-                    global_goal_pos,
-                    segment.entry_t,
-                    segment.exit_t,
                     start_t,
-                    end_t,
-                    agent_id);
+                    end_t);
+                
                 if (!segment.mdd) {
                     std::cout << "[Create_Local_Problem] ERROR: Failed to build MDD for agent " << agent_id << std::endl;
                     continue;
@@ -767,14 +800,11 @@ void refresh_zone_after_extension(
                     }
                     //update the segment accordingly
                     //continueing the segment until the new exit time
-                    segment_to_continue.mdd = build_segment_mdd_with_optional_wait_tail(masked_map, 
-                                                                                        segment_to_continue.path, 
-                                                                                        current_solution.goals[agent_id], 
-                                                                                        segment_to_continue.entry_t, 
-                                                                                        segment_to_continue.exit_t, 
-                                                                                        state.zone_start_t, 
-                                                                                        state.zone_end_t, 
-                                                                                        agent_id);
+                    segment_to_continue.mdd = build_segment_mdd(current_solution,
+                                                                segment_to_continue,
+                                                                masked_map,
+                                                                state.zone_start_t,
+                                                                state.zone_end_t);
                     if (!segment_to_continue.mdd) {
                         std::cout << "[Create_Local_Problem] ERROR: Failed to build MDD for agent " << agent_id << std::endl;
                         continue;
@@ -803,14 +833,12 @@ void refresh_zone_after_extension(
                 new_segment.original_exit_t = segment_info.exit_t[0];
                 new_segment.path = std::move(segment_info.zone_paths[0]);
                 //make new mdd
-                new_segment.mdd = build_segment_mdd_with_optional_wait_tail(masked_map, 
-                                                                            new_segment.path, 
-                                                                            current_solution.goals[agent_id], 
-                                                                            new_segment.entry_t, 
-                                                                            new_segment.exit_t, 
-                                                                            state.zone_start_t, 
-                                                                            state.zone_end_t, 
-                                                                            agent_id);
+                new_segment.mdd = build_segment_mdd(current_solution,
+                                                    new_segment,
+                                                    masked_map,
+                                                    state.zone_start_t,
+                                                    state.zone_end_t);
+
                 if (!new_segment.mdd) {
                     std::cout << "[Create_Local_Problem] ERROR: Failed to build MDD for agent " << agent_id << std::endl;
                     continue;
@@ -843,14 +871,12 @@ void refresh_zone_after_extension(
             new_segment.original_exit_t = segment_info.exit_t[0];
             new_segment.path = std::move(segment_info.zone_paths[0]);
             //make new mdd
-            new_segment.mdd = build_segment_mdd_with_optional_wait_tail(masked_map, 
-                                                                        new_segment.path, 
-                                                                        current_solution.goals[agent_id], 
-                                                                        new_segment.entry_t, 
-                                                                        new_segment.exit_t, 
-                                                                        state.zone_start_t, 
-                                                                        state.zone_end_t, 
-                                                                        agent_id);
+            new_segment.mdd = build_segment_mdd(current_solution,
+                                                new_segment,
+                                                masked_map,
+                                                state.zone_start_t,
+                                                state.zone_end_t);
+
             if (!new_segment.mdd) {
                 std::cout << "[Create_Local_Problem] ERROR: Failed to build MDD for agent " << agent_id << std::endl;
                 continue;
@@ -875,14 +901,12 @@ void refresh_zone_after_extension(
             new_segment.original_exit_t = segment_info.exit_t[i];
             new_segment.path = std::move(segment_info.zone_paths[i]);
             //make new mdd
-            new_segment.mdd = build_segment_mdd_with_optional_wait_tail(masked_map, 
-                                                                        new_segment.path,
-                                                                        current_solution.goals[new_segment.original_id], 
-                                                                        new_segment.entry_t, 
-                                                                        new_segment.exit_t, 
-                                                                        state.zone_start_t, 
-                                                                        state.zone_end_t, 
-                                                                        new_segment.original_id);
+            new_segment.mdd = build_segment_mdd(current_solution,
+                                                new_segment,
+                                                masked_map,
+                                                state.zone_start_t,
+                                                state.zone_end_t);
+
             if (!new_segment.mdd) {
                 std::cout << "[Create_Local_Problem] ERROR: Failed to build MDD for agent " << new_segment.original_id << std::endl;
                 continue;

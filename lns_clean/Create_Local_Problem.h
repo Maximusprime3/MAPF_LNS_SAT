@@ -57,8 +57,20 @@ std::shared_ptr<MDD> build_segment_mdd_with_optional_wait_tail(
     int agent_id,
     int forced_pre_tail_idx = -1);
 
+// Builds an MDD for a segment while accounting for waiting time usage when the
+// global goal lies on the segment path.
+// The returned MDD always targets the segment's final position and only deducts
+// waiting time if the agent's final goal-staying suffix lasts through the
+// segment exit and the rest of its global path.
+std::shared_ptr<MDD> build_segment_mdd(
+    CurrentSolution& current_solution,
+    const LocalSegment& segment,
+    const std::vector<std::vector<char>>& masked_map,
+    int window_start_t,
+    int window_end_t);
+
 LocalZoneState build_local_problem_for_zone(
-    const CurrentSolution& current_solution,
+    CurrentSolution& current_solution,
     const std::set<std::pair<int,int>>& zone_positions_set,
     const std::vector<std::vector<char>>& masked_map,
     const std::vector<std::vector<char>>& grid,
