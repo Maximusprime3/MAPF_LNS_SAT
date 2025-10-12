@@ -338,7 +338,7 @@ std::shared_ptr<MDD> build_segment_mdd(
                         full_path.begin() + goal_suffix_entry_t,
                         full_path.end(),
                         [&](const std::pair<int,int>& pos) { return pos == global_goal_pos; });
-                        
+
                     if (path_waits_at_goal_after_segment) {
                         const int path_last_t = static_cast<int>(full_path.size()) - 1;
                         if (segment_exit_t > path_last_t) {
@@ -740,7 +740,7 @@ void refresh_zone_after_extension(
                     std::cout << "[Create_Local_Problem] ERROR: Agent " << agent_id << "already extended to the end of the zone" << std::endl;
                     continue;
                 } else {
-                    //std::cout << "[Create_Local_Problem] Agent " << agent_id << " is continuing in the zone" << std::endl;
+                    std::cout << "[Create_Local_Problem] Agent " << agent_id << " is continuing in the zone" << std::endl;
                     //extend the segment to the end of the first segment in the new window
                     const int old_exit = segment_to_continue.exit_t;
                     const int new_exit = segment_info.exit_t[0];

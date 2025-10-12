@@ -3,6 +3,8 @@
 #include "Waiting_time_Solve.h"
 #include "Solve_Local_Zone.h"
 
+#include <algorithm>
+
 
 // Helper function to find agents present in a zone within a time window
 std::set<int> get_agents_in_zone_within_time_window(
@@ -50,6 +52,8 @@ LocalZoneResult solve_local_zone(
     std::vector<int> local_zone_conflict_indices = best_bucket.indices;
     int earliest_conflict_t = best_bucket.earliest_t;
     int latest_conflict_t = best_bucket.latest_t;
+    const int bucket_time_window_start = std::max(best_bucket.earliest_t - offset, 0);
+    const int bucket_time_window_end = std::min(best_bucket.latest_t + offset, current_max_timesteps);
 
     int expansion_factor = 0;
     //loop until solution found or the local zone reached the size of the map and still no solution found
@@ -115,7 +119,9 @@ LocalZoneResult solve_local_zone(
             map,
             local_zone_conflict_indices,
             local_zone_positions,
-            expanded_offset);
+            expanded_offset,
+            bucket_time_window_start,
+            bucket_time_window_end);
         
         local_zone_positions = expanded_zone_positions_set;
         local_zone_conflict_indices = expanded_conflict_indices; //todo: no more conflict indices? all conflict meta
@@ -129,6 +135,9 @@ LocalZoneResult solve_local_zone(
                 std::cout << "[Solve_local_zone] ERROR: Invalid conflict index " << conflict_idx << std::endl;
             }
         }
+
+        earliest_conflict_t = std::max(earliest_conflict_t, bucket_time_window_start);
+        latest_conflict_t = std::min(latest_conflict_t, bucket_time_window_end);
 
         std::cout << "[Solve_local_zone] Final expanded zone contains " << expanded_zone_positions_set.size() 
                   << " positions with " << expanded_conflict_indices.size() << " conflicts " << std::endl; 

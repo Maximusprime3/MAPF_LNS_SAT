@@ -211,7 +211,8 @@ std::vector<DiamondBucket> build_diamond_buckets(
     const std::vector<std::vector<char>>& map,
     const std::vector<ConflictMeta>& all_conflict_meta,
     int offset,
-    const std::set<int>& solved_conflict_indices) {
+    const std::set<int>& solved_conflict_indices,
+    int max_timesteps) {
 
     std::vector<DiamondBucket> diamond_buckets;
     std::vector<char> diamond_used(all_conflict_meta.size(), 0); //used to track which conflicts have been used in a bucket
@@ -236,6 +237,8 @@ std::vector<DiamondBucket> build_diamond_buckets(
         // Track earliest timestep incrementally
         int bucket_earliest_t = building_conflicts_meta[i].timestep; //set to timestep of first conflict
         int bucket_latest_t = building_conflicts_meta[i].timestep;
+        const int original_earliest_t = std::max(bucket_earliest_t - offset, 0);
+        const int original_latest_t = std::min(bucket_latest_t + offset, max_timesteps);
         //set time window relvant for this conflict
 
         std::set<std::pair<int,int>> previous_shape;
@@ -274,13 +277,18 @@ std::vector<DiamondBucket> build_diamond_buckets(
                         continue;
                     }
                     if (!solved_conflict_indices.count(conflict_idx)) { //check if the conflict is already solved 
-                        bucket_conflicts_meta.push_back(all_conflict_meta[conflict_idx]);
+                        const auto& candidate_meta = all_conflict_meta[conflict_idx];
+                        if (candidate_meta.timestep < original_earliest_t ||
+                            candidate_meta.timestep > original_latest_t) {
+                            continue;
+                        }
+                        bucket_conflicts_meta.push_back(candidate_meta);
                         diamond_used[conflict_idx] = 1;
                         found_new_conflicts = true;
                         index_set.insert(conflict_idx);
                         //update the time window of the bucket
-                        bucket_earliest_t = std::min(bucket_earliest_t, all_conflict_meta[conflict_idx].timestep); //update earliest timestep of the bucket
-                        bucket_latest_t = std::max(bucket_latest_t, all_conflict_meta[conflict_idx].timestep);                         
+                        bucket_earliest_t = std::min(bucket_earliest_t, candidate_meta.timestep); //update earliest timestep of the bucket
+                        bucket_latest_t = std::max(bucket_latest_t, candidate_meta.timestep);                         
                         
                     }
                 }
@@ -311,7 +319,8 @@ std::vector<DiamondBucket> build_diamond_buckets_for_earliest_conflicts(
     const std::vector<ConflictMeta>& all_conflict_meta,
     const std::vector<std::vector<std::vector<int>>>& conflict_map,
     const std::vector<std::vector<char>>& map,
-    int offset) {
+    int offset,
+    int max_timesteps) {
     
     //detect earliest conflicts
     std::vector<ConflictMeta> earliest_conflicts_meta;
@@ -341,7 +350,9 @@ std::vector<DiamondBucket> build_diamond_buckets_for_earliest_conflicts(
             conflict_map,
             map,
             all_conflict_meta,
-            offset);
+            offset,
+            std::set<int>(),
+            max_timesteps);
     } else {
         std::cout << "[LOCAL ZONE] ERROR: No earliest conflicts found" << std::endl;
         return {};
@@ -376,7 +387,9 @@ std::pair<std::set<std::pair<int,int>>, std::vector<int>> expand_bucket_zone(
     const std::vector<std::vector<char>>& map,
     const std::vector<int>& original_bucket_indices,
     const std::set<std::pair<int,int>>& original_bucket_positions,
-    int expanded_offset)
+    int expanded_offset,
+    int allowed_earliest_t,
+    int allowed_latest_t)
 {
     //extract the conflicts from the original bucket
     std::vector<ConflictMeta> expanded_bucket_conflicts_meta;
@@ -415,6 +428,10 @@ std::pair<std::set<std::pair<int,int>>, std::vector<int>> expand_bucket_zone(
                 }
                 continue; 
             }
+            const auto& candidate_meta = conflict_meta[conflict_idx];
+            if (candidate_meta.timestep < allowed_earliest_t || candidate_meta.timestep > allowed_latest_t) {
+                continue;
+            }
             newly_touched_conflicts.insert(conflict_idx);
             std::cout << "[LOCAL ZONE] Found newly touched conflict " << conflict_idx << " at position (" << r << "," << c << ")" << std::endl;
         }
@@ -450,8 +467,14 @@ std::pair<std::set<std::pair<int,int>>, std::vector<int>> expand_bucket_zone(
                         continue; 
                     }
                     
+                    const auto& candidate_meta = conflict_meta[conflict_idx];
+                    if (candidate_meta.timestep < allowed_earliest_t || candidate_meta.timestep > allowed_latest_t) {
+                        continue;
+                    }
+
+                    expanded_bucket_conflicts_meta.push_back(candidate_meta);
+
                     std::cout << "[LOCAL ZONE] Found newly touched conflict " << conflict_idx << " at position (" << r << "," << c << ")" << std::endl;
-                    expanded_bucket_conflicts_meta.push_back(conflict_meta[conflict_idx]);
                     expanded_bucket_conflict_indices.push_back(conflict_idx);
                     expanded_bucket_conflict_indices_set.insert(conflict_idx);
                     newly_touched_conflicts.insert(conflict_idx);

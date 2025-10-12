@@ -78,7 +78,8 @@ std::vector<DiamondBucket> build_diamond_buckets(
     const std::vector<std::vector<char>>& map,
     const std::vector<ConflictMeta>& all_conflict_meta,
     int offset,
-    const std::set<int>& solved_conflict_indices = std::set<int>());
+    const std::set<int>& solved_conflict_indices = std::set<int>(),
+    int max_timesteps = 0);
 /**
  * @brief Group conflicts into disjoint diamond buckets via iterative growth for earliest conflicts.
  * @param all_conflict_meta  Per-conflict metadata (timestep, agents, etc.).
@@ -91,7 +92,8 @@ std::vector<DiamondBucket> build_diamond_buckets_for_earliest_conflicts(
     const std::vector<ConflictMeta>& all_conflict_meta,
     const std::vector<std::vector<std::vector<int>>>& conflict_map,
     const std::vector<std::vector<char>>& map,
-    int offset);
+    int offset,
+    int max_timesteps);
 
 /**
  * @brief Expand a bucket's zone with a larger offset and absorb new conflicts.
@@ -101,6 +103,8 @@ std::vector<DiamondBucket> build_diamond_buckets_for_earliest_conflicts(
  * @param original_bucket_indices  Global indices of the original bucket.
  * @param original_bucket_positions Positions of the original bucket.
  * @param expanded_offset  New diamond radius.
+ * @param allowed_earliest_t  Allowed earliest timestep.
+ * @param allowed_latest_t  Allowed latest timestep.
  * @return {expanded positions set, full list of conflict indices}.
  */
 std::pair<std::set<std::pair<int,int>>, std::vector<int>> expand_bucket_zone(
@@ -109,7 +113,9 @@ std::pair<std::set<std::pair<int,int>>, std::vector<int>> expand_bucket_zone(
     const std::vector<std::vector<char>>& map,
     const std::vector<int>& original_bucket_indices,
     const std::set<std::pair<int,int>>& original_bucket_positions,
-    int expanded_offset);
+    int expanded_offset,
+    int allowed_earliest_t,
+    int allowed_latest_t);
 
 /**
  * @brief Extract vertex and edge collisions from conflict indices.

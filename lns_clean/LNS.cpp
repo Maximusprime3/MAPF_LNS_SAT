@@ -184,7 +184,7 @@ std::unordered_map<int, std::vector<std::pair<int,int>>> LNS(
             const int offset = 1; // half the standard conflict zone size
             std::cout << "[LNS] Creating conflict buckets..." << std::endl;
             auto diamond_buckets = build_diamond_buckets_for_earliest_conflicts(
-                conflict_meta, conflict_map, problem.grid, offset);
+                conflict_meta, conflict_map, problem.grid, offset, current_max_timesteps);
             //if multiple buckets, select the most relevant one
             DiamondBucket best_bucket = select_most_relevant_bucket(diamond_buckets);
             if (best_bucket.indices.empty()) {
