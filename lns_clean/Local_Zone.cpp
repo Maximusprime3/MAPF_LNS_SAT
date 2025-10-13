@@ -237,8 +237,8 @@ std::vector<DiamondBucket> build_diamond_buckets(
         // Track earliest timestep incrementally
         int bucket_earliest_t = building_conflicts_meta[i].timestep; //set to timestep of first conflict
         int bucket_latest_t = building_conflicts_meta[i].timestep;
-        const int original_earliest_t = std::max(bucket_earliest_t - offset, 0);
-        const int original_latest_t = std::min(bucket_latest_t + offset, max_timesteps);
+        int allowed_earliest_t = std::max(bucket_earliest_t - offset, 0);
+        int allowed_latest_t = std::min(bucket_latest_t + offset, max_timesteps);
         //set time window relvant for this conflict
 
         std::set<std::pair<int,int>> previous_shape;
@@ -278,8 +278,8 @@ std::vector<DiamondBucket> build_diamond_buckets(
                     }
                     if (!solved_conflict_indices.count(conflict_idx)) { //check if the conflict is already solved 
                         const auto& candidate_meta = all_conflict_meta[conflict_idx];
-                        if (candidate_meta.timestep < original_earliest_t ||
-                            candidate_meta.timestep > original_latest_t) {
+                        if (candidate_meta.timestep < allowed_earliest_t ||
+                            candidate_meta.timestep > allowed_latest_t) {
                             continue;
                         }
                         bucket_conflicts_meta.push_back(candidate_meta);
@@ -288,7 +288,9 @@ std::vector<DiamondBucket> build_diamond_buckets(
                         index_set.insert(conflict_idx);
                         //update the time window of the bucket
                         bucket_earliest_t = std::min(bucket_earliest_t, candidate_meta.timestep); //update earliest timestep of the bucket
-                        bucket_latest_t = std::max(bucket_latest_t, candidate_meta.timestep);                         
+                        bucket_latest_t = std::max(bucket_latest_t, candidate_meta.timestep); 
+                        allowed_earliest_t = std::max(bucket_earliest_t - offset, 0);
+                        allowed_latest_t = std::min(bucket_latest_t + offset, max_timesteps);                        
                         
                     }
                 }
