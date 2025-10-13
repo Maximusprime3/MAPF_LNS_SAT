@@ -36,11 +36,12 @@ MiniSatSolution MiniSatWrapper::solve_cnf(const std::vector<std::vector<int>>& c
                                           const std::vector<int>* initial_assignment) {
     incremental_mode = false;
     clauses_loaded = 0;
-    return solve_with_clause_range(clauses, initial_assignment, 0, false);
+    return solve_with_clause_range(clauses, initial_assignment, 0, false, false);
 }
 
 MiniSatSolution MiniSatWrapper::solve_cnf_incremental(const std::vector<std::vector<int>>& clauses,
-                                                      const std::vector<int>* initial_assignment) {
+                                                    const std::vector<int>* initial_assignment,
+                                                    bool use_assumptions) {
     if (!incremental_mode) {
         reset_solver();
         incremental_mode = true;
@@ -54,7 +55,7 @@ MiniSatSolution MiniSatWrapper::solve_cnf_incremental(const std::vector<std::vec
     }
 
     std::size_t start_index = clauses_loaded;
-    auto result = solve_with_clause_range(clauses, initial_assignment, start_index, true);
+    auto result = solve_with_clause_range(clauses, initial_assignment, start_index, true, use_assumptions);
     clauses_loaded = clauses.size();
     return result;
 }
@@ -67,7 +68,8 @@ void MiniSatWrapper::reset_incremental() {
 MiniSatSolution MiniSatWrapper::solve_with_clause_range(const std::vector<std::vector<int>>& clauses,
                                                         const std::vector<int>* initial_assignment,
                                                         std::size_t start_index,
-                                                        bool incremental_run) {
+                                                        bool incremental_run,
+                                                        bool use_assumptions) {
     MiniSatSolution result;
     result.satisfiable = false;
     result.num_decisions = 0;
@@ -153,16 +155,26 @@ MiniSatSolution MiniSatWrapper::solve_with_clause_range(const std::vector<std::v
                   << std::endl;
         std::cout << "DEBUG: After adding clauses, solver has " << solver->nClauses() << " clauses and " << solver->nVars() << " variables" << std::endl;
 
+        vec<Lit> assumption_lits;
         // Set initial assignment if provided
         if (initial_assignment != nullptr) {
             // MiniSAT uses 0-based indexing, so we need to convert
             for (size_t i = 0; i < initial_assignment->size(); ++i) {
-                int var_id = i; // 0-based
+                int var_id = static_cast<int>(i); // 0-based
+                if (var_id >= solver->nVars()) {
+                    std::cout << "DEBUG: ERROR: Initial assignment variable " << var_id << " is out of bounds" << std::endl;
+                    continue;
+                }
                 int value = (*initial_assignment)[i];
                 
-                if (var_id < solver->nVars()) {
+                if (use_assumptions) {
+                    if (value == 1) {
+                        assumption_lits.push(mkLit(var_id, /*sign=*/false));
+                    } else if (value == 0) {
+                        assumption_lits.push(mkLit(var_id, /*sign=*/true));
+                    }
+                } else {
                     // Set the polarity based on the initial assignment
-                    // Note: MiniSAT doesn't have a direct way to set initial assignments
                     // We'll use setPolarity as a heuristic
                     if (value == 1) {
                         solver->setPolarity(var_id, l_True);
@@ -176,7 +188,12 @@ MiniSatSolution MiniSatWrapper::solve_with_clause_range(const std::vector<std::v
         // Solve the problem
         auto start_time = std::chrono::high_resolution_clock::now();
         
-        bool satisfiable = solver->solve();
+        bool satisfiable = false;
+        if (use_assumptions && initial_assignment != nullptr) {
+            satisfiable = solver->solve(assumption_lits);
+        } else {
+            satisfiable = solver->solve();
+        }
         
         auto end_time = std::chrono::high_resolution_clock::now();
         auto duration = std::chrono::duration_cast<std::chrono::milliseconds>(end_time - start_time);

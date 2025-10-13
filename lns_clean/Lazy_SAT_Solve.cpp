@@ -238,9 +238,17 @@ LazySolveResult lazy_SAT_solve(
         std::cout << std::endl;
         if (first_iteration) {
             minisat_result = SATSolverManager::solve_cnf_with_minisat_incremental(local_cnf, minisat_wrapper, nullptr, true);
+        } else if (!initial_assignment.empty()) {
+            minisat_result = SATSolverManager::solve_cnf_with_minisat_incremental(
+                local_cnf, minisat_wrapper, &initial_assignment, false, true);
+
+            if (!minisat_result.satisfiable) {
+                std::cout << "[SAT] Previous assignment invalidated by new clauses, retrying without assumptions..." << std::endl;
+                minisat_result = SATSolverManager::solve_cnf_with_minisat_incremental(local_cnf, minisat_wrapper, nullptr, false);
+            }
         } else {
-            minisat_result = SATSolverManager::solve_cnf_with_minisat_incremental(local_cnf, minisat_wrapper, &initial_assignment);
-        }
+            minisat_result = SATSolverManager::solve_cnf_with_minisat_incremental(local_cnf, minisat_wrapper, nullptr, false);
+            }
         first_iteration = false;
         //print minisat result
         //std::cout << "[SAT] Minisat result: " << minisat_result.satisfiable << " num decisions: " << minisat_result.num_decisions << " solve time: " << minisat_result.solve_time << " error message: " << minisat_result.error_message << std::endl;
@@ -280,8 +288,7 @@ LazySolveResult lazy_SAT_solve(
             cnf_constructor.add_collision_clauses_to_cnf(local_cnf, new_collisions);
             cnf_constructor.add_edge_collision_clauses_to_cnf(local_cnf, new_edge_collisions);
             //create new partial assignment from the solution and continue
-            initial_assignment = minisat_result.assignment; //minisat uses polarity not hard assumptions, we can set all variables and it can still change them
-
+            initial_assignment = cnf_constructor.partial_assignment_from_paths(local_paths);
             std::cout << "[SAT] Adding collision clauses and solving again..." << std::endl;
         }
     }

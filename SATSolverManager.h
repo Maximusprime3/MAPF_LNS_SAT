@@ -277,7 +277,8 @@ public:
      static MiniSatSolution solve_cnf_with_minisat_incremental(const CNF& cnf,
         MiniSatWrapper& minisat_wrapper,
         const std::vector<int>* initial_assignment = nullptr,
-        bool reset_solver = false);
+        bool reset_solver = false,
+        bool use_assumptions = false);
 
 
     /**

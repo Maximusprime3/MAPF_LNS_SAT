@@ -28,7 +28,8 @@ public:
     // Incremental solving interface. Subsequent calls add only new clauses and
     // reuse the solver state so learnt clauses and polarities are preserved.
     MiniSatSolution solve_cnf_incremental(const std::vector<std::vector<int>>& clauses,
-                        const std::vector<int>* initial_assignment = nullptr);
+                                        const std::vector<int>* initial_assignment = nullptr,
+                                        bool use_assumptions = false);
 
     // Resets the incremental session (clears loaded clauses and solver state).
     void reset_incremental();
@@ -47,7 +48,8 @@ private:
     MiniSatSolution solve_with_clause_range(const std::vector<std::vector<int>>& clauses,
                                             const std::vector<int>* initial_assignment,
                                             std::size_t start_index,
-                                            bool incremental_run);
+                                            bool incremental_run,
+                                            bool use_assumptions);
     
     // Helper functions
     void reset_solver();

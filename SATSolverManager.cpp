@@ -634,11 +634,12 @@ MiniSatSolution SATSolverManager::solve_cnf_with_minisat(const std::shared_ptr<C
 MiniSatSolution SATSolverManager::solve_cnf_with_minisat_incremental(const CNF& cnf,
                                                                     MiniSatWrapper& minisat_wrapper,
                                                                     const std::vector<int>* initial_assignment,
-                                                                    bool reset_solver) {
+                                                                    bool reset_solver,
+                                                                    bool use_assumptions) {
     if (reset_solver) {
         minisat_wrapper.reset_incremental();
     }
-    return minisat_wrapper.solve_cnf_incremental(cnf.get_clauses(), initial_assignment);
+    return minisat_wrapper.solve_cnf_incremental(cnf.get_clauses(), initial_assignment, use_assumptions);
 }
 
 /**
