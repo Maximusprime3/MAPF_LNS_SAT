@@ -1015,8 +1015,11 @@ LazySolveResult lazy_solve_with_waiting_time(
             if (idx_it == state.segment_index_by_id.end()) return false;
             const LocalSegment& segment = state.segments[idx_it->second];
             int original_id = segment.original_id;
-            if (current_solution.get_waiting_time(original_id) < amount_of_waiting_time) {
-                std::cout << "[Waiting_time_Solve] ERROR: Agent " << original_id << " has not enough waiting time to apply " << amount_of_waiting_time << std::endl;
+            const int available_wait = current_solution.get_waiting_time(original_id);
+            if (available_wait < amount_of_waiting_time) {
+                std::cout << "[Waiting_time_Solve] ERROR: Skipping waiting time application for agent "
+                          << original_id << " (needs " << amount_of_waiting_time
+                          << ", available: " << available_wait << ")" << std::endl;
                 return false;
             }
             //print waiting time delta

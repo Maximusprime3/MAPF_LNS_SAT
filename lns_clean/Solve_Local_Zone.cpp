@@ -65,6 +65,10 @@ LocalZoneResult solve_local_zone(
         }
         if(local_zone_positions.size() == 0.95*all_walkable_positions) {
             std::cout << "[Solve_local_zone] Local zone size reached 95% of all walkable positions" << std::endl;
+            std::cout << "[Solve_local_zone] Will try to solve with full time window and all positions" << std::endl;
+            const int full_time_window_start = 0;
+            const int full_time_window_end = current_max_timesteps;
+            //std::set<std::pair<int,int>> full_walkable_positions_set = get_all_walkable_positions(map);
             //todo: expand zone to 100% of all walkable positions
         }
         //current local zone size and % or all walkable positions
