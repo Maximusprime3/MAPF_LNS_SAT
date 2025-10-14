@@ -41,12 +41,18 @@ LocalZoneResult solve_local_zone(
 
     //get number of all walkable positions in the map
     int all_walkable_positions = 0;
-    for (int i = 0; i < map.size(); i++) {
-        for (int j = 0; j < map[0].size(); j++) {
+    std::set<std::pair<int,int>> all_walkable_positions_set;
+    for (int i = 0; i < static_cast<int>(map.size()); i++) {
+        for (int j = 0; j < static_cast<int>(map[0].size()); j++) {
             if (map[i][j] == '.') {
                 all_walkable_positions++;
+                all_walkable_positions_set.emplace(i, j);
             }
         }
+    }
+    if (all_walkable_positions == 0) {
+        std::cout << "[Solve_local_zone] ERROR: Map has no walkable positions" << std::endl;
+        return local_zone_result;
     }
     std::set<std::pair<int,int>> local_zone_positions = best_bucket.positions;
     std::vector<int> local_zone_conflict_indices = best_bucket.indices;
@@ -63,13 +69,46 @@ LocalZoneResult solve_local_zone(
             std::cout << "[Solve_local_zone] Local zone size reached all walkable positions" << std::endl;
             break;
         }
-        if(local_zone_positions.size() == 0.95*all_walkable_positions) {
+        if(local_zone_positions.size() >=0.95*all_walkable_positions) {
             std::cout << "[Solve_local_zone] Local zone size reached 95% of all walkable positions" << std::endl;
             std::cout << "[Solve_local_zone] Will try to solve with full time window and all positions" << std::endl;
+            
+            local_zone_positions = all_walkable_positions_set;
+            local_zone_conflict_indices.clear();
+            local_zone_conflict_indices.reserve(conflict_meta.size());
+            for (int idx = 0; idx < static_cast<int>(conflict_meta.size()); ++idx) {
+                local_zone_conflict_indices.push_back(idx);
+            }
             const int full_time_window_start = 0;
             const int full_time_window_end = current_max_timesteps;
-            //std::set<std::pair<int,int>> full_walkable_positions_set = get_all_walkable_positions(map);
-            //todo: expand zone to 100% of all walkable positions
+            //makespan
+            std::cout << "[Solve_local_zone] Makespan: " << current_max_timesteps << std::endl;
+            std::cout << "[Solve_local_zone] Time window: [" << full_time_window_start << ", " << full_time_window_end << "]" << std::endl;
+            auto full_waiting_result = lazy_solve_with_waiting_time(
+                current_solution,
+                map,
+                map,
+                local_zone_positions,
+                conflict_meta,
+                local_zone_conflict_indices,
+                conflict_map,
+                full_time_window_start,
+                full_time_window_end,
+                offset + expansion_factor,
+                0,
+                rng);
+
+            if (full_waiting_result.solution_found) {
+                std::cout << "[Solve_local_zone] Successfully solved global zone" << std::endl;
+                local_zone_result.solution_found = true;
+                local_zone_result.local_paths = full_waiting_result.local_paths;
+                local_zone_result.local_entry_exit_time = full_waiting_result.local_entry_exit_time;
+                break;
+            }
+
+            std::cout << "[Solve_local_zone] Failed to solve full map with current makespan" << std::endl;
+            // The caller will respond by increasing the makespan.
+            break;
         }
         //current local zone size and % or all walkable positions
         std::cout << "[Solve_local_zone] Current local zone size: " << local_zone_positions.size() << " (" 
@@ -143,12 +182,15 @@ LocalZoneResult solve_local_zone(
         earliest_conflict_t = std::max(earliest_conflict_t, bucket_time_window_start);
         latest_conflict_t = std::min(latest_conflict_t, bucket_time_window_end);
 
+        start_t = std::max(0, earliest_conflict_t - expanded_offset);
+        end_t = std::min(current_max_timesteps, latest_conflict_t + expanded_offset);
+
         std::cout << "[Solve_local_zone] Final expanded zone contains " << expanded_zone_positions_set.size() 
                   << " positions with " << expanded_conflict_indices.size() << " conflicts " << std::endl; 
         std::cout << "[Solve_local_zone] New time window: [" << start_t << ", " << end_t << "]" << std::endl;
         
 
     }
-   
+    std::cout << "[Solve_local_zone] Final local zone size: " << local_zone_positions.size() << " (" << (double)local_zone_positions.size() / all_walkable_positions * 100 << "% of all walkable positions)" << std::endl;
     return local_zone_result;
 }

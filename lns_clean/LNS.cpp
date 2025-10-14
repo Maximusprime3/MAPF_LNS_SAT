@@ -18,6 +18,8 @@
 #include <string>
 #include <iostream>
 
+//95% ->full coverage with full time window last resort solve
+
 //ERRORS
 // untailed try before zone expansion
 

@@ -237,17 +237,25 @@ LazySolveResult lazy_SAT_solve(
         
         std::cout << std::endl;
         if (first_iteration) {
-            minisat_result = SATSolverManager::solve_cnf_with_minisat_incremental(local_cnf, minisat_wrapper, nullptr, true);
+            minisat_result = SATSolverManager::solve_cnf_with_minisat_incremental(
+                local_cnf, minisat_wrapper, nullptr, true, false);
         } else if (!initial_assignment.empty()) {
             minisat_result = SATSolverManager::solve_cnf_with_minisat_incremental(
                 local_cnf, minisat_wrapper, &initial_assignment, false, true);
 
-            if (!minisat_result.satisfiable) {
+            if (!minisat_result.satisfiable) {// no
                 std::cout << "[SAT] Previous assignment invalidated by new clauses, retrying without assumptions..." << std::endl;
-                minisat_result = SATSolverManager::solve_cnf_with_minisat_incremental(local_cnf, minisat_wrapper, nullptr, false);
+                minisat_result = SATSolverManager::solve_cnf_with_minisat_incremental(
+                    local_cnf, minisat_wrapper, nullptr, false, false);
+                if (!minisat_result.satisfiable) {
+                    std::cout << "[SAT] Previous assignment invalidated by new clauses, reset solver and retry without assumptions..." << std::endl;
+                    minisat_result = SATSolverManager::solve_cnf_with_minisat_incremental(
+                        local_cnf, minisat_wrapper, nullptr, true, false);
+                }
             }
         } else {
-            minisat_result = SATSolverManager::solve_cnf_with_minisat_incremental(local_cnf, minisat_wrapper, nullptr, false);
+            minisat_result = SATSolverManager::solve_cnf_with_minisat_incremental(
+                local_cnf, minisat_wrapper, nullptr, false, false);
             }
         first_iteration = false;
         //print minisat result

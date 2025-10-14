@@ -274,7 +274,8 @@ public:
      * solver, allowing it to reuse learnt clauses and the internal search
      * state.
      */
-     static MiniSatSolution solve_cnf_with_minisat_incremental(const CNF& cnf,
+     static MiniSatSolution solve_cnf_with_minisat_incremental(
+        const CNF& cnf,
         MiniSatWrapper& minisat_wrapper,
         const std::vector<int>* initial_assignment = nullptr,
         bool reset_solver = false,

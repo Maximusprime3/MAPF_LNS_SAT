@@ -86,7 +86,6 @@ namespace {
         
         if (!segment.contiguous_intervals.empty() && segment.agent_in_zone) {
             segment.contiguous_intervals.back().second = segment.exit_t; 
-            std::cout << "[Create_Local_problem] Agent " << agent_id << " exited the zone at exit time " << segment.exit_t << std::endl;
         }
         
         return segment;
@@ -425,7 +424,7 @@ void align_mdd_to_time_window(std::shared_ptr<MDD> mdd,
 
     //std::cout << "checked if MDD start and end are aligned" << std::endl;
     if (mdd_start_aligned && mdd_end_aligned) {
-        std::cout << "[Create_Local_Problem] MDD already aligned to the time window" << std::endl;
+        //std::cout << "[Create_Local_Problem] MDD already aligned to the time window" << std::endl;
         return;
     }
     // Shift the agent's MDD levels to the correct position. Some MDDs already use
@@ -695,7 +694,7 @@ void refresh_zone_after_extension(
         if (scan_start > scan_end) {
             continue;
         }
-        std::cout << "[Create_Local_Problem] Agent " << agent_id << " is being scanned from timestep " << scan_start << " to " << scan_end << std::endl;
+        //std::cout << "[Create_Local_Problem] Agent " << agent_id << " is being scanned from timestep " << scan_start << " to " << scan_end << std::endl;
         //get the agents segments in the extended zone window
         AgentProcessingResult segment_info = process_agent_in_zone(
             agent_id, 
@@ -737,23 +736,34 @@ void refresh_zone_after_extension(
                               << agent_id << std::endl;
                     continue;
                 }
-                if (segment_to_continue.exit_t == segment_info.exit_t[0]) {
-                    std::cout << "[Create_Local_Problem] Agent " << agent_id << " is already extended to the end of the previous zone: " << segment_to_continue.exit_t << std::endl;
+                if (segment_to_continue.exit_t >= segment_info.exit_t[0] && segment_to_continue.entry_t <= segment_info.entry_t[0]) {
+                    //std::cout << "[Create_Local_Problem] Agent " << agent_id << " is already extended to the end of the previous zone: " << segment_to_continue.exit_t << std::endl;
+                    continue;
+                }
+                //does the segment already exist in the zone?
+                //get all previous segments for the agent and check if the first segment from segment info is already encapsulated
+                bool segment_already_exists = false;
+                const auto& previous_segments = state.original_to_segments.at(agent_id);
+                for (const auto& segment_idx : previous_segments) {
+                    const auto& previous_segment = state.segments[segment_idx];
+                    if (previous_segment.exit_t >= segment_info.exit_t[0] &&
+                        previous_segment.entry_t <= segment_info.entry_t[0]) {
+                        segment_already_exists = true;
+                        break;
+                    }
+                }
+                if (segment_already_exists) {
+                    //std::cout << "[Create_Local_Problem] Agent " << agent_id << " new segment already exists in the zone" << std::endl;
                     continue;
                 }
                 if (segment_to_continue.exit_t > previous_zone_end_t) {
-                    std::cout << "[Create_Local_Problem] ERROR: Agent " << agent_id << " already extended to the end of the previous zone" << std::endl;
-                    std::cout << "[Create_Local_Problem] Agent " << agent_id << "old segment entry, exit: " << segment_to_continue.entry_t << ", " << segment_to_continue.exit_t << std::endl;
-                    std::cout << "[Create_Local_Problem] Agent " << agent_id << "new segment entry, exit: " << segment_info.entry_t[0] << ", " << segment_info.exit_t[0] << std::endl;
-                    continue;
+                    std::cout << "[Create_Local_Problem] extending agent " << agent_id << " further. Old segment entry, exit: " << segment_to_continue.entry_t << ", " << segment_to_continue.exit_t << std::endl;
+                    std::cout << "[Create_Local_Problem] new segment entry, exit: " << segment_info.entry_t[0] << ", " << segment_info.exit_t[0] << std::endl;
                 }
                 if (segment_to_continue.exit_t > state.zone_end_t) {
                     std::cout << "[Create_Local_Problem] ERROR: Agent " << agent_id << "already extended to the end of the zone" << std::endl;
                     continue;
                 } else {
-                    std::cout << "[Create_Local_Problem] Agent " << agent_id << " is continuing in the zone until timestep " << segment_info.exit_t[0] << std::endl;
-                    std::cout << "[Create_Local_Problem] Agent " << agent_id << "old segment entry, exit: " << segment_to_continue.entry_t << ", " << segment_to_continue.exit_t << std::endl;
-                    std::cout << "[Create_Local_Problem] Agent " << agent_id << "new segment entry, exit: " << segment_info.entry_t[0] << ", " << segment_info.exit_t[0] << std::endl;
                     //extend the segment to the end of the first segment in the new window
                     const int old_exit = segment_to_continue.exit_t;
                     const int new_exit = segment_info.exit_t[0];
@@ -833,8 +843,22 @@ void refresh_zone_after_extension(
                     // -> no we already have all conflicts in the zone
                 }
             } else {
+                bool segment_already_exists = false;
+                const auto& previous_segments = state.original_to_segments.at(agent_id);
+                for (const auto& segment_idx : previous_segments) {
+                    const auto& previous_segment = state.segments[segment_idx];
+                    if (previous_segment.exit_t >= segment_info.exit_t[0] &&
+                        previous_segment.entry_t <= segment_info.entry_t[0]) {
+                        segment_already_exists = true;
+                        break;
+                    }
+                }
+                if (segment_already_exists) {
+                    //std::cout << "[Create_Local_Problem] Agent " << agent_id << " already exists in the zone" << std::endl;
+                    continue;
+                }
                 //agent returns
-                std::cout << "[Create_Local_Problem] Agent " << agent_id << " is returning to the zone" << std::endl;
+                //std::cout << "[Create_Local_Problem] Agent " << agent_id << " is returning to the zone" << std::endl;
                 //create new pseudo agent
                 int pseudo_agent_id = state.next_pseudo_id++;
                 //get new agents path in the zone
