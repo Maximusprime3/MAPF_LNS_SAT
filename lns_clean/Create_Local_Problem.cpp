@@ -657,12 +657,12 @@ void refresh_zone_after_extension(
         //get that agents global path
         auto path_it = current_solution.agent_paths.find(agent_id);
         if (path_it == current_solution.agent_paths.end()) {
-            std::cout << "[Create_Local_Problem] WARNING: Missing global path for agent " << agent_id << std::endl;
+            std::cout << "[Create_Local_Problem] ERROR: Missing global path for agent " << agent_id << std::endl;
             continue;
         }
         const auto& global_path = path_it->second;
         if (global_path.empty()) {
-            std::cout << "[Create_Local_Problem] WARNING: Empty global path for agent "
+            std::cout << "[Create_Local_Problem] ERROR: Empty global path for agent "
                       << agent_id << std::endl;
             continue;
         }
@@ -695,6 +695,7 @@ void refresh_zone_after_extension(
         if (scan_start > scan_end) {
             continue;
         }
+        std::cout << "[Create_Local_Problem] Agent " << agent_id << " is being scanned from timestep " << scan_start << " to " << scan_end << std::endl;
         //get the agents segments in the extended zone window
         AgentProcessingResult segment_info = process_agent_in_zone(
             agent_id, 
@@ -736,11 +737,19 @@ void refresh_zone_after_extension(
                               << agent_id << std::endl;
                     continue;
                 }
+                if (segment_to_continue.exit_t > previous_zone_end_t) {
+                    std::cout << "[Create_Local_Problem] ERROR: Agent " << agent_id << " already extended to the end of the previous zone" << std::endl;
+                    std::cout << "[Create_Local_Problem] Agent " << agent_id << "old segment entry, exit: " << segment_to_continue.entry_t << ", " << segment_to_continue.exit_t << std::endl;
+                    std::cout << "[Create_Local_Problem] Agent " << agent_id << "new segment entry, exit: " << segment_info.entry_t[0] << ", " << segment_info.exit_t[0] << std::endl;
+                    continue;
+                }
                 if (segment_to_continue.exit_t > state.zone_end_t) {
                     std::cout << "[Create_Local_Problem] ERROR: Agent " << agent_id << "already extended to the end of the zone" << std::endl;
                     continue;
                 } else {
-                    std::cout << "[Create_Local_Problem] Agent " << agent_id << " is continuing in the zone" << std::endl;
+                    std::cout << "[Create_Local_Problem] Agent " << agent_id << " is continuing in the zone until timestep " << segment_info.exit_t[0] << std::endl;
+                    std::cout << "[Create_Local_Problem] Agent " << agent_id << "old segment entry, exit: " << segment_to_continue.entry_t << ", " << segment_to_continue.exit_t << std::endl;
+                    std::cout << "[Create_Local_Problem] Agent " << agent_id << "new segment entry, exit: " << segment_info.entry_t[0] << ", " << segment_info.exit_t[0] << std::endl;
                     //extend the segment to the end of the first segment in the new window
                     const int old_exit = segment_to_continue.exit_t;
                     const int new_exit = segment_info.exit_t[0];
