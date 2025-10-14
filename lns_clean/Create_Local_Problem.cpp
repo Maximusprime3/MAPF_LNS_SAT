@@ -737,6 +737,10 @@ void refresh_zone_after_extension(
                               << agent_id << std::endl;
                     continue;
                 }
+                if (segment_to_continue.exit_t == segment_info.exit_t[0]) {
+                    std::cout << "[Create_Local_Problem] Agent " << agent_id << " is already extended to the end of the previous zone: " << segment_to_continue.exit_t << std::endl;
+                    continue;
+                }
                 if (segment_to_continue.exit_t > previous_zone_end_t) {
                     std::cout << "[Create_Local_Problem] ERROR: Agent " << agent_id << " already extended to the end of the previous zone" << std::endl;
                     std::cout << "[Create_Local_Problem] Agent " << agent_id << "old segment entry, exit: " << segment_to_continue.entry_t << ", " << segment_to_continue.exit_t << std::endl;
