@@ -69,7 +69,7 @@ LocalZoneResult solve_local_zone(
             std::cout << "[Solve_local_zone] Local zone size reached all walkable positions" << std::endl;
             break;
         }
-        if(local_zone_positions.size() >=0.95*all_walkable_positions) {
+        if(local_zone_positions.size() <=0.95*all_walkable_positions) {
             std::cout << "[Solve_local_zone] Local zone size reached 95% of all walkable positions" << std::endl;
             std::cout << "[Solve_local_zone] Will try to solve with full time window and all positions" << std::endl;
             

@@ -465,7 +465,7 @@ bool apply_waiting_time_delta(
     //if more movement is needed than there is tail in the segment, extend the segment exit time
     const auto global_goal_pos = current_solution.goals[segment.original_id];
     const auto it = std::find(segment.path.begin(), segment.path.end(), global_goal_pos);
-    if (it != segment.path.end()) {
+    /*if (it != segment.path.end()) {
         const int idx = static_cast<int>(std::distance(segment.path.begin(), it));
 
         const int absolute_idx_time = segment.entry_t + idx;
@@ -498,7 +498,7 @@ bool apply_waiting_time_delta(
                                             state.zone_end_t);
             amount_of_waiting_time -= usable_waiting_time_in_segment;
         }
-    }
+    }*/
     if (need_to_apply_waiting_time_delta) {
         //first extend the segment exit time
         segment.exit_t += amount_of_waiting_time;
@@ -853,7 +853,8 @@ LazySolveResult lazy_solve_with_waiting_time(
         total_available_waiting_time += waiting_time;
     }
     std::cout << "[Waiting_time_Solve] Total available waiting time: " << total_available_waiting_time << std::endl;
-    const int max_iterations = total_available_waiting_time;
+    const int max_iterations = std::max(1, total_available_waiting_time);
+    std::cout << "[Waiting_time_Solve] Max iterations: " << max_iterations << std::endl;
     for (int iter = 0; iter < max_iterations; iter++) {
         std::cout << "[Waiting_time_Solve] Iteration " << iter << "..." << std::endl;
 
@@ -1153,7 +1154,7 @@ LazySolveResult lazy_solve_with_waiting_time(
                 agents_already_used_waiting_time.count(*original_agent2) > 0) {
                 continue;
             }
-
+            /*
             //spceial case collision happens at the global goal positin of either agent
             std::pair<int,int> collision_pos = std::get<2>(collision);
             const auto& goal1 = current_solution.goals[*original_agent1];
@@ -1173,7 +1174,7 @@ LazySolveResult lazy_solve_with_waiting_time(
                 }
                 continue;
             }
-
+            */
             //check which agent has more waiting time and use it
             if (current_solution.get_waiting_time(*original_agent1) >= current_solution.get_waiting_time(*original_agent2)) {
                 if (try_apply_wait(agent1, waiting_delta)){
@@ -1204,7 +1205,7 @@ LazySolveResult lazy_solve_with_waiting_time(
                 agents_already_used_waiting_time.count(*original_agent2) > 0) {
                 continue;
             }
-
+            /*
             //spceial case collision happens at the global goal positin of either agent
             std::pair<int,int> collision_pos1 = std::get<2>(collision);
             std::pair<int,int> collision_pos2 = std::get<3>(collision);
@@ -1227,7 +1228,7 @@ LazySolveResult lazy_solve_with_waiting_time(
                 }
                 continue;
             }
-            
+            */
             //check which agent has more waiting time and use it
             if (current_solution.get_waiting_time(*original_agent1) >= current_solution.get_waiting_time(*original_agent2)) {
                 if (try_apply_wait(agent1, waiting_delta)){
