@@ -5,6 +5,10 @@
 #include "Solve_Local_Zone.h" //solve_local_zone, local_zone_result
 #include "../SATSolverManager.h" //find_all_collisions, print_agent_paths
 #include "VerificationHelpers.h" //verify_solution_consistency
+#include "ExperimentLogger.h"
+#include "Metrics.h"
+#include "ExperimentLogger.h"
+
 
 #include <iostream>
 #include <vector>
@@ -17,6 +21,7 @@
 #include <optional>
 #include <string>
 #include <iostream>
+#include <chrono>
 
 //95% ->full coverage with full time window last resort solve
 
@@ -77,6 +82,18 @@ std::unordered_map<int, std::vector<std::pair<int,int>>> LNS(
               << (problem.grid.empty() ? 0 : (int)problem.grid[0].size())
               << ", agents: " << problem.starts.size() << std::endl;
 
+
+    auto& logger = ExperimentLogger::instance();
+    std::string experiment_id = logger.start_experiment(map_path, scenario_path, num_agents, scenario_index, seed);
+    ExperimentSummaryMetrics summary;
+    summary.experiment_id = experiment_id;
+    summary.map_path = map_path;
+    summary.scenario_path = scenario_path;
+    summary.num_agents = num_agents;
+    summary.scenario_index = scenario_index;
+    summary.seed = seed;
+    auto experiment_start = std::chrono::steady_clock::now();
+    
     //print full map
     std::cout << "[LNS] Map:" << std::endl;
     for (const auto& row : problem.grid) {
@@ -110,6 +127,11 @@ std::unordered_map<int, std::vector<std::pair<int,int>>> LNS(
     for (int inc = 0; inc <= max_timestep_increase; ++inc) {
         int current_max_timesteps = base_makespan + inc;
         std::cout << "\n[LNS] === Attempt with max_timesteps=" << current_max_timesteps << " ===" << std::endl;
+        
+        MakespanAttemptMetrics makespan_metrics;
+        makespan_metrics.attempt_index = inc;
+        makespan_metrics.makespan = current_max_timesteps;
+        auto attempt_start = std::chrono::steady_clock::now();
 
         //Build MDDs with fastest way to the goal and sample for initial solution
         //this is just for the initial solution, can be improved in the future
@@ -173,7 +195,7 @@ std::unordered_map<int, std::vector<std::pair<int,int>>> LNS(
             if (vertex_collisions.empty() && edge_collisions.empty()) {
                 std::cout << "[LNS] Collision-free solution found at makespan " << current_max_timesteps << std::endl;
                 std::cout << "[LNS] Final agent paths:" << std::endl;
-                SATSolverManager::print_agent_paths(current_solution.agent_paths);
+                //SATSolverManager::print_agent_paths(current_solution.agent_paths);
                 conflicts_remain = false;
                 continue;
             }
@@ -203,8 +225,22 @@ std::unordered_map<int, std::vector<std::pair<int,int>>> LNS(
             std::cout << "[LNS] Solving the best bucket Local Zone..." << std::endl;
             //solve the local zone
             LocalZoneResult local_zone_result = solve_local_zone(
-                problem.grid, best_bucket, conflict_meta, conflict_map, current_solution, offset, current_max_timesteps, rng);
-            
+                problem.grid, best_bucket, conflict_meta, conflict_map, current_solution, offset, current_max_timesteps, rng, experiment_id, inc);
+
+            for (const auto& zone_metric : local_zone_result.attempt_metrics) {
+                makespan_metrics.zones_attempted++;
+                if (zone_metric.solved) {
+                    makespan_metrics.zones_solved++;
+                }
+                makespan_metrics.total_waiting_attempts += zone_metric.waiting_attempts;
+                makespan_metrics.total_lazy_iterations += zone_metric.total_lazy_iterations;
+                makespan_metrics.total_cnf_clauses += zone_metric.total_cnf_clauses;
+                makespan_metrics.total_mdd_build_time_ms += zone_metric.total_mdd_build_time_ms;
+                makespan_metrics.total_cnf_build_time_ms += zone_metric.total_cnf_build_time_ms;
+                makespan_metrics.total_lazy_wall_time_ms += zone_metric.total_lazy_wall_time_ms;
+                makespan_metrics.total_lazy_solver_wall_time_ms += zone_metric.total_lazy_solver_wall_time_ms;
+                makespan_metrics.total_lazy_solver_reported_time_ms += zone_metric.total_lazy_solver_reported_time_ms;
+            }
 
             //Step 8: Update the current solution with the local zone result if found
             if (local_zone_result.solution_found) {
@@ -220,6 +256,21 @@ std::unordered_map<int, std::vector<std::pair<int,int>>> LNS(
                 break;
             }
         }
+
+        makespan_metrics.solved = !conflicts_remain;
+        makespan_metrics.attempt_wall_time_ms = std::chrono::duration_cast<std::chrono::microseconds>(std::chrono::steady_clock::now() - attempt_start).count() / 1000.0;
+        logger.log_makespan_attempt(experiment_id, makespan_metrics);
+        summary.total_cnf_clauses += makespan_metrics.total_cnf_clauses;
+        summary.total_mdd_build_time_ms += makespan_metrics.total_mdd_build_time_ms;
+        summary.total_cnf_build_time_ms += makespan_metrics.total_cnf_build_time_ms;
+        summary.total_lazy_wall_time_ms += makespan_metrics.total_lazy_wall_time_ms;
+        summary.total_lazy_solver_wall_time_ms += makespan_metrics.total_lazy_solver_wall_time_ms;
+        summary.total_lazy_solver_reported_ms += makespan_metrics.total_lazy_solver_reported_time_ms;
+        if (makespan_metrics.solved && summary.makespan_success == -1) {
+            summary.makespan_success = current_max_timesteps;
+            summary.solved = true;
+        }
+
         if (!conflicts_remain) {
             std::cout << "[LNS] All conflicts resolved" << std::endl;
             successfull_solution = std::move(current_solution);
@@ -230,7 +281,10 @@ std::unordered_map<int, std::vector<std::pair<int,int>>> LNS(
         }
     }
     //Step 9: validate agents paths and return Solution if valid
-
+    summary.total_runtime_ms =
+        std::chrono::duration_cast<std::chrono::microseconds>(std::chrono::steady_clock::now() - experiment_start).count() / 1000.0;
+    logger.log_experiment_summary(summary);
+    
     if (!successfull_solution.has_value()) {
         std::cout << "[LNS] ERROR: No successful solution found" << std::endl;
         return {};
@@ -240,7 +294,7 @@ std::unordered_map<int, std::vector<std::pair<int,int>>> LNS(
     if (Valid_Solution) {
         std::cout << "[LNS] Collision-free solution found at makespan " << successful_max_timesteps << std::endl;
         std::cout << "[LNS] Final agent paths:" << std::endl;
-        SATSolverManager::print_agent_paths(successfull_solution->agent_paths);
+        //SATSolverManager::print_agent_paths(successfull_solution->agent_paths);
     }else{
         std::cout << "[LNS] ERROR:Solution is not valid" << std::endl;
         SATSolverManager::print_agent_paths(successfull_solution->agent_paths);

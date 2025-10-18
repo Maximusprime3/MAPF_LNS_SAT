@@ -55,7 +55,7 @@ bool verify_solution_consistency(
     const std::vector<std::pair<int, int>>& goals,
     const std::vector<std::vector<char>>& map) {
     for (const auto& [agent_id, path] : agent_paths) {
-        std::cout << "[VerificationHelpers] Verifying Agent " << agent_id << " path" << std::endl;
+        //std::cout << "[VerificationHelpers] Verifying Agent " << agent_id << " path" << std::endl;
         if (static_cast<size_t>(agent_id) >= starts.size() || static_cast<size_t>(agent_id) >= goals.size()) {
             std::cout << "[VerificationHelpers] ERROR: Agent " << agent_id << " exceeds provided start/goal data" << std::endl;
             return false;

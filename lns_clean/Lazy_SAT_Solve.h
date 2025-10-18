@@ -2,6 +2,7 @@
 #define LNS_LAZY_SAT_SOLVE_H
 
 #include "../SATSolverManager.h"
+#include "Metrics.h"
 #include <unordered_map>
 #include <vector>
 #include <tuple>
@@ -31,6 +32,8 @@ struct LazySolveResult {
     // latest collisions that were discovered before UNSAT
     std::vector<std::tuple<int, int, std::pair<int,int>, int>> latest_discovered_vertex_collisions;
     std::vector<std::tuple<int, int, std::pair<int,int>, std::pair<int,int>, int>> latest_discovered_edge_collisions;
+    LazySolveRunMetrics metrics;
+    std::vector<WaitingAttemptMetrics> waiting_attempts;
 };
 
 /**

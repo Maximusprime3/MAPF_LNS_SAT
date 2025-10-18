@@ -2,6 +2,7 @@
 #include "Current_Solution.h"
 #include "Waiting_time_Solve.h"
 #include "Solve_Local_Zone.h"
+#include "ExperimentLogger.h"
 
 #include <algorithm>
 
@@ -34,9 +35,37 @@ LocalZoneResult solve_local_zone(
     CurrentSolution& current_solution, 
     int offset,
     int current_max_timesteps,
-    std::mt19937& rng) {
+    std::mt19937& rng,
+    const std::string& experiment_id,
+    int makespan_attempt_index) {
         
     LocalZoneResult local_zone_result;
+
+    auto& logger = ExperimentLogger::instance();
+    int zone_attempt_index = 0;
+    auto record_zone_attempt = [&](LocalZoneAttemptMetrics zone_metrics,
+                                   const LazySolveResult& waiting_result,
+                                   int zone_index) {
+        zone_metrics.waiting_attempts = static_cast<int>(waiting_result.waiting_attempts.size());
+        for (const auto& attempt : waiting_result.waiting_attempts) {
+            zone_metrics.total_lazy_iterations += static_cast<int>(attempt.lazy_metrics.iterations.size());
+            zone_metrics.total_cnf_clauses += attempt.lazy_metrics.final_clause_count;
+            zone_metrics.total_mdd_build_time_ms += attempt.mdd_build_time_ms;
+            zone_metrics.total_cnf_build_time_ms += attempt.cnf_build_time_ms;
+            zone_metrics.total_lazy_wall_time_ms += attempt.lazy_metrics.total_wall_time_ms;
+            zone_metrics.total_lazy_solver_wall_time_ms += attempt.lazy_metrics.total_solver_wall_time_ms;
+            zone_metrics.total_lazy_solver_reported_time_ms += attempt.lazy_metrics.total_solver_reported_time_ms;
+
+            logger.log_waiting_attempt(experiment_id, makespan_attempt_index, zone_index, attempt);
+            for (const auto& iteration_metric : attempt.lazy_metrics.iterations) {
+                logger.log_lazy_iteration(experiment_id, makespan_attempt_index, zone_index, attempt.attempt_index, iteration_metric);
+            }
+        }
+        zone_metrics.solved = waiting_result.solution_found;
+        logger.log_local_zone_attempt(experiment_id, makespan_attempt_index, zone_metrics);
+        local_zone_result.attempt_metrics.push_back(zone_metrics);
+        return zone_metrics;
+    };
     
 
     //get number of all walkable positions in the map
@@ -69,7 +98,7 @@ LocalZoneResult solve_local_zone(
             std::cout << "[Solve_local_zone] Local zone size reached all walkable positions" << std::endl;
             break;
         }
-        if(local_zone_positions.size() <=0.95*all_walkable_positions) {
+        if(local_zone_positions.size() >=0.95*all_walkable_positions) {
             std::cout << "[Solve_local_zone] Local zone size reached 95% of all walkable positions" << std::endl;
             std::cout << "[Solve_local_zone] Will try to solve with full time window and all positions" << std::endl;
             
@@ -84,6 +113,16 @@ LocalZoneResult solve_local_zone(
             //makespan
             std::cout << "[Solve_local_zone] Makespan: " << current_max_timesteps << std::endl;
             std::cout << "[Solve_local_zone] Time window: [" << full_time_window_start << ", " << full_time_window_end << "]" << std::endl;
+            LocalZoneAttemptMetrics zone_metrics;
+            zone_metrics.attempt_index = zone_attempt_index;
+            zone_metrics.zone_positions = local_zone_positions.size();
+            zone_metrics.zone_fraction = static_cast<double>(local_zone_positions.size()) / all_walkable_positions;
+            zone_metrics.conflicts = static_cast<int>(local_zone_conflict_indices.size());
+            zone_metrics.start_t = full_time_window_start;
+            zone_metrics.end_t = full_time_window_end;
+            zone_metrics.agents_in_window = static_cast<int>(get_agents_in_zone_within_time_window(
+                current_solution, local_zone_positions, full_time_window_start, full_time_window_end).size());
+            
             auto full_waiting_result = lazy_solve_with_waiting_time(
                 current_solution,
                 map,
@@ -97,6 +136,8 @@ LocalZoneResult solve_local_zone(
                 offset + expansion_factor,
                 0,
                 rng);
+            zone_metrics = record_zone_attempt(std::move(zone_metrics), full_waiting_result, zone_attempt_index);
+            zone_attempt_index++;
 
             if (full_waiting_result.solution_found) {
                 std::cout << "[Solve_local_zone] Successfully solved global zone" << std::endl;
@@ -135,6 +176,17 @@ LocalZoneResult solve_local_zone(
             expanded_offset,
             0, //initial waiting time amount
             rng);
+        LocalZoneAttemptMetrics zone_metrics;
+        zone_metrics.attempt_index = zone_attempt_index;
+        zone_metrics.zone_positions = local_zone_positions.size();
+        zone_metrics.zone_fraction = static_cast<double>(local_zone_positions.size()) / all_walkable_positions;
+        zone_metrics.conflicts = static_cast<int>(local_zone_conflict_indices.size());
+        zone_metrics.start_t = start_t;
+        zone_metrics.end_t = end_t;
+        zone_metrics.agents_in_window = static_cast<int>(get_agents_in_zone_within_time_window(
+            current_solution, local_zone_positions, start_t, end_t).size());
+        zone_metrics = record_zone_attempt(std::move(zone_metrics), waiting_result, zone_attempt_index);
+        zone_attempt_index++;
         
         //if solution found, update the current solution
         if (waiting_result.solution_found) {

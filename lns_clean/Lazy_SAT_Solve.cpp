@@ -7,6 +7,7 @@
 #include <set>
 #include <iostream>
 #include <utility>
+#include <chrono>
 
 
 
@@ -188,7 +189,14 @@ LazySolveResult lazy_SAT_solve(
     std::cout << "[SAT] Start solving CNF: " << local_cnf.get_clauses().size() << " clauses and " 
               << (cnf_constructor.get_next_variable_id() - 1) << " variables" << std::endl;
 
-
+    //print all exit entry times
+    for (const auto& [agent_id, entry_exit_time] : local_entry_exit_time) {
+        std::cout << "[SAT] Agent " << agent_id << " entry time: " << entry_exit_time.first << " exit time: " << entry_exit_time.second << std::endl;
+    }
+    std::cout << std::endl;
+    //print start and end times
+    std::cout << "[SAT] Start time: " << start_t << " End time: " << end_t << std::endl;
+    std::cout << std::endl;
     // Track all discovered collisions during solving without duplicates
     auto set_to_vector_vertex = [](const std::set<std::tuple<int, int, std::pair<int,int>, int>>& s) {
         return std::vector<std::tuple<int, int, std::pair<int,int>, int>>(s.begin(), s.end());
@@ -227,6 +235,9 @@ LazySolveResult lazy_SAT_solve(
     minisat_result.solve_time = 0.0;
     minisat_result.error_message = "";
 
+    LazySolveRunMetrics run_metrics;
+    auto run_start = std::chrono::steady_clock::now();
+
     //main loop: solve the cnf with minisat
     while (!solution_found && iteration < max_iterations) {
         iteration++;
@@ -235,34 +246,71 @@ LazySolveResult lazy_SAT_solve(
         //print local cnf
         std::cout << "[SAT] Local CNF: " << local_cnf.get_clauses().size() << " clauses "<< std::endl;
         
+        LazySatIterationMetrics iteration_metrics;
+        iteration_metrics.iteration = iteration;
+        iteration_metrics.clause_count_before = static_cast<int>(local_cnf.get_clauses().size());
+        iteration_metrics.variable_count = local_cnf.count_variables();
+        auto iteration_start = std::chrono::steady_clock::now();
+
+        double solver_wall_ms = 0.0;
+        double solver_reported_ms = 0.0;
+        bool used_assumptions = false;
+        bool reset_solver = false;
+
+        auto call_solver = [&](const std::vector<int>* assignment,
+                               bool reset,
+                               bool use_assumptions) {
+            auto solver_start = std::chrono::steady_clock::now();
+            auto result = SATSolverManager::solve_cnf_with_minisat_incremental(
+                local_cnf, minisat_wrapper, assignment, reset, use_assumptions);
+            auto solver_end = std::chrono::steady_clock::now();
+            solver_wall_ms += std::chrono::duration_cast<std::chrono::microseconds>(solver_end - solver_start).count() / 1000.0;
+            solver_reported_ms += result.solve_time * 1000.0;
+            if (use_assumptions && assignment != nullptr) {
+                used_assumptions = true;
+            }
+            if (reset) {
+                reset_solver = true;
+            }
+            return result;
+        };
+
         std::cout << std::endl;
         if (first_iteration) {
-            minisat_result = SATSolverManager::solve_cnf_with_minisat_incremental(
-                local_cnf, minisat_wrapper, nullptr, true, false);
+            minisat_result = call_solver(nullptr, true, false);
         } else if (!initial_assignment.empty()) {
-            minisat_result = SATSolverManager::solve_cnf_with_minisat_incremental(
-                local_cnf, minisat_wrapper, &initial_assignment, false, true);
+            minisat_result = call_solver(&initial_assignment, false, true);
 
             if (!minisat_result.satisfiable) {// no
-                std::cout << "[SAT] Previous assignment invalidated by new clauses, retrying without assumptions..." << std::endl;
-                minisat_result = SATSolverManager::solve_cnf_with_minisat_incremental(
-                    local_cnf, minisat_wrapper, nullptr, false, false);
-                if (!minisat_result.satisfiable) {
-                    std::cout << "[SAT] Previous assignment invalidated by new clauses, reset solver and retry without assumptions..." << std::endl;
-                    minisat_result = SATSolverManager::solve_cnf_with_minisat_incremental(
-                        local_cnf, minisat_wrapper, nullptr, true, false);
-                }
+                std::cout << "[SAT] Previous assignment invalidated by new clauses, reset solver and retrying without assumptions..." << std::endl;
+                minisat_result = call_solver(nullptr, true, false);
             }
         } else {
-            minisat_result = SATSolverManager::solve_cnf_with_minisat_incremental(
-                local_cnf, minisat_wrapper, nullptr, false, false);
-            }
+            minisat_result = call_solver(nullptr, false, false);
+        }
         first_iteration = false;
         //print minisat result
         //std::cout << "[SAT] Minisat result: " << minisat_result.satisfiable << " num decisions: " << minisat_result.num_decisions << " solve time: " << minisat_result.solve_time << " error message: " << minisat_result.error_message << std::endl;
 
+        iteration_metrics.solver_wall_time_ms = solver_wall_ms;
+        iteration_metrics.solver_reported_time_ms = solver_reported_ms;
+        iteration_metrics.used_assumptions = used_assumptions;
+        iteration_metrics.reset_solver = reset_solver;
+        iteration_metrics.satisfiable = minisat_result.satisfiable;
+        iteration_metrics.num_decisions = minisat_result.num_decisions;
+        iteration_metrics.num_propagations = minisat_result.num_propagations;
+
         if (!minisat_result.satisfiable) {
             std::cout << "[SAT] Local problem is unsatisfiable after " << iteration << " iterations" << std::endl;
+            iteration_metrics.total_vertex_collisions = static_cast<int>(discovered_vertex_collisions_set.size());
+            iteration_metrics.total_edge_collisions = static_cast<int>(discovered_edge_collisions_set.size());
+            iteration_metrics.total_clauses_after = static_cast<int>(local_cnf.get_clauses().size());
+            iteration_metrics.clauses_added = iteration_metrics.total_clauses_after - iteration_metrics.clause_count_before;
+            auto iteration_end = std::chrono::steady_clock::now();
+            iteration_metrics.iteration_wall_time_ms = std::chrono::duration_cast<std::chrono::microseconds>(iteration_end - iteration_start).count() / 1000.0;
+            run_metrics.iterations.push_back(iteration_metrics);
+            run_metrics.total_solver_wall_time_ms += solver_wall_ms;
+            run_metrics.total_solver_reported_time_ms += solver_reported_ms;
             break;
         }
         //we found a solution
@@ -283,6 +331,11 @@ LazySolveResult lazy_SAT_solve(
         latest_discovered_vertex_collisions.insert(new_collisions.begin(), new_collisions.end());
         latest_discovered_edge_collisions.insert(new_edge_collisions.begin(), new_edge_collisions.end());
         
+        iteration_metrics.new_vertex_collisions = static_cast<int>(new_collisions.size());
+        iteration_metrics.new_edge_collisions = static_cast<int>(new_edge_collisions.size());
+        iteration_metrics.total_vertex_collisions = static_cast<int>(discovered_vertex_collisions_set.size());
+        iteration_metrics.total_edge_collisions = static_cast<int>(discovered_edge_collisions_set.size());
+
         std::cout << "[SAT] Found " << new_collisions.size() << " vertex collisions and " 
                   << new_edge_collisions.size() << " edge collisions" << std::endl;
         
@@ -299,18 +352,36 @@ LazySolveResult lazy_SAT_solve(
             initial_assignment = cnf_constructor.partial_assignment_from_paths(local_paths);
             std::cout << "[SAT] Adding collision clauses and solving again..." << std::endl;
         }
+        iteration_metrics.total_clauses_after = static_cast<int>(local_cnf.get_clauses().size());
+        iteration_metrics.clauses_added = iteration_metrics.total_clauses_after - iteration_metrics.clause_count_before;
+        auto iteration_end = std::chrono::steady_clock::now();
+        iteration_metrics.iteration_wall_time_ms =
+            std::chrono::duration_cast<std::chrono::microseconds>(iteration_end - iteration_start).count() / 1000.0;
+
+        run_metrics.iterations.push_back(iteration_metrics);
+        run_metrics.total_solver_wall_time_ms += solver_wall_ms;
+        run_metrics.total_solver_reported_time_ms += solver_reported_ms;
     }
+    auto run_end = std::chrono::steady_clock::now();
+    run_metrics.total_wall_time_ms =
+        std::chrono::duration_cast<std::chrono::microseconds>(run_end - run_start).count() / 1000.0;
+    run_metrics.final_clause_count = static_cast<int>(local_cnf.get_clauses().size());
+    run_metrics.final_variable_count = local_cnf.count_variables();
+    run_metrics.solved = solution_found;
     if (!solution_found) {
         std::cout << "[SAT] Local problem appears to be unsatisfiable in current zone" << std::endl;
     }
 
     
-    return {solution_found,
-            final_local_paths,
-            local_entry_exit_time,
-            set_to_vector_vertex(discovered_vertex_collisions_set),
-            set_to_vector_edge(discovered_edge_collisions_set),
-            set_to_vector_vertex(latest_discovered_vertex_collisions),
-            set_to_vector_edge(latest_discovered_edge_collisions)};
+    LazySolveResult result;
+    result.solution_found = solution_found;
+    result.local_paths = std::move(final_local_paths);
+    result.local_entry_exit_time = local_entry_exit_time;
+    result.discovered_vertex_collisions = set_to_vector_vertex(discovered_vertex_collisions_set);
+    result.discovered_edge_collisions = set_to_vector_edge(discovered_edge_collisions_set);
+    result.latest_discovered_vertex_collisions = set_to_vector_vertex(latest_discovered_vertex_collisions);
+    result.latest_discovered_edge_collisions = set_to_vector_edge(latest_discovered_edge_collisions);
+    result.metrics = std::move(run_metrics);
+    return result;
         
 }

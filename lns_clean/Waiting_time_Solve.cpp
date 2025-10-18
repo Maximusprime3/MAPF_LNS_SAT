@@ -12,6 +12,7 @@
 #include <set>
 #include <tuple>
 #include <unordered_map>
+#include <chrono>
 
 //[Current_Solution] ERROR: Segment 2 local path length (1) does not match expected length (9)
 // entry exit time not updated? ->rebuild mdds?
@@ -805,6 +806,8 @@ LazySolveResult lazy_solve_with_waiting_time(
 
     LazySolveResult result;
     result.solution_found = false;
+
+    std::vector<WaitingAttemptMetrics> attempt_metrics_log;
     
     //assert waiting time and make a backup so we can restore it if waiting time solve fails
     auto waiting_time_backup = current_solution.backup_waiting_times();
@@ -859,10 +862,42 @@ LazySolveResult lazy_solve_with_waiting_time(
         std::cout << "[Waiting_time_Solve] Iteration " << iter << "..." << std::endl;
 
         
+        auto attempt_start = std::chrono::steady_clock::now();
+        WaitingAttemptMetrics attempt_metrics;
+        attempt_metrics.attempt_index = iter;
+        attempt_metrics.waiting_time_budget = waiting_delta;
+        attempt_metrics.zone_positions = static_cast<int>(local_zone_positions.size());
+        attempt_metrics.segment_count = static_cast<int>(state.segments.size());
+        attempt_metrics.agent_count = static_cast<int>(state.original_to_segments.size());
+        attempt_metrics.start_t = state.zone_start_t;
+        attempt_metrics.end_t = state.zone_end_t;
+        bool applied_wait = false;
+        bool extended_time_window = false;
+        bool attempt_recorded = false;
 
+        auto finalize_attempt = [&](bool solved_now) {
+            if (attempt_recorded) {
+                return;
+            }
+            attempt_metrics.extended_time_window = extended_time_window;
+            attempt_metrics.applied_waiting_time = applied_wait;
+            attempt_metrics.solved = solved_now;
+            attempt_metrics.attempt_wall_time_ms = std::chrono::duration_cast<std::chrono::microseconds>(std::chrono::steady_clock::now() - attempt_start).count() / 1000.0;
+            attempt_metrics_log.push_back(attempt_metrics);
+            attempt_recorded = true;
+        };
+
+
+        auto mdd_start = std::chrono::steady_clock::now();
         auto mdd_map = build_segment_mdd_map(state);
+        auto mdd_end = std::chrono::steady_clock::now();
+        attempt_metrics.mdd_build_time_ms = std::chrono::duration_cast<std::chrono::microseconds>(mdd_end - mdd_start).count() / 1000.0;
+
+        auto cnf_start = std::chrono::steady_clock::now();
         CNFConstructor cnf_constructor(mdd_map, true);
         CNF local_cnf = cnf_constructor.construct_cnf();
+        auto cnf_end = std::chrono::steady_clock::now();
+        attempt_metrics.cnf_build_time_ms = std::chrono::duration_cast<std::chrono::microseconds>(cnf_end - cnf_start).count() / 1000.0;
 
         // Before constructing the SAT instance, purge any collisions whose
         // timestamps no longer align with the updated segment MDDs. Without
@@ -912,6 +947,10 @@ LazySolveResult lazy_solve_with_waiting_time(
         
         merge_collisions(state, lazy_result.discovered_vertex_collisions, lazy_result.discovered_edge_collisions);
         
+        attempt_metrics.lazy_metrics = lazy_result.metrics;
+        attempt_metrics.cnf_clauses = local_cnf.count_clauses();
+        attempt_metrics.cnf_variables = local_cnf.count_variables();
+
         if (lazy_result.solution_found) {
             std::unordered_map<int, std::vector<std::pair<int,int>>> original_paths;
             std::unordered_map<int, std::pair<int,int>> new_entry_exit_time;
@@ -985,10 +1024,11 @@ LazySolveResult lazy_solve_with_waiting_time(
                 }
             }
 
-            result = lazy_result;
-            result.local_paths = std::move(lazy_result.local_paths);
+            finalize_attempt(true);
+            result = std::move(lazy_result);
             result.local_entry_exit_time = std::move(new_entry_exit_time);
             result.solution_found = true;
+            result.waiting_attempts = attempt_metrics_log;
             return result;
         }
         //check lazy result solution for consistency
@@ -998,6 +1038,8 @@ LazySolveResult lazy_solve_with_waiting_time(
                 //get og id
                 int original_id = state.segments[state.segment_index_by_id.find(path.first)->second].original_id;
                 std::cout << "[Waiting_time_Solve] ERROR: Lazy result path is not consistent for agent " << original_id << std::endl;
+                finalize_attempt(false);
+                result.waiting_attempts = attempt_metrics_log;
                 return result;
             }
         }
@@ -1008,8 +1050,8 @@ LazySolveResult lazy_solve_with_waiting_time(
         auto pending_vertex_collisions = lazy_result.latest_discovered_vertex_collisions;
         auto pending_edge_collisions = lazy_result.latest_discovered_edge_collisions;
 
-        bool applied_wait = false;
-        bool extended_time_window = false;
+        applied_wait = false;
+        extended_time_window = false;
         int previous_zone_end_t = state.zone_end_t;
         //adjust them if we use waiting time
         auto try_apply_wait = [&](int segment_id, int amount_of_waiting_time) {
@@ -1251,11 +1293,14 @@ LazySolveResult lazy_solve_with_waiting_time(
         for (const auto& segment : state.segments) {
             if (!verify_path_consistency(segment.path, map)) {
                 std::cout << "[Waiting_time_Solve] ERROR: Path is not consistent for segment " << segment.segment_id << std::endl;
+                finalize_attempt(false);
+                result.waiting_attempts = attempt_metrics_log;
                 return result;
             }
         }
         if (!applied_wait) {
             std::cout << "[Waiting_time_Solve] No waiting time applied" << std::endl;
+            finalize_attempt(false);
             break;
         } else {
             std::cout << "[Waiting_time_Solve] ALL Waiting time applied" << std::endl;
@@ -1280,6 +1325,7 @@ LazySolveResult lazy_solve_with_waiting_time(
         }
         if (out_of_waiting_time) {
             std::cout << "[Waiting_time_Solve] Out of waiting time" << std::endl;
+            finalize_attempt(false);
             break;
         }
         if (extended_time_window) {
@@ -1324,6 +1370,7 @@ LazySolveResult lazy_solve_with_waiting_time(
             }
 
         }
+        finalize_attempt(false);
     }
 
     if (!result.solution_found) {
@@ -1337,7 +1384,7 @@ LazySolveResult lazy_solve_with_waiting_time(
     
 
     //state = baseline_state;
-    
+    result.waiting_attempts = std::move(attempt_metrics_log);
     return result;
 }
 

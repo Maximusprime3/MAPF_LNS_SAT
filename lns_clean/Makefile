@@ -9,6 +9,11 @@ LIB := liblns_clean.a
 MAIN := main_clean_lns
 MAIN_SRC := main_clean_lns.cpp
 
+
+RUN_EXPERIMENTS_DIR := run_experiments
+RUN_EXPERIMENTS_SRC := $(RUN_EXPERIMENTS_DIR)/run_batch_experiments.cpp
+RUN_EXPERIMENTS_BIN := $(RUN_EXPERIMENTS_DIR)/run_batch_experiments
+
 CXXFLAGS := -std=gnu++17 -O2 -Wall -Wextra -pedantic -pthread -fpermissive
 CFLAGS := -O2 -Wall -Wextra -pedantic
 
@@ -20,6 +25,7 @@ DEPFLAGS := -MMD -MP
 LDFLAGS := -pthread
 
 LOCAL_SOURCES := \
+    ExperimentLogger.cpp \
     Create_Local_Problem.cpp \
     Current_Solution.cpp \
     Lazy_SAT_Solve.cpp \
@@ -58,9 +64,9 @@ C_OBJS := $(foreach src,$(C_SOURCES),$(call make_obj,$(src)))
 OBJS := $(LOCAL_OBJS) $(SHARED_OBJS) $(C_OBJS)
 DEPS := $(OBJS:.o=.d)
 
-.PHONY: all clean asan
+.PHONY: all clean asan run_experiments
 
-all: $(LIB) $(MAIN)
+all: $(LIB) $(MAIN) $(RUN_EXPERIMENTS_BIN)
 
 $(LIB): $(OBJ_DIR) $(OBJS)
 	$(AR) rcs $@ $(OBJS)
@@ -70,6 +76,11 @@ $(MAIN): $(LIB) $(MAIN_SRC)
 
 $(OBJ_DIR):
 	mkdir -p $(OBJ_DIR)
+
+$(RUN_EXPERIMENTS_BIN): $(RUN_EXPERIMENTS_SRC) $(RUN_EXPERIMENTS_DIR)/simple_json.h
+	$(CXX) $(CXXFLAGS) -I$(RUN_EXPERIMENTS_DIR) $< -o $@
+
+run_experiments: $(RUN_EXPERIMENTS_BIN)
 
 define cpp_rule
 $(OBJ_DIR)/$(notdir $(basename $(1))).o: $(1) | $(OBJ_DIR)
@@ -86,7 +97,7 @@ $(foreach src,$(SHARED_SOURCES),$(eval $(call cpp_rule,$(src))))
 $(foreach src,$(C_SOURCES),$(eval $(call c_rule,$(src))))
 
 clean:
-	rm -rf $(OBJ_DIR) $(LIB) $(MAIN)
+	rm -rf $(OBJ_DIR) $(LIB) $(MAIN) $(RUN_EXPERIMENTS_BIN)
 
 asan:
 	$(MAKE) clean
