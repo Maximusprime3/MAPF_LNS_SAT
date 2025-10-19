@@ -22,14 +22,14 @@ constexpr const char* kWaitingAttemptsHeader =
 
 constexpr const char* kLocalZoneHeader =
     "experiment_id,makespan_attempt,zone_attempt,zone_positions,zone_fraction,conflicts,agents,start_t,end_t,waiting_attempts," \
-    "total_lazy_iterations,total_cnf_clauses,total_mdd_build_ms,total_cnf_build_ms,total_lazy_wall_ms,total_lazy_solver_wall_ms,total_lazy_solver_reported_ms,solved";
+    "total_lazy_iterations,total_cnf_clauses,total_cnf_variables,total_mdd_build_ms,total_cnf_build_ms,total_lazy_wall_ms,total_lazy_solver_wall_ms,total_lazy_solver_reported_ms,solved";
 
 constexpr const char* kMakespanHeader =
-    "experiment_id,makespan_attempt,makespan,zones_attempted,zones_solved,total_waiting_attempts,total_lazy_iterations,total_cnf_clauses," \
+    "experiment_id,makespan_attempt,makespan,zones_attempted,zones_solved,total_waiting_attempts,total_lazy_iterations,total_cnf_clauses,total_cnf_variables," \
     "total_mdd_build_ms,total_cnf_build_ms,total_lazy_wall_ms,total_lazy_solver_wall_ms,total_lazy_solver_reported_ms,attempt_wall_ms,solved";
 
 constexpr const char* kExperimentHeader =
-    "experiment_id,map_path,scenario_path,num_agents,scenario_index,seed,solved,makespan_success,total_runtime_ms,total_cnf_clauses," \
+    "experiment_id,map_path,scenario_path,num_agents,scenario_index,seed,solved,makespan_success,total_runtime_ms,total_cnf_clauses,total_cnf_variables," \
     "total_mdd_build_ms,total_cnf_build_ms,total_lazy_wall_ms,total_lazy_solver_wall_ms,total_lazy_solver_reported_ms";
 }
 
@@ -190,6 +190,7 @@ void ExperimentLogger::log_local_zone_attempt(const std::string& experiment_id,
          << ',' << metrics.waiting_attempts
          << ',' << metrics.total_lazy_iterations
          << ',' << metrics.total_cnf_clauses
+         << ',' << metrics.total_cnf_variables
          << ',' << metrics.total_mdd_build_time_ms
          << ',' << metrics.total_cnf_build_time_ms
          << ',' << metrics.total_lazy_wall_time_ms
@@ -215,6 +216,7 @@ void ExperimentLogger::log_makespan_attempt(const std::string& experiment_id,
          << ',' << metrics.total_waiting_attempts
          << ',' << metrics.total_lazy_iterations
          << ',' << metrics.total_cnf_clauses
+         << ',' << metrics.total_cnf_variables
          << ',' << metrics.total_mdd_build_time_ms
          << ',' << metrics.total_cnf_build_time_ms
          << ',' << metrics.total_lazy_wall_time_ms
@@ -243,6 +245,7 @@ void ExperimentLogger::log_experiment_summary(const ExperimentSummaryMetrics& me
          << metrics.makespan_success << ','
          << metrics.total_runtime_ms << ','
          << metrics.total_cnf_clauses << ','
+         << metrics.total_cnf_variables << ','
          << metrics.total_mdd_build_time_ms << ','
          << metrics.total_cnf_build_time_ms << ','
          << metrics.total_lazy_wall_time_ms << ','

@@ -3,6 +3,10 @@
 #include <string>
 #include <vector>
 
+inline double seconds_to_milliseconds(double seconds) {
+    return seconds * 1000.0;
+}
+
 struct LazySatIterationMetrics {
     int iteration = 0;
     int clause_count_before = 0;
@@ -63,6 +67,7 @@ struct LocalZoneAttemptMetrics {
     int waiting_attempts = 0;
     int total_lazy_iterations = 0;
     long long total_cnf_clauses = 0;
+    long long total_cnf_variables = 0;
     double total_mdd_build_time_ms = 0.0;
     double total_cnf_build_time_ms = 0.0;
     double total_lazy_wall_time_ms = 0.0;
@@ -79,6 +84,7 @@ struct MakespanAttemptMetrics {
     int total_waiting_attempts = 0;
     int total_lazy_iterations = 0;
     long long total_cnf_clauses = 0;
+    long long total_cnf_variables = 0;
     double total_mdd_build_time_ms = 0.0;
     double total_cnf_build_time_ms = 0.0;
     double total_lazy_wall_time_ms = 0.0;
@@ -99,6 +105,7 @@ struct ExperimentSummaryMetrics {
     double total_runtime_ms = 0.0;
     bool solved = false;
     long long total_cnf_clauses = 0;
+    long long total_cnf_variables = 0;
     double total_mdd_build_time_ms = 0.0;
     double total_cnf_build_time_ms = 0.0;
     double total_lazy_wall_time_ms = 0.0;

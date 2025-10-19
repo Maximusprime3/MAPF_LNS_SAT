@@ -265,7 +265,8 @@ LazySolveResult lazy_SAT_solve(
                 local_cnf, minisat_wrapper, assignment, reset, use_assumptions);
             auto solver_end = std::chrono::steady_clock::now();
             solver_wall_ms += std::chrono::duration_cast<std::chrono::microseconds>(solver_end - solver_start).count() / 1000.0;
-            solver_reported_ms += result.solve_time * 1000.0;
+            // MiniSatWrapper::solve_time is reported in seconds; convert to milliseconds for logging.
+            solver_reported_ms += seconds_to_milliseconds(result.solve_time);
             if (use_assumptions && assignment != nullptr) {
                 used_assumptions = true;
             }
@@ -301,7 +302,6 @@ LazySolveResult lazy_SAT_solve(
         iteration_metrics.num_propagations = minisat_result.num_propagations;
 
         if (!minisat_result.satisfiable) {
-            std::cout << "[SAT] Local problem is unsatisfiable after " << iteration << " iterations" << std::endl;
             iteration_metrics.total_vertex_collisions = static_cast<int>(discovered_vertex_collisions_set.size());
             iteration_metrics.total_edge_collisions = static_cast<int>(discovered_edge_collisions_set.size());
             iteration_metrics.total_clauses_after = static_cast<int>(local_cnf.get_clauses().size());
@@ -383,5 +383,4 @@ LazySolveResult lazy_SAT_solve(
     result.latest_discovered_edge_collisions = set_to_vector_edge(latest_discovered_edge_collisions);
     result.metrics = std::move(run_metrics);
     return result;
-        
 }

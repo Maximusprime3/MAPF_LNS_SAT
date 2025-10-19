@@ -82,7 +82,6 @@ std::unordered_map<int, std::vector<std::pair<int,int>>> LNS(
               << (problem.grid.empty() ? 0 : (int)problem.grid[0].size())
               << ", agents: " << problem.starts.size() << std::endl;
 
-
     auto& logger = ExperimentLogger::instance();
     std::string experiment_id = logger.start_experiment(map_path, scenario_path, num_agents, scenario_index, seed);
     ExperimentSummaryMetrics summary;
@@ -93,6 +92,7 @@ std::unordered_map<int, std::vector<std::pair<int,int>>> LNS(
     summary.scenario_index = scenario_index;
     summary.seed = seed;
     auto experiment_start = std::chrono::steady_clock::now();
+
     
     //print full map
     std::cout << "[LNS] Map:" << std::endl;
@@ -235,6 +235,7 @@ std::unordered_map<int, std::vector<std::pair<int,int>>> LNS(
                 makespan_metrics.total_waiting_attempts += zone_metric.waiting_attempts;
                 makespan_metrics.total_lazy_iterations += zone_metric.total_lazy_iterations;
                 makespan_metrics.total_cnf_clauses += zone_metric.total_cnf_clauses;
+                makespan_metrics.total_cnf_variables += zone_metric.total_cnf_variables;
                 makespan_metrics.total_mdd_build_time_ms += zone_metric.total_mdd_build_time_ms;
                 makespan_metrics.total_cnf_build_time_ms += zone_metric.total_cnf_build_time_ms;
                 makespan_metrics.total_lazy_wall_time_ms += zone_metric.total_lazy_wall_time_ms;
@@ -261,6 +262,7 @@ std::unordered_map<int, std::vector<std::pair<int,int>>> LNS(
         makespan_metrics.attempt_wall_time_ms = std::chrono::duration_cast<std::chrono::microseconds>(std::chrono::steady_clock::now() - attempt_start).count() / 1000.0;
         logger.log_makespan_attempt(experiment_id, makespan_metrics);
         summary.total_cnf_clauses += makespan_metrics.total_cnf_clauses;
+        summary.total_cnf_variables += makespan_metrics.total_cnf_variables;
         summary.total_mdd_build_time_ms += makespan_metrics.total_mdd_build_time_ms;
         summary.total_cnf_build_time_ms += makespan_metrics.total_cnf_build_time_ms;
         summary.total_lazy_wall_time_ms += makespan_metrics.total_lazy_wall_time_ms;
@@ -281,8 +283,7 @@ std::unordered_map<int, std::vector<std::pair<int,int>>> LNS(
         }
     }
     //Step 9: validate agents paths and return Solution if valid
-    summary.total_runtime_ms =
-        std::chrono::duration_cast<std::chrono::microseconds>(std::chrono::steady_clock::now() - experiment_start).count() / 1000.0;
+    summary.total_runtime_ms = std::chrono::duration_cast<std::chrono::microseconds>(std::chrono::steady_clock::now() - experiment_start).count() / 1000.0;
     logger.log_experiment_summary(summary);
     
     if (!successfull_solution.has_value()) {
