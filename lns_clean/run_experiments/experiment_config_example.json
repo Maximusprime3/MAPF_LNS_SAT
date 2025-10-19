@@ -19,7 +19,7 @@
       "scenario_dir": "../../mapf-scen-even/scen-even",
       "scenario_pattern": "{map}-even-*.scen",
       "num_agents": 10,
-      "experiments": 2,
+      "experiments": 100,
       "solver": "minisat",
       "seed": 42,
       "start_run_id": 0,

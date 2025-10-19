@@ -49,7 +49,8 @@ LocalZoneResult solve_local_zone(
         zone_metrics.waiting_attempts = static_cast<int>(waiting_result.waiting_attempts.size());
         for (const auto& attempt : waiting_result.waiting_attempts) {
             zone_metrics.total_lazy_iterations += static_cast<int>(attempt.lazy_metrics.iterations.size());
-            zone_metrics.total_cnf_clauses += attempt.lazy_metrics.final_clause_count;
+            zone_metrics.total_cnf_clauses += attempt.cnf_clauses;
+            zone_metrics.total_cnf_variables += attempt.cnf_variables;
             zone_metrics.total_mdd_build_time_ms += attempt.mdd_build_time_ms;
             zone_metrics.total_cnf_build_time_ms += attempt.cnf_build_time_ms;
             zone_metrics.total_lazy_wall_time_ms += attempt.lazy_metrics.total_wall_time_ms;
@@ -98,7 +99,7 @@ LocalZoneResult solve_local_zone(
             std::cout << "[Solve_local_zone] Local zone size reached all walkable positions" << std::endl;
             break;
         }
-        if(local_zone_positions.size() >=0.95*all_walkable_positions) {
+        if(local_zone_positions.size() <=0.95*all_walkable_positions) {
             std::cout << "[Solve_local_zone] Local zone size reached 95% of all walkable positions" << std::endl;
             std::cout << "[Solve_local_zone] Will try to solve with full time window and all positions" << std::endl;
             
@@ -122,7 +123,7 @@ LocalZoneResult solve_local_zone(
             zone_metrics.end_t = full_time_window_end;
             zone_metrics.agents_in_window = static_cast<int>(get_agents_in_zone_within_time_window(
                 current_solution, local_zone_positions, full_time_window_start, full_time_window_end).size());
-            
+
             auto full_waiting_result = lazy_solve_with_waiting_time(
                 current_solution,
                 map,
