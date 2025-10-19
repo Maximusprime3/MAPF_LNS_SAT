@@ -14,28 +14,16 @@
       "log_file": "logs/empty-16-16_minisat.log"
     },
     {
-      "name": "empty-32x32-20-agents",
+      "name": "empty-32x32-10-agents_whole_mapf",
       "map": "../../mapf-map/empty-32-32.map",
       "scenario_dir": "../../mapf-scen-even/scen-even",
       "scenario_pattern": "{map}-even-*.scen",
-      "num_agents": 20,
+      "num_agents": 10,
       "experiments": 2,
       "solver": "minisat",
       "seed": 42,
       "start_run_id": 0,
-      "log_file": "logs/empty-32-32_20agents.log"
-    },
-    {
-      "name": "empty-32x32-30-agents",
-      "map": "../../mapf-map/empty-32-32.map",
-      "scenario_dir": "../../mapf-scen-even/scen-even",
-      "scenario_pattern": "{map}-even-*.scen",
-      "num_agents": 30,
-      "experiments": 2,
-      "solver": "minisat",
-      "seed": 42,
-      "start_run_id": 0,
-      "log_file": "logs/empty-32-32_30agents.log"
+      "log_file": "logs/empty-32-32_10agents_whole_mapf.log"
     }
   ]
 }

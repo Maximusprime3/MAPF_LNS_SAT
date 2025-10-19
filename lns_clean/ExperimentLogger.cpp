@@ -8,6 +8,8 @@
 #include <system_error>
 
 namespace {
+constexpr int kFloatPrecision = 4;
+
 constexpr const char* kLazyIterationsHeader =
     "experiment_id,makespan_attempt,zone_attempt,waiting_attempt,iteration,clauses_before,variables,clauses_added,total_clauses_after," \
     "new_vertex_collisions,new_edge_collisions,total_vertex_collisions,total_edge_collisions,iteration_wall_ms,solver_wall_ms,solver_reported_ms," \
@@ -112,7 +114,7 @@ void ExperimentLogger::log_lazy_iteration(const std::string& experiment_id,
     if (!file.is_open()) {
         return;
     }
-    file << std::fixed << std::setprecision(3);
+    file << std::fixed << std::setprecision(kFloatPrecision);
     file << experiment_id << ',' << makespan_attempt << ',' << zone_attempt << ',' << waiting_attempt
          << ',' << metrics.iteration
          << ',' << metrics.clause_count_before
@@ -145,7 +147,7 @@ void ExperimentLogger::log_waiting_attempt(const std::string& experiment_id,
         return;
     }
     const auto& lazy = metrics.lazy_metrics;
-    file << std::fixed << std::setprecision(3);
+    file << std::fixed << std::setprecision(kFloatPrecision);
     file << experiment_id << ',' << makespan_attempt << ',' << zone_attempt << ',' << metrics.attempt_index
          << ',' << metrics.waiting_time_budget
          << ',' << metrics.zone_positions
@@ -177,7 +179,7 @@ void ExperimentLogger::log_local_zone_attempt(const std::string& experiment_id,
     if (!file.is_open()) {
         return;
     }
-    file << std::fixed << std::setprecision(3);
+    file << std::fixed << std::setprecision(kFloatPrecision);
     file << experiment_id << ',' << makespan_attempt << ',' << metrics.attempt_index
          << ',' << metrics.zone_positions
          << ',' << metrics.zone_fraction
@@ -205,7 +207,7 @@ void ExperimentLogger::log_makespan_attempt(const std::string& experiment_id,
     if (!file.is_open()) {
         return;
     }
-    file << std::fixed << std::setprecision(3);
+    file << std::fixed << std::setprecision(kFloatPrecision);
     file << experiment_id << ',' << metrics.attempt_index
          << ',' << metrics.makespan
          << ',' << metrics.zones_attempted
@@ -230,7 +232,7 @@ void ExperimentLogger::log_experiment_summary(const ExperimentSummaryMetrics& me
     if (!file.is_open()) {
         return;
     }
-    file << std::fixed << std::setprecision(3);
+    file << std::fixed << std::setprecision(kFloatPrecision);
     file << metrics.experiment_id << ','
          << metrics.map_path << ','
          << metrics.scenario_path << ','

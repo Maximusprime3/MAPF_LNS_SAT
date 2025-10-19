@@ -195,7 +195,7 @@ std::unordered_map<int, std::vector<std::pair<int,int>>> LNS(
             if (vertex_collisions.empty() && edge_collisions.empty()) {
                 std::cout << "[LNS] Collision-free solution found at makespan " << current_max_timesteps << std::endl;
                 std::cout << "[LNS] Final agent paths:" << std::endl;
-                //SATSolverManager::print_agent_paths(current_solution.agent_paths);
+                SATSolverManager::print_agent_paths(current_solution.agent_paths);
                 conflicts_remain = false;
                 continue;
             }

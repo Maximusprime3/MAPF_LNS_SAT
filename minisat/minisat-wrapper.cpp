@@ -195,11 +195,11 @@ MiniSatSolution MiniSatWrapper::solve_with_clause_range(const std::vector<std::v
             satisfiable = solver->solve();
         }
         
-        auto end_time = std::chrono::high_resolution_clock::now();
-        auto duration = std::chrono::duration_cast<std::chrono::milliseconds>(end_time - start_time);
         
+        auto end_time = std::chrono::high_resolution_clock::now();
+        auto duration = std::chrono::duration_cast<std::chrono::duration<double>>(end_time - start_time);        
         result.satisfiable = satisfiable;
-        result.solve_time = duration.count() / 1000.0; // Convert to seconds
+        result.solve_time = duration.count();
         result.num_decisions = solver->decisions;
         result.num_propagations = solver->propagations;
         
