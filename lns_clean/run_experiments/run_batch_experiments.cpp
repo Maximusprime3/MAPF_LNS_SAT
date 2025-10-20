@@ -19,6 +19,8 @@
 #include <ctime>
 #include <iomanip>
 #include <limits>
+#include <thread>
+#include <csignal>
 #include <unistd.h>
 #ifdef __linux__
 #include <sys/wait.h>
@@ -41,7 +43,9 @@ struct Options {
     bool dry_run = false;
     bool verbose = false;
     std::optional<std::string> log_file;
+    std::optional<int> time_limit_seconds;
 };
+
 
 struct ScenarioStats {
     fs::path path;
@@ -71,6 +75,7 @@ namespace {
               << "  --solver NAME            minisat or probsat (default: minisat)\n"
               << "  --seed N                 Random seed forwarded to the solver (default: 42)\n"
               << "  --start-run-id N         Starting run identifier (default: 0)\n"
+              << "  --time-limit SECONDS     Maximum wall-clock time per experiment (0 disables)\n"
               << "  --dry-run                Only report capacities without launching experiments\n"
               << "  --verbose                Print command lines before execution\n"
               << "  --log-file PATH          Append solver output to the given log file\n";
@@ -159,6 +164,17 @@ Options parse_arguments(int argc, char** argv) {
                 usage(argv[0], "--start-run-id requires an integer");
             }
             opts.start_run_id = *parsed;
+        } else if (arg == "--time-limit") {
+            std::string value = require_value("--time-limit");
+            auto parsed = parse_int(value);
+            if (!parsed || *parsed < 0) {
+                usage(argv[0], "--time-limit requires a non-negative integer");
+            }
+            if (*parsed == 0) {
+                opts.time_limit_seconds.reset();
+            } else {
+                opts.time_limit_seconds = *parsed;
+            }
         } else if (arg == "--dry-run") {
             opts.dry_run = true;
         } else if (arg == "--verbose") {
@@ -370,7 +386,7 @@ fs::path check_executable(const std::string& solver) {
     throw std::runtime_error(oss.str());
 }
 
-std::string shell_quote(const std::string& arg) {
+[[maybe_unused]] std::string shell_quote(const std::string& arg) {
     std::string result = "'";
     for (char c : arg) {
         if (c == '\'') {
@@ -383,7 +399,110 @@ std::string shell_quote(const std::string& arg) {
     return result;
 }
 
-int run_command(const std::vector<std::string>& command, std::ostream* log_stream) {
+int run_command(const std::vector<std::string>& command, std::ostream* log_stream,
+    std::optional<std::chrono::seconds> time_limit) {
+    #ifdef __linux__
+    std::vector<char*> args;
+    args.reserve(command.size() + 1);
+    for (const auto& part : command) {
+        args.push_back(const_cast<char*>(part.c_str()));
+    }
+    args.push_back(nullptr);
+
+    int pipefd[2];
+    if (::pipe(pipefd) != 0) {
+        return -1;
+    }
+
+    pid_t pid = ::fork();
+    if (pid == -1) {
+        ::close(pipefd[0]);
+        ::close(pipefd[1]);
+        return -1;
+    }
+
+    if (pid == 0) {
+        ::close(pipefd[0]);
+        ::dup2(pipefd[1], STDOUT_FILENO);
+        ::dup2(pipefd[1], STDERR_FILENO);
+        ::close(pipefd[1]);
+        ::execvp(args[0], args.data());
+        std::perror("execvp");
+        std::_Exit(127);
+    }
+
+    ::close(pipefd[1]);
+    FILE* stream = ::fdopen(pipefd[0], "r");
+    if (!stream) {
+        ::close(pipefd[0]);
+        ::kill(pid, SIGKILL);
+        int status_dummy = 0;
+        ::waitpid(pid, &status_dummy, 0);
+        return -1;
+    }
+
+    std::thread reader([stream, log_stream]() {
+        char buffer[4096];
+        while (std::fgets(buffer, sizeof(buffer), stream)) {
+            if (log_stream) {
+                (*log_stream) << buffer;
+                log_stream->flush();
+            } else {
+                std::cout << buffer;
+                std::cout.flush();
+            }
+        }
+        std::fclose(stream);
+    });
+
+    const bool has_limit = time_limit && time_limit->count() > 0;
+    const auto deadline = has_limit ? std::chrono::steady_clock::now() + *time_limit
+                                    : std::chrono::steady_clock::time_point::max();
+    int status = 0;
+    bool timed_out = false;
+    while (true) {
+        pid_t result = ::waitpid(pid, &status, WNOHANG);
+        if (result == pid) {
+            break;
+        }
+        if (result == -1) {
+            status = -1;
+            break;
+        }
+        if (has_limit && std::chrono::steady_clock::now() >= deadline) {
+            timed_out = true;
+            ::kill(pid, SIGKILL);
+            ::waitpid(pid, &status, 0);
+            break;
+        }
+        std::this_thread::sleep_for(std::chrono::milliseconds(50));
+    }
+
+    if (reader.joinable()) {
+        reader.join();
+    }
+
+    if (timed_out) {
+        if (log_stream) {
+            (*log_stream) << "Command terminated after exceeding the time limit.\n";
+            log_stream->flush();
+        } else {
+            std::cout << "Command terminated after exceeding the time limit.\n";
+        }
+        return 124;
+    }
+    if (status == -1) {
+        return -1;
+    }
+    if (WIFEXITED(status)) {
+        return WEXITSTATUS(status);
+    }
+    if (WIFSIGNALED(status)) {
+        return 128 + WTERMSIG(status);
+    }
+    return status;
+#else
+    (void)time_limit;
     std::string command_line;
     for (std::size_t i = 0; i < command.size(); ++i) {
         if (i > 0) {
@@ -415,6 +534,7 @@ int run_command(const std::vector<std::string>& command, std::ostream* log_strea
     }
 #endif
     return status;
+#endif
 }
 
 void append_log_header(std::ofstream& log, const Options& opts, const fs::path& map) {
@@ -426,7 +546,11 @@ void append_log_header(std::ofstream& log, const Options& opts, const fs::path& 
     } else {
         log << "# Batch started (timestamp=" << now_time << ")";
     }
-    log << " | map=" << map.string() << " | agents=" << *opts.num_agents << "\n";
+    log << " | map=" << map.string() << " | agents=" << *opts.num_agents;
+    if (opts.time_limit_seconds && *opts.time_limit_seconds > 0) {
+        log << " | time_limit=" << *opts.time_limit_seconds << "s";
+    }
+    log << "\n";
     log.flush();
 }
 
@@ -482,6 +606,11 @@ int execute_single_run(Options opts, const std::optional<std::string>& label) {
     if (label) {
         std::cout << "Configuration '" << *label << "': map=" << map_path << ", agents="
                   << *opts.num_agents << ", experiments=" << opts.experiments << "\n";
+    }
+    std::optional<std::chrono::seconds> time_limit;
+    if (opts.time_limit_seconds && *opts.time_limit_seconds > 0) {
+        time_limit = std::chrono::seconds(*opts.time_limit_seconds);
+        std::cout << "Per-experiment time limit: " << time_limit->count() << " seconds\n";
     }
     print_stats(stats, *opts.num_agents, opts.experiments);
 
@@ -543,7 +672,11 @@ int execute_single_run(Options opts, const std::optional<std::string>& label) {
                 std::cout << "  Command: " << oss.str() << "\n";
             } else {
                 std::cout << "  Run #" << run_id << ": scenario_index=" << scenario_index << " -> "
-                          << item.path.filename().string() << "\n";
+                          << item.path.filename().string();
+                if (time_limit) {
+                    std::cout << " (limit=" << time_limit->count() << "s)";
+                }
+                std::cout << "\n";
             }
             if (log_stream.is_open()) {
                 log_stream << "\n# Run " << run_id << " | scenario=" << item.path
@@ -556,17 +689,28 @@ int execute_single_run(Options opts, const std::optional<std::string>& label) {
                     oss << cmd[i];
                 }
                 log_stream << "# Command: " << oss.str() << "\n";
+                if (time_limit) {
+                    log_stream << "# Time limit: " << time_limit->count() << " seconds\n";
+                }
                 log_stream.flush();
             }
-            int exit_code = run_command(cmd, log_stream.is_open() ? &log_stream : nullptr);
+            int exit_code = run_command(cmd, log_stream.is_open() ? &log_stream : nullptr, time_limit);
             if (exit_code != 0) {
                 std::cerr << "Error: experiment run_id=" << run_id
                           << " failed with exit code " << exit_code << "\n";
                 if (log_stream.is_open()) {
                     log_stream << "# Run failed with exit code " << exit_code << "\n";
+                    if (time_limit && exit_code == 124) {
+                        log_stream << "# Run exceeded time limit of " << time_limit->count()
+                                   << " seconds\n";
+                    }
                     log_stream.flush();
                     log_stream << "# Batch aborted due to failure\n";
                     log_stream.flush();
+                }
+                if (time_limit && exit_code == 124) {
+                    std::cerr << "Run exceeded configured time limit of "
+                              << time_limit->count() << " seconds.\n";
                 }
                 return EXIT_FAILURE;
             }
@@ -669,6 +813,7 @@ Options apply_config_entry(const Options& base, const simple_json::JsonObject& e
         {"verbose", 0},
         {"log_file", 0},
         {"name", 0},
+        {"time_limit_seconds", 0},
     };
     for (const auto& kv : entry) {
         if (!allowed.count(kv.first)) {
@@ -733,6 +878,17 @@ Options apply_config_entry(const Options& base, const simple_json::JsonObject& e
                 throw std::runtime_error("Configuration field 'start_run_id' must be an integer");
             }
             result.start_run_id = *parsed;
+        } else if (key == "time_limit_seconds") {
+            auto parsed = value_to_int(value);
+            if (!parsed || *parsed < 0) {
+                throw std::runtime_error(
+                    "Configuration field 'time_limit_seconds' must be a non-negative integer");
+            }
+            if (*parsed == 0) {
+                result.time_limit_seconds.reset();
+            } else {
+                result.time_limit_seconds = *parsed;
+            }
         } else if (key == "dry_run") {
             result.dry_run = truthy(value);
         } else if (key == "verbose") {

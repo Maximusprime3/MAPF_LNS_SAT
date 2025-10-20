@@ -8,7 +8,7 @@
 #include <system_error>
 
 namespace {
-constexpr int kFloatPrecision = 4;
+constexpr int kFloatPrecision = 6;
 
 constexpr const char* kLazyIterationsHeader =
     "experiment_id,makespan_attempt,zone_attempt,waiting_attempt,iteration,clauses_before,variables,clauses_added,total_clauses_after," \
