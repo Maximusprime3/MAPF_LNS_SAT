@@ -1,6 +1,3 @@
-Analysis/load_lns_logs.py
-New
-+701-0
 """Utilities for loading LNS and Wholesolve log CSVs into pandas DataFrames.
 
 The dataset expected by this module should live under ``lns_clean/logs`` with the
@@ -146,7 +143,7 @@ def _parse_run_metadata(
     # "agent" to avoid picking up unrelated numbers from the map name.
     agent_patterns: Sequence[re.Pattern[str]] = (
         re.compile(r"(?:^|[_-])(\d+)(?=agents?(?:[_-]|$))", re.IGNORECASE),
-        re.compile(r"(?<=agents?[_-])(\d+)(?:(?=[_-])|$)", re.IGNORECASE),
+        re.compile(r"(?<=agent[_-])(\d+)(?:(?=[_-])|$)", re.IGNORECASE),
         re.compile(r"agents?(\d+)", re.IGNORECASE),
     )
     for pattern in agent_patterns:
@@ -200,7 +197,7 @@ def load_solver_logs(
         DataFrame with the metadata columns is returned.
     """
 
-    base_path = Path(base_dir)
+    base_path = Path(base_dir).resolve()
     frames: List[pd.DataFrame] = []
 
     logger = logging.getLogger(__name__)
