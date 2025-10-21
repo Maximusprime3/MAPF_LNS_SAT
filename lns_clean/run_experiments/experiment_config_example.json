@@ -1,7 +1,7 @@
 {
   "runs": [
     {
-      "name": "Berlin_1_256-10-minisat",
+      "name": "Berlin_1_256-10-LNS-minisat",
       "map": "../../mapf-map/Berlin_1_256.map",
       "scenario_dir": "../../mapf-scen-even/scen-even",
       "scenario_pattern": "{map}-even-*.scen",
@@ -11,10 +11,10 @@
       "seed": 42,
       "start_run_id": 0,
       "time_limit_seconds": 600,
-      "log_file": "logs/Berlin_1_256_10_minisat.log"
+      "log_file": "logs/Berlin_1_256_10_LNS_minisat.log"
     },
     {
-      "name": "Berlin_1_256-20-minisat",
+      "name": "Berlin_1_256-20-LNS-minisat",
       "map": "../../mapf-map/Berlin_1_256.map",
       "scenario_dir": "../../mapf-scen-even/scen-even",
       "scenario_pattern": "{map}-even-*.scen",
@@ -24,10 +24,10 @@
       "seed": 42,
       "start_run_id": 0,
       "time_limit_seconds": 600,
-      "log_file": "logs/Berlin_1_256_20_minisat.log"
+      "log_file": "logs/Berlin_1_256_20_LNS_minisat.log"
     },
     {
-      "name": "Berlin_1_256-50-minisat",
+      "name": "Berlin_1_256-50-LNS-minisat",
       "map": "../../mapf-map/Berlin_1_256.map",
       "scenario_dir": "../../mapf-scen-even/scen-even",
       "scenario_pattern": "{map}-even-*.scen",
@@ -37,10 +37,10 @@
       "seed": 42,
       "start_run_id": 0,
       "time_limit_seconds": 600,
-      "log_file": "logs/Berlin_1_256_50_minisat.log"
+      "log_file": "logs/Berlin_1_256_50_LNS_minisat.log"
     },
     {
-      "name": "Berlin_1_256-100-minisat",
+      "name": "Berlin_1_256-100-LNS-minisat",
       "map": "../../mapf-map/Berlin_1_256.map",
       "scenario_dir": "../../mapf-scen-even/scen-even",
       "scenario_pattern": "{map}-even-*.scen",
@@ -50,10 +50,10 @@
       "seed": 42,
       "start_run_id": 0,
       "time_limit_seconds": 600,
-      "log_file": "logs/Berlin_1_256_100_minisat.log"
+      "log_file": "logs/Berlin_1_256_100_LNS_minisat.log"
     },
     {
-      "name": "Berlin_1_256-200-minisat",
+      "name": "Berlin_1_256-200-LNS-minisat",
       "map": "../../mapf-map/Berlin_1_256.map",
       "scenario_dir": "../../mapf-scen-even/scen-even",
       "scenario_pattern": "{map}-even-*.scen",
@@ -63,7 +63,7 @@
       "seed": 42,
       "start_run_id": 0,
       "time_limit_seconds": 600,
-      "log_file": "logs/Berlin_1_256_200_minisat.log"
+      "log_file": "logs/Berlin_1_256_200_LNS_minisat.log"
     }
   ]
 }
