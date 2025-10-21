@@ -46,7 +46,6 @@ struct Options {
     std::optional<int> time_limit_seconds;
 };
 
-
 struct ScenarioStats {
     fs::path path;
     int entries = 0;
@@ -75,7 +74,7 @@ namespace {
               << "  --solver NAME            minisat or probsat (default: minisat)\n"
               << "  --seed N                 Random seed forwarded to the solver (default: 42)\n"
               << "  --start-run-id N         Starting run identifier (default: 0)\n"
-              << "  --time-limit SECONDS     Maximum wall-clock time per experiment (0 disables)\n"
+              << "  --time-limit SECONDS     Maximum wall-clock time per run (0 disables)\n"
               << "  --dry-run                Only report capacities without launching experiments\n"
               << "  --verbose                Print command lines before execution\n"
               << "  --log-file PATH          Append solver output to the given log file\n";
@@ -400,8 +399,8 @@ fs::path check_executable(const std::string& solver) {
 }
 
 int run_command(const std::vector<std::string>& command, std::ostream* log_stream,
-    std::optional<std::chrono::seconds> time_limit) {
-    #ifdef __linux__
+                std::optional<std::chrono::seconds> time_limit) {
+#ifdef __linux__
     std::vector<char*> args;
     args.reserve(command.size() + 1);
     for (const auto& part : command) {
@@ -548,7 +547,7 @@ void append_log_header(std::ofstream& log, const Options& opts, const fs::path& 
     }
     log << " | map=" << map.string() << " | agents=" << *opts.num_agents;
     if (opts.time_limit_seconds && *opts.time_limit_seconds > 0) {
-        log << " | time_limit=" << *opts.time_limit_seconds << "s";
+        log << " | total_time_limit=" << *opts.time_limit_seconds << "s";
     }
     log << "\n";
     log.flush();
@@ -607,10 +606,12 @@ int execute_single_run(Options opts, const std::optional<std::string>& label) {
         std::cout << "Configuration '" << *label << "': map=" << map_path << ", agents="
                   << *opts.num_agents << ", experiments=" << opts.experiments << "\n";
     }
-    std::optional<std::chrono::seconds> time_limit;
+    std::optional<std::chrono::seconds> total_time_limit;
+    std::optional<std::chrono::steady_clock::time_point> run_start;
+    std::optional<std::chrono::steady_clock::time_point> run_deadline;
     if (opts.time_limit_seconds && *opts.time_limit_seconds > 0) {
-        time_limit = std::chrono::seconds(*opts.time_limit_seconds);
-        std::cout << "Per-experiment time limit: " << time_limit->count() << " seconds\n";
+        total_time_limit = std::chrono::seconds(*opts.time_limit_seconds);
+        std::cout << "Overall run time limit: " << total_time_limit->count() << " seconds\n";
     }
     print_stats(stats, *opts.num_agents, opts.experiments);
 
@@ -645,10 +646,16 @@ int execute_single_run(Options opts, const std::optional<std::string>& label) {
         std::cout << "Appending solver output to " << log_path << "\n";
     }
 
+    if (total_time_limit) {
+        run_start = std::chrono::steady_clock::now();
+        run_deadline = *run_start + *total_time_limit;
+    }
+
     int remaining = opts.experiments;
     int run_id = opts.start_run_id;
+    bool aborted_due_to_time_limit = false;
     for (const auto& item : stats) {
-        if (remaining <= 0) {
+        if (remaining <= 0 || aborted_due_to_time_limit) {
             break;
         }
         if (item.experiments_possible <= 0) {
@@ -659,6 +666,23 @@ int execute_single_run(Options opts, const std::optional<std::string>& label) {
                   << item.path.filename().string() << " (" << *opts.num_agents
                   << " agents per chunk).\n";
         for (int local = 0; local < runs_here; ++local) {
+            if (aborted_due_to_time_limit) {
+                break;
+            }
+            std::optional<std::chrono::seconds> remaining_time;
+            if (run_deadline) {
+                auto now = std::chrono::steady_clock::now();
+                if (now >= *run_deadline) {
+                    aborted_due_to_time_limit = true;
+                    break;
+                }
+                auto diff = std::chrono::duration_cast<std::chrono::seconds>(*run_deadline - now);
+                if (diff.count() <= 0) {
+                    aborted_due_to_time_limit = true;
+                    break;
+                }
+                remaining_time = diff;
+            }
             int scenario_index = local;
             auto cmd = build_command(exe_path, opts, item.path, scenario_index);
             if (opts.verbose) {
@@ -673,8 +697,8 @@ int execute_single_run(Options opts, const std::optional<std::string>& label) {
             } else {
                 std::cout << "  Run #" << run_id << ": scenario_index=" << scenario_index << " -> "
                           << item.path.filename().string();
-                if (time_limit) {
-                    std::cout << " (limit=" << time_limit->count() << "s)";
+                if (remaining_time) {
+                    std::cout << " (remaining_time=" << remaining_time->count() << "s)";
                 }
                 std::cout << "\n";
             }
@@ -689,28 +713,31 @@ int execute_single_run(Options opts, const std::optional<std::string>& label) {
                     oss << cmd[i];
                 }
                 log_stream << "# Command: " << oss.str() << "\n";
-                if (time_limit) {
-                    log_stream << "# Time limit: " << time_limit->count() << " seconds\n";
+                if (remaining_time) {
+                    log_stream << "# Remaining time budget: " << remaining_time->count()
+                               << " seconds\n";
                 }
                 log_stream.flush();
             }
-            int exit_code = run_command(cmd, log_stream.is_open() ? &log_stream : nullptr, time_limit);
+            int exit_code = run_command(cmd, log_stream.is_open() ? &log_stream : nullptr,
+                                        remaining_time);
+            if (run_deadline && exit_code == 124) {
+                if (log_stream.is_open()) {
+                    log_stream << "# Run terminated after reaching overall time limit\n";
+                    log_stream.flush();
+                }
+                std::cout << "  Overall time limit reached; stopping further experiments.\n";
+                aborted_due_to_time_limit = true;
+                break;
+            }
             if (exit_code != 0) {
                 std::cerr << "Error: experiment run_id=" << run_id
                           << " failed with exit code " << exit_code << "\n";
                 if (log_stream.is_open()) {
                     log_stream << "# Run failed with exit code " << exit_code << "\n";
-                    if (time_limit && exit_code == 124) {
-                        log_stream << "# Run exceeded time limit of " << time_limit->count()
-                                   << " seconds\n";
-                    }
                     log_stream.flush();
                     log_stream << "# Batch aborted due to failure\n";
                     log_stream.flush();
-                }
-                if (time_limit && exit_code == 124) {
-                    std::cerr << "Run exceeded configured time limit of "
-                              << time_limit->count() << " seconds.\n";
                 }
                 return EXIT_FAILURE;
             }
@@ -720,6 +747,30 @@ int execute_single_run(Options opts, const std::optional<std::string>& label) {
                 break;
             }
         }
+    }
+
+    if (aborted_due_to_time_limit) {
+        int completed = opts.experiments - remaining;
+        std::optional<std::chrono::seconds> elapsed_seconds;
+        if (run_start) {
+            elapsed_seconds = std::chrono::duration_cast<std::chrono::seconds>(
+                std::chrono::steady_clock::now() - *run_start);
+        }
+        std::cout << "Stopped after reaching the overall time limit with " << completed
+                  << " completed experiment(s)";
+        if (elapsed_seconds) {
+            std::cout << " (elapsed " << elapsed_seconds->count() << "s)";
+        }
+        std::cout << ".\n";
+        if (log_stream.is_open()) {
+            log_stream << "\n# Batch stopped after reaching overall time limit";
+            if (elapsed_seconds) {
+                log_stream << " (elapsed " << elapsed_seconds->count() << "s)";
+            }
+            log_stream << "\n";
+            log_stream.flush();
+        }
+        return EXIT_SUCCESS;
     }
 
     if (remaining > 0) {

@@ -1,0 +1,500 @@
+# Batch started 2025-10-21 10:15:59 | map=/home/max/Documents/PhD/MAPF/LNS/MAPF_LNS_SAT/mapf-map/room-64-64-16.map | agents=100 | total_time_limit=600s
+
+# Run 0 | scenario="/home/max/Documents/PhD/MAPF/LNS/MAPF_LNS_SAT/mapf-scen-even/scen-even/room-64-64-16-even-1.scen" | scenario_index=0
+# Command: /home/max/Documents/PhD/MAPF/LNS/MAPF_LNS_SAT/lns_clean/main_clean_lns /home/max/Documents/PhD/MAPF/LNS/MAPF_LNS_SAT/mapf-map/room-64-64-16.map /home/max/Documents/PhD/MAPF/LNS/MAPF_LNS_SAT/mapf-scen-even/scen-even/room-64-64-16-even-1.scen 100 0 minisat 42
+# Remaining time budget: 599 seconds
+[LNS] Loaded map 64x64, agents: 100
+[LNS] Map:
+@.@@@@@@@@@@.@@@@@@@@@@@@.@.@@@@@@@@@@@@.@@.@@@@@@@@@@@@@@@..@@@
+@...............@...............@...............@...............
+@...............@...............@...............@...............
+@...............@...............@...............................
+@...............@...............@...............@...............
+@...............@...............@...............@...............
+@...............@...............@...............@...............
+@...............@...............@...............................
+@...............@...............@...............@...............
+@...............................@...............@...............
+@...............@...............@...............@...............
+@...............................................@...............
+@...............@...............@...............@...............
+@...............@...............@...............@...............
+@...............@...............................@...............
+@...............@...............@...............@...............
+@.@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@.@@@.@@@@@@@@@@.@@@@@@@@@@.
+@...............@...............@...............@...............
+................@...............@...............@...............
+@...............@...............@...............@...............
+................@...............................@...............
+@...............@...............@...............@...............
+@...............@...............@...............................
+@...............@...............@...............@...............
+@...............@...............@...............@...............
+@...............@...............@...............@...............
+@...............@...............@...............@...............
+@...............@...............@...............@...............
+@...............@...............@...............@...............
+@...............@...............@...............................
+@...............@...............@...............@...............
+@...............@...............@...............@...............
+@@@@@@@.@.@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@.@@.@@@@@@@@@@@@@@@@
+@...............@...............@...............................
+................@...............@...............@...............
+@...............@...............@...............@...............
+@...............@...............@...............@...............
+@...............@...............................@...............
+@...............@...............@...............@...............
+@...............@...............@...............@...............
+@...............@...............@...............@...............
+@...............@...............................@...............
+@...............@...............@...............@...............
+................@...............@...............@...............
+@...............@...............@...............................
+@...............@...............@...............@...............
+@...............@...............@...............@...............
+@...............@...............@...............@...............
+@.@@@@.@@@@@@@@@@@@@@@@@@@@@@@@@@..@@@@@@@@@@@@@@@@@@@@@@.@.@@@@
+@...............@...............@...............@...............
+@...............@...............@...............@...............
+@...............@...............@...............@...............
+@...............@...............@...............@...............
+@...............@...............@...............@...............
+@...............@...............@...............@...............
+@...............@...............@...............................
+@...............@...............@...............@...............
+@...............................@...............@...............
+................@...............@...............@...............
+@...............@...............@...............@...............
+@...............@...............@...............@...............
+@...............@...............@...............@...............
+@...............@...............@...............................
+................................@...............@...............
+[LNS] Number of agents: 100
+[LNS] Agents (start -> goal):
+  Agent 0: (7,45) -> (56,4)
+  Agent 1: (36,54) -> (55,3)
+  Agent 2: (23,7) -> (26,50)
+  Agent 3: (59,23) -> (59,39)
+  Agent 4: (33,54) -> (33,44)
+  Agent 5: (7,29) -> (20,44)
+  Agent 6: (31,58) -> (26,1)
+  Agent 7: (24,44) -> (15,20)
+  Agent 8: (38,20) -> (26,7)
+  Agent 9: (57,60) -> (49,26)
+  Agent 10: (62,46) -> (62,21)
+  Agent 11: (12,23) -> (53,6)
+  Agent 12: (24,31) -> (62,34)
+  Agent 13: (62,48) -> (50,17)
+  Agent 14: (12,4) -> (51,27)
+  Agent 15: (21,42) -> (17,61)
+  Agent 16: (57,33) -> (47,47)
+  Agent 17: (15,51) -> (7,40)
+  Agent 18: (23,20) -> (41,19)
+  Agent 19: (0,43) -> (59,46)
+  Agent 20: (53,19) -> (45,27)
+  Agent 21: (43,3) -> (20,47)
+  Agent 22: (47,28) -> (12,23)
+  Agent 23: (52,35) -> (3,3)
+  Agent 24: (56,19) -> (13,8)
+  Agent 25: (42,38) -> (33,58)
+  Agent 26: (49,11) -> (6,61)
+  Agent 27: (46,30) -> (62,18)
+  Agent 28: (38,50) -> (5,8)
+  Agent 29: (25,46) -> (60,15)
+  Agent 30: (38,19) -> (49,31)
+  Agent 31: (63,30) -> (54,34)
+  Agent 32: (62,57) -> (10,20)
+  Agent 33: (9,38) -> (26,2)
+  Agent 34: (58,0) -> (50,50)
+  Agent 35: (46,3) -> (55,7)
+  Agent 36: (60,20) -> (31,35)
+  Agent 37: (29,56) -> (33,1)
+  Agent 38: (53,31) -> (46,26)
+  Agent 39: (53,15) -> (40,40)
+  Agent 40: (22,61) -> (50,24)
+  Agent 41: (29,1) -> (26,41)
+  Agent 42: (5,18) -> (43,2)
+  Agent 43: (6,18) -> (27,57)
+  Agent 44: (3,54) -> (11,52)
+  Agent 45: (62,60) -> (63,26)
+  Agent 46: (57,22) -> (14,8)
+  Agent 47: (62,19) -> (60,40)
+  Agent 48: (54,46) -> (57,38)
+  Agent 49: (46,33) -> (61,12)
+  Agent 50: (45,49) -> (60,10)
+  Agent 51: (22,18) -> (17,17)
+  Agent 52: (9,22) -> (25,56)
+  Agent 53: (61,14) -> (43,24)
+  Agent 54: (6,10) -> (29,21)
+  Agent 55: (6,59) -> (10,51)
+  Agent 56: (58,61) -> (59,12)
+  Agent 57: (10,18) -> (49,37)
+  Agent 58: (53,20) -> (38,42)
+  Agent 59: (48,59) -> (12,11)
+  Agent 60: (56,20) -> (13,27)
+  Agent 61: (14,14) -> (39,44)
+  Agent 62: (44,25) -> (38,54)
+  Agent 63: (5,50) -> (42,36)
+  Agent 64: (46,14) -> (5,19)
+  Agent 65: (38,59) -> (61,18)
+  Agent 66: (59,2) -> (7,21)
+  Agent 67: (58,13) -> (39,28)
+  Agent 68: (53,3) -> (18,25)
+  Agent 69: (44,19) -> (24,9)
+  Agent 70: (40,51) -> (4,61)
+  Agent 71: (21,20) -> (54,19)
+  Agent 72: (42,25) -> (34,14)
+  Agent 73: (17,11) -> (37,4)
+  Agent 74: (60,33) -> (60,34)
+  Agent 75: (45,57) -> (35,11)
+  Agent 76: (38,13) -> (54,52)
+  Agent 77: (21,9) -> (8,50)
+  Agent 78: (3,45) -> (24,10)
+  Agent 79: (60,54) -> (59,11)
+  Agent 80: (53,21) -> (60,44)
+  Agent 81: (8,18) -> (29,26)
+  Agent 82: (30,41) -> (23,44)
+  Agent 83: (63,1) -> (39,59)
+  Agent 84: (8,59) -> (39,14)
+  Agent 85: (26,62) -> (5,28)
+  Agent 86: (34,44) -> (5,36)
+  Agent 87: (9,3) -> (55,58)
+  Agent 88: (8,36) -> (51,15)
+  Agent 89: (17,34) -> (23,8)
+  Agent 90: (27,35) -> (52,1)
+  Agent 91: (42,52) -> (38,28)
+  Agent 92: (52,6) -> (11,18)
+  Agent 93: (29,25) -> (19,23)
+  Agent 94: (51,53) -> (57,25)
+  Agent 95: (44,22) -> (12,56)
+  Agent 96: (39,12) -> (2,52)
+  Agent 97: (50,37) -> (32,9)
+  Agent 98: (27,58) -> (63,31)
+  Agent 99: (54,21) -> (5,45)
+[LNS] Base makespan: 189
+
+[LNS] === Attempt with max_timesteps=189 ===
+[SAT] Creating MDDs with shortest paths + waiting time...
+[SAT] Created 100 MDDs with waiting time structure
+[LNS] Built MDDs with waiting time structure for 100 agents at makespan 189
+[Current_Solution] Calculating waiting times for agents...
+[Current_Solution] Agent 99 reaches goal at t=121, waiting time=68
+[Current_Solution] Agent 98 reaches goal at t=157, waiting time=32
+[Current_Solution] Agent 97 reaches goal at t=124, waiting time=65
+[Current_Solution] Agent 96 reaches goal at t=99, waiting time=90
+[Current_Solution] Agent 95 reaches goal at t=66, waiting time=123
+[Current_Solution] Agent 94 reaches goal at t=172, waiting time=17
+[Current_Solution] Agent 93 reaches goal at t=12, waiting time=177
+[Current_Solution] Agent 92 reaches goal at t=65, waiting time=124
+[Current_Solution] Agent 91 reaches goal at t=32, waiting time=157
+[Current_Solution] Agent 90 reaches goal at t=107, waiting time=82
+[Current_Solution] Agent 89 reaches goal at t=64, waiting time=125
+[Current_Solution] Agent 88 reaches goal at t=94, waiting time=95
+[Current_Solution] Agent 87 reaches goal at t=101, waiting time=88
+[Current_Solution] Agent 86 reaches goal at t=37, waiting time=152
+[Current_Solution] Agent 85 reaches goal at t=55, waiting time=134
+[Current_Solution] Agent 84 reaches goal at t=104, waiting time=85
+[Current_Solution] Agent 83 reaches goal at t=150, waiting time=39
+[Current_Solution] Agent 82 reaches goal at t=10, waiting time=179
+[Current_Solution] Agent 81 reaches goal at t=51, waiting time=138
+[Current_Solution] Agent 80 reaches goal at t=184, waiting time=5
+[Current_Solution] Agent 79 reaches goal at t=168, waiting time=21
+[Current_Solution] Agent 78 reaches goal at t=74, waiting time=115
+[Current_Solution] Agent 77 reaches goal at t=72, waiting time=117
+[Current_Solution] Agent 76 reaches goal at t=143, waiting time=46
+[Current_Solution] Agent 75 reaches goal at t=124, waiting time=65
+[Current_Solution] Agent 74 reaches goal at t=1, waiting time=188
+[Current_Solution] Agent 73 reaches goal at t=27, waiting time=162
+[Current_Solution] Agent 72 reaches goal at t=129, waiting time=60
+[Current_Solution] Agent 71 reaches goal at t=132, waiting time=57
+[Current_Solution] Agent 70 reaches goal at t=54, waiting time=135
+[Current_Solution] Agent 69 reaches goal at t=122, waiting time=67
+[Current_Solution] Agent 68 reaches goal at t=111, waiting time=78
+[Current_Solution] Agent 67 reaches goal at t=148, waiting time=41
+[Current_Solution] Agent 66 reaches goal at t=83, waiting time=106
+[Current_Solution] Agent 65 reaches goal at t=154, waiting time=35
+[Current_Solution] Agent 64 reaches goal at t=72, waiting time=117
+[Current_Solution] Agent 63 reaches goal at t=55, waiting time=134
+[Current_Solution] Agent 62 reaches goal at t=41, waiting time=148
+[Current_Solution] Agent 61 reaches goal at t=61, waiting time=128
+[Current_Solution] Agent 60 reaches goal at t=96, waiting time=93
+[Current_Solution] Agent 59 reaches goal at t=86, waiting time=103
+[Current_Solution] Agent 58 reaches goal at t=143, waiting time=46
+[Current_Solution] Agent 57 reaches goal at t=78, waiting time=111
+[Current_Solution] Agent 56 reaches goal at t=168, waiting time=21
+[Current_Solution] Agent 55 reaches goal at t=12, waiting time=177
+[Current_Solution] Agent 54 reaches goal at t=66, waiting time=123
+[Current_Solution] Agent 53 reaches goal at t=160, waiting time=29
+[Current_Solution] Agent 52 reaches goal at t=50, waiting time=139
+[Current_Solution] Agent 51 reaches goal at t=6, waiting time=183
+[Current_Solution] Agent 50 reaches goal at t=142, waiting time=47
+[Current_Solution] Agent 49 reaches goal at t=152, waiting time=37
+[Current_Solution] Agent 48 reaches goal at t=11, waiting time=178
+[Current_Solution] Agent 47 reaches goal at t=179, waiting time=10
+[Current_Solution] Agent 46 reaches goal at t=73, waiting time=116
+[Current_Solution] Agent 45 reaches goal at t=189, waiting time=0
+[Current_Solution] Agent 44 reaches goal at t=10, waiting time=179
+[Current_Solution] Agent 43 reaches goal at t=60, waiting time=129
+[Current_Solution] Agent 42 reaches goal at t=66, waiting time=123
+[Current_Solution] Agent 41 reaches goal at t=73, waiting time=116
+[Current_Solution] Agent 40 reaches goal at t=149, waiting time=40
+[Current_Solution] Agent 39 reaches goal at t=134, waiting time=55
+[Current_Solution] Agent 38 reaches goal at t=178, waiting time=11
+[Current_Solution] Agent 37 reaches goal at t=107, waiting time=82
+[Current_Solution] Agent 36 reaches goal at t=128, waiting time=61
+[Current_Solution] Agent 35 reaches goal at t=13, waiting time=176
+[Current_Solution] Agent 34 reaches goal at t=162, waiting time=27
+[Current_Solution] Agent 33 reaches goal at t=55, waiting time=134
+[Current_Solution] Agent 32 reaches goal at t=89, waiting time=100
+[Current_Solution] Agent 31 reaches goal at t=179, waiting time=10
+[Current_Solution] Agent 30 reaches goal at t=181, waiting time=8
+[Current_Solution] Agent 29 reaches goal at t=124, waiting time=65
+[Current_Solution] Agent 28 reaches goal at t=75, waiting time=114
+[Current_Solution] Agent 27 reaches goal at t=162, waiting time=27
+[Current_Solution] Agent 26 reaches goal at t=115, waiting time=74
+[Current_Solution] Agent 25 reaches goal at t=29, waiting time=160
+[Current_Solution] Agent 24 reaches goal at t=72, waiting time=117
+[Current_Solution] Agent 23 reaches goal at t=101, waiting time=88
+[Current_Solution] Agent 22 reaches goal at t=72, waiting time=117
+[Current_Solution] Agent 21 reaches goal at t=97, waiting time=92
+[Current_Solution] Agent 20 reaches goal at t=164, waiting time=25
+[Current_Solution] Agent 19 reaches goal at t=86, waiting time=103
+[Current_Solution] Agent 18 reaches goal at t=73, waiting time=116
+[Current_Solution] Agent 17 reaches goal at t=19, waiting time=170
+[Current_Solution] Agent 16 reaches goal at t=24, waiting time=165
+[Current_Solution] Agent 15 reaches goal at t=25, waiting time=164
+[Current_Solution] Agent 14 reaches goal at t=82, waiting time=107
+[Current_Solution] Agent 13 reaches goal at t=187, waiting time=2
+[Current_Solution] Agent 12 reaches goal at t=69, waiting time=120
+[Current_Solution] Agent 11 reaches goal at t=72, waiting time=117
+[Current_Solution] Agent 10 reaches goal at t=189, waiting time=0
+[Current_Solution] Agent 9 reaches goal at t=186, waiting time=3
+[Current_Solution] Agent 8 reaches goal at t=115, waiting time=74
+[Current_Solution] Agent 7 reaches goal at t=35, waiting time=154
+[Current_Solution] Agent 6 reaches goal at t=92, waiting time=97
+[Current_Solution] Agent 5 reaches goal at t=28, waiting time=161
+[Current_Solution] Agent 4 reaches goal at t=10, waiting time=179
+[Current_Solution] Agent 3 reaches goal at t=178, waiting time=11
+[Current_Solution] Agent 2 reaches goal at t=82, waiting time=107
+[Current_Solution] Agent 1 reaches goal at t=132, waiting time=57
+[Current_Solution] Agent 0 reaches goal at t=102, waiting time=87
+[Current_Solution] Waiting time calculation complete
+[LNS] Created current solution with 100 agent paths on a map of size 64x64
+[LNS] Analyzing conflicts...
+[LNS] Current solution: vertex collisions=1317, edge collisions=143
+[LNS] Creating conflict buckets...
+[LOCAL ZONE] Building diamond bucket for conflict 0
+[LOCAL ZONE] Built diamond bucket for conflict 0 with 8 positions, 2 conflicts, 1 - 2 time window
+[LOCAL ZONE] Building diamond bucket for conflict 1
+[LOCAL ZONE] Built diamond bucket for conflict 1 with 8 positions, 2 conflicts, 1 - 2 time window
+[LNS] Selected most relevant bucket 0 with time window: 1 - 2, 2 conflicts and 8 positions.
+[LNS] Solving the best bucket Local Zone...
+[Solve_local_zone] Local zone size reached 95% of all walkable positions
+[Solve_local_zone] Will try to solve with full time window and all positions
+[Solve_local_zone] Makespan: 189
+[Solve_local_zone] Time window: [0, 189]
+[Current_Solution] Agent 0 used 87 waiting timesteps, 0 remaining
+[Current_Solution] Agent 1 used 57 waiting timesteps, 0 remaining
+[Current_Solution] Agent 2 used 107 waiting timesteps, 0 remaining
+[Current_Solution] Agent 3 used 11 waiting timesteps, 0 remaining
+[Current_Solution] Agent 4 used 179 waiting timesteps, 0 remaining
+[Current_Solution] Agent 5 used 161 waiting timesteps, 0 remaining
+[Current_Solution] Agent 6 used 97 waiting timesteps, 0 remaining
+[Current_Solution] Agent 7 used 154 waiting timesteps, 0 remaining
+[Current_Solution] Agent 8 used 74 waiting timesteps, 0 remaining
+[Current_Solution] Agent 9 used 3 waiting timesteps, 0 remaining
+[Current_Solution] Agent 11 used 117 waiting timesteps, 0 remaining
+[Current_Solution] Agent 12 used 120 waiting timesteps, 0 remaining
+[Current_Solution] Agent 13 used 2 waiting timesteps, 0 remaining
+[Current_Solution] Agent 14 used 107 waiting timesteps, 0 remaining
+[Current_Solution] Agent 15 used 164 waiting timesteps, 0 remaining
+[Current_Solution] Agent 16 used 165 waiting timesteps, 0 remaining
+[Current_Solution] Agent 17 used 170 waiting timesteps, 0 remaining
+[Current_Solution] Agent 18 used 116 waiting timesteps, 0 remaining
+[Current_Solution] Agent 19 used 103 waiting timesteps, 0 remaining
+[Current_Solution] Agent 20 used 25 waiting timesteps, 0 remaining
+[Current_Solution] Agent 21 used 92 waiting timesteps, 0 remaining
+[Current_Solution] Agent 22 used 117 waiting timesteps, 0 remaining
+[Current_Solution] Agent 23 used 88 waiting timesteps, 0 remaining
+[Current_Solution] Agent 24 used 117 waiting timesteps, 0 remaining
+[Current_Solution] Agent 25 used 160 waiting timesteps, 0 remaining
+[Current_Solution] Agent 26 used 74 waiting timesteps, 0 remaining
+[Current_Solution] Agent 27 used 27 waiting timesteps, 0 remaining
+[Current_Solution] Agent 28 used 114 waiting timesteps, 0 remaining
+[Current_Solution] Agent 29 used 65 waiting timesteps, 0 remaining
+[Current_Solution] Agent 30 used 8 waiting timesteps, 0 remaining
+[Current_Solution] Agent 31 used 10 waiting timesteps, 0 remaining
+[Current_Solution] Agent 32 used 100 waiting timesteps, 0 remaining
+[Current_Solution] Agent 33 used 134 waiting timesteps, 0 remaining
+[Current_Solution] Agent 34 used 27 waiting timesteps, 0 remaining
+[Current_Solution] Agent 35 used 176 waiting timesteps, 0 remaining
+[Current_Solution] Agent 36 used 61 waiting timesteps, 0 remaining
+[Current_Solution] Agent 37 used 82 waiting timesteps, 0 remaining
+[Current_Solution] Agent 38 used 11 waiting timesteps, 0 remaining
+[Current_Solution] Agent 39 used 55 waiting timesteps, 0 remaining
+[Current_Solution] Agent 40 used 40 waiting timesteps, 0 remaining
+[Current_Solution] Agent 41 used 116 waiting timesteps, 0 remaining
+[Current_Solution] Agent 42 used 123 waiting timesteps, 0 remaining
+[Current_Solution] Agent 43 used 129 waiting timesteps, 0 remaining
+[Current_Solution] Agent 44 used 179 waiting timesteps, 0 remaining
+[Current_Solution] Agent 46 used 116 waiting timesteps, 0 remaining
+[Current_Solution] Agent 47 used 10 waiting timesteps, 0 remaining
+[Current_Solution] Agent 48 used 178 waiting timesteps, 0 remaining
+[Current_Solution] Agent 49 used 37 waiting timesteps, 0 remaining
+[Current_Solution] Agent 50 used 47 waiting timesteps, 0 remaining
+[Current_Solution] Agent 51 used 183 waiting timesteps, 0 remaining
+[Current_Solution] Agent 52 used 139 waiting timesteps, 0 remaining
+[Current_Solution] Agent 53 used 29 waiting timesteps, 0 remaining
+[Current_Solution] Agent 54 used 123 waiting timesteps, 0 remaining
+[Current_Solution] Agent 55 used 177 waiting timesteps, 0 remaining
+[Current_Solution] Agent 56 used 21 waiting timesteps, 0 remaining
+[Current_Solution] Agent 57 used 111 waiting timesteps, 0 remaining
+[Current_Solution] Agent 58 used 46 waiting timesteps, 0 remaining
+[Current_Solution] Agent 59 used 103 waiting timesteps, 0 remaining
+[Current_Solution] Agent 60 used 93 waiting timesteps, 0 remaining
+[Current_Solution] Agent 61 used 128 waiting timesteps, 0 remaining
+[Current_Solution] Agent 62 used 148 waiting timesteps, 0 remaining
+[Current_Solution] Agent 63 used 134 waiting timesteps, 0 remaining
+[Current_Solution] Agent 64 used 117 waiting timesteps, 0 remaining
+[Current_Solution] Agent 65 used 35 waiting timesteps, 0 remaining
+[Current_Solution] Agent 66 used 106 waiting timesteps, 0 remaining
+[Current_Solution] Agent 67 used 41 waiting timesteps, 0 remaining
+[Current_Solution] Agent 68 used 78 waiting timesteps, 0 remaining
+[Current_Solution] Agent 69 used 67 waiting timesteps, 0 remaining
+[Current_Solution] Agent 70 used 135 waiting timesteps, 0 remaining
+[Current_Solution] Agent 71 used 57 waiting timesteps, 0 remaining
+[Current_Solution] Agent 72 used 60 waiting timesteps, 0 remaining
+[Current_Solution] Agent 73 used 162 waiting timesteps, 0 remaining
+[Current_Solution] Agent 74 used 188 waiting timesteps, 0 remaining
+[Current_Solution] Agent 75 used 65 waiting timesteps, 0 remaining
+[Current_Solution] Agent 76 used 46 waiting timesteps, 0 remaining
+[Current_Solution] Agent 77 used 117 waiting timesteps, 0 remaining
+[Current_Solution] Agent 78 used 115 waiting timesteps, 0 remaining
+[Current_Solution] Agent 79 used 21 waiting timesteps, 0 remaining
+[Current_Solution] Agent 80 used 5 waiting timesteps, 0 remaining
+[Current_Solution] Agent 81 used 138 waiting timesteps, 0 remaining
+[Current_Solution] Agent 82 used 179 waiting timesteps, 0 remaining
+[Current_Solution] Agent 83 used 39 waiting timesteps, 0 remaining
+[Current_Solution] Agent 84 used 85 waiting timesteps, 0 remaining
+[Current_Solution] Agent 85 used 134 waiting timesteps, 0 remaining
+[Current_Solution] Agent 86 used 152 waiting timesteps, 0 remaining
+[Current_Solution] Agent 87 used 88 waiting timesteps, 0 remaining
+[Current_Solution] Agent 88 used 95 waiting timesteps, 0 remaining
+[Current_Solution] Agent 89 used 125 waiting timesteps, 0 remaining
+[Current_Solution] Agent 90 used 82 waiting timesteps, 0 remaining
+[Current_Solution] Agent 91 used 157 waiting timesteps, 0 remaining
+[Current_Solution] Agent 92 used 124 waiting timesteps, 0 remaining
+[Current_Solution] Agent 93 used 177 waiting timesteps, 0 remaining
+[Current_Solution] Agent 94 used 17 waiting timesteps, 0 remaining
+[Current_Solution] Agent 95 used 123 waiting timesteps, 0 remaining
+[Current_Solution] Agent 96 used 90 waiting timesteps, 0 remaining
+[Current_Solution] Agent 97 used 65 waiting timesteps, 0 remaining
+[Current_Solution] Agent 98 used 32 waiting timesteps, 0 remaining
+[Current_Solution] Agent 99 used 68 waiting timesteps, 0 remaining
+[Waiting_time_Solve] Agent 0 has waiting time 0
+[Waiting_time_Solve] Agent 1 has waiting time 0
+[Waiting_time_Solve] Agent 2 has waiting time 0
+[Waiting_time_Solve] Agent 3 has waiting time 0
+[Waiting_time_Solve] Agent 4 has waiting time 0
+[Waiting_time_Solve] Agent 5 has waiting time 0
+[Waiting_time_Solve] Agent 6 has waiting time 0
+[Waiting_time_Solve] Agent 7 has waiting time 0
+[Waiting_time_Solve] Agent 8 has waiting time 0
+[Waiting_time_Solve] Agent 9 has waiting time 0
+[Waiting_time_Solve] Agent 10 has waiting time 0
+[Waiting_time_Solve] Agent 11 has waiting time 0
+[Waiting_time_Solve] Agent 12 has waiting time 0
+[Waiting_time_Solve] Agent 13 has waiting time 0
+[Waiting_time_Solve] Agent 14 has waiting time 0
+[Waiting_time_Solve] Agent 15 has waiting time 0
+[Waiting_time_Solve] Agent 16 has waiting time 0
+[Waiting_time_Solve] Agent 17 has waiting time 0
+[Waiting_time_Solve] Agent 18 has waiting time 0
+[Waiting_time_Solve] Agent 19 has waiting time 0
+[Waiting_time_Solve] Agent 20 has waiting time 0
+[Waiting_time_Solve] Agent 21 has waiting time 0
+[Waiting_time_Solve] Agent 22 has waiting time 0
+[Waiting_time_Solve] Agent 23 has waiting time 0
+[Waiting_time_Solve] Agent 24 has waiting time 0
+[Waiting_time_Solve] Agent 25 has waiting time 0
+[Waiting_time_Solve] Agent 26 has waiting time 0
+[Waiting_time_Solve] Agent 27 has waiting time 0
+[Waiting_time_Solve] Agent 28 has waiting time 0
+[Waiting_time_Solve] Agent 29 has waiting time 0
+[Waiting_time_Solve] Agent 30 has waiting time 0
+[Waiting_time_Solve] Agent 31 has waiting time 0
+[Waiting_time_Solve] Agent 32 has waiting time 0
+[Waiting_time_Solve] Agent 33 has waiting time 0
+[Waiting_time_Solve] Agent 34 has waiting time 0
+[Waiting_time_Solve] Agent 35 has waiting time 0
+[Waiting_time_Solve] Agent 36 has waiting time 0
+[Waiting_time_Solve] Agent 37 has waiting time 0
+[Waiting_time_Solve] Agent 38 has waiting time 0
+[Waiting_time_Solve] Agent 39 has waiting time 0
+[Waiting_time_Solve] Agent 40 has waiting time 0
+[Waiting_time_Solve] Agent 41 has waiting time 0
+[Waiting_time_Solve] Agent 42 has waiting time 0
+[Waiting_time_Solve] Agent 43 has waiting time 0
+[Waiting_time_Solve] Agent 44 has waiting time 0
+[Waiting_time_Solve] Agent 45 has waiting time 0
+[Waiting_time_Solve] Agent 46 has waiting time 0
+[Waiting_time_Solve] Agent 47 has waiting time 0
+[Waiting_time_Solve] Agent 48 has waiting time 0
+[Waiting_time_Solve] Agent 49 has waiting time 0
+[Waiting_time_Solve] Agent 50 has waiting time 0
+[Waiting_time_Solve] Agent 51 has waiting time 0
+[Waiting_time_Solve] Agent 52 has waiting time 0
+[Waiting_time_Solve] Agent 53 has waiting time 0
+[Waiting_time_Solve] Agent 54 has waiting time 0
+[Waiting_time_Solve] Agent 55 has waiting time 0
+[Waiting_time_Solve] Agent 56 has waiting time 0
+[Waiting_time_Solve] Agent 57 has waiting time 0
+[Waiting_time_Solve] Agent 58 has waiting time 0
+[Waiting_time_Solve] Agent 59 has waiting time 0
+[Waiting_time_Solve] Agent 60 has waiting time 0
+[Waiting_time_Solve] Agent 61 has waiting time 0
+[Waiting_time_Solve] Agent 62 has waiting time 0
+[Waiting_time_Solve] Agent 63 has waiting time 0
+[Waiting_time_Solve] Agent 64 has waiting time 0
+[Waiting_time_Solve] Agent 65 has waiting time 0
+[Waiting_time_Solve] Agent 66 has waiting time 0
+[Waiting_time_Solve] Agent 67 has waiting time 0
+[Waiting_time_Solve] Agent 68 has waiting time 0
+[Waiting_time_Solve] Agent 69 has waiting time 0
+[Waiting_time_Solve] Agent 70 has waiting time 0
+[Waiting_time_Solve] Agent 71 has waiting time 0
+[Waiting_time_Solve] Agent 72 has waiting time 0
+[Waiting_time_Solve] Agent 73 has waiting time 0
+[Waiting_time_Solve] Agent 74 has waiting time 0
+[Waiting_time_Solve] Agent 75 has waiting time 0
+[Waiting_time_Solve] Agent 76 has waiting time 0
+[Waiting_time_Solve] Agent 77 has waiting time 0
+[Waiting_time_Solve] Agent 78 has waiting time 0
+[Waiting_time_Solve] Agent 79 has waiting time 0
+[Waiting_time_Solve] Agent 80 has waiting time 0
+[Waiting_time_Solve] Agent 81 has waiting time 0
+[Waiting_time_Solve] Agent 82 has waiting time 0
+[Waiting_time_Solve] Agent 83 has waiting time 0
+[Waiting_time_Solve] Agent 84 has waiting time 0
+[Waiting_time_Solve] Agent 85 has waiting time 0
+[Waiting_time_Solve] Agent 86 has waiting time 0
+[Waiting_time_Solve] Agent 87 has waiting time 0
+[Waiting_time_Solve] Agent 88 has waiting time 0
+[Waiting_time_Solve] Agent 89 has waiting time 0
+[Waiting_time_Solve] Agent 90 has waiting time 0
+[Waiting_time_Solve] Agent 91 has waiting time 0
+[Waiting_time_Solve] Agent 92 has waiting time 0
+[Waiting_time_Solve] Agent 93 has waiting time 0
+[Waiting_time_Solve] Agent 94 has waiting time 0
+[Waiting_time_Solve] Agent 95 has waiting time 0
+[Waiting_time_Solve] Agent 96 has waiting time 0
+[Waiting_time_Solve] Agent 97 has waiting time 0
+[Waiting_time_Solve] Agent 98 has waiting time 0
+[Waiting_time_Solve] Agent 99 has waiting time 0
+[Waiting_time_Solve] Total available waiting time: 0
+[Waiting_time_Solve] Max iterations: 1
+[Waiting_time_Solve] Iteration 0...
+Command terminated after exceeding the time limit.
+# Run terminated after reaching overall time limit
+
+# Batch stopped after reaching overall time limit (elapsed 599s)

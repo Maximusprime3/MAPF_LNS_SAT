@@ -1,0 +1,2 @@
+experiment_id,makespan_attempt,makespan,zones_attempted,zones_solved,total_waiting_attempts,total_lazy_iterations,total_cnf_clauses,total_cnf_variables,total_mdd_build_ms,total_cnf_build_ms,total_lazy_wall_ms,total_lazy_solver_wall_ms,total_lazy_solver_reported_ms,attempt_wall_ms,solved
+_home_max_Documents_PhD_MAPF_LNS_MAPF_LNS_SAT_mapf-map_Paris_1_256_map-_home_max_Documents_PhD_MAPF_LNS_MAPF_LNS_SAT_mapf-scen-even_scen-even_Paris_1_256-even-1_scen-agents10-idx0-seed42-1760987557659,0,501,0,0,0,0,0,0,0.000000,0.000000,0.000000,0.000000,0.000000,814.970000,1
