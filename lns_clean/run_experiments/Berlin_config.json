@@ -138,3 +138,90 @@
       }
     ]
   }
+
+
+
+
+
+  {
+    "runs": [
+      {
+        "name": "room-32-32-4-10-LNS++1-minisat",
+        "map": "../../mapf-map/room-32-32-4.map",
+        "scenario_dir": "../../mapf-scen-even/scen-even",
+        "scenario_pattern": "{map}-even-*.scen",
+        "num_agents": 10,
+        "experiments": 100,
+        "solver": "minisat",
+        "seed": 42,
+        "start_run_id": 0,
+        "time_limit_seconds": 600,
+        "log_file": "logs/room_32_32_4_10_LNS++1_minisat.log"
+      },
+      {
+        "name": "room-32-32-4-20-LNS++1-minisat",
+        "map": "../../mapf-map/room-32-32-4.map",
+        "scenario_dir": "../../mapf-scen-even/scen-even",
+        "scenario_pattern": "{map}-even-*.scen",
+        "num_agents": 20,
+        "experiments": 100,
+        "solver": "minisat",
+        "seed": 42,
+        "start_run_id": 0,
+        "time_limit_seconds": 600,
+        "log_file": "logs/room_32_32_4_20_LNS++1_minisat.log"
+      },
+      {
+        "name": "room-32-32-4-50-LNS++1-minisat",
+        "map": "../../mapf-map/room-32-32-4.map",
+        "scenario_dir": "../../mapf-scen-even/scen-even",
+        "scenario_pattern": "{map}-even-*.scen",
+        "num_agents": 50,
+        "experiments": 49,
+        "solver": "minisat",
+        "seed": 42,
+        "start_run_id": 0,
+        "time_limit_seconds": 600,
+        "log_file": "logs/room_32_32_4_50_LNS++1_minisat.log"
+      },
+      {
+        "name": "room-64-64-16-10-LNS++1-minisat",
+        "map": "../../mapf-map/room-64-64-16.map",
+        "scenario_dir": "../../mapf-scen-even/scen-even",
+        "scenario_pattern": "{map}-even-*.scen",
+        "num_agents": 10,
+        "experiments": 100,
+        "solver": "minisat",
+        "seed": 42,
+        "start_run_id": 0,
+        "time_limit_seconds": 600,
+        "log_file": "logs/room_64_64_16_10_LNS++1_minisat.log"
+      },
+      {
+        "name": "room-64-64-16-20-LNS++1-minisat",
+        "map": "../../mapf-map/room-64-64-16.map",
+        "scenario_dir": "../../mapf-scen-even/scen-even",
+        "scenario_pattern": "{map}-even-*.scen",
+        "num_agents": 20,
+        "experiments": 100,
+        "solver": "minisat",
+        "seed": 42,
+        "start_run_id": 0,
+        "time_limit_seconds": 600,
+        "log_file": "logs/room_64_64_16_20_LNS++1_minisat.log"
+      },
+      {
+        "name": "room-64-64-16-50-LNS++1-minisat",
+        "map": "../../mapf-map/room-64-64-16.map",
+        "scenario_dir": "../../mapf-scen-even/scen-even",
+        "scenario_pattern": "{map}-even-*.scen",
+        "num_agents": 50,
+        "experiments": 100,
+        "solver": "minisat",
+        "seed": 42,
+        "start_run_id": 0,
+        "time_limit_seconds": 600,
+        "log_file": "logs/room_64_64_16_50_LNS++1_minisat.log"
+      }
+    ]
+  }
