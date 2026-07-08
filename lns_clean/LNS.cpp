@@ -205,7 +205,12 @@ std::unordered_map<int, std::vector<std::pair<int,int>>> LNS(
             
 
             //Step 6: create conflict buckets for the earliest conflict(s)
-            const int offset = 1; // half the standard conflict zone size
+            const int offset = 1; // initial conflict zone radius
+            const int expansion_radius_step = 2; // use 3 for fixed +3 expansion runs
+            //ZoneExpansionGrowth::FixedStep always adds the same amount to the zone radiusafter failures
+            //ZoneExpansionGrowth::DynamicStep increases expansion radius per step +1, 2, 3, ... after failures
+            const ZoneExpansionGrowth expansion_growth = ZoneExpansionGrowth::FixedStep;
+
             std::cout << "[LNS] Creating conflict buckets..." << std::endl;
             auto diamond_buckets = build_diamond_buckets_for_earliest_conflicts(
                 conflict_meta, conflict_map, problem.grid, offset, current_max_timesteps);
@@ -225,7 +230,19 @@ std::unordered_map<int, std::vector<std::pair<int,int>>> LNS(
             std::cout << "[LNS] Solving the best bucket Local Zone..." << std::endl;
             //solve the local zone
             LocalZoneResult local_zone_result = solve_local_zone(
-                problem.grid, best_bucket, conflict_meta, conflict_map, current_solution, offset, current_max_timesteps, rng, experiment_id, inc);
+               // problem.grid, best_bucket, conflict_meta, conflict_map, current_solution, offset, current_max_timesteps, rng, experiment_id, inc);
+                problem.grid,
+                best_bucket,
+                conflict_meta,
+                conflict_map,
+                current_solution,
+                offset,
+                expansion_radius_step,
+                expansion_growth,
+                current_max_timesteps,
+                rng,
+                experiment_id,
+                inc);
 
             for (const auto& zone_metric : local_zone_result.attempt_metrics) {
                 makespan_metrics.zones_attempted++;

@@ -6,6 +6,21 @@
 
 #include <algorithm>
 
+//Zone expansion, increase the size of the local zone by a fixed step or a dynamic step
+namespace {
+    int next_expansion_factor(
+        int current_expansion_factor,
+        int expansion_attempt_index,
+        int expansion_radius_step,
+        ZoneExpansionGrowth expansion_growth) {
+        if (expansion_growth == ZoneExpansionGrowth::DynamicStep) {
+            return current_expansion_factor + expansion_attempt_index + 1;
+        }
+    
+        return current_expansion_factor + expansion_radius_step;
+    }
+    }
+    
 
 // Helper function to find agents present in a zone within a time window
 std::set<int> get_agents_in_zone_within_time_window(
@@ -34,6 +49,8 @@ LocalZoneResult solve_local_zone(
     const std::vector<std::vector<std::vector<int>>>& conflict_map, 
     CurrentSolution& current_solution, 
     int offset,
+    int expansion_radius_step,
+    ZoneExpansionGrowth expansion_growth,
     int current_max_timesteps,
     std::mt19937& rng,
     const std::string& experiment_id,
@@ -88,10 +105,11 @@ LocalZoneResult solve_local_zone(
     std::vector<int> local_zone_conflict_indices = best_bucket.indices;
     int earliest_conflict_t = best_bucket.earliest_t;
     int latest_conflict_t = best_bucket.latest_t;
-    const int bucket_time_window_start = std::max(best_bucket.earliest_t - offset, 0);
-    const int bucket_time_window_end = std::min(best_bucket.latest_t + offset, current_max_timesteps);
+    //const int bucket_time_window_start = std::max(best_bucket.earliest_t - offset, 0);
+    //const int bucket_time_window_end = std::min(best_bucket.latest_t + offset, current_max_timesteps);
 
     int expansion_factor = 0;
+    int expansion_attempt_index = 0;
     //loop until solution found or the local zone reached the size of the map and still no solution found
     while (local_zone_result.solution_found == false && local_zone_positions.size() <= all_walkable_positions) {
         
@@ -203,9 +221,23 @@ LocalZoneResult solve_local_zone(
         //Step 3: Expand the local zone 
         // Expansion attempts: increase bucket offset and try again
         std::cout << "[Solve_local_zone] Zone with expansion factor " << expansion_factor << "failed" << std::endl;
-        expansion_factor++;
+
+        //expansion_factor++;
+        expansion_factor = next_expansion_factor(
+            expansion_factor,
+            expansion_attempt_index,
+            expansion_radius_step,
+            expansion_growth);
+        expansion_attempt_index++;
+
         expanded_offset = offset + expansion_factor;
         std::cout << "[Solve_local_zone] Expanding zone with offset " << expanded_offset << " (original: " << offset << ")" << std::endl;
+        
+        //update the time window for the bucket with the new expansion factor
+        const int bucket_time_window_start = std::max(earliest_conflict_t - expanded_offset, 0);
+        const int bucket_time_window_end = std::min(latest_conflict_t + expanded_offset, current_max_timesteps);
+
+        
         // Recreate the bucket conflicts from the original bucket indices
         // Use helper to expand zone and gather expanded conflict indices
         //todo:no more conflict points? all conflict meta

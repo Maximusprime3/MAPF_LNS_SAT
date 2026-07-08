@@ -10,6 +10,12 @@
 #include <utility>
 
 
+enum class ZoneExpansionGrowth {
+    FixedStep,       // radius += expansion_radius_step on each failed attempt
+    DynamicStep      // radius gains +1, then +2, then +3, ... after failures
+};
+
+
 struct LocalZoneResult {
     bool solution_found = false;
     std::unordered_map<int, std::vector<std::pair<int,int>>> local_paths;
@@ -25,6 +31,8 @@ LocalZoneResult solve_local_zone(
     const std::vector<std::vector<std::vector<int>>>& conflict_map,
     CurrentSolution& current_solution,
     int offset,
+    int expansion_radius_step,
+    ZoneExpansionGrowth expansion_growth,
     int current_max_timesteps,
     std::mt19937& rng,
     const std::string& experiment_id,
