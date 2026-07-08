@@ -113,7 +113,7 @@ LocalZoneResult solve_local_zone(
     //loop until solution found or the local zone reached the size of the map and still no solution found
     while (local_zone_result.solution_found == false && local_zone_positions.size() <= all_walkable_positions) {
         
-        if (local_zone_positions.size() == all_walkable_positions) {
+        if (local_zone_positions.size() > all_walkable_positions) {
             std::cout << "[Solve_local_zone] Local zone size reached all walkable positions" << std::endl;
             break;
         }
