@@ -6,7 +6,8 @@
 
 #include <algorithm>
 
-//Zone expansion, increase the size of the local zone by a fixed step or a dynamic step
+// Zone expansion: fixed growth adds the configured step each time, while dynamic
+// growth scales that configured step by the retry number (+step, +2*step, +3*step, ...).
 namespace {
     int next_expansion_factor(
         int current_expansion_factor,
@@ -14,7 +15,7 @@ namespace {
         int expansion_radius_step,
         ZoneExpansionGrowth expansion_growth) {
         if (expansion_growth == ZoneExpansionGrowth::DynamicStep) {
-            return current_expansion_factor + expansion_attempt_index + 1;
+            return current_expansion_factor + expansion_radius_step * (expansion_attempt_index + 1);
         }
     
         return current_expansion_factor + expansion_radius_step;

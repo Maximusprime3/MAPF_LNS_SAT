@@ -12,7 +12,7 @@
 
 enum class ZoneExpansionGrowth {
     FixedStep,       // radius += expansion_radius_step on each failed attempt
-    DynamicStep      // radius gains +1, then +2, then +3, ... after failures
+    DynamicStep      // radius gains +step, then +2*step, then +3*step, ... after failures
 };
 
 

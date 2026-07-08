@@ -206,10 +206,16 @@ std::unordered_map<int, std::vector<std::pair<int,int>>> LNS(
 
             //Step 6: create conflict buckets for the earliest conflict(s)
             const int offset = 1; // initial conflict zone radius
-            const int expansion_radius_step = 2; // use 3 for fixed +3 expansion runs
+            const int expansion_radius_step = 1; // use 3 for fixed +3 expansion runs
             //ZoneExpansionGrowth::FixedStep always adds the same amount to the zone radiusafter failures
             //ZoneExpansionGrowth::DynamicStep increases expansion radius per step +1, 2, 3, ... after failures
+            
+            // ZoneExpansionGrowth::FixedStep always adds expansion_radius_step after failures.
+            // ZoneExpansionGrowth::DynamicStep grows failed retries by +step, +2*step, +3*step, ...,
+            // yielding attempted radii 1, 3, 7, 13, 21, ... with offset=1 and step=2.
             const ZoneExpansionGrowth expansion_growth = ZoneExpansionGrowth::FixedStep;
+            //const ZoneExpansionGrowth expansion_growth = ZoneExpansionGrowth::DynamicStep;
+
 
             std::cout << "[LNS] Creating conflict buckets..." << std::endl;
             auto diamond_buckets = build_diamond_buckets_for_earliest_conflicts(
