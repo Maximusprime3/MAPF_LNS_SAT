@@ -205,7 +205,7 @@ std::unordered_map<int, std::vector<std::pair<int,int>>> LNS(
             
 
             //Step 6: create conflict buckets for the earliest conflict(s)
-            const int offset = 1; // initial conflict zone radius
+            const int offset = 2; // initial conflict zone radius
             const int expansion_radius_step = 1; // use 3 for fixed +3 expansion runs
             //ZoneExpansionGrowth::FixedStep always adds the same amount to the zone radiusafter failures
             //ZoneExpansionGrowth::DynamicStep increases expansion radius per step +1, 2, 3, ... after failures

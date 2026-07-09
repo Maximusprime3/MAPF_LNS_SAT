@@ -1,8 +1,8 @@
 {
   "runs": [
     {
-      "name": "empty-16-16-10-LNSrerun_minisat",
-      "map": "../../mapf-map/empty-16-16.map",
+      "name": "Berlin_1_256-10-LNSinit2-minisat",
+      "map": "../../mapf-map/Berlin_1_256.map",
       "scenario_dir": "../../mapf-scen-even/scen-even",
       "scenario_pattern": "{map}-even-*.scen",
       "num_agents": 10,
@@ -11,11 +11,11 @@
       "seed": 42,
       "start_run_id": 0,
       "time_limit_seconds": 600,
-      "log_file": "logs/empty-16-16-10_LNSrerun_minisat.log"
+      "log_file": "logs/Berlin_1_256_10_LNSinit2_minisat.log"
     },
     {
-      "name": "empty-16-16-20-LNSrerun_minisat",
-      "map": "../../mapf-map/empty-16-16.map",
+      "name": "Berlin_1_256-20-LNSinit2-minisat",
+      "map": "../../mapf-map/Berlin_1_256.map",
       "scenario_dir": "../../mapf-scen-even/scen-even",
       "scenario_pattern": "{map}-even-*.scen",
       "num_agents": 20,
@@ -24,11 +24,11 @@
       "seed": 42,
       "start_run_id": 0,
       "time_limit_seconds": 600,
-      "log_file": "logs/empty-16-16-20_LNSrerun_minisat.log"
+      "log_file": "logs/Berlin_1_256_20_LNSinit2_minisat.log"
     },
     {
-      "name": "empty-16-16-50-LNSrerun_minisat",
-      "map": "../../mapf-map/empty-16-16.map",
+      "name": "Berlin_1_256-50-LNSinit2-minisat",
+      "map": "../../mapf-map/Berlin_1_256.map",
       "scenario_dir": "../../mapf-scen-even/scen-even",
       "scenario_pattern": "{map}-even-*.scen",
       "num_agents": 50,
@@ -37,11 +37,11 @@
       "seed": 42,
       "start_run_id": 0,
       "time_limit_seconds": 600,
-      "log_file": "logs/empty-16-16-50_LNSrerun_minisat.log"
+      "log_file": "logs/Berlin_1_256_50_LNSinit2_minisat.log"
     },
     {
-      "name": "empty-16-16-100-LNSrerun_minisat",
-      "map": "../../mapf-map/empty-16-16.map",
+      "name": "Berlin_1_256-100-LNSinit2-minisat",
+      "map": "../../mapf-map/Berlin_1_256.map",
       "scenario_dir": "../../mapf-scen-even/scen-even",
       "scenario_pattern": "{map}-even-*.scen",
       "num_agents": 100,
@@ -50,11 +50,11 @@
       "seed": 42,
       "start_run_id": 0,
       "time_limit_seconds": 600,
-      "log_file": "logs/empty-16-16-100_LNSrerun_minisat.log"
+      "log_file": "logs/Berlin_1_256_100_LNSinit2_minisat.log"
     },
     {
-      "name": "empty-16-16-200-LNSrerun_minisat",
-      "map": "../../mapf-map/empty-16-16.map",
+      "name": "Berlin_1_256-200-LNSinit2-minisat",
+      "map": "../../mapf-map/Berlin_1_256.map",
       "scenario_dir": "../../mapf-scen-even/scen-even",
       "scenario_pattern": "{map}-even-*.scen",
       "num_agents": 200,
@@ -63,137 +63,7 @@
       "seed": 42,
       "start_run_id": 0,
       "time_limit_seconds": 600,
-      "log_file": "logs/empty-16-16-200_LNSrerun_minisat.log"
-    },
-    {
-      "name": "empty-32-32-10-LNSrerun_minisat",
-      "map": "../../mapf-map/empty-32-32.map",
-      "scenario_dir": "../../mapf-scen-even/scen-even",
-      "scenario_pattern": "{map}-even-*.scen",
-      "num_agents": 10,
-      "experiments": 100,
-      "solver": "minisat",
-      "seed": 42,
-      "start_run_id": 0,
-      "time_limit_seconds": 600,
-        "log_file": "logs/empty-32-32-10_LNSrerun_minisat.log"
-    },
-    {
-      "name": "empty-32-32-20-LNSrerun_minisat",
-      "map": "../../mapf-map/empty-32-32.map",
-      "scenario_dir": "../../mapf-scen-even/scen-even",
-      "scenario_pattern": "{map}-even-*.scen",
-      "num_agents": 20,
-      "experiments": 100,
-      "solver": "minisat",
-      "seed": 42,
-      "start_run_id": 0,
-      "time_limit_seconds": 600,
-      "log_file": "logs/empty-32-32-20_LNSrerun_minisat.log"
-    },
-    {
-      "name": "empty-32-32-50-LNSrerun_minisat",
-      "map": "../../mapf-map/empty-32-32.map",
-      "scenario_dir": "../../mapf-scen-even/scen-even",
-      "scenario_pattern": "{map}-even-*.scen",
-      "num_agents": 50,
-      "experiments": 100,
-      "solver": "minisat",
-      "seed": 42,
-      "start_run_id": 0,
-      "time_limit_seconds": 600,
-      "log_file": "logs/empty-32-32-50_LNSrerun_minisat.log"
-    },
-    {
-      "name": "empty-32-32-100-LNSrerun_minisat",
-      "map": "../../mapf-map/empty-32-32.map",
-      "scenario_dir": "../../mapf-scen-even/scen-even",
-      "scenario_pattern": "{map}-even-*.scen",
-      "num_agents": 100,
-      "experiments": 100,
-      "solver": "minisat",
-      "seed": 42,
-      "start_run_id": 0,
-      "time_limit_seconds": 600,
-      "log_file": "logs/empty-32-32-100_LNSrerun_minisat.log"
-    },
-    {
-      "name": "empty-32-32-200-LNSrerun_minisat",
-      "map": "../../mapf-map/empty-32-32.map",
-      "scenario_dir": "../../mapf-scen-even/scen-even",
-      "scenario_pattern": "{map}-even-*.scen",
-      "num_agents": 200,
-      "experiments": 100,
-      "solver": "minisat",
-      "seed": 42,
-      "start_run_id": 0,
-      "time_limit_seconds": 600,
-      "log_file": "logs/empty-32-32-200_LNSrerun_minisat.log"
-    },
-    {
-        "name": "empty-48-48-10-LNSrerun_minisat",
-      "map": "../../mapf-map/empty-48-48.map",
-      "scenario_dir": "../../mapf-scen-even/scen-even",
-      "scenario_pattern": "{map}-even-*.scen",
-      "num_agents": 10,
-      "experiments": 100,
-      "solver": "minisat",
-      "seed": 42,
-      "start_run_id": 0,
-      "time_limit_seconds": 600,
-      "log_file": "logs/empty-48-48-10_LNSrerun_minisat.log"
-    },
-    {
-      "name": "empty-48-48-20-LNSrerun_minisat",
-      "map": "../../mapf-map/empty-48-48.map",
-      "scenario_dir": "../../mapf-scen-even/scen-even",
-      "scenario_pattern": "{map}-even-*.scen",
-      "num_agents": 20,
-      "experiments": 100,
-      "solver": "minisat",
-      "seed": 42,
-      "start_run_id": 0,
-      "time_limit_seconds": 600,
-        "log_file": "logs/empty-48-48-20_LNSrerun_minisat.log"
-    },
-    {
-      "name": "empty-48-48-50-LNSrerun_minisat",
-      "map": "../../mapf-map/empty-48-48.map",
-      "scenario_dir": "../../mapf-scen-even/scen-even",
-      "scenario_pattern": "{map}-even-*.scen",
-      "num_agents": 50,
-      "experiments": 100,
-      "solver": "minisat",
-      "seed": 42,
-      "start_run_id": 0,
-      "time_limit_seconds": 600,
-      "log_file": "logs/empty-48-48-50_LNSrerun_minisat.log"
-    },
-    {
-      "name": "empty-48-48-100-LNSrerun_minisat",
-      "map": "../../mapf-map/empty-48-48.map",
-      "scenario_dir": "../../mapf-scen-even/scen-even",
-      "scenario_pattern": "{map}-even-*.scen",
-      "num_agents": 100,
-      "experiments": 100,
-      "solver": "minisat",
-      "seed": 42,
-      "start_run_id": 0,
-      "time_limit_seconds": 600,
-      "log_file": "logs/empty-48-48-100_LNSrerun_minisat.log"
-    },
-    {
-      "name": "empty-48-48-200-LNSrerun_minisat",
-      "map": "../../mapf-map/empty-48-48.map",
-      "scenario_dir": "../../mapf-scen-even/scen-even",
-      "scenario_pattern": "{map}-even-*.scen",
-      "num_agents": 200,
-      "experiments": 100,
-      "solver": "minisat",
-      "seed": 42,
-      "start_run_id": 0,
-      "time_limit_seconds": 600,
-      "log_file": "logs/empty-48-48-200_LNSrerun_minisat.log"
+      "log_file": "logs/Berlin_1_256_200_LNSinit2_minisat.log"
     }
   ]
 }
