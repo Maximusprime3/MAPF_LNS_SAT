@@ -213,8 +213,8 @@ std::unordered_map<int, std::vector<std::pair<int,int>>> LNS(
             // ZoneExpansionGrowth::FixedStep always adds expansion_radius_step after failures.
             // ZoneExpansionGrowth::DynamicStep grows failed retries by +step, +2*step, +3*step, ...,
             // yielding attempted radii 1, 3, 7, 13, 21, ... with offset=1 and step=2.
-            ////const ZoneExpansionGrowth expansion_growth = ZoneExpansionGrowth::FixedStep;
-            const ZoneExpansionGrowth expansion_growth = ZoneExpansionGrowth::DynamicStep;
+            const ZoneExpansionGrowth expansion_growth = ZoneExpansionGrowth::FixedStep;
+            //const ZoneExpansionGrowth expansion_growth = ZoneExpansionGrowth::DynamicStep;
 
 
             std::cout << "[LNS] Creating conflict buckets..." << std::endl;
