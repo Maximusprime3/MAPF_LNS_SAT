@@ -99,6 +99,12 @@ SAT_SOLVER_COLUMN_CANDIDATES = (
     "total_lazy_wall_ms",
 )
 EXPERIMENT_ID_COLUMN_CANDIDATES = ("experiment_id", "id")
+SCENARIO_INDEX_COLUMN_CANDIDATES = ("scenario_index", "scen_index", "instance_index")
+SEED_COLUMN_CANDIDATES = ("seed", "random_seed")
+MAP_FAMILY_ORDER = ("empty", "room", "berlin", "warehouse")
+EXPECTED_COUNT_OVERRIDES = {
+    ("empty-16-16", "50"): 50,
+}
 ATTEMPT_ZONE_USED_CANDIDATES = ("zones_attempted", "zones_used")
 ATTEMPT_ZONE_EXPANDED_CANDIDATES = ("zones_solved", "zones_expanded")
 ATTEMPT_WAITING_COLUMN_CANDIDATES = (
@@ -110,6 +116,7 @@ SolverSources = Mapping[str, Sequence[LogInput]]
 
 __all__ = (
     "collect_solver_aggregate_data",
+    "filter_solver_sources_to_common_experiments",
     "plot_solver_aggregate_cdfs",
 )
 
@@ -120,6 +127,49 @@ def _ensure_iterable_sources(sources: Sequence[LogInput]) -> list[LogInput]:
     if isinstance(sources, list):
         return sources
     return list(sources)
+
+
+def _map_family_rank(map_label: object) -> tuple[int, str]:
+    """Sort maps as empty, room, Berlin, warehouse, then any other maps."""
+
+    label = str(map_label)
+    lower_label = label.lower()
+    for rank, prefix in enumerate(MAP_FAMILY_ORDER):
+        if lower_label.startswith(prefix):
+            return rank, lower_label
+    return len(MAP_FAMILY_ORDER), lower_label
+
+
+def _normalise_expected_count_overrides(
+    overrides: Optional[Mapping[Tuple[object, object], int]] = None,
+) -> Dict[Tuple[str, str], int]:
+    """Normalise map/agent expected-count overrides to collected labels."""
+
+    normalised: Dict[Tuple[str, str], int] = {}
+    for (map_label, agent_label), count in (overrides or {}).items():
+        normalised[
+            (_normalise_map_label(map_label), _normalise_agent_label(agent_label))
+        ] = int(count)
+    return normalised
+
+
+def _scaled_time_limit(
+    *,
+    time_limit_s: Optional[float],
+    expected_count: Optional[int],
+    expected_per_combination: Optional[int],
+) -> Optional[float]:
+    """Scale the block time budget when a block has fewer expected scenarios."""
+
+    if time_limit_s is None:
+        return None
+    if (
+        expected_count is None
+        or expected_per_combination is None
+        or int(expected_per_combination) <= 0
+    ):
+        return float(time_limit_s)
+    return float(time_limit_s) * (int(expected_count) / int(expected_per_combination))
 
 
 @lru_cache(maxsize=None)
@@ -228,12 +278,15 @@ def _build_series_for_sequence(
             finite_mask = np.isfinite(array)
             if not np.all(finite_mask):
                 array = array[finite_mask]
-        if expected_per_combination is not None and array.size > int(expected_per_combination):
-            array = array[: int(expected_per_combination)]
+        entry_expected = entry.get("expected", expected_per_combination)
+        if entry_expected is not None and array.size > int(entry_expected):
+            array = array[: int(entry_expected)]
+
+        entry_time_limit = entry.get("time_limit_s", time_limit)
 
         cumulative = np.cumsum(array, dtype=float) if array.size else np.asarray([], dtype=float)
-        if time_limit is not None and cumulative.size:
-            cumulative = np.minimum(cumulative, float(time_limit))
+        if entry_time_limit is not None and cumulative.size:
+            cumulative = np.minimum(cumulative, float(entry_time_limit))
 
         for value in cumulative:
             event_time = elapsed + float(max(value, 0.0))
@@ -244,21 +297,21 @@ def _build_series_for_sequence(
         completed = int(array.size)
         combination_totals[label] = completed
 
-        if time_limit is not None:
-            if expected_per_combination is not None and completed < int(expected_per_combination):
-                block_duration = float(time_limit)
+        if entry_time_limit is not None:
+            if entry_expected is not None and completed < int(entry_expected):
+                block_duration = float(entry_time_limit)
             else:
-                block_duration = float(min(array.sum(), float(time_limit))) if array.size else 0.0
+                block_duration = float(min(array.sum(), float(entry_time_limit))) if array.size else 0.0
         else:
             block_duration = float(array.sum()) if array.size else 0.0
 
         block_end = elapsed + max(block_duration, 0.0)
         if (
-            time_limit is not None
-            and expected_per_combination is not None
-            and completed < int(expected_per_combination)
+            entry_time_limit is not None
+            and entry_expected is not None
+            and completed < int(entry_expected)
         ):
-            block_end = elapsed + float(time_limit)
+            block_end = elapsed + float(entry_time_limit)
 
         if not timeline or timeline[-1][0] != block_end:
             timeline.append((block_end, running_total))
@@ -269,7 +322,8 @@ def _build_series_for_sequence(
                 "agents": entry.get("agents"),
                 "label": label,
                 "completed": completed,
-                "expected": expected_per_combination,
+                "expected": entry_expected,
+                "time_limit_s": entry_time_limit,
                 "block_start_s": float(elapsed),
                 "block_end_s": float(block_end),
             }
@@ -280,7 +334,10 @@ def _build_series_for_sequence(
     total_combinations = len(sequence)
     horizon = None
     if time_limit is not None:
-        horizon = float(time_limit) * total_combinations
+        horizon = sum(
+            float(entry.get("time_limit_s", time_limit) or 0.0)
+            for entry in sequence
+        )
         if timeline and timeline[-1][0] < horizon:
             timeline.append((horizon, running_total))
 
@@ -290,9 +347,14 @@ def _build_series_for_sequence(
     series.attrs["total_combinations"] = total_combinations
     if horizon is not None:
         series.attrs["time_horizon_s"] = float(horizon)
+    expected_total = sum(
+        int(entry.get("expected", expected_per_combination) or 0)
+        for entry in sequence
+    )
     if expected_per_combination is not None:
         series.attrs["expected_per_combination"] = int(expected_per_combination)
-        series.attrs["expected_completion_total"] = int(expected_per_combination) * total_combinations
+    if expected_total:
+        series.attrs["expected_completion_total"] = int(expected_total)
     if combination_totals:
         series.attrs["combination_totals"] = combination_totals
     if block_records:
@@ -464,11 +526,16 @@ def collect_solver_aggregate_data(
     skip_status_filter: bool = False,
     expected_per_combination: Optional[int] = EXPECTED_EXPERIMENTS_PER_COMBINATION,
     time_limit_s: Optional[float] = EXPERIMENT_TIME_LIMIT_S,
+    expected_from_attempts: bool = False,
+    expected_count_overrides: Optional[Mapping[Tuple[object, object], int]] = None,
 ) -> Dict[str, object]:
     """Return aggregated completion timelines and statistics for each solver."""
 
     success_statuses = success_statuses or ("SAT", "SUCCESS")
     normalised_successes = _normalise_statuses(success_statuses)
+    expected_count_overrides = _normalise_expected_count_overrides(
+        {**EXPECTED_COUNT_OVERRIDES, **(expected_count_overrides or {})}
+    )
 
     solver_order: list[str] = []
     map_order: list[str] = []
@@ -476,6 +543,8 @@ def collect_solver_aggregate_data(
     agents_per_map: MutableMapping[str, set[str]] = defaultdict(set)
     solver_combo_times: Dict[str, Dict[Tuple[str, str], list[float]]] = defaultdict(dict)
     solver_combo_presence: Dict[str, set[Tuple[str, str]]] = defaultdict(set)
+    solver_combo_expected: Dict[str, Dict[Tuple[str, str], int]] = defaultdict(dict)
+    solver_combo_time_limit: Dict[str, Dict[Tuple[str, str], Optional[float]]] = defaultdict(dict)
     instance_records: list[Dict[str, object]] = []
 
     for solver_label, sources in solver_sources.items():
@@ -508,6 +577,20 @@ def collect_solver_aggregate_data(
             df_all["__map__"] = df_all[map_column].map(_normalise_map_label)
             df_all["__time__"] = _normalise_time_values(df_all[time_column], time_column)
             df_all["__agents__"] = df_all[agent_column].map(_normalise_agent_label)
+            scenario_index_column = _find_optional_column(
+                df_all.columns, SCENARIO_INDEX_COLUMN_CANDIDATES
+            )
+            seed_column = _find_optional_column(df_all.columns, SEED_COLUMN_CANDIDATES)
+            df_all["__scenario_order__"] = (
+                pd.to_numeric(df_all[scenario_index_column], errors="coerce")
+                if scenario_index_column
+                else df_all.groupby(["__map__", "__agents__"], sort=False).cumcount()
+            )
+            df_all["__seed_order__"] = (
+                pd.to_numeric(df_all[seed_column], errors="coerce").fillna(0)
+                if seed_column
+                else 0
+            )
 
             cnf_variables_column = _find_optional_column(df_all.columns, CNF_VARIABLE_COLUMN_CANDIDATES)
             cnf_clauses_column = _find_optional_column(df_all.columns, CNF_CLAUSE_COLUMN_CANDIDATES)
@@ -594,6 +677,27 @@ def collect_solver_aggregate_data(
                 solver_combo_presence[solver_label_str].add((map_label_str, agent_label_str))
 
                 combo_key = (map_label_str, agent_label_str)
+                override_expected = expected_count_overrides.get(combo_key)
+                if expected_from_attempts:
+                    observed = int(len(attempts_df))
+                    if expected_per_combination is not None:
+                        observed = min(observed, int(expected_per_combination))
+                    expected_count = (
+                        min(override_expected, observed)
+                        if override_expected is not None
+                        else observed
+                    )
+                    solver_combo_expected[solver_label_str][combo_key] = expected_count
+                elif override_expected is not None:
+                    expected_count = override_expected
+                    solver_combo_expected[solver_label_str][combo_key] = expected_count
+                else:
+                    expected_count = expected_per_combination
+                solver_combo_time_limit[solver_label_str][combo_key] = _scaled_time_limit(
+                    time_limit_s=time_limit_s,
+                    expected_count=expected_count,
+                    expected_per_combination=expected_per_combination,
+                )
 
                 if df_success.empty:
                     solver_combo_times[solver_label_str].setdefault(combo_key, [])
@@ -606,7 +710,10 @@ def collect_solver_aggregate_data(
                     solver_combo_times[solver_label_str].setdefault(combo_key, [])
                     continue
 
-                ordered = success_subset.sort_values("__original_order__")
+                ordered = success_subset.sort_values(
+                    ["__scenario_order__", "__seed_order__", "__original_order__"],
+                    kind="mergesort",
+                )
                 times = ordered["__time__"].to_numpy(dtype=float)
                 finite_mask = np.isfinite(times)
                 if not np.all(finite_mask):
@@ -614,8 +721,8 @@ def collect_solver_aggregate_data(
                     times = times[finite_mask]
                     ordered = ordered.iloc[indices]
 
-                if expected_per_combination is not None and times.size > int(expected_per_combination):
-                    limit = int(expected_per_combination)
+                if expected_count is not None and times.size > int(expected_count):
+                    limit = int(expected_count)
                     times = times[:limit]
                     ordered = ordered.iloc[:limit]
 
@@ -663,6 +770,8 @@ def collect_solver_aggregate_data(
     if not solver_order or not map_order:
         raise ValueError("No solver experiment data found; verify the provided sources.")
 
+    map_order = sorted(map_order, key=_map_family_rank)
+
     agent_order_by_map: Dict[str, list[str]] = {}
     global_agent_seen: set[str] = set()
     for map_label, agent_set in agents_per_map.items():
@@ -696,9 +805,30 @@ def collect_solver_aggregate_data(
     series_by_agent: Dict[str, Dict[str, pd.Series]] = {}
     series_by_map: Dict[str, Dict[str, pd.Series]] = {}
 
+    def _combo_expected_and_time_limit(
+        solver_expected: Mapping[Tuple[str, str], int],
+        solver_time_limit: Mapping[Tuple[str, str], Optional[float]],
+        combo_key: Tuple[str, str],
+    ) -> tuple[Optional[int], Optional[float]]:
+        expected = solver_expected.get(
+            combo_key,
+            expected_count_overrides.get(combo_key, expected_per_combination),
+        )
+        block_time_limit = solver_time_limit.get(
+            combo_key,
+            _scaled_time_limit(
+                time_limit_s=time_limit_s,
+                expected_count=expected,
+                expected_per_combination=expected_per_combination,
+            ),
+        )
+        return expected, block_time_limit
+
     for solver_label in solver_order:
         solver_times = solver_combo_times.get(solver_label, {})
         solver_presence = solver_combo_presence.get(solver_label, set())
+        solver_expected = solver_combo_expected.get(solver_label, {})
+        solver_time_limit = solver_combo_time_limit.get(solver_label, {})
 
         overall_sequence = []
         for map_label in map_order:
@@ -708,12 +838,17 @@ def collect_solver_aggregate_data(
                 times = solver_times.get(combo_key, [])
                 if combo_key not in solver_presence:
                     times = times or []
+                combo_expected, combo_time_limit = _combo_expected_and_time_limit(
+                    solver_expected, solver_time_limit, combo_key
+                )
                 overall_sequence.append(
                     {
                         "map": map_label,
                         "agents": agent_label,
                         "label": f"{map_label} (agents={agent_label})",
                         "times": times,
+                        "expected": combo_expected,
+                        "time_limit_s": combo_time_limit,
                     }
                 )
         overall_series[solver_label] = _build_series_for_sequence(
@@ -726,18 +861,25 @@ def collect_solver_aggregate_data(
         per_agent_mapping: Dict[str, pd.Series] = {}
         for solver_label in solver_order:
             solver_times = solver_combo_times.get(solver_label, {})
+            solver_expected = solver_combo_expected.get(solver_label, {})
+            solver_time_limit = solver_combo_time_limit.get(solver_label, {})
             sequence = []
             for map_label in map_order:
                 if agent_label not in agent_order_by_map.get(map_label, []):
                     continue
                 combo_key = (map_label, agent_label)
                 times = solver_times.get(combo_key, [])
+                combo_expected, combo_time_limit = _combo_expected_and_time_limit(
+                    solver_expected, solver_time_limit, combo_key
+                )
                 sequence.append(
                     {
                         "map": map_label,
                         "agents": agent_label,
                         "label": map_label,
                         "times": times,
+                        "expected": combo_expected,
+                        "time_limit_s": combo_time_limit,
                     }
                 )
             per_agent_mapping[solver_label] = _build_series_for_sequence(
@@ -752,16 +894,23 @@ def collect_solver_aggregate_data(
         agent_labels = agent_order_by_map.get(map_label, [])
         for solver_label in solver_order:
             solver_times = solver_combo_times.get(solver_label, {})
+            solver_expected = solver_combo_expected.get(solver_label, {})
+            solver_time_limit = solver_combo_time_limit.get(solver_label, {})
             sequence = []
             for agent_label in agent_labels:
                 combo_key = (map_label, agent_label)
                 times = solver_times.get(combo_key, [])
+                combo_expected, combo_time_limit = _combo_expected_and_time_limit(
+                    solver_expected, solver_time_limit, combo_key
+                )
                 sequence.append(
                     {
                         "map": map_label,
                         "agents": agent_label,
                         "label": f"agents={agent_label}",
                         "times": times,
+                        "expected": combo_expected,
+                        "time_limit_s": combo_time_limit,
                     }
                 )
             per_map_mapping[solver_label] = _build_series_for_sequence(
@@ -807,6 +956,104 @@ def collect_solver_aggregate_data(
     }
 
 
+def _experiment_key_columns(df: pd.DataFrame) -> tuple[str, str, Optional[str], Optional[str]]:
+    """Return columns used to identify the same scenario across solver reruns."""
+
+    map_column = _find_column(df.columns, MAP_COLUMN_CANDIDATES)
+    agent_column = _find_column(df.columns, AGENT_COLUMN_CANDIDATES)
+    scenario_column = _find_optional_column(df.columns, SCENARIO_INDEX_COLUMN_CANDIDATES)
+    seed_column = _find_optional_column(df.columns, SEED_COLUMN_CANDIDATES)
+    return map_column, agent_column, scenario_column, seed_column
+
+
+def _experiment_key_frame(df: pd.DataFrame) -> pd.DataFrame:
+    """Build comparable experiment identifiers independent of timestamped ids."""
+
+    map_column, agent_column, scenario_column, seed_column = _experiment_key_columns(df)
+    key_df = pd.DataFrame(
+        {
+            "__map__": df[map_column].map(_normalise_map_label),
+            "__agents__": df[agent_column].map(_normalise_agent_label),
+            "__scenario_index__": (
+                df[scenario_column].astype(str).str.strip()
+                if scenario_column
+                else df.groupby([map_column, agent_column], sort=False).cumcount().astype(str)
+            ),
+            "__seed__": (
+                df[seed_column].astype(str).str.strip()
+                if seed_column
+                else ""
+            ),
+        },
+        index=df.index,
+    )
+    return key_df
+
+
+def filter_solver_sources_to_common_experiments(
+    solver_sources: SolverSources,
+) -> tuple[Dict[str, list[pd.DataFrame]], pd.DataFrame]:
+    """Filter logs to the exact map/agent/scenario/seed experiments shared by all solvers.
+
+    The raw ``experiment_id`` values end in run-specific timestamps, so this helper
+    matches runs using stable columns: normalised map name, agent count,
+    ``scenario_index`` (or per-combination row order as a fallback), and seed.
+    It returns in-memory dataframes suitable for ``plot_solver_aggregate_cdfs`` plus
+    a per-map/per-agent summary of how many common experiments remain.
+    """
+
+    loaded: Dict[str, list[pd.DataFrame]] = {}
+    keys_by_solver: Dict[str, set[tuple[str, str, str, str]]] = {}
+
+    for solver_label, sources in solver_sources.items():
+        solver_label_str = str(solver_label)
+        loaded[solver_label_str] = []
+        solver_keys: set[tuple[str, str, str, str]] = set()
+        per_solver_sources = [
+            (solver_label_str, source) for source in _ensure_iterable_sources(sources)
+        ]
+        for raw_df, _source in _iter_log_sources(per_solver_sources):
+            df = raw_df.copy()
+            key_df = _experiment_key_frame(df)
+            df["__common_key__"] = list(map(tuple, key_df.to_numpy(dtype=str)))
+            solver_keys.update(df["__common_key__"])
+            loaded[solver_label_str].append(df)
+        keys_by_solver[solver_label_str] = solver_keys
+
+    if not keys_by_solver:
+        return loaded, pd.DataFrame(columns=["map", "agents", "common_experiments"])
+
+    common_keys = set.intersection(*keys_by_solver.values())
+    filtered: Dict[str, list[pd.DataFrame]] = {}
+    for solver_label, frames in loaded.items():
+        filtered[solver_label] = [
+            frame.loc[frame["__common_key__"].isin(common_keys)]
+            .drop(columns=["__common_key__"])
+            .copy()
+            for frame in frames
+        ]
+
+    summary = pd.DataFrame(
+        [
+            {"map": key[0], "agents": key[1], "common_experiments": 1}
+            for key in common_keys
+        ]
+    )
+    if not summary.empty:
+        summary = (
+            summary.groupby(["map", "agents"], as_index=False)["common_experiments"]
+            .sum()
+        )
+        summary["__map_rank__"] = summary["map"].map(_map_family_rank)
+        summary["__agents_numeric__"] = pd.to_numeric(summary["agents"], errors="coerce")
+        summary = (
+            summary.sort_values(["__map_rank__", "__agents_numeric__", "agents"])
+            .drop(columns=["__map_rank__", "__agents_numeric__"])
+            .reset_index(drop=True)
+        )
+    return filtered, summary
+
+
 def plot_solver_aggregate_cdfs(
     solver_sources: SolverSources,
     *,
@@ -814,6 +1061,8 @@ def plot_solver_aggregate_cdfs(
     skip_status_filter: bool = False,
     expected_per_combination: Optional[int] = EXPECTED_EXPERIMENTS_PER_COMBINATION,
     time_limit_s: Optional[float] = EXPERIMENT_TIME_LIMIT_S,
+    expected_from_attempts: bool = False,
+    expected_count_overrides: Optional[Mapping[Tuple[object, object], int]] = None,
     palette: Sequence[str] = OKABE_ITO_PALETTE,
     title_overall: Optional[str] = None,
     title_by_agent: Optional[str] = None,
@@ -832,6 +1081,8 @@ def plot_solver_aggregate_cdfs(
         skip_status_filter=skip_status_filter,
         expected_per_combination=expected_per_combination,
         time_limit_s=time_limit_s,
+        expected_from_attempts=expected_from_attempts,
+        expected_count_overrides=expected_count_overrides,
     )
 
     stats_overall: pd.DataFrame = aggregated["stats_overall"]
@@ -944,6 +1195,33 @@ def _parse_solver_arguments(entries: Iterable[Sequence[str]]) -> Dict[str, list[
             target.append(Path(source) if not isinstance(source, pd.DataFrame) else source)
     return solver_sources
 
+def _parse_expected_count_overrides(
+    entries: Optional[Iterable[Sequence[str]]],
+) -> Dict[Tuple[str, str], int]:
+    """Convert ``--expected-count MAP AGENTS COUNT`` entries into overrides."""
+
+    overrides: Dict[Tuple[str, str], int] = {}
+    for entry in entries or []:
+        if len(entry) != 3:
+            raise ValueError(
+                "Each --expected-count argument requires MAP AGENTS COUNT."
+            )
+        map_label, agent_label, count_text = entry
+        try:
+            count = int(count_text)
+        except ValueError as exc:
+            raise ValueError(
+                f"Expected-count override for {map_label!r}/{agent_label!r} "
+                f"must be an integer, got {count_text!r}."
+            ) from exc
+        if count < 0:
+            raise ValueError(
+                f"Expected-count override for {map_label!r}/{agent_label!r} "
+                "must be non-negative."
+            )
+        overrides[(map_label, agent_label)] = count
+    return overrides
+
 
 def _build_argument_parser() -> argparse.ArgumentParser:
     parser = argparse.ArgumentParser(
@@ -976,6 +1254,34 @@ def _build_argument_parser() -> argparse.ArgumentParser:
         "--skip-status-filter",
         action="store_true",
         help="Do not filter rows by solve status.",
+    )
+    parser.add_argument(
+        "--common-experiments",
+        action="store_true",
+        help=(
+            "Before plotting, keep only map/agent/scenario/seed experiments that "
+            "exist for every solver. This is useful when newer reruns have fewer "
+            "entries than the original LNS/WholeSolve logs."
+        ),
+    )
+    parser.add_argument(
+        "--expected-from-attempts",
+        action="store_true",
+        help=(
+            "Use the number of attempted rows in each map/agent block as that "
+            "block's expected completion count instead of assuming 100."
+        ),
+    )
+    parser.add_argument(
+        "--expected-count",
+        action="append",
+        nargs=3,
+        metavar=("MAP", "AGENTS", "COUNT"),
+        help=(
+            "Override the expected scenario count for one map/agent block. "
+            "The block time budget is scaled by COUNT/100; repeat for multiple "
+            "exceptions. Built-in default: empty-16-16 50 50."
+        ),
     )
     parser.add_argument(
         "--title-overall",
@@ -1026,14 +1332,23 @@ def main(argv: Optional[Sequence[str]] = None) -> int:
 
     try:
         solver_sources = _parse_solver_arguments(args.solver)
+        expected_count_overrides = _parse_expected_count_overrides(args.expected_count)
     except ValueError as exc:
         parser.error(str(exc))
         return 2
+
+    common_summary = None
+    if args.common_experiments:
+        solver_sources, common_summary = filter_solver_sources_to_common_experiments(
+            solver_sources
+        )
 
     plots, stats_overall, stats_by_agent, stats_by_map = plot_solver_aggregate_cdfs(
         solver_sources,
         success_statuses=args.success_statuses,
         skip_status_filter=args.skip_status_filter,
+        expected_from_attempts=args.expected_from_attempts or args.common_experiments,
+        expected_count_overrides=expected_count_overrides,
         title_overall=args.title_overall,
         title_by_agent=args.title_agents,
         title_by_map=args.title_maps,
@@ -1050,6 +1365,8 @@ def main(argv: Optional[Sequence[str]] = None) -> int:
         stats_by_map.to_csv(prefix.with_name(prefix.name + "_maps.csv"), index=False)
 
     _print_stats_table("Overall statistics", stats_overall)
+    if common_summary is not None:
+        _print_stats_table("Common experiment counts", common_summary)
     _print_stats_table("Per-agent statistics", stats_by_agent)
     _print_stats_table("Per-map statistics", stats_by_map)
 

@@ -719,6 +719,7 @@ def plot_solver_map_agent_timelines(
     expected_per_combination: Optional[int] = EXPECTED_EXPERIMENTS_PER_COMBINATION,
     time_limit_s: Optional[float] = EXPERIMENT_TIME_LIMIT_S,
     title: Optional[str] = None,
+    preferred_map_order: Optional[Sequence[str]] = None,
     figsize: Optional[Tuple[float, float]] = None,
     return_stats: bool = False,
     display_stats: Optional[bool] = None,
@@ -745,6 +746,23 @@ def plot_solver_map_agent_timelines(
     )
 
     map_order: Sequence[str] = aggregated["map_order"]
+    if preferred_map_order is not None:
+        available_maps = list(map_order)
+        preferred_seen: set[str] = set()
+        ordered_maps: list[str] = []
+        for preferred in preferred_map_order:
+            preferred_label = str(preferred)
+            if (
+                preferred_label in available_maps
+                and preferred_label not in preferred_seen
+            ):
+                ordered_maps.append(preferred_label)
+                preferred_seen.add(preferred_label)
+        ordered_maps.extend(
+            map_label for map_label in available_maps if map_label not in preferred_seen
+        )
+        aggregated["map_order"] = ordered_maps
+        map_order = ordered_maps
     solver_order: Sequence[str] = aggregated["solver_order"]
     agent_order_by_map: Mapping[str, Sequence[str]] = aggregated["agent_order_by_map"]
     timelines: Mapping[str, Mapping[str, Mapping[str, Dict[str, object]]]] = aggregated[
