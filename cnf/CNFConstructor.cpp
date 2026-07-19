@@ -1,7 +1,6 @@
 #include "CNFConstructor.h"
 #include <algorithm>
 #include <iterator>
-#include <iostream>
 
 CNFConstructor::CNFConstructor(const std::unordered_map<int, std::shared_ptr<MDD>>& mdds, 
                                bool lazy_encoding,
@@ -108,37 +107,12 @@ void CNFConstructor::create_no_conflict_clauses() {
 }
 
 
-// Debug: print variable-map entries for any agent whose expected variable is missing
-void CNFConstructor::print_agent_vars(int agent) {
-    std::cout << "[DEBUG] Variable map for agent " << agent << ":" << std::endl;
-    for (const auto& kv : variable_map) {
-        int a = std::get<0>(kv.first);
-        if (a != agent) continue;
-        const auto& p = std::get<1>(kv.first);
-        int t = std::get<2>(kv.first);
-        int v = kv.second;
-        std::cout << "  Var " << v << ": agent " << a << ", pos (" << p.first << "," << p.second << "), t=" << t << std::endl;
-    }
-}
-
 std::vector<int> CNFConstructor::add_single_collision_clause(int agent1_id, int agent2_id, 
                                                             const MDDNode::Position& position, 
                                                             int timestep, bool add_to_cnf) {
     int variable1 = add_variable(agent1_id, position, timestep);
     int variable2 = add_variable(agent2_id, position, timestep);
 
-    if (variable1 <= 0) {
-        std::cout << "[CNF Constructor] Missing variable(s) for agent " << agent1_id
-                  << " expecting pos=(" << position.first << "," << position.second << ")@t=" << timestep
-                  << ". var1=" << variable1 << std::endl;
-        print_agent_vars(agent1_id);
-    }
-    if (variable2 <= 0) {
-        std::cout << "[CNF Constructor] Missing variable(s) for agent " << agent2_id
-                  << " expecting pos=(" << position.first << "," << position.second << ")@t=" << timestep
-                  << ". var2=" << variable2 << std::endl;
-        print_agent_vars(agent2_id);
-    }
     // Negate the variables to ensure only one can occupy this position at this time
     std::vector<int> clause = {-variable1, -variable2};
     if (add_to_cnf) {
@@ -247,20 +221,6 @@ std::vector<int> CNFConstructor::add_single_edge_collision_clause(int agent1_id,
         return clause;
     }
    
-    if (var1 <= 0 || var2 <= 0) {
-        std::cout << "[DEBUG] Missing variable(s) for agent " << agent1_id
-                  << " expecting pos1=(" << pos1.first << "," << pos1.second << ")@t=" << timestep
-                  << ", pos2=(" << pos2.first << "," << pos2.second << ")@t=" << (timestep + 1)
-                  << ". var1=" << var1 << ", var2=" << var2 << std::endl;
-        print_agent_vars(agent1_id);
-    }
-    if (var3 <= 0 || var4 <= 0) {
-        std::cout << "[DEBUG] Missing variable(s) for agent " << agent2_id
-                  << " expecting pos2=(" << pos2.first << "," << pos2.second << ")@t=" << timestep
-                  << ", pos1=(" << pos1.first << "," << pos1.second << ")@t=" << (timestep + 1)
-                  << ". var3=" << var3 << ", var4=" << var4 << std::endl;
-        print_agent_vars(agent2_id);
-    }
     throw std::runtime_error("Invalid edge collision clause: agent1=" + std::to_string(agent1_id) + ", agent2=" + std::to_string(agent2_id) + ", pos1=(" + std::to_string(pos1.first) + "," + std::to_string(pos1.second) + "), pos2=(" + std::to_string(pos2.first) + "," + std::to_string(pos2.second) + "), timestep=" + std::to_string(timestep));
 }
 
@@ -354,10 +314,7 @@ std::vector<int> CNFConstructor::path_to_cnf_assignment(int agent_id, const std:
 
 std::unordered_map<int, std::vector<MDDNode::Position>> CNFConstructor::cnf_assignment_to_paths(const std::vector<int>& assignment) {
     std::unordered_map<int, std::vector<MDDNode::Position>> agent_paths;
-    
-    std::cout << std::endl;
-    
-    
+
     // Group positive assignments by agent using O(1) reverse lookup
     std::unordered_map<int, std::vector<std::pair<int, MDDNode::Position>>> agent_positions;
     // The assignment vector is 0-based over variables 1..N

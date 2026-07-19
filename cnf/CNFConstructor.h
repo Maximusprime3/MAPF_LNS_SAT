@@ -114,9 +114,6 @@ public:
     const std::unordered_map<int, std::tuple<int, MDDNode::Position, int>>& get_reverse_variable_map() const { return reverse_variable_map; }
     int get_next_variable_id() const { return next_variable_id; }
 
-    // Debug helper to print all variable mappings for a given agent
-    void print_agent_vars(int agent);
-
 protected:
     // Helper method to get the maximum number of timesteps across all MDDs
     int get_max_timesteps() const;

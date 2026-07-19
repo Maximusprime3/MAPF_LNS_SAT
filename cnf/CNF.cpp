@@ -1,27 +1,11 @@
 #include "CNF.h"
-#include <iostream>
 #include <sstream>
-#ifdef __GNUC__
-#include <execinfo.h>
-#endif
 
 CNF::CNF() {
     // Constructor initializes empty CNF
 }
 
 void CNF::add_clause(const std::vector<int>& clause) {
-    if (clause.empty()) {
-        std::cerr << "[CNF] WARNING: Attempted to add empty clause!" << std::endl;
-#ifdef __GNUC__
-        void* callstack[10];
-        int frames = backtrace(callstack, 10);
-        char** strs = backtrace_symbols(callstack, frames);
-        for (int i = 0; i < frames; ++i) {
-            std::cerr << strs[i] << std::endl;
-        }
-        free(strs);
-#endif
-    }
     clauses.push_back(clause);
     
     // Update variables set

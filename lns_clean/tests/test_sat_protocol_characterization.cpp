@@ -116,6 +116,17 @@ int main() {
                      real->model()[0] == 0,
                  "reset did not create an independent session");
 
+    std::vector<std::string> adapter_diagnostics;
+    auto diagnostic_solver = make_sat_solver(
+        [&adapter_diagnostics](const std::string& message) {
+            adapter_diagnostics.push_back(message);
+        });
+    ok &= expect(diagnostic_solver->add_clause({1}).ok &&
+                     !adapter_diagnostics.empty() &&
+                     adapter_diagnostics.front().find("MiniSAT clause batch") !=
+                         std::string::npos,
+                 "adapter diagnostics were not opt-in through the sink");
+
     FakeSatSolver incremental(
         {scripted(SatResultKind::Sat),
          scripted(SatResultKind::Sat),
