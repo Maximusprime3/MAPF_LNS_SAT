@@ -1,5 +1,6 @@
 #include "MDDConstructor.h"
 #include "MDD.h"
+#include "../lns_clean/Grid.h"
 #include <set>
 #include <algorithm>
 #include <iostream>
@@ -17,18 +18,18 @@ MDDConstructor::MDDConstructor(const std::vector<std::vector<char>>& grid_, MDDN
     }
     
     // Validate start position
-    if (start.first < 0 || start.first >= rows || start.second < 0 || start.second >= cols) {
+    if (!mapf::is_in_bounds(grid, start)) {
         throw std::invalid_argument("Start position is out of bounds");
     }
-    if (grid[start.first][start.second] != '.' && grid[start.first][start.second] != 'G') {
+    if (!mapf::is_walkable_position(grid, start)) {
         throw std::invalid_argument("Start position is not on a free cell");
     }
     
     // Validate goal position
-    if (goal.first < 0 || goal.first >= rows || goal.second < 0 || goal.second >= cols) {
+    if (!mapf::is_in_bounds(grid, goal)) {
         throw std::invalid_argument("Goal position is out of bounds");
     }
-    if (grid[goal.first][goal.second] != '.' && grid[goal.first][goal.second] != 'G') {
+    if (!mapf::is_walkable_position(grid, goal)) {
         throw std::invalid_argument("Goal position is not on a free cell");
     }
     
@@ -42,13 +43,13 @@ std::vector<MDDNode::Position> MDDConstructor::get_neighbors(const MDDNode::Posi
     };
     std::vector<MDDNode::Position> neighbors;
     int x = pos.first, y = pos.second;
-    if (x < 0 || x >= rows || y < 0 || y >= cols) {
+    if (!mapf::is_walkable_position(grid, pos)) {
         return neighbors;
     }
     for (const auto& [dx, dy] : directions) {
         int nx = x + dx, ny = y + dy;
         // Check bounds and if cell is open or goal
-        if (nx >= 0 && nx < rows && ny >= 0 && ny < cols && (grid[nx][ny] == '.' || grid[nx][ny] == 'G')) {
+        if (mapf::is_walkable_position(grid, nx, ny)) {
             neighbors.emplace_back(nx, ny);
         }
     }
@@ -126,4 +127,4 @@ std::shared_ptr<MDD> MDDConstructor::construct_mdd() {
         }
     }
     return mdd;
-} 
+}

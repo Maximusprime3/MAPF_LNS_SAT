@@ -1,6 +1,7 @@
 #include "Local_Zone.h"
 #include "Current_Solution.h"
 #include "Local_Zone_Builder.h"
+#include "Grid.h"
 
 #include <cmath>
 #include <algorithm>  // for std::set_difference
@@ -95,18 +96,14 @@ std::set<std::pair<int,int>> create_shape_from_conflicts_meta( //only returns wa
     }
 
     // Diagnostics and fallback seeding when the expansion failed to return any cell.
-    const int rows = static_cast<int>(map.size());
-    const int cols = rows > 0 ? static_cast<int>(map[0].size()) : 0;
     std::cout << "[LOCAL ZONE] WARNING: create_shape_from_conflicts_meta produced an empty zone for "
               << conflict_meta.size() << " conflicts. Falling back to seeding conflict coordinates." << std::endl;
 
     auto in_bounds = [&](int r, int c) {
-        return r >= 0 && r < rows && c >= 0 && c < cols;
+        return mapf::is_in_bounds(map, r, c);
     };
     auto is_walkable = [&](int r, int c) {
-        if (!in_bounds(r, c)) return false;
-        char cell = map[r][c];
-        return cell == '.' || cell == 'G';
+        return mapf::is_walkable_position(map, r, c);
     };
     auto try_insert = [&](const std::pair<int,int>& pos, const char* label) {
         int r = pos.first;
@@ -157,8 +154,6 @@ std::set<std::pair<int,int>> find_new_positions(
     const std::set<std::pair<int,int>>& current_shape,
     const std::set<std::pair<int,int>>& previous_shape,
     const std::vector<std::vector<char>>& map) {
-    int rows = (int)map.size();
-    int cols = rows > 0 ? (int)map[0].size() : 0;
     // First compute the set difference
     std::set<std::pair<int,int>> new_positions;
     std::set_difference(
@@ -171,11 +166,8 @@ std::set<std::pair<int,int>> find_new_positions(
     for (const auto& pos : new_positions) {
         int x = pos.first;
         int y = pos.second;
-        if (x >= 0 && x < rows && y >= 0 && y < cols) {
-            char cell = map[x][y];
-            if (cell == '.' || cell == 'G') {
-                bounded_and_walkable.insert(pos);
-            }
+        if (mapf::is_walkable_position(map, x, y)) {
+            bounded_and_walkable.insert(pos);
         }
     }
     return bounded_and_walkable;

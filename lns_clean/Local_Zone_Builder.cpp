@@ -1,12 +1,10 @@
 #include "Local_Zone_Builder.h"
+#include "Grid.h"
 
 #include <array>
 #include <queue>
 
 namespace {
-constexpr char kWalkable = '.';
-constexpr char kGoal = 'G';
-
 constexpr std::array<std::pair<int,int>, 4> kDirections{{
     {1, 0}, {-1, 0}, {0, 1}, {0, -1}
 }};
@@ -18,15 +16,11 @@ ConflictZoneBuilder::ConflictZoneBuilder(const std::vector<std::vector<char>>& m
       cols_(rows_ > 0 ? static_cast<int>(map[0].size()) : 0) {}
 
 bool ConflictZoneBuilder::in_bounds(int r, int c) const {
-    return r >= 0 && r < rows_ && c >= 0 && c < cols_;
+    return mapf::is_in_bounds(map_, r, c);
 }
 
 bool ConflictZoneBuilder::is_walkable(int r, int c) const {
-    if (!in_bounds(r, c)) {
-        return false;
-    }
-    char cell = map_[r][c];
-    return cell == kWalkable || cell == kGoal;
+    return mapf::is_walkable_position(map_, r, c);
 }
 
 int ConflictZoneBuilder::degree(int r, int c) const {

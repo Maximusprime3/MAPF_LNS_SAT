@@ -89,10 +89,6 @@ void validate_path_geometry(
 
 }  // namespace
 
-bool is_walkable_cell(char cell) {
-    return cell == '.' || cell == 'G';
-}
-
 VerificationReport verify_path_geometry(
     const Path& path,
     const Grid& grid,

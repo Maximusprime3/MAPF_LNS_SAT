@@ -1,5 +1,7 @@
 #pragma once
 
+#include "Grid.h"
+
 #include <string>
 #include <unordered_map>
 #include <utility>
@@ -51,9 +53,6 @@ struct VerificationReport {
         return issues.empty();
     }
 };
-
-// The loader preserves Moving AI terrain; only '.' and 'G' are traversable.
-bool is_walkable_cell(char cell);
 
 // Validates one path's map bounds, terrain, and moves. It intentionally does
 // not make start/goal or multi-agent claims.

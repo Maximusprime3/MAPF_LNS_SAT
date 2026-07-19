@@ -170,7 +170,7 @@ $(WAITING_BUDGET_TEST_BIN): $(WAITING_BUDGET_TEST_SRC) $(LIB) Waiting_time_Solve
 test_waiting_budget_conservation: $(WAITING_BUDGET_TEST_BIN)
 	$(WAITING_BUDGET_TEST_BIN)
 
-$(GRID_WALKABILITY_TEST_BIN): $(GRID_WALKABILITY_TEST_SRC) $(LIB) Load_LNSProblem.h Local_Zone.h SolutionVerifier.h Solve_Local_Zone.h | $(OBJ_DIR)
+$(GRID_WALKABILITY_TEST_BIN): $(GRID_WALKABILITY_TEST_SRC) $(LIB) Grid.h Load_LNSProblem.h Local_Zone.h SolutionVerifier.h Solve_Local_Zone.h | $(OBJ_DIR)
 	$(CXX) $(CXXFLAGS) $(CPPFLAGS) $(LDFLAGS) $(GRID_WALKABILITY_TEST_SRC) -L. -llns_clean -o $@
 
 test_grid_walkability: $(GRID_WALKABILITY_TEST_BIN)

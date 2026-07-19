@@ -1,3 +1,4 @@
+#include "../Grid.h"
 #include "../Load_LNSProblem.h"
 #include "../Local_Zone.h"
 #include "../NeighborhoodVariant.h"
@@ -138,9 +139,13 @@ int main() {
             0).has_value(),
         "problem loader should reject out-of-grid endpoints");
 
-    // Record the current per-component terrain rules before centralization.
+    // Every component must agree with the loader-authoritative terrain rule.
     const std::set<char> expected_walkable{'.', 'G'};
     for (char terrain : kMovingAiTerrain) {
+        tests.expect(
+            mapf::is_walkable_cell(terrain) ==
+                (expected_walkable.count(terrain) != 0),
+            std::string("shared rule disagrees on terrain ") + terrain);
         tests.expect(
             verifier_accepts(terrain) == (expected_walkable.count(terrain) != 0),
             std::string("verifier disagrees on terrain ") + terrain);
@@ -163,6 +168,12 @@ int main() {
                 (expected_walkable.count(terrain) != 0),
             std::string("zone frontier disagrees on terrain ") + terrain);
     }
+    tests.expect(!mapf::is_walkable_cell('X'),
+                 "unknown terrain should be blocked");
+    tests.expect(
+        mapf::walkable_positions(loaded_grid) ==
+            std::set<Position>{{0, 0}, {0, 1}},
+        "walkable-cell collection should use the shared terrain rule");
 
     const auto goal_fallback = characterize_goal_only_fallback();
     tests.expect(
@@ -173,6 +184,10 @@ int main() {
     // outside the grid, even before all components agree on terrain.
     const Grid boundary_grid{{'.', '.'}, {'.', '.'}};
     MDDConstructor boundary_mdd(boundary_grid, {0, 0}, {1, 1}, 2);
+    tests.expect(mapf::is_in_bounds(boundary_grid, {0, 0}),
+                 "shared bounds should include the top-left corner");
+    tests.expect(mapf::is_in_bounds(boundary_grid, {1, 1}),
+                 "shared bounds should include the bottom-right corner");
     tests.expect(boundary_mdd.get_neighbors({0, 0}).size() == 2,
                  "top-left MDD neighbor count should respect row/column boundaries");
     tests.expect(boundary_mdd.get_neighbors({1, 1}).size() == 2,
@@ -180,6 +195,10 @@ int main() {
 
     for (const Position& invalid :
          std::array<Position, 4>{{{-1, 0}, {2, 0}, {0, -1}, {0, 2}}}) {
+        tests.expect(!mapf::is_in_bounds(boundary_grid, invalid),
+                     "shared bounds should reject out-of-grid positions");
+        tests.expect(!mapf::is_walkable_position(boundary_grid, invalid),
+                     "shared walkability should reject out-of-grid positions");
         bool rejected_start = false;
         try {
             MDDConstructor invalid_mdd(boundary_grid, invalid, {0, 0}, 2);

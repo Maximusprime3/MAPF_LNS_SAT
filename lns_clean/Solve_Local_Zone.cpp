@@ -3,6 +3,7 @@
 #include "Waiting_time_Solve.h"
 #include "Solve_Local_Zone.h"
 #include "ExperimentLogger.h"
+#include "Grid.h"
 
 #include <algorithm>
 
@@ -69,16 +70,10 @@ LocalZoneResult solve_local_zone(
     
 
     //get number of all walkable positions in the map
-    int all_walkable_positions = 0;
-    std::set<std::pair<int,int>> all_walkable_positions_set;
-    for (int i = 0; i < static_cast<int>(map.size()); i++) {
-        for (int j = 0; j < static_cast<int>(map[0].size()); j++) {
-            if (map[i][j] == '.' || map[i][j] == 'G') {
-                all_walkable_positions++;
-                all_walkable_positions_set.emplace(i, j);
-            }
-        }
-    }
+    const std::set<std::pair<int,int>> all_walkable_positions_set =
+        mapf::walkable_positions(map);
+    const std::size_t all_walkable_positions =
+        all_walkable_positions_set.size();
     if (all_walkable_positions == 0) {
         std::cout << "[Solve_local_zone] ERROR: Map has no walkable positions" << std::endl;
         local_zone_result.status = SolveStatus::InvalidInput;
