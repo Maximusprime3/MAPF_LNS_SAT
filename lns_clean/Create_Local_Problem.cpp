@@ -574,6 +574,12 @@ LocalZoneState build_local_problem_for_zone(
             state.segments.push_back(std::move(segment));
         }
 
+        // Spatial expansion can join visits that previously needed separate
+        // pseudo agents. Keep this mapping limited to IDs that still own an
+        // active segment; next_pseudo_id remains monotonic so retired IDs are
+        // not reused later in this local-state lineage.
+        pseudo_list.resize(pseudo_cursor);
+
         //ensure original_to_segments order is sorted by entry_t
         auto& segment_indices = state.original_to_segments[agent_id];
         std::sort(segment_indices.begin(), segment_indices.end(), [&](size_t a, size_t b) {
@@ -722,7 +728,15 @@ void refresh_zone_after_extension(
         if (was_in_the_zone) {
             int last_segment_idx = state.original_to_segments.at(agent_id).back();
             LocalSegment& last_segment = state.segments[last_segment_idx];
-            was_in_the_zone_at_last_timestep = last_segment.exit_t >= previous_zone_end_t;
+            // Ending at the old boundary is not enough to prove continuity:
+            // the agent may leave the zone and re-enter later in the extended
+            // window. Only the newly adjacent timestep may extend the segment.
+            const bool new_window_starts_inside_zone =
+                !segment_info.entry_t.empty() &&
+                segment_info.entry_t.front() == new_window_start;
+            was_in_the_zone_at_last_timestep =
+                last_segment.exit_t >= previous_zone_end_t &&
+                new_window_starts_inside_zone;
             //continueing agent
             if (was_in_the_zone_at_last_timestep) {
                 LocalSegment& segment_to_continue = last_segment;

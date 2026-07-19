@@ -29,6 +29,8 @@ MINISAT_STATUS_TEST_SRC := $(TEST_DIR)/test_minisat_unsat_status.cpp
 MINISAT_STATUS_TEST_BIN := $(OBJ_DIR)/test_minisat_unsat_status
 PSEUDO_SEGMENT_TEST_SRC := $(TEST_DIR)/test_pseudo_agent_segmentation.cpp
 PSEUDO_SEGMENT_TEST_BIN := $(OBJ_DIR)/test_pseudo_agent_segmentation
+PSEUDO_REFRESH_TEST_SRC := $(TEST_DIR)/test_pseudo_agent_refresh_reassembly.cpp
+PSEUDO_REFRESH_TEST_BIN := $(OBJ_DIR)/test_pseudo_agent_refresh_reassembly
 LNS_VERIFICATION_SRC := $(TEST_DIR)/run_lns_verification.cpp
 LNS_VERIFICATION_BIN := $(OBJ_DIR)/run_lns_verification
 
@@ -84,7 +86,7 @@ C_OBJS := $(foreach src,$(C_SOURCES),$(call make_obj,$(src)))
 OBJS := $(LOCAL_OBJS) $(SHARED_OBJS) $(C_OBJS)
 DEPS := $(OBJS:.o=.d)
 
-.PHONY: all clean asan run_experiments test test_solution_verifier test_neighborhood_variant test_current_solution_transaction test_initial_mdd_agent_ids test_solve_result test_minisat_unsat_status test_pseudo_agent_segmentation lns_verification_runner
+.PHONY: all clean asan run_experiments test test_solution_verifier test_neighborhood_variant test_current_solution_transaction test_initial_mdd_agent_ids test_solve_result test_minisat_unsat_status test_pseudo_agent_segmentation test_pseudo_agent_refresh_reassembly lns_verification_runner
 
 all: $(LIB) $(MAIN) $(RUN_EXPERIMENTS_BIN)
 
@@ -144,7 +146,13 @@ $(PSEUDO_SEGMENT_TEST_BIN): $(PSEUDO_SEGMENT_TEST_SRC) $(LIB) Create_Local_Probl
 test_pseudo_agent_segmentation: $(PSEUDO_SEGMENT_TEST_BIN)
 	$(PSEUDO_SEGMENT_TEST_BIN)
 
-test: test_solution_verifier test_neighborhood_variant test_current_solution_transaction test_initial_mdd_agent_ids test_solve_result test_minisat_unsat_status test_pseudo_agent_segmentation
+$(PSEUDO_REFRESH_TEST_BIN): $(PSEUDO_REFRESH_TEST_SRC) $(LIB) Create_Local_Problem.h Current_Solution.h | $(OBJ_DIR)
+	$(CXX) $(CXXFLAGS) $(CPPFLAGS) $(LDFLAGS) $(PSEUDO_REFRESH_TEST_SRC) -L. -llns_clean -o $@
+
+test_pseudo_agent_refresh_reassembly: $(PSEUDO_REFRESH_TEST_BIN)
+	$(PSEUDO_REFRESH_TEST_BIN)
+
+test: test_solution_verifier test_neighborhood_variant test_current_solution_transaction test_initial_mdd_agent_ids test_solve_result test_minisat_unsat_status test_pseudo_agent_segmentation test_pseudo_agent_refresh_reassembly
 
 # Integration runner used by bounded benchmark checks. It calls LNS and then
 # independently verifies the returned path map with SolutionVerifier.
