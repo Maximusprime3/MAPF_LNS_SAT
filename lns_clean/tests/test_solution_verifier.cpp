@@ -111,12 +111,12 @@ int main() {
         mapf::verify_solution(valid_paths, valid_starts, valid_goals, open_grid));
 
     tests.expect_valid(
-        "wait moves and Moving AI terrain",
+        "wait moves and goal terrain",
         mapf::verify_solution(
             AgentPaths{{0, {{0, 0}, {0, 0}, {0, 1}, {0, 2}}}},
             {{0, 0}},
             {{0, 2}},
-            make_grid({".GS"})));
+            make_grid({".G."})));
 
     // Agent-set and path-shape failures.
     tests.expect_issue(
