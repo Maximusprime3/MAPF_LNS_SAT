@@ -879,6 +879,15 @@ WaitingSolveResult lazy_solve_with_waiting_time(
         offset,
         start_t,
         end_t);
+
+    const LocalZoneValidationResult construction_validation =
+        validate_local_zone_state(state, current_solution);
+    if (!construction_validation.valid) {
+        result.status = SolveStatus::InvalidState;
+        result.message = "Invalid local-zone state after construction: " +
+                         construction_validation.message;
+        return result;
+    }
    
     LocalZoneState baseline_state = state;
     
@@ -931,6 +940,17 @@ WaitingSolveResult lazy_solve_with_waiting_time(
             attempt_metrics_log.push_back(attempt_metrics);
             attempt_recorded = true;
         };
+
+        const LocalZoneValidationResult pre_sat_validation =
+            validate_local_zone_state(state, current_solution);
+        if (!pre_sat_validation.valid) {
+            finalize_attempt(false);
+            result.status = SolveStatus::InvalidState;
+            result.message = "Invalid local-zone state before SAT solving: " +
+                             pre_sat_validation.message;
+            result.waiting_attempts = attempt_metrics_log;
+            return result;
+        }
 
 
         auto mdd_start = std::chrono::steady_clock::now();
@@ -1022,6 +1042,17 @@ WaitingSolveResult lazy_solve_with_waiting_time(
                     return result;
                 }
                 segment.path = it_path->second;
+            }
+
+            const LocalZoneValidationResult integration_validation =
+                validate_local_zone_state(state, current_solution);
+            if (!integration_validation.valid) {
+                finalize_attempt(false);
+                result.status = SolveStatus::InvalidState;
+                result.message = "Invalid local-zone state before integration: " +
+                                 integration_validation.message;
+                result.waiting_attempts = attempt_metrics_log;
+                return result;
             }
 
             // Reject malformed segment paths before they can be integrated.
@@ -1421,6 +1452,17 @@ WaitingSolveResult lazy_solve_with_waiting_time(
                 conflict_map,
                 conflict_meta,
                 offset);
+
+            const LocalZoneValidationResult refresh_validation =
+                validate_local_zone_state(state, current_solution);
+            if (!refresh_validation.valid) {
+                finalize_attempt(false);
+                result.status = SolveStatus::InvalidState;
+                result.message = "Invalid local-zone state after refresh: " +
+                                 refresh_validation.message;
+                result.waiting_attempts = attempt_metrics_log;
+                return result;
+            }
 
             //verify every agent has their amount of waiting time as goal positions in the end of their path
             for (const auto& [agent_id, path] : current_solution.agent_paths) {

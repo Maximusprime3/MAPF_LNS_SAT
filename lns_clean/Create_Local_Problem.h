@@ -5,6 +5,7 @@
 
 #include <memory>
 #include <set>
+#include <string>
 #include <tuple>
 #include <unordered_map>
 #include <utility>
@@ -40,6 +41,18 @@ struct LocalZoneState {
     int zone_start_t = 0;
     int zone_end_t = 0;
 };
+
+struct LocalZoneValidationResult {
+    bool valid = false;
+    std::string message;
+};
+
+// Checks the complete cross-indexed pseudo-agent representation without
+// mutating it. Callers use the diagnostic to reject malformed local state
+// before it reaches CNF construction or global path integration.
+LocalZoneValidationResult validate_local_zone_state(
+    const LocalZoneState& state,
+    const CurrentSolution& current_solution);
 
 void align_mdd_to_time_window(std::shared_ptr<MDD> mdd,
     int entry_t, int exit_t,

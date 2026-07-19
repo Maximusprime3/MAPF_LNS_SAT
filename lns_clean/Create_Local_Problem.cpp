@@ -8,6 +8,7 @@
 #include <memory>
 #include <set>
 #include <unordered_map>
+#include <unordered_set>
 #include <vector>
 
 
@@ -589,6 +590,191 @@ LocalZoneState build_local_problem_for_zone(
     }
 
     return state;
+}
+
+
+LocalZoneValidationResult validate_local_zone_state(
+    const LocalZoneState& state,
+    const CurrentSolution& current_solution) {
+    auto invalid = [](const std::string& message) {
+        return LocalZoneValidationResult{false, message};
+    };
+
+    if (state.zone_start_t < 0 || state.zone_end_t < state.zone_start_t) {
+        return invalid("invalid local-zone time window");
+    }
+    if (state.segments.empty()) {
+        return invalid("local-zone state has no segments");
+    }
+
+    const int real_agent_count = static_cast<int>(current_solution.starts.size());
+    std::unordered_set<int> segment_ids;
+    std::vector<bool> referenced_segments(state.segments.size(), false);
+    int max_segment_id = -1;
+
+    for (size_t index = 0; index < state.segments.size(); ++index) {
+        const LocalSegment& segment = state.segments[index];
+        if (segment.segment_id < 0 || !segment_ids.insert(segment.segment_id).second) {
+            return invalid("segment IDs must be unique and non-negative");
+        }
+        max_segment_id = std::max(max_segment_id, segment.segment_id);
+
+        if (segment.original_id < 0 || segment.original_id >= real_agent_count ||
+            segment.original_id >= static_cast<int>(current_solution.goals.size()) ||
+            current_solution.agent_paths.find(segment.original_id) ==
+                current_solution.agent_paths.end()) {
+            return invalid("segment has invalid real-agent ownership");
+        }
+
+        const auto index_it = state.segment_index_by_id.find(segment.segment_id);
+        if (index_it == state.segment_index_by_id.end() || index_it->second != index) {
+            return invalid("segment_index_by_id does not map a segment ID back to its index");
+        }
+
+        if (segment.entry_t < state.zone_start_t ||
+            segment.exit_t < segment.entry_t ||
+            segment.exit_t > state.zone_end_t) {
+            return invalid("segment interval is outside the local-zone time window");
+        }
+        const int expected_path_size = segment.exit_t - segment.entry_t + 1;
+        if (static_cast<int>(segment.path.size()) != expected_path_size) {
+            return invalid("segment path length does not match its entry and exit times");
+        }
+        if (segment.original_entry_t < 0 ||
+            segment.original_exit_t < segment.original_entry_t) {
+            return invalid("segment has invalid original entry and exit times");
+        }
+
+        const auto& global_path = current_solution.agent_paths.at(segment.original_id);
+        if (segment.exit_t >= static_cast<int>(global_path.size()) ||
+            segment.original_exit_t >= static_cast<int>(global_path.size())) {
+            return invalid("segment interval exceeds its real agent's global path");
+        }
+
+        for (size_t path_index = 1; path_index < segment.path.size(); ++path_index) {
+            const std::pair<int, int>& previous = segment.path[path_index - 1];
+            const std::pair<int, int>& current = segment.path[path_index];
+            const int row_delta = previous.first > current.first
+                                      ? previous.first - current.first
+                                      : current.first - previous.first;
+            const int col_delta = previous.second > current.second
+                                      ? previous.second - current.second
+                                      : current.second - previous.second;
+            if (row_delta + col_delta > 1) {
+                return invalid("segment path is not continuous");
+            }
+        }
+
+        if (!segment.mdd || segment.mdd->levels.empty()) {
+            return invalid("segment has no MDD");
+        }
+        if (segment.mdd->levels.begin()->first != segment.entry_t ||
+            segment.mdd->levels.rbegin()->first != segment.exit_t) {
+            return invalid("segment MDD time bounds do not match the segment interval");
+        }
+        for (int timestep = segment.entry_t; timestep <= segment.exit_t; ++timestep) {
+            const auto level_it = segment.mdd->levels.find(timestep);
+            if (level_it == segment.mdd->levels.end() || level_it->second.empty()) {
+                return invalid("segment MDD has a missing or empty time level");
+            }
+            for (const auto& node : level_it->second) {
+                if (!node || node->time_step != timestep) {
+                    return invalid("segment MDD node identity does not match its time level");
+                }
+            }
+        }
+
+        const auto contains_position = [](const auto& nodes,
+                                          const std::pair<int, int>& position) {
+            return std::any_of(nodes.begin(), nodes.end(), [&](const auto& node) {
+                return node && node->position == position;
+            });
+        };
+        if (!contains_position(segment.mdd->levels.begin()->second,
+                               segment.path.front()) ||
+            !contains_position(segment.mdd->levels.rbegin()->second,
+                               segment.path.back())) {
+            return invalid("segment endpoints do not match its MDD endpoints");
+        }
+    }
+
+    if (state.segment_index_by_id.size() != state.segments.size()) {
+        return invalid("segment_index_by_id contains missing or extra entries");
+    }
+    for (const auto& [segment_id, index] : state.segment_index_by_id) {
+        if (index >= state.segments.size() ||
+            state.segments[index].segment_id != segment_id) {
+            return invalid("segment_index_by_id contains an invalid reverse mapping");
+        }
+    }
+
+    std::unordered_map<int, std::vector<int>> expected_pseudo_ids;
+    for (const auto& [original_id, indices] : state.original_to_segments) {
+        if (indices.empty()) {
+            return invalid("original_to_segments contains an empty segment list");
+        }
+        if (current_solution.agent_paths.find(original_id) ==
+            current_solution.agent_paths.end()) {
+            return invalid("original_to_segments references an unknown real agent");
+        }
+
+        int previous_exit = -1;
+        int previous_original_exit = -1;
+        for (size_t order = 0; order < indices.size(); ++order) {
+            const size_t index = indices[order];
+            if (index >= state.segments.size() || referenced_segments[index]) {
+                return invalid("original_to_segments contains an invalid or duplicate index");
+            }
+            referenced_segments[index] = true;
+            const LocalSegment& segment = state.segments[index];
+            if (segment.original_id != original_id) {
+                return invalid("original_to_segments points to a segment owned by another agent");
+            }
+            if (order == 0 && segment.segment_id != original_id) {
+                return invalid("the first segment must retain the real agent ID");
+            }
+            if (order > 0) {
+                if (segment.segment_id < real_agent_count) {
+                    return invalid("pseudo segment ID overlaps the real-agent ID range");
+                }
+                expected_pseudo_ids[original_id].push_back(segment.segment_id);
+            }
+            if (segment.entry_t <= previous_exit ||
+                segment.original_entry_t <= previous_original_exit) {
+                return invalid("agent segment intervals must be ordered and non-overlapping");
+            }
+            previous_exit = segment.exit_t;
+            previous_original_exit = segment.original_exit_t;
+        }
+    }
+
+    if (std::any_of(referenced_segments.begin(), referenced_segments.end(),
+                    [](bool referenced) { return !referenced; })) {
+        return invalid("a segment is missing from original_to_segments");
+    }
+
+    for (const auto& [original_id, pseudo_ids] : state.original_to_pseudo_ids) {
+        if (current_solution.agent_paths.find(original_id) ==
+            current_solution.agent_paths.end()) {
+            return invalid("pseudo-ID mapping references an unknown real agent");
+        }
+        if (pseudo_ids != expected_pseudo_ids[original_id]) {
+            return invalid("pseudo-ID mapping does not match active pseudo segments");
+        }
+    }
+    for (const auto& [original_id, pseudo_ids] : expected_pseudo_ids) {
+        const auto mapping_it = state.original_to_pseudo_ids.find(original_id);
+        if (!pseudo_ids.empty() &&
+            (mapping_it == state.original_to_pseudo_ids.end() ||
+             mapping_it->second != pseudo_ids)) {
+            return invalid("active pseudo segment is missing from its pseudo-ID mapping");
+        }
+    }
+
+    if (state.next_pseudo_id <= max_segment_id) {
+        return invalid("next_pseudo_id does not exceed all active segment IDs");
+    }
+    return {true, {}};
 }
 
 

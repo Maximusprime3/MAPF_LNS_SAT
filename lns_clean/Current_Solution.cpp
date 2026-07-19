@@ -105,6 +105,14 @@ void CurrentSolution::update_with_local_paths_and_pseudo_agents(
     const std::unordered_map<int, std::vector<std::pair<int,int>>>& solved_segment_paths,
     const std::vector<std::vector<char>>& map) {
 
+    const LocalZoneValidationResult validation =
+        validate_local_zone_state(local_zone_state, *this);
+    if (!validation.valid) {
+        std::cerr << "[Current_Solution] ERROR: Refusing invalid local-zone state: "
+                  << validation.message << std::endl;
+        return;
+    }
+
     std::cout << "[LNS] Updating global solution with pseudo-agent local paths..." << std::endl;
 
     std::set<int> processed_segments;
@@ -289,4 +297,3 @@ void CurrentSolution::update_with_local_paths_and_pseudo_agents(
 
     std::cout << "[LNS] Successfully updated global solution with local paths and pseudo agents!" << std::endl;
 }
-
