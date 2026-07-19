@@ -1,7 +1,6 @@
 # Build script for the refactored LNS solver components
 
 CXX := g++
-CC := gcc
 AR := ar
 
 OBJ_DIR := build
@@ -44,16 +43,16 @@ CONFIG_CHARACTERIZATION_TEST_BIN := $(OBJ_DIR)/test_solver_configuration_charact
 SOLVER_CONFIG_TEST_SRC := $(TEST_DIR)/test_solver_configuration.cpp
 SOLVER_CONFIG_TEST_BIN := $(OBJ_DIR)/test_solver_configuration
 BATCH_BACKEND_TEST_SRC := $(TEST_DIR)/test_batch_backend_rejection.sh
+SUPPORTED_BUILD_DEPENDENCY_TEST_SRC := $(TEST_DIR)/test_supported_build_dependencies.sh
 LNS_VERIFICATION_SRC := $(TEST_DIR)/run_lns_verification.cpp
 LNS_VERIFICATION_BIN := $(OBJ_DIR)/run_lns_verification
 
 CXXFLAGS := -std=gnu++17 -O2 -Wall -Wextra -pedantic -pthread -fpermissive
-CFLAGS := -O2 -Wall -Wextra -pedantic
 
 # Optional instrumentation helpers used for debugging memory issues
 DEBUG_FLAGS := -O0 -g
 SANITIZE_FLAGS := -fsanitize=address -fno-omit-frame-pointer
-CPPFLAGS := -D__STDC_FORMAT_MACROS -I. -I.. -I../cnf -I../mdd -I../minisat -I../minisat/minisat-master -I../probSAT-master
+CPPFLAGS := -D__STDC_FORMAT_MACROS -I. -I.. -I../cnf -I../mdd -I../minisat -I../minisat/minisat-master
 DEPFLAGS := -MMD -MP
 LDFLAGS := -pthread
 
@@ -77,7 +76,6 @@ SHARED_SOURCES := \
     ../SATSolverManager.cpp \
     ../cnf/CNF.cpp \
     ../cnf/CNFConstructor.cpp \
-    ../cnf/CNFProbSATConstructor.cpp \
     ../mdd/MDD.cpp \
     ../mdd/MDDConstructor.cpp \
     ../mdd/MDDNode.cpp \
@@ -85,8 +83,6 @@ SHARED_SOURCES := \
     ../minisat/minisat-master/minisat/core/Solver.cc \
     ../minisat/minisat-master/minisat/utils/System.cc
 
-C_SOURCES := \
-    ../probSAT-master/probSAT_inmem.c
 
 # Helper to flatten object names
 define make_obj
@@ -95,16 +91,16 @@ endef
 
 LOCAL_OBJS := $(foreach src,$(LOCAL_SOURCES),$(call make_obj,$(src)))
 SHARED_OBJS := $(foreach src,$(SHARED_SOURCES),$(call make_obj,$(src)))
-C_OBJS := $(foreach src,$(C_SOURCES),$(call make_obj,$(src)))
 
-OBJS := $(LOCAL_OBJS) $(SHARED_OBJS) $(C_OBJS)
+OBJS := $(LOCAL_OBJS) $(SHARED_OBJS)
 DEPS := $(OBJS:.o=.d)
 
-.PHONY: all clean asan run_experiments test test_solution_verifier test_neighborhood_variant test_current_solution_transaction test_initial_mdd_agent_ids test_solve_result test_minisat_unsat_status test_sat_protocol_characterization test_pseudo_agent_segmentation test_pseudo_agent_refresh_reassembly test_local_zone_state_validation test_waiting_budget_conservation test_grid_walkability test_solver_configuration_characterization test_solver_configuration test_batch_backend_rejection lns_verification_runner
+.PHONY: all clean asan run_experiments test test_solution_verifier test_neighborhood_variant test_current_solution_transaction test_initial_mdd_agent_ids test_solve_result test_minisat_unsat_status test_sat_protocol_characterization test_pseudo_agent_segmentation test_pseudo_agent_refresh_reassembly test_local_zone_state_validation test_waiting_budget_conservation test_grid_walkability test_solver_configuration_characterization test_solver_configuration test_batch_backend_rejection test_supported_build_dependencies lns_verification_runner
 
 all: $(LIB) $(MAIN) $(RUN_EXPERIMENTS_BIN)
 
 $(LIB): $(OBJ_DIR) $(OBJS)
+	$(RM) $@
 	$(AR) rcs $@ $(OBJS)
 
 $(MAIN): $(LIB) $(MAIN_SRC)
@@ -205,7 +201,10 @@ test_solver_configuration: $(SOLVER_CONFIG_TEST_BIN)
 test_batch_backend_rejection: $(RUN_EXPERIMENTS_BIN) $(BATCH_BACKEND_TEST_SRC)
 	sh $(BATCH_BACKEND_TEST_SRC) $(RUN_EXPERIMENTS_BIN)
 
-test: test_solution_verifier test_neighborhood_variant test_current_solution_transaction test_initial_mdd_agent_ids test_solve_result test_minisat_unsat_status test_sat_protocol_characterization test_pseudo_agent_segmentation test_pseudo_agent_refresh_reassembly test_local_zone_state_validation test_waiting_budget_conservation test_grid_walkability test_solver_configuration_characterization test_solver_configuration test_batch_backend_rejection
+test_supported_build_dependencies: $(LIB) $(SUPPORTED_BUILD_DEPENDENCY_TEST_SRC)
+	sh $(SUPPORTED_BUILD_DEPENDENCY_TEST_SRC) $(LIB)
+
+test: test_solution_verifier test_neighborhood_variant test_current_solution_transaction test_initial_mdd_agent_ids test_solve_result test_minisat_unsat_status test_sat_protocol_characterization test_pseudo_agent_segmentation test_pseudo_agent_refresh_reassembly test_local_zone_state_validation test_waiting_budget_conservation test_grid_walkability test_solver_configuration_characterization test_solver_configuration test_batch_backend_rejection test_supported_build_dependencies
 
 # Integration runner used by bounded benchmark checks. It calls LNS and then
 # independently verifies the returned path map with SolutionVerifier.
@@ -219,14 +218,9 @@ $(OBJ_DIR)/$(notdir $(basename $(1))).o: $(1) | $(OBJ_DIR)
 	$(CXX) $(CXXFLAGS) $(CPPFLAGS) $(DEPFLAGS) -c $$< -o $$@
 endef
 
-define c_rule
-$(OBJ_DIR)/$(notdir $(basename $(1))).o: $(1) | $(OBJ_DIR)
-	$(CC) $(CFLAGS) $(CPPFLAGS) $(DEPFLAGS) -c $$< -o $$@
-endef
 
 $(foreach src,$(LOCAL_SOURCES),$(eval $(call cpp_rule,$(src))))
 $(foreach src,$(SHARED_SOURCES),$(eval $(call cpp_rule,$(src))))
-$(foreach src,$(C_SOURCES),$(eval $(call c_rule,$(src))))
 
 clean:
 	rm -rf $(OBJ_DIR) $(LIB) $(MAIN) $(RUN_EXPERIMENTS_BIN)
@@ -234,7 +228,6 @@ clean:
 asan:
 	$(MAKE) clean
 	$(MAKE) CXXFLAGS="$(filter-out -O%,$(CXXFLAGS)) $(DEBUG_FLAGS) $(SANITIZE_FLAGS)" \
-		CFLAGS="$(filter-out -O%,$(CFLAGS)) $(DEBUG_FLAGS) $(SANITIZE_FLAGS)" \
 		LDFLAGS="$(LDFLAGS) $(SANITIZE_FLAGS)"
 
 -include $(DEPS)
