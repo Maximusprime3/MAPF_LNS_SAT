@@ -73,7 +73,7 @@ LocalZoneResult solve_local_zone(
     std::set<std::pair<int,int>> all_walkable_positions_set;
     for (int i = 0; i < static_cast<int>(map.size()); i++) {
         for (int j = 0; j < static_cast<int>(map[0].size()); j++) {
-            if (map[i][j] == '.') {
+            if (map[i][j] == '.' || map[i][j] == 'G') {
                 all_walkable_positions++;
                 all_walkable_positions_set.emplace(i, j);
             }

@@ -90,7 +90,7 @@ void validate_path_geometry(
 }  // namespace
 
 bool is_walkable_cell(char cell) {
-    return cell == '.' || cell == 'G' || cell == 'S';
+    return cell == '.' || cell == 'G';
 }
 
 VerificationReport verify_path_geometry(

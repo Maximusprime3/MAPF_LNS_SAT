@@ -52,7 +52,7 @@ struct VerificationReport {
     }
 };
 
-// Moving AI maps use '.', 'G', and 'S' for traversable terrain.
+// The loader preserves Moving AI terrain; only '.' and 'G' are traversable.
 bool is_walkable_cell(char cell);
 
 // Validates one path's map bounds, terrain, and moves. It intentionally does

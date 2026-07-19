@@ -104,7 +104,7 @@ std::set<std::pair<int,int>> ConflictZoneBuilder::build_reachable_zone(
     for (const auto& conflict_point : conflict_points) {
         int center_row = conflict_point.first;
         int center_col = conflict_point.second;
-        if (!in_bounds(center_row, center_col)) {
+        if (!is_walkable(center_row, center_col)) {
             continue;
         }
 
@@ -135,7 +135,7 @@ std::set<std::pair<int,int>> ConflictZoneBuilder::build_reachable_zone(
     for (const auto& seed : seeds) {
         int sr = seed.first;
         int sc = seed.second;
-        if (!in_bounds(sr, sc)) {
+        if (!is_walkable(sr, sc)) {
             continue;
         }
         if (distance[sr][sc] != -1) {

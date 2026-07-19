@@ -35,6 +35,25 @@ std::optional<LNSProblem> load_problem(const std::string& map_path,
     problem.starts = sets[scenario_index].first;
     problem.goals = sets[scenario_index].second;
 
+    auto is_walkable_position = [&](const std::pair<int, int>& position) {
+        const int row = position.first;
+        const int column = position.second;
+        if (row < 0 || row >= static_cast<int>(problem.grid.size()) ||
+            column < 0 ||
+            column >= static_cast<int>(problem.grid[row].size())) {
+            return false;
+        }
+        const char cell = problem.grid[row][column];
+        return cell == '.' || cell == 'G';
+    };
+    for (std::size_t agent_id = 0; agent_id < problem.starts.size(); ++agent_id) {
+        if (!is_walkable_position(problem.starts[agent_id]) ||
+            !is_walkable_position(problem.goals[agent_id])) {
+            std::cerr << "[LNS] Agent " << agent_id
+                      << " has a blocked or out-of-grid start/goal" << std::endl;
+            return std::nullopt;
+        }
+    }
+
     return problem;
 }
-

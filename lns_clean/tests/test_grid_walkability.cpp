@@ -127,49 +127,47 @@ int main() {
             map_path, "tests/fixtures/all-terrain-valid.scen", 1, 0).has_value(),
         "problem loader should accept in-bounds walkable endpoints");
     tests.expect(
-        load_problem(
+        !load_problem(
             map_path, "tests/fixtures/all-terrain-blocked.scen", 1, 0).has_value(),
-        "current problem loader accepts blocked endpoints for downstream validation");
+        "problem loader should reject blocked endpoints");
     tests.expect(
-        load_problem(
+        !load_problem(
             map_path,
             "tests/fixtures/all-terrain-out-of-bounds.scen",
             1,
             0).has_value(),
-        "current problem loader accepts out-of-grid endpoints for downstream validation");
+        "problem loader should reject out-of-grid endpoints");
 
     // Record the current per-component terrain rules before centralization.
-    const std::set<char> verifier_walkable{'.', 'G', 'S'};
-    const std::set<char> mdd_walkable{'.', 'G'};
-    const std::set<char> frontier_walkable{'.', 'G'};
+    const std::set<char> expected_walkable{'.', 'G'};
     for (char terrain : kMovingAiTerrain) {
         tests.expect(
-            verifier_accepts(terrain) == (verifier_walkable.count(terrain) != 0),
-            std::string("unexpected verifier characterization for ") + terrain);
+            verifier_accepts(terrain) == (expected_walkable.count(terrain) != 0),
+            std::string("verifier disagrees on terrain ") + terrain);
         tests.expect(
-            mdd_accepts(terrain) == (mdd_walkable.count(terrain) != 0),
-            std::string("unexpected MDD characterization for ") + terrain);
+            mdd_accepts(terrain) == (expected_walkable.count(terrain) != 0),
+            std::string("MDD disagrees on terrain ") + terrain);
 
         const Grid one_cell{{terrain}};
         const auto seeded_zone =
             create_shape_from_conflicts({{0, 0}}, 0, one_cell);
         tests.expect(
-            seeded_zone.count({0, 0}) == 1,
-            std::string("current zone seeding should preserve in-bounds conflict cell ") +
-                terrain);
+            (seeded_zone.count({0, 0}) != 0) ==
+                (expected_walkable.count(terrain) != 0),
+            std::string("zone seeding disagrees on terrain ") + terrain);
 
         const auto frontier =
             find_new_positions({{0, 0}}, {}, one_cell);
         tests.expect(
             (frontier.count({0, 0}) != 0) ==
-                (frontier_walkable.count(terrain) != 0),
-            std::string("unexpected zone-frontier characterization for ") + terrain);
+                (expected_walkable.count(terrain) != 0),
+            std::string("zone frontier disagrees on terrain ") + terrain);
     }
 
     const auto goal_fallback = characterize_goal_only_fallback();
     tests.expect(
-        goal_fallback.status == SolveStatus::InvalidInput,
-        "current full-map counting treats a goal-only grid as having no walkable cells");
+        goal_fallback.status != SolveStatus::InvalidInput,
+        "full-map fallback should count goal terrain as walkable");
 
     // Row/column limits and invalid positions must be handled without indexing
     // outside the grid, even before all components agree on terrain.
