@@ -1195,7 +1195,18 @@ WaitingSolveResult lazy_solve_with_waiting_time(
             if (!apply_waiting_time_delta(state, segment_id, original_id, amount_of_waiting_time, masked_map, map, current_solution, rng)) {
                 return false;
             }
-            current_solution.use_waiting_time(original_id, amount_of_waiting_time);
+            // A goal-tail MDD may already reserve some or all of this delta.
+            // Non-goal segments still consume terminal slack when their global
+            // suffix is shifted, so charge only the part not reserved by MDD
+            // construction.
+            const int charged_during_mdd =
+                std::max(0, available_wait -
+                                current_solution.get_waiting_time(original_id));
+            const int remaining_charge =
+                std::max(0, amount_of_waiting_time - charged_during_mdd);
+            if (remaining_charge > 0) {
+                current_solution.use_waiting_time(original_id, remaining_charge);
+            }
             //check if the path of this agent is consitent after apllying waiting time
             if (!verify_path_consistency(current_solution.agent_paths[original_id], map)) {
                 std::cout << "[Waiting_time_Solve] ERROR: Path is not consistent after applying waiting time to agent " << original_id << "segment " << segment_id << std::endl;
