@@ -10,7 +10,6 @@
 #include "Metrics.h"
 #include "ExperimentLogger.h"
 
-
 #include <iostream>
 #include <vector>
 #include <random>
@@ -36,8 +35,6 @@
 
 
 
-
-
 //TODO:
 //incremental sat solve, when solution found -> keep solving after adding new constraints
 //minisat can do that, no need to re-solve from scratch
@@ -57,22 +54,34 @@
 
 
 
-
-
 //main function for LNS
 //takes map path, scenario path, number of agents, scenario index, use minisat, seed
 //returns paths of agents
 
-LNSResult LNS(
-    const std::string& map_path, 
-    const std::string& scenario_path, 
-    int num_agents, 
-    int scenario_index, 
-    bool use_minisat, //room to plug in different solvers
-    int seed,
-    NeighborhoodVariant variant) {
+LNSResult LNS(const SolveRequest& request, const SolverConfig& config) {
+    const std::string& map_path = request.map_path;
+    const std::string& scenario_path = request.scenario_path;
+    const int num_agents = request.num_agents;
+    const int scenario_index = request.scenario_index;
+    const int seed = config.seed;
+    const NeighborhoodVariant variant = config.neighborhood_variant;
+    const bool use_minisat = config.backend == SatBackend::MiniSat;
+    (void)use_minisat;
+
     LNSResult solve_result;
     solve_result.seed = seed;
+    solve_result.neighborhood_variant = variant;
+    solve_result.backend = config.backend;
+
+    const ConfigurationValidation validation =
+        validate_solver_configuration(request, config);
+    if (!validation.valid) {
+        solve_result.status = SolveStatus::InvalidInput;
+        solve_result.message = validation.message;
+        return solve_result;
+    }
+    solve_result.search_started = true;
+    const SolverDeadline deadline = make_solver_deadline(config);
     
     //Step 1: Load problem and print basic info
     auto problem_loaded = load_problem(map_path, scenario_path, num_agents, scenario_index);
@@ -88,6 +97,12 @@ LNSResult LNS(
     std::cout << "[LNS] Loaded map " << problem.grid.size() << "x"
               << (problem.grid.empty() ? 0 : (int)problem.grid[0].size())
               << ", agents: " << problem.starts.size() << std::endl;
+    if (solver_deadline_reached(deadline)) {
+        solve_result.status = SolveStatus::Exhausted;
+        solve_result.message = "Wall-clock limit reached after input loading";
+        return solve_result;
+    }
+
     std::cout << "[LNS] Neighborhood variant: " << variant_policy.canonical_name
               << " (initial radius=" << variant_policy.initial_radius << ")" << std::endl;
 
@@ -128,7 +143,6 @@ LNSResult LNS(
     std::cout << "[LNS] Base makespan: " << base_makespan << std::endl;
 
     //Step 3: Outer loop: increase max timesteps if no solution is found
-    const int max_timestep_increase = 10; // crude limit for now
     std::mt19937 rng(static_cast<unsigned int>(seed));
     std::optional<CurrentSolution> successfull_solution;
     int successful_max_timesteps = -1;
@@ -136,12 +150,20 @@ LNSResult LNS(
     std::string terminal_message = "No solution found within the configured makespan limit";
     bool fatal_failure = false;
     
-    for (int inc = 0; inc <= max_timestep_increase; ++inc) {
+    int makespan_attempt_index = 0;
+    for (int inc = 0;
+         inc <= config.makespan_increase_limit;
+         inc += config.makespan_increment, ++makespan_attempt_index) {
+        if (solver_deadline_reached(deadline)) {
+            terminal_message = "Wall-clock limit reached before makespan attempt";
+            break;
+        }
+
         int current_max_timesteps = base_makespan + inc;
         std::cout << "\n[LNS] === Attempt with max_timesteps=" << current_max_timesteps << " ===" << std::endl;
         
         MakespanAttemptMetrics makespan_metrics;
-        makespan_metrics.attempt_index = inc;
+        makespan_metrics.attempt_index = makespan_attempt_index;
         makespan_metrics.makespan = current_max_timesteps;
         auto attempt_start = std::chrono::steady_clock::now();
 
@@ -246,7 +268,6 @@ LNSResult LNS(
                     << best_bucket.indices.size() << " conflicts and " 
                     << best_bucket.positions.size() << " positions." << std::endl;
 
-
             //Step 7: Solve the best buckets Local Zone
             std::cout << "[LNS] Solving the best bucket Local Zone..." << std::endl;
             //solve the local zone
@@ -261,7 +282,9 @@ LNSResult LNS(
                 current_max_timesteps,
                 rng,
                 experiment_id,
-                inc);
+                makespan_attempt_index,
+                config,
+                deadline);
 
             for (const auto& zone_metric : local_zone_result.attempt_metrics) {
                 makespan_metrics.zones_attempted++;
@@ -369,4 +392,22 @@ LNSResult LNS(
     solve_result.makespan = successful_max_timesteps;
     solve_result.message = "Verified collision-free solution";
     return solve_result;
+}
+
+LNSResult LNS(
+    const std::string& map_path,
+    const std::string& scenario_path,
+    int num_agents,
+    int scenario_index,
+    bool use_minisat,
+    int seed,
+    NeighborhoodVariant variant) {
+    SolveRequest request{
+        map_path, scenario_path, num_agents, scenario_index};
+    SolverConfig config;
+    config.seed = seed;
+    config.neighborhood_variant = variant;
+    config.backend =
+        use_minisat ? SatBackend::MiniSat : SatBackend::ProbSat;
+    return LNS(request, config);
 }

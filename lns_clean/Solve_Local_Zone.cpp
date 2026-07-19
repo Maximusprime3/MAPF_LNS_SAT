@@ -37,7 +37,9 @@ LocalZoneResult solve_local_zone(
     int current_max_timesteps,
     std::mt19937& rng,
     const std::string& experiment_id,
-    int makespan_attempt_index) {
+    int makespan_attempt_index,
+    const SolverConfig& config,
+    const SolverDeadline& deadline) {
         
     LocalZoneResult local_zone_result;
 
@@ -91,12 +93,20 @@ LocalZoneResult solve_local_zone(
     int failed_attempt_count = 0;
     //loop until solution found or the local zone reached the size of the map and still no solution found
     while (!local_zone_result.solved() && local_zone_positions.size() <= all_walkable_positions) {
+        if (solver_deadline_reached(deadline)) {
+            local_zone_result.status = SolveStatus::Exhausted;
+            local_zone_result.message =
+                "Wall-clock limit reached before local-zone attempt";
+            break;
+        }
+
         
         if (local_zone_positions.size() > all_walkable_positions) {
             std::cout << "[Solve_local_zone] Local zone size reached all walkable positions" << std::endl;
             break;
         }
-        if(local_zone_positions.size() >=0.95*all_walkable_positions) {
+        if (static_cast<double>(local_zone_positions.size()) /
+                all_walkable_positions >= config.full_map_fallback_threshold) {
             std::cout << "[Solve_local_zone] Local zone size reached 95% of all walkable positions" << std::endl;
             std::cout << "[Solve_local_zone] Will try to solve with full time window and all positions" << std::endl;
             
@@ -133,7 +143,9 @@ LocalZoneResult solve_local_zone(
                 full_time_window_end,
                 expansion_radius,
                 0,
-                rng);
+                rng,
+                config,
+                deadline);
             zone_metrics = record_zone_attempt(std::move(zone_metrics), full_waiting_result, zone_attempt_index);
             zone_attempt_index++;
 
@@ -181,7 +193,9 @@ LocalZoneResult solve_local_zone(
             start_t, end_t,
             expanded_offset,
             0, //initial waiting time amount
-            rng);
+            rng,
+            config,
+            deadline);
         LocalZoneAttemptMetrics zone_metrics;
         zone_metrics.attempt_index = zone_attempt_index;
         zone_metrics.zone_positions = local_zone_positions.size();
@@ -274,4 +288,21 @@ LocalZoneResult solve_local_zone(
     }
     std::cout << "[Solve_local_zone] Final local zone size: " << local_zone_positions.size() << " (" << (double)local_zone_positions.size() / all_walkable_positions * 100 << "% of all walkable positions)" << std::endl;
     return local_zone_result;
+}
+
+LocalZoneResult solve_local_zone(
+    const std::vector<std::vector<char>>& map,
+    const DiamondBucket& best_bucket,
+    const std::vector<ConflictMeta>& conflict_meta,
+    const std::vector<std::vector<std::vector<int>>>& conflict_map,
+    CurrentSolution& current_solution,
+    const NeighborhoodPolicy& neighborhood_policy,
+    int current_max_timesteps,
+    std::mt19937& rng,
+    const std::string& experiment_id,
+    int makespan_attempt_index) {
+    return solve_local_zone(
+        map, best_bucket, conflict_meta, conflict_map, current_solution,
+        neighborhood_policy, current_max_timesteps, rng, experiment_id,
+        makespan_attempt_index, SolverConfig{}, SolverDeadline{});
 }

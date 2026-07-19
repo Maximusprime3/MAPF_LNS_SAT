@@ -28,7 +28,6 @@
 //introduce mdd timed positions to check collision validity -> have segment timed positions --> collision validity checking with timed positions
 
 
-
 namespace {
 
 using VertexCollision = std::tuple<int, int, std::pair<int,int>, int>;
@@ -84,7 +83,6 @@ bool verify_goal_wait_suffix(
     return path.back() == goal &&
            path[path.size() - static_cast<std::size_t>(waiting_time) - 1] == goal;
 }
-
 
 int count_goal_tail(const std::vector<std::pair<int,int>>& path,
     const std::pair<int,int>& goal) {
@@ -241,7 +239,6 @@ bool can_apply_waiting_time_delta(const LocalZoneState& state,
 
 
 
-
 using TimedPosition = std::tuple<int, int, int>;
 using TimedPositionSet = std::set<TimedPosition>;
 
@@ -263,7 +260,6 @@ TimedPositionSet gather_mdd_timed_positions(const std::shared_ptr<MDD>& mdd) {
     return result;
 }
 
-
 bool segment_allows_position_at_time(
     const LocalSegment& segment,
     const std::pair<int,int>& position,
@@ -282,7 +278,6 @@ bool segment_allows_position_at_time(
         return node && node->position == position;
     });
 }
-
 
 std::vector<std::tuple<int, int, std::pair<int,int>, int>> gather_vertex_collisions(
     const LocalZoneState& state) {
@@ -440,7 +435,6 @@ void merge_collisions(LocalZoneState& state,
 }
 
 }//namespace
-
 
 
 //also updates the global solution with the new path
@@ -678,7 +672,6 @@ bool apply_waiting_time_delta(
     
     //path can be longer than before, need to find last segment exit_t and resize path if needed
 
-
     //before the segment entry time, the path is the same
     //after the segment exit time, the path is the same but delayed by the waiting time delta
     const int path_length = static_cast<int>(new_path.size());
@@ -797,7 +790,6 @@ bool apply_waiting_time_delta(
 }
 
 
-
 std::pair<std::set<int>, bool> choose_agents_to_use_waiting_time(
     const std::vector<ConflictMeta>& current_conflicts, 
     const CurrentSolution& current_solution) {
@@ -832,7 +824,6 @@ std::pair<std::set<int>, bool> choose_agents_to_use_waiting_time(
 }
 
 
-
 WaitingSolveResult lazy_solve_with_waiting_time(
     CurrentSolution& current_solution,
     const std::vector<std::vector<char>>& map,
@@ -845,12 +836,20 @@ WaitingSolveResult lazy_solve_with_waiting_time(
     int end_t,
     int offset,
     int initial_waiting_time_amount,
-    std::mt19937& rng) {
+    std::mt19937& rng,
+    const SolverConfig& config,
+    const SolverDeadline& deadline) {
 
     (void)map;
     (void)local_zone_conflict_indices;
 
     WaitingSolveResult result;
+    if (solver_deadline_reached(deadline)) {
+        result.status = SolveStatus::Exhausted;
+        result.message = "Wall-clock limit reached before local solver mutation";
+        return result;
+    }
+
 
     std::vector<WaitingAttemptMetrics> attempt_metrics_log;
     
@@ -913,6 +912,13 @@ WaitingSolveResult lazy_solve_with_waiting_time(
     const int max_iterations = std::max(1, total_available_waiting_time);
     std::cout << "[Waiting_time_Solve] Max iterations: " << max_iterations << std::endl;
     for (int iter = 0; iter < max_iterations; iter++) {
+        if (solver_deadline_reached(deadline)) {
+            result.status = SolveStatus::Exhausted;
+            result.message = "Wall-clock limit reached before SAT invocation";
+            result.waiting_attempts = std::move(attempt_metrics_log);
+            return result;
+        }
+
         std::cout << "[Waiting_time_Solve] Iteration " << iter << "..." << std::endl;
 
         
@@ -952,7 +958,6 @@ WaitingSolveResult lazy_solve_with_waiting_time(
             return result;
         }
 
-
         auto mdd_start = std::chrono::steady_clock::now();
         auto mdd_map = build_segment_mdd_map(state);
         auto mdd_end = std::chrono::steady_clock::now();
@@ -984,7 +989,6 @@ WaitingSolveResult lazy_solve_with_waiting_time(
         auto cached_vertex_collisions = gather_vertex_collisions(state);
         auto cached_edge_collisions = gather_edge_collisions(state);
 
-
         auto entry_exit_map = build_segment_entry_exit_time_map(state);
 
         //print all agents with all corresponding pseudo agents in one line per agent
@@ -1006,7 +1010,7 @@ WaitingSolveResult lazy_solve_with_waiting_time(
             entry_exit_map,
             state.zone_start_t,
             state.zone_end_t,
-            10000000, // max_iterations
+            config.lazy_iteration_limit,
             cached_vertex_collisions,
             cached_edge_collisions);
         
@@ -1510,6 +1514,25 @@ WaitingSolveResult lazy_solve_with_waiting_time(
     return result;
 }
 
+WaitingSolveResult lazy_solve_with_waiting_time(
+    CurrentSolution& current_solution,
+    const std::vector<std::vector<char>>& map,
+    const std::vector<std::vector<char>>& masked_map,
+    const std::set<std::pair<int,int>>& local_zone_positions,
+    const std::vector<ConflictMeta>& conflict_meta,
+    const std::vector<int>& local_zone_conflict_indices,
+    const std::vector<std::vector<std::vector<int>>>& conflict_map,
+    int start_t,
+    int end_t,
+    int offset,
+    int initial_waiting_time_amount,
+    std::mt19937& rng) {
+    return lazy_solve_with_waiting_time(
+        current_solution, map, masked_map, local_zone_positions,
+        conflict_meta, local_zone_conflict_indices, conflict_map,
+        start_t, end_t, offset, initial_waiting_time_amount, rng,
+        SolverConfig{}, SolverDeadline{});
+}
 
 
 

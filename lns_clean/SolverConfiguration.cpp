@@ -323,3 +323,15 @@ ConfigurationResolution load_solve_configuration_file(
         return invalid_resolution("Failed to parse config file");
     }
 }
+
+SolverDeadline make_solver_deadline(const SolverConfig& config) {
+    if (!config.wall_clock_limit) {
+        return std::nullopt;
+    }
+    return std::chrono::steady_clock::now() + *config.wall_clock_limit;
+}
+
+bool solver_deadline_reached(const SolverDeadline& deadline) {
+    return deadline.has_value() &&
+           std::chrono::steady_clock::now() >= *deadline;
+}

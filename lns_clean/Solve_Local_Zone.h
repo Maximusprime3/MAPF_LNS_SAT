@@ -4,6 +4,7 @@
 #include "Current_Solution.h"
 #include "Metrics.h"
 #include "NeighborhoodVariant.h"
+#include "SolverConfiguration.h"
 #include "SolveStatus.h"
 
 #include <random>
@@ -23,6 +24,21 @@ struct LocalZoneResult {
         return status == SolveStatus::Solved;
     }
 };
+
+
+LocalZoneResult solve_local_zone(
+    const std::vector<std::vector<char>>& map,
+    const DiamondBucket& best_bucket,
+    const std::vector<ConflictMeta>& conflict_meta,
+    const std::vector<std::vector<std::vector<int>>>& conflict_map,
+    CurrentSolution& current_solution,
+    const NeighborhoodPolicy& neighborhood_policy,
+    int current_max_timesteps,
+    std::mt19937& rng,
+    const std::string& experiment_id,
+    int makespan_attempt_index,
+    const SolverConfig& config,
+    const SolverDeadline& deadline);
 
 
 LocalZoneResult solve_local_zone(

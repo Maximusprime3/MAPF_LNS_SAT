@@ -73,6 +73,8 @@ struct ConfigurationResolution {
     }
 };
 
+using SolverDeadline = std::optional<std::chrono::steady_clock::time_point>;
+
 ConfigurationValidation validate_solver_configuration(
     const SolveRequest& request,
     const SolverConfig& config);
@@ -88,3 +90,7 @@ const char* log_level_name(LogLevel level);
 
 std::optional<SatBackend> parse_sat_backend(const std::string& value);
 const char* sat_backend_name(SatBackend backend);
+
+SolverDeadline make_solver_deadline(const SolverConfig& config);
+
+bool solver_deadline_reached(const SolverDeadline& deadline);
