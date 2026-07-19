@@ -1,6 +1,7 @@
 #pragma once
 
 #include "Metrics.h"
+#include "SolverConfiguration.h"
 
 #include <filesystem>
 #include <string>
@@ -9,6 +10,8 @@
 class ExperimentLogger {
 public:
     static ExperimentLogger& instance();
+
+    void set_log_level(LogLevel log_level);
 
     std::string start_experiment(const std::string& map_path,
                                  const std::string& scenario_path,
@@ -45,5 +48,6 @@ private:
     std::string sanitize(const std::string& value) const;
 
     std::filesystem::path base_dir_;
+    LogLevel log_level_ = LogLevel::Info;
     mutable std::unordered_map<std::string, bool> header_written_;
 };

@@ -40,6 +40,10 @@ ExperimentLogger& ExperimentLogger::instance() {
 
 ExperimentLogger::ExperimentLogger() : base_dir_("logs") {}
 
+void ExperimentLogger::set_log_level(LogLevel log_level) {
+    log_level_ = log_level;
+}
+
 void ExperimentLogger::ensure_directory() const {
     std::error_code ec;
     std::filesystem::create_directories(base_dir_, ec);
@@ -89,6 +93,9 @@ std::string ExperimentLogger::start_experiment(const std::string& map_path,
                                                int num_agents,
                                                int scenario_index,
                                                int seed) {
+    if (log_level_ == LogLevel::Quiet) {
+        return "logging-disabled";
+    }
     ensure_directory();
     auto now = std::chrono::system_clock::now();
     auto ts = std::chrono::duration_cast<std::chrono::milliseconds>(now.time_since_epoch()).count();
@@ -107,6 +114,7 @@ void ExperimentLogger::log_lazy_iteration(const std::string& experiment_id,
                                           int zone_attempt,
                                           int waiting_attempt,
                                           const LazySatIterationMetrics& metrics) {
+    if (log_level_ == LogLevel::Quiet) return;
     auto path = file_path("lazy_iterations.csv");
     ensure_header(path, kLazyIterationsHeader);
 
@@ -140,6 +148,7 @@ void ExperimentLogger::log_waiting_attempt(const std::string& experiment_id,
                                            int makespan_attempt,
                                            int zone_attempt,
                                            const WaitingAttemptMetrics& metrics) {
+    if (log_level_ == LogLevel::Quiet) return;
     auto path = file_path("waiting_attempts.csv");
     ensure_header(path, kWaitingAttemptsHeader);
     std::ofstream file(path, std::ios::app);
@@ -173,6 +182,7 @@ void ExperimentLogger::log_waiting_attempt(const std::string& experiment_id,
 void ExperimentLogger::log_local_zone_attempt(const std::string& experiment_id,
                                               int makespan_attempt,
                                               const LocalZoneAttemptMetrics& metrics) {
+    if (log_level_ == LogLevel::Quiet) return;
     auto path = file_path("local_zones.csv");
     ensure_header(path, kLocalZoneHeader);
     std::ofstream file(path, std::ios::app);
@@ -202,6 +212,7 @@ void ExperimentLogger::log_local_zone_attempt(const std::string& experiment_id,
 
 void ExperimentLogger::log_makespan_attempt(const std::string& experiment_id,
                                             const MakespanAttemptMetrics& metrics) {
+    if (log_level_ == LogLevel::Quiet) return;
     auto path = file_path("makespan_attempts.csv");
     ensure_header(path, kMakespanHeader);
     std::ofstream file(path, std::ios::app);
@@ -228,6 +239,7 @@ void ExperimentLogger::log_makespan_attempt(const std::string& experiment_id,
 }
 
 void ExperimentLogger::log_experiment_summary(const ExperimentSummaryMetrics& metrics) {
+    if (log_level_ == LogLevel::Quiet) return;
     auto path = file_path("experiments.csv");
     ensure_header(path, kExperimentHeader);
     std::ofstream file(path, std::ios::app);

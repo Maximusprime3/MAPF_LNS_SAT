@@ -105,9 +105,12 @@ LocalZoneResult solve_local_zone(
             std::cout << "[Solve_local_zone] Local zone size reached all walkable positions" << std::endl;
             break;
         }
-        if (static_cast<double>(local_zone_positions.size()) /
+        if (all_walkable_positions > 0 &&
+            static_cast<double>(local_zone_positions.size()) /
                 all_walkable_positions >= config.full_map_fallback_threshold) {
-            std::cout << "[Solve_local_zone] Local zone size reached 95% of all walkable positions" << std::endl;
+            std::cout << "[Solve_local_zone] Local zone size reached "
+                      << config.full_map_fallback_threshold * 100.0
+                      << "% of all walkable positions" << std::endl;
             std::cout << "[Solve_local_zone] Will try to solve with full time window and all positions" << std::endl;
             
             local_zone_positions = all_walkable_positions_set;

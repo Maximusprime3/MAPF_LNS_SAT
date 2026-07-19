@@ -8,7 +8,7 @@
 #include <cstdlib>
 #include <fstream>
 #include <limits>
-#include <unordered_map>
+#include <map>
 
 namespace {
 
@@ -283,7 +283,7 @@ ConfigurationResolution load_solve_configuration_file(
         }
 
         ConfigurationResolution result;
-        std::unordered_map<std::string, std::string> values;
+        std::map<std::string, std::string> values;
         std::string line;
         std::size_t line_number = 0;
         while (std::getline(input, line)) {

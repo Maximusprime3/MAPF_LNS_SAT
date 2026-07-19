@@ -107,6 +107,7 @@ LNSResult LNS(const SolveRequest& request, const SolverConfig& config) {
               << " (initial radius=" << variant_policy.initial_radius << ")" << std::endl;
 
     auto& logger = ExperimentLogger::instance();
+    logger.set_log_level(config.log_level);
     std::string experiment_id = logger.start_experiment(map_path, scenario_path, num_agents, scenario_index, seed);
     ExperimentSummaryMetrics summary;
     summary.experiment_id = experiment_id;
