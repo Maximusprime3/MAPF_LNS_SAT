@@ -13,11 +13,6 @@ enum class LogLevel {
     Debug,
 };
 
-enum class SatBackend {
-    MiniSat,
-    ProbSat,
-};
-
 struct SolveRequest {
     std::string map_path;
     std::string scenario_path;
@@ -42,7 +37,6 @@ struct SolverConfig {
     std::optional<std::chrono::milliseconds> wall_clock_limit;
     LogLevel log_level = LogLevel::Info;
     std::string log_output_path;
-    SatBackend backend = SatBackend::MiniSat;
 
     bool operator==(const SolverConfig& other) const {
         return seed == other.seed &&
@@ -53,8 +47,7 @@ struct SolverConfig {
                full_map_fallback_threshold == other.full_map_fallback_threshold &&
                wall_clock_limit == other.wall_clock_limit &&
                log_level == other.log_level &&
-               log_output_path == other.log_output_path &&
-               backend == other.backend;
+               log_output_path == other.log_output_path;
     }
 };
 
@@ -87,9 +80,6 @@ ConfigurationResolution load_solve_configuration_file(
 
 std::optional<LogLevel> parse_log_level(const std::string& value);
 const char* log_level_name(LogLevel level);
-
-std::optional<SatBackend> parse_sat_backend(const std::string& value);
-const char* sat_backend_name(SatBackend backend);
 
 SolverDeadline make_solver_deadline(const SolverConfig& config);
 

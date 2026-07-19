@@ -51,10 +51,12 @@ int main(int argc, char** argv) {
         return 65;
     }
 
-    // The public artifact is intended to support MiniSAT only, so this runner
-    // deliberately fixes the backend selection to MiniSAT.
+    SolverConfig config;
+    config.seed = seed;
+    config.neighborhood_variant = *variant;
     const auto solve_result = LNS(
-        map_path, scenario_path, num_agents, scenario_index, true, seed, *variant);
+        SolveRequest{map_path, scenario_path, num_agents, scenario_index},
+        config);
     if (!solve_result.solved()) {
         std::cerr << "VERIFY_RESULT seed=" << seed
                   << " status=" << solve_status_name(solve_result.status)

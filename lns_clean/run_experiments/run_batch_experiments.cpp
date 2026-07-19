@@ -37,7 +37,6 @@ struct Options {
     std::string scenario_pattern = "{map}-even-*.scen";
     std::optional<int> num_agents;
     int experiments = 1;
-    std::string solver = "minisat";
     int seed = 42;
     // Reproduce the published LNS-SAT baseline unless a paper variant is requested.
     std::string variant = "lns-sat";
@@ -73,7 +72,6 @@ namespace {
               << "  --scenario-pattern PAT   Glob pattern within the scenario directory (default: {map}-even-*.scen)\n"
               << "  --num-agents N           Number of agents per experiment\n"
               << "  --experiments N          Number of experiments to execute (default: 1)\n"
-              << "  --solver NAME            minisat or probsat (default: minisat)\n"
               << "  --seed N                 Random seed forwarded to the solver (default: 42)\n"
               << "  --variant NAME           Neighborhood policy: lns-sat, initial-radius-2,\n"
               << "                           fixed-step-2, or increasing-step (default: lns-sat)\n"
@@ -87,19 +85,6 @@ namespace {
 
 bool starts_with(const std::string& text, const std::string& prefix) {
     return text.compare(0, prefix.size(), prefix) == 0;
-}
-
-bool equals_ignore_case(const std::string& lhs, const std::string& rhs) {
-    if (lhs.size() != rhs.size()) {
-        return false;
-    }
-    for (std::size_t i = 0; i < lhs.size(); ++i) {
-        if (std::tolower(static_cast<unsigned char>(lhs[i])) !=
-            std::tolower(static_cast<unsigned char>(rhs[i]))) {
-            return false;
-        }
-    }
-    return true;
 }
 
 std::optional<int> parse_int(const std::string& value) {
@@ -151,8 +136,6 @@ Options parse_arguments(int argc, char** argv) {
                 usage(argv[0], "--experiments requires an integer");
             }
             opts.experiments = *parsed;
-        } else if (arg == "--solver") {
-            opts.solver = require_value("--solver");
         } else if (arg == "--variant") {
             opts.variant = require_value("--variant");
         } else if (arg == "--seed") {
@@ -364,11 +347,7 @@ void print_stats(const std::vector<ScenarioStats>& stats, int num_agents, int re
     std::cout << "\n";
 }
 
-fs::path check_executable(const std::string& solver) {
-    if (!equals_ignore_case(solver, "minisat") && !equals_ignore_case(solver, "probsat")) {
-        throw std::runtime_error("Unknown solver: " + solver);
-    }
-
+fs::path check_executable() {
     const std::vector<fs::path> candidates = {
         fs::path("lns_clean") / "main_clean_lns",
         fs::path("main_clean_lns"),
@@ -568,7 +547,6 @@ std::vector<std::string> build_command(const fs::path& exe, const Options& opts,
     cmd.push_back(scenario_path.string());
     cmd.push_back(std::to_string(*opts.num_agents));
     cmd.push_back(std::to_string(scenario_index));
-    cmd.push_back(opts.solver);
     cmd.push_back(std::to_string(opts.seed));
     // main_clean_lns accepts the neighborhood variant after the optional seed.
     cmd.push_back(opts.variant);
@@ -631,7 +609,7 @@ int execute_single_run(Options opts, const std::optional<std::string>& label) {
 
     fs::path exe_path;
     try {
-        exe_path = check_executable(opts.solver);
+        exe_path = check_executable();
     } catch (const std::exception& ex) {
         std::cerr << "Error: " << ex.what() << "\n";
         return EXIT_FAILURE;
@@ -866,7 +844,6 @@ Options apply_config_entry(const Options& base, const simple_json::JsonObject& e
         {"scenario_pattern", 0},
         {"num_agents", 0},
         {"experiments", 0},
-        {"solver", 0},
         {"seed", 0},
         {"variant", 0},
         {"start_run_id", 0},
@@ -921,12 +898,6 @@ Options apply_config_entry(const Options& base, const simple_json::JsonObject& e
                 throw std::runtime_error("Configuration field 'experiments' must be an integer");
             }
             result.experiments = *parsed;
-        } else if (key == "solver") {
-            auto str = value_to_string(value);
-            if (!str) {
-                throw std::runtime_error("Configuration field 'solver' must be a string");
-            }
-            result.solver = *str;
         } else if (key == "variant") {
             auto str = value_to_string(value);
             if (!str) {

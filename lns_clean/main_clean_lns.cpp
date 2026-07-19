@@ -10,10 +10,10 @@ namespace {
 
 void print_usage(const char* executable) {
     std::cerr << "Usage: " << executable
-              << " <map_path> <scenario_path> <num_agents> <scenario_index> <solver> [seed] [variant]" << std::endl
+              << " <map_path> <scenario_path> <num_agents> <scenario_index> [seed] [variant]" << std::endl
               << "   or: " << executable << " --config <config_file>" << std::endl
               << "  optional variant: lns-sat | initial-radius-2 | fixed-step-2 | increasing-step" << std::endl
-              << "  example: ./main_clean_lns mapf-map/maze-32-32-2.map mapf-scen-even/scen-even/maze-32-32-2-even-1.scen 30 0 minisat 42 lns-sat" << std::endl;
+              << "  example: ./main_clean_lns mapf-map/maze-32-32-2.map mapf-scen-even/scen-even/maze-32-32-2-even-1.scen 30 0 42 lns-sat" << std::endl;
 }
 
 }  // namespace

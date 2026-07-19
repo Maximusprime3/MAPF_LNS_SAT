@@ -83,10 +83,6 @@ std::optional<std::string> apply_value(
         const auto parsed = parse_int(value);
         if (!parsed) return "Config field scenario_index must be an integer";
         request.scenario_index = *parsed;
-    } else if (key == "solver") {
-        const auto parsed = parse_sat_backend(value);
-        if (!parsed) return "Unknown solver backend: " + value;
-        config.backend = *parsed;
     } else if (key == "seed") {
         const auto parsed = parse_int(value);
         if (!parsed) return "Config field seed must be an integer";
@@ -150,21 +146,6 @@ const char* log_level_name(LogLevel level) {
     return "unknown";
 }
 
-std::optional<SatBackend> parse_sat_backend(const std::string& value) {
-    const std::string normalized = lower(trim(value));
-    if (normalized == "minisat") return SatBackend::MiniSat;
-    if (normalized == "probsat") return SatBackend::ProbSat;
-    return std::nullopt;
-}
-
-const char* sat_backend_name(SatBackend backend) {
-    switch (backend) {
-        case SatBackend::MiniSat: return "minisat";
-        case SatBackend::ProbSat: return "probsat";
-    }
-    return "unknown";
-}
-
 ConfigurationValidation validate_solver_configuration(
     const SolveRequest& request,
     const SolverConfig& config) {
@@ -220,21 +201,14 @@ ConfigurationValidation validate_solver_configuration(
         default:
             return invalid("Unknown log level");
     }
-    switch (config.backend) {
-        case SatBackend::MiniSat:
-        case SatBackend::ProbSat:
-            break;
-        default:
-            return invalid("Unknown solver backend");
-    }
     return {true, ""};
 }
 
 ConfigurationResolution resolve_positional_solve_arguments(
     const std::vector<std::string>& arguments) {
-    if (arguments.size() < 5 || arguments.size() > 7) {
+    if (arguments.size() < 4 || arguments.size() > 6) {
         return invalid_resolution(
-            "Expected map, scenario, agent count, scenario index, solver, "
+            "Expected map, scenario, agent count, scenario index, "
             "and optional seed and variant");
     }
 
@@ -252,20 +226,16 @@ ConfigurationResolution resolve_positional_solve_arguments(
     }
     result.request.scenario_index = *scenario_index;
 
-    const auto backend = parse_sat_backend(arguments[4]);
-    if (!backend) return invalid_resolution("Unknown solver backend: " + arguments[4]);
-    result.config.backend = *backend;
-
-    if (arguments.size() >= 6) {
-        const auto seed = parse_int(arguments[5]);
+    if (arguments.size() >= 5) {
+        const auto seed = parse_int(arguments[4]);
         if (!seed) return invalid_resolution("Seed must be an integer");
         result.config.seed = *seed;
     }
-    if (arguments.size() >= 7) {
-        const auto variant = parse_neighborhood_variant(arguments[6]);
+    if (arguments.size() >= 6) {
+        const auto variant = parse_neighborhood_variant(arguments[5]);
         if (!variant) {
             return invalid_resolution(
-                "Unknown neighborhood variant: " + arguments[6]);
+                "Unknown neighborhood variant: " + arguments[5]);
         }
         result.config.neighborhood_variant = *variant;
     }

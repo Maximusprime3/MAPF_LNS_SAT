@@ -29,13 +29,9 @@ int main() {
     // Missing files exercise the public input-error path without executing the
     // search. Failure must be explicit rather than encoded as an empty map.
     const LNSResult invalid_input = LNS(
-        "tests/does-not-exist.map",
-        "tests/does-not-exist.scen",
-        1,
-        0,
-        true,
-        42,
-        NeighborhoodVariant::LnsSat);
+        SolveRequest{"tests/does-not-exist.map",
+                     "tests/does-not-exist.scen", 1, 0},
+        SolverConfig{});
     passed &= invalid_input.status == SolveStatus::InvalidInput;
     passed &= !invalid_input.solved();
     passed &= invalid_input.paths.empty();

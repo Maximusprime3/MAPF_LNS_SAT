@@ -27,12 +27,9 @@ int main() {
                  "the public default variant should resolve to LNS-SAT");
 
     const LNSResult default_result = LNS(
-        "tests/does-not-exist.map",
-        "tests/does-not-exist.scen",
-        1,
-        0,
-        true,
-        42);
+        SolveRequest{"tests/does-not-exist.map",
+                     "tests/does-not-exist.scen", 1, 0},
+        SolverConfig{});
     ok &= expect(default_result.status == SolveStatus::InvalidInput,
                  "missing inputs should fail as InvalidInput before search");
     ok &= expect(default_result.seed == 42,
@@ -40,14 +37,14 @@ int main() {
     ok &= expect(default_result.paths.empty() && default_result.runtime_ms == 0.0,
                  "invalid input should not produce paths or measured search time");
 
+    SolverConfig overridden_config;
+    overridden_config.seed = 73;
+    overridden_config.neighborhood_variant =
+        NeighborhoodVariant::FixedStep2;
     const LNSResult overridden_seed = LNS(
-        "tests/does-not-exist.map",
-        "tests/does-not-exist.scen",
-        1,
-        0,
-        true,
-        73,
-        NeighborhoodVariant::FixedStep2);
+        SolveRequest{"tests/does-not-exist.map",
+                     "tests/does-not-exist.scen", 1, 0},
+        overridden_config);
     ok &= expect(overridden_seed.status == SolveStatus::InvalidInput &&
                      overridden_seed.seed == 73,
                  "an explicit seed should propagate before input loading");

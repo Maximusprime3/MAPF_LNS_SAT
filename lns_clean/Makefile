@@ -43,6 +43,7 @@ CONFIG_CHARACTERIZATION_TEST_SRC := $(TEST_DIR)/test_solver_configuration_charac
 CONFIG_CHARACTERIZATION_TEST_BIN := $(OBJ_DIR)/test_solver_configuration_characterization
 SOLVER_CONFIG_TEST_SRC := $(TEST_DIR)/test_solver_configuration.cpp
 SOLVER_CONFIG_TEST_BIN := $(OBJ_DIR)/test_solver_configuration
+BATCH_BACKEND_TEST_SRC := $(TEST_DIR)/test_batch_backend_rejection.sh
 LNS_VERIFICATION_SRC := $(TEST_DIR)/run_lns_verification.cpp
 LNS_VERIFICATION_BIN := $(OBJ_DIR)/run_lns_verification
 
@@ -99,7 +100,7 @@ C_OBJS := $(foreach src,$(C_SOURCES),$(call make_obj,$(src)))
 OBJS := $(LOCAL_OBJS) $(SHARED_OBJS) $(C_OBJS)
 DEPS := $(OBJS:.o=.d)
 
-.PHONY: all clean asan run_experiments test test_solution_verifier test_neighborhood_variant test_current_solution_transaction test_initial_mdd_agent_ids test_solve_result test_minisat_unsat_status test_sat_protocol_characterization test_pseudo_agent_segmentation test_pseudo_agent_refresh_reassembly test_local_zone_state_validation test_waiting_budget_conservation test_grid_walkability test_solver_configuration_characterization test_solver_configuration lns_verification_runner
+.PHONY: all clean asan run_experiments test test_solution_verifier test_neighborhood_variant test_current_solution_transaction test_initial_mdd_agent_ids test_solve_result test_minisat_unsat_status test_sat_protocol_characterization test_pseudo_agent_segmentation test_pseudo_agent_refresh_reassembly test_local_zone_state_validation test_waiting_budget_conservation test_grid_walkability test_solver_configuration_characterization test_solver_configuration test_batch_backend_rejection lns_verification_runner
 
 all: $(LIB) $(MAIN) $(RUN_EXPERIMENTS_BIN)
 
@@ -201,7 +202,10 @@ $(SOLVER_CONFIG_TEST_BIN): $(SOLVER_CONFIG_TEST_SRC) SolverConfiguration.cpp Sol
 test_solver_configuration: $(SOLVER_CONFIG_TEST_BIN)
 	$(SOLVER_CONFIG_TEST_BIN)
 
-test: test_solution_verifier test_neighborhood_variant test_current_solution_transaction test_initial_mdd_agent_ids test_solve_result test_minisat_unsat_status test_sat_protocol_characterization test_pseudo_agent_segmentation test_pseudo_agent_refresh_reassembly test_local_zone_state_validation test_waiting_budget_conservation test_grid_walkability test_solver_configuration_characterization test_solver_configuration
+test_batch_backend_rejection: $(RUN_EXPERIMENTS_BIN) $(BATCH_BACKEND_TEST_SRC)
+	sh $(BATCH_BACKEND_TEST_SRC) $(RUN_EXPERIMENTS_BIN)
+
+test: test_solution_verifier test_neighborhood_variant test_current_solution_transaction test_initial_mdd_agent_ids test_solve_result test_minisat_unsat_status test_sat_protocol_characterization test_pseudo_agent_segmentation test_pseudo_agent_refresh_reassembly test_local_zone_state_validation test_waiting_budget_conservation test_grid_walkability test_solver_configuration_characterization test_solver_configuration test_batch_backend_rejection
 
 # Integration runner used by bounded benchmark checks. It calls LNS and then
 # independently verifies the returned path map with SolutionVerifier.

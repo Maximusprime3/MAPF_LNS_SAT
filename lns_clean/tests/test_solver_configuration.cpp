@@ -72,7 +72,7 @@ const std::string kRequiredConfig =
 
 void test_defaults_and_overrides(TestRunner& tests) {
     const auto defaults = resolve_positional_solve_arguments(
-        {"maps/example.map", "scenarios/example.scen", "4", "0", "minisat"});
+        {"maps/example.map", "scenarios/example.scen", "4", "0"});
     tests.expect(defaults.valid(), "valid positional defaults were rejected");
     tests.expect(defaults.config.seed == 42, "default seed changed");
     tests.expect(
@@ -90,8 +90,6 @@ void test_defaults_and_overrides(TestRunner& tests) {
                  "default wall-clock policy should remain unlimited");
     tests.expect(defaults.config.log_level == LogLevel::Info,
                  "default log level changed");
-    tests.expect(defaults.config.backend == SatBackend::MiniSat,
-                 "default backend changed");
 
     const auto overrides = load_text(
         kRequiredConfig +
@@ -103,8 +101,7 @@ void test_defaults_and_overrides(TestRunner& tests) {
         "full_map_fallback_threshold=0.75\n"
         "wall_clock_limit_ms=250\n"
         "log_level=debug\n"
-        "log=solver.log\n"
-        "solver=probsat\n");
+        "log=solver.log\n");
     tests.expect(overrides.valid(), "explicit valid overrides were rejected");
     tests.expect(overrides.config.seed == 73,
                  "explicit seed override was not resolved");
@@ -124,8 +121,6 @@ void test_defaults_and_overrides(TestRunner& tests) {
     tests.expect(overrides.config.log_level == LogLevel::Debug &&
                      overrides.config.log_output_path == "solver.log",
                  "explicit logging policy was not resolved");
-    tests.expect(overrides.config.backend == SatBackend::ProbSat,
-                 "explicit backend was not resolved");
 }
 
 void test_invalid_values(TestRunner& tests) {
@@ -194,20 +189,30 @@ void test_invalid_values(TestRunner& tests) {
 void test_parsing_failures(TestRunner& tests) {
     tests.expect(
         !resolve_positional_solve_arguments(
-             {"map", "scenario", "four", "0", "minisat"}).valid(),
+             {"map", "scenario", "four", "0"}).valid(),
         "malformed positional agent count was accepted");
     tests.expect(
         !resolve_positional_solve_arguments(
-             {"map", "scenario", "4", "zero", "minisat"}).valid(),
+             {"map", "scenario", "4", "zero"}).valid(),
         "malformed positional scenario index was accepted");
     tests.expect(
         !resolve_positional_solve_arguments(
-             {"map", "scenario", "4", "0", "minisat", "seed"}).valid(),
+             {"map", "scenario", "4", "0", "seed"}).valid(),
         "malformed positional seed was accepted");
     tests.expect(
         !resolve_positional_solve_arguments(
-             {"map", "scenario", "4", "0", "minisat", "42", "unknown"}).valid(),
+             {"map", "scenario", "4", "0", "42", "unknown"}).valid(),
         "unknown positional variant was accepted");
+    tests.expect(
+        !resolve_positional_solve_arguments(
+             {"map", "scenario", "4", "0", "minisat", "42"}).valid(),
+        "obsolete minisat positional slot was accepted");
+    tests.expect(
+        !resolve_positional_solve_arguments(
+             {"map", "scenario", "4", "0", "probsat", "42"}).valid(),
+        "obsolete probsat positional slot was accepted");
+    tests.expect(!load_text(kRequiredConfig + "solver=minisat\n").valid(),
+                 "obsolete config solver key was accepted");
     tests.expect(!load_text(kRequiredConfig + "variant=unknown\n").valid(),
                  "unknown config variant was accepted");
     tests.expect(!load_text(kRequiredConfig + "log_level=trace\n").valid(),
@@ -233,10 +238,9 @@ void test_parsing_failures(TestRunner& tests) {
 void test_equivalent_inputs(TestRunner& tests) {
     const auto positional = resolve_positional_solve_arguments(
         {"maps/example.map", "scenarios/example.scen", "4", "0",
-         "minisat", "73", "fixed-step-2"});
+         "73", "fixed-step-2"});
     const auto file = load_text(
         kRequiredConfig +
-        "solver=minisat\n"
         "seed=73\n"
         "variant=fixed-step-2\n");
     tests.expect(positional.valid() && file.valid(),

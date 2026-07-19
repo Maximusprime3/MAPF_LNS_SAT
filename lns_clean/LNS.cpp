@@ -65,13 +65,10 @@ LNSResult LNS(const SolveRequest& request, const SolverConfig& config) {
     const int scenario_index = request.scenario_index;
     const int seed = config.seed;
     const NeighborhoodVariant variant = config.neighborhood_variant;
-    const bool use_minisat = config.backend == SatBackend::MiniSat;
-    (void)use_minisat;
 
     LNSResult solve_result;
     solve_result.seed = seed;
     solve_result.neighborhood_variant = variant;
-    solve_result.backend = config.backend;
 
     const ConfigurationValidation validation =
         validate_solver_configuration(request, config);
@@ -393,22 +390,4 @@ LNSResult LNS(const SolveRequest& request, const SolverConfig& config) {
     solve_result.makespan = successful_max_timesteps;
     solve_result.message = "Verified collision-free solution";
     return solve_result;
-}
-
-LNSResult LNS(
-    const std::string& map_path,
-    const std::string& scenario_path,
-    int num_agents,
-    int scenario_index,
-    bool use_minisat,
-    int seed,
-    NeighborhoodVariant variant) {
-    SolveRequest request{
-        map_path, scenario_path, num_agents, scenario_index};
-    SolverConfig config;
-    config.seed = seed;
-    config.neighborhood_variant = variant;
-    config.backend =
-        use_minisat ? SatBackend::MiniSat : SatBackend::ProbSat;
-    return LNS(request, config);
 }
