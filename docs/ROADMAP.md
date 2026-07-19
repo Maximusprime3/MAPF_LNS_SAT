@@ -41,15 +41,13 @@ These changes are preserved in commits `51911f6` and `5142ad6`.
 
 ## Current release blockers
 
-1. Pseudo-agent splitting, refresh, and reassembly lack focused deterministic tests.
-2. Successful waiting-slack consumption is not yet protected by conservation tests.
-3. Walkability and terrain rules are inferred independently in several components.
-4. Public solver limits remain hardcoded or spread across helper defaults.
-5. The SAT boundary still exposes probSAT concepts and a `bool use_minisat` switch.
-6. The supported build still compiles probSAT and relies on `-fpermissive`.
-7. The CLI cannot write a stable solution/result format and redirects global output.
-8. Source, legacy experiments, binaries, caches, and duplicate drivers remain mixed.
-9. The root README, citation metadata, third-party notices, and CI are not release-ready.
+1. The supported Make build still relies on `-fpermissive` and checked-in build products.
+2. The CLI cannot write a stable solution/result format and still redirects global output.
+3. Human-readable progress output remains entangled with the algorithm outside the
+   SAT/CNF backend diagnostics.
+4. Source, legacy experiments, binaries, caches, and duplicate drivers remain mixed.
+5. Run manifests still lack revision, compiler/build mode, backend version, and input checksums.
+6. The root README, citation metadata, third-party notices, and CI are not release-ready.
 
 ## Milestone 1: lock down pseudo-agent correctness
 
@@ -136,32 +134,43 @@ Two to four focused commits.
 
 ## Milestone 4: isolate MiniSAT and remove probSAT
 
+**Status: completed on `cleanup/pseudo-agent`.**
+
 ### Goal
 
 Support MiniSAT only while making a future backend replacement local and obvious.
 
-### Work
+### Completed work
 
-- Define a narrow incremental `SatSolver` interface for reset, clause addition, solving,
-  assumptions, model extraction, and solver statistics.
-- Distinguish SAT, UNSAT, and backend/internal error explicitly.
-- Implement the interface with the existing MiniSAT wrapper.
-- Inject the backend into lazy SAT solving instead of passing `bool use_minisat`.
-- Remove solver selection from the public CLI while only one backend is supported.
-- Separate SAT responsibilities from the oversized `SATSolverManager` utility class.
-- Rename probSAT-specific CNF types where their implementation is actually generic.
-- Remove probSAT sources, includes, binaries, tests, and build rules from the supported
-  artifact.
-- Replace unconditional MiniSAT/CNF debug output with the project logging interface.
+- Added a narrow incremental `SatSolver` interface for reset, clause addition, solving,
+  typed assumptions, model extraction, and per-call statistics.
+- Added explicit `Sat`, `Unsat`, and `Error` results and preserved those distinctions
+  through lazy, waiting, local-zone, and top-level solve outcomes.
+- Isolated MiniSAT types and ownership inside one adapter implementation.
+- Injected the backend into lazy SAT solving and added a fake-backed protocol suite.
+- Removed public solver selection from positional/configuration/batch inputs.
+- Removed probSAT APIs from shared CNF/manager code and probSAT dependencies from the
+  supported Make build and static archive. Historical backend sources remain outside the
+  supported artifact for later repository organization.
+- Routed MiniSAT clause diagnostics through a sink enabled only for `LogLevel::Debug` and
+  removed unconditional CNF variable/model/stack dumps.
+
+### Exit evidence
+
+The supported build graph, archive member table, and archive symbols are checked by
+`test_supported_build_dependencies.sh`. The incremental protocol tests cover suffix-only
+clause loading, assumptions, exact UNSAT reset/retry, immediate error propagation, model
+extraction, reset independence, and both-call statistics. The fixed-seed empty-8x8
+verification still returns the baseline paths at makespan 6.
 
 ### Exit condition
 
-The supported build has no probSAT dependency, and adding another SAT backend requires
-one adapter without changes to LNS, neighborhood, MDD, verifier, or CLI code.
+Achieved: adding another backend now requires one `SatSolver` adapter and factory choice,
+without changes to LNS, neighborhood, MDD, verifier, or CLI code.
 
-### Expected size
+### Delivered size
 
-Four to six focused commits.
+Six focused commits.
 
 ## Milestone 5: establish the build and source tree
 

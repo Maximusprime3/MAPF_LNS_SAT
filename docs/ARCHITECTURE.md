@@ -3,7 +3,7 @@
 ## Status and scope
 
 This document describes the implementation currently centered in `lns_clean/` on the
-`new_pseudo_agent_approach` line of development. It is a description of the code as it
+`cleanup/pseudo-agent` branch. It is a description of the code as it
 exists, not yet a claim that every component is release-ready.
 
 The intended public project is **LNS-SAT**, a SAT-based large-neighborhood-search solver
@@ -28,8 +28,7 @@ The intended solution invariants are:
 5. no two agents occupy the same vertex at the same timestep; and
 6. no two agents swap across the same edge during one timestep.
 
-The final public verifier should enforce all six invariants. The current verifier does not
-yet enforce the complete list; see `KNOWN_ISSUES.md`.
+`SolutionVerifier` independently enforces all six invariants before a successful result is returned.
 
 ## Entry points
 
@@ -42,15 +41,16 @@ positional arguments or an INI-like configuration file and calls `LNS(...)` in
 Current positional form:
 
 ```text
-main_clean_lns <map_path> <scenario_path> <num_agents> <scenario_index> <solver> [seed]
+main_clean_lns <map_path> <scenario_path> <num_agents> <scenario_index> [seed] [variant]
 ```
 
 Current configuration keys are `map`, `scenario`, `num_agents`, `scenario_index`,
-`solver`, `seed`, `variant`, and optional `log`.
+`seed`, `variant`, `makespan_increment`, `makespan_increase_limit`,
+`lazy_iteration_limit`, `full_map_fallback_threshold`, `wall_clock_limit_ms`,
+`log_level`, and optional `log`. Unknown keys are rejected.
 
-The CLI still advertises both MiniSAT and probSAT. The intended public artifact will ship
-with MiniSAT only, behind a small solver interface so another SAT solver can be added
-without changing the LNS algorithm.
+MiniSAT is the only supported backend and is intentionally implicit in the CLI. Obsolete
+solver arguments and batch/configuration fields are rejected rather than silently mapped.
 
 ### Batch experiments
 
@@ -88,13 +88,15 @@ The current orchestration in `lns_clean/LNS.cpp` follows this sequence:
 10. **Integrate or expand.** A successful local repair is spliced into the global paths.
     Otherwise the spatial zone and time window are expanded according to the selected
     radius policy.
-11. **Try the full instance.** Once the zone covers at least 95% of cells counted as
-    walkable, the code makes one full-map, full-time-window SAT attempt.
+11. **Try the full instance.** Once the zone reaches the configured full-map fallback
+    threshold, the code makes one full-map, full-time-window SAT attempt.
 12. **Increase makespan.** If the full attempt fails, the outer loop increases the
-    makespan by one and rebuilds the initial solution, up to a hard-coded limit.
+    makespan by the configured increment and rebuilds the initial solution, up to the
+    configured increase limit.
 13. **Verify and return.** The final paths are passed through `VerificationHelpers`, which
     delegates to the independent complete verifier in `SolutionVerifier`. Verification
-    failure is fail-closed: callers receive an empty result rather than invalid paths.
+    failure is fail-closed and returned as a structured non-solved status with a
+    diagnostic.
 
 ## Core modules
 
@@ -108,14 +110,16 @@ The current orchestration in `lns_clean/LNS.cpp` follows this sequence:
 | `Create_Local_Problem.*` | Split real-agent paths into local segments, assign pseudo-agent IDs, and build segment MDDs |
 | `Solve_Local_Zone.*` | Retry local repairs, expand the zone/time window, and perform the full-map fallback |
 | `Waiting_time_Solve.*` | Coordinate waiting-slack attempts and update the global solution after success |
-| `Lazy_SAT_Solve.*` | Incremental collision discovery around the SAT/CNF solve |
+| `Lazy_SAT_Solve.*` | Backend-neutral incremental clause loading, assumptions, collision discovery, and result mapping |
+| `SatSolver.h` | Typed backend contract for reset, clauses, assumptions, model, outcomes, and statistics |
 | `SolutionVerifier.*` | Independently enforce agent coverage, common horizon, path geometry, start/goal, vertex-conflict, and edge-conflict invariants |
 | `VerificationHelpers.*` | Compatibility wrappers used by existing solver call sites |
 | `ExperimentLogger.*`, `Metrics.h` | Record experiment, makespan, zone, waiting, and lazy-iteration measurements |
 | `mdd/` | Multi-value decision diagrams for time-expanded agent movement |
 | `cnf/` | Translate MDD path choices and collision constraints into CNF |
-| `minisat/` | Bundled MiniSAT implementation and in-memory wrapper |
-| `SATSolverManager.*` | Shared path, collision, makespan, and SAT-solver utilities inherited from earlier code |
+| `minisat/minisat-wrapper.cpp` | The only supported `SatSolver` adapter; owns all MiniSAT-specific types |
+| `minisat/minisat-master/` | Bundled MiniSAT implementation |
+| `SATSolverManager.*` | Shared map, path, collision, and makespan utilities inherited from earlier code |
 
 ## Pseudo-agent representation
 
@@ -139,18 +143,24 @@ the zone or time window is expanded.
 
 ## SAT boundary
 
-The algorithm conceptually needs a small backend contract:
+`SatSolver` is the backend-neutral contract used by lazy solving:
 
 ```text
-add clauses -> solve -> read model or UNSAT
+reset -> add appended clauses -> solve [with typed assumptions] -> Sat | Unsat | Error
+                                                       -> model and per-call statistics
 ```
 
-The current implementation reaches MiniSAT through repository-wide CNF and solver-manager
-classes. Solver selection leaks into the CLI and experiment tooling, while the actual
-local solve is not cleanly backend-independent. A release-oriented refactor should define
-one C++ interface at this boundary, implement it with MiniSAT, and remove probSAT from the
-supported build. That preserves future solver replaceability without maintaining two
-backends now.
+`Waiting_time_Solve` creates one fresh solver session per waiting attempt and injects it
+into `Lazy_SAT_Solve`. The lazy loop loads only the suffix appended since the previous
+iteration. If an assumption solve is explicitly `Unsat`, it resets once, reloads the full
+formula, and retries without assumptions. Backend `Error` returns immediately and is never
+treated as `Unsat`. Statistics and elapsed time include both calls when that retry occurs.
+
+The MiniSAT adapter and factory are implemented in `minisat/minisat-wrapper.cpp`; MiniSAT
+types do not cross that file boundary. Clause diagnostics use an injected sink enabled by
+`LogLevel::Debug`. The supported Make target and archive have no probSAT include, source,
+object, or symbol dependency. Historical probSAT-only files remain outside the supported
+artifact until the source-tree milestone classifies legacy material.
 
 ## Randomness and reproducibility
 
@@ -174,8 +184,10 @@ Four boundaries report the shared statuses `Solved`, `Exhausted`, `InvalidInput`
 3. `LocalZoneResult` describes spatial zone expansion across slack attempts.
 4. `LNSResult` describes the complete bounded solver invocation and owns verified final paths.
 
-`Exhausted` is an expected search outcome and may cause the next slack amount, radius, or
-makespan to be tried. `InvalidInput` and `InvalidState` propagate upward immediately. The CLI
+A formula or assumption conclusion of `Unsat` maps to bounded `Exhausted` search behavior;
+a backend `Error` maps to `InvalidState` and propagates upward immediately. `Exhausted` may
+cause the next slack amount, radius, or makespan to be tried, while `InvalidInput` and
+`InvalidState` do not trigger an UNSAT retry. The CLI
 maps the four statuses to exit codes 0, 1, 2, and 3 respectively.
 
 ## Architectural boundaries for cleanup

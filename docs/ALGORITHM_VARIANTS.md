@@ -60,9 +60,10 @@ paper-facing name `IncreasingStep`; the implementation enum can be renamed durin
 
 The variant controls neighborhood expansion only. Independently of the chosen schedule:
 
-1. when the zone reaches at least 95% of cells counted as walkable, the implementation
-   tries the full map over the full current time window;
-2. if that attempt is unsatisfiable, the outer loop increases the makespan by one; and
+1. when the zone reaches the configured full-map threshold (default `0.95`), the
+   implementation tries the full map over the full current time window;
+2. if that attempt is unsatisfiable, the outer loop uses the configured makespan increment
+   (default `1`) within the configured increase limit; and
 3. a new initial solution is sampled for the larger makespan.
 
 These fallback rules should be exposed as separate configuration values rather than being

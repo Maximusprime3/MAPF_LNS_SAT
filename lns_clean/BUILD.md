@@ -1,45 +1,51 @@
 # Building the refactored LNS components
 
-The `Makefile` in this directory builds a static archive named `liblns_clean.a` that bundles
-all refactored LNS sources together with the shared SAT solver infrastructure used across the
-repository.
+The `Makefile` in this directory is the currently supported build. It produces the static
+archive `liblns_clean.a`, the `main_clean_lns` solver, and the batch experiment runner.
 
 ## Requirements
 
-- A C++17 capable compiler (the Makefile uses `g++` with `-std=gnu++17`).
-- `gcc` for compiling the C-based probSAT sources.
+- A C++17-capable compiler (the Makefile uses `g++` with `-std=gnu++17`).
 - `ar` for producing the static library archive.
-- POSIX-compatible build environment with `make`.
-- The repository's bundled dependencies:
-  - `cnf/` CNF construction sources.
-  - `mdd/` MDD constructor sources.
-  - `minisat/` MiniSAT wrapper and core sources.
-  - `probSAT-master/` probSAT in-memory solver implementation.
+- A POSIX-compatible environment with `make` and `sh`.
+- The repository-bundled `cnf/`, `mdd/`, and MiniSAT sources.
+
+MiniSAT is the only supported SAT backend. The build has no probSAT include, source,
+object, archive-member, or symbol dependency.
 
 ## Default compiler and linker flags
 
-The Makefile defaults to the following noteworthy flags:
+The Makefile currently uses:
 
-- `-std=gnu++17` – enables C++17 language features required by the solver.
-- `-O2` – applies a reasonable optimization level.
-- `-Wall -Wextra -pedantic` – activates additional warnings during compilation.
-- `-pthread` – links in POSIX threading support used by MiniSAT.
-- `-D__STDC_FORMAT_MACROS` – ensures C99 format macros are available for older headers.
-- `-fpermissive` – matches the flags historically used for the existing solver builds.
-- Dependency tracking is enabled with `-MMD -MP`.
+- `-std=gnu++17` for the solver sources;
+- `-O2`;
+- `-Wall -Wextra -pedantic`;
+- `-pthread`;
+- `-D__STDC_FORMAT_MACROS` for the bundled MiniSAT headers;
+- `-fpermissive`, retained temporarily for legacy project sources; and
+- `-MMD -MP` dependency tracking.
 
-The probSAT C source is compiled with matching optimisation and macro definitions. All
-compilation units are built with include paths that expose the repository root, CNF, MDD,
-MiniSAT, and probSAT headers.
+Removing `-fpermissive`, separating third-party warnings, and replacing checked-in build
+products belong to Milestone 5.
 
 ## Usage
 
 ```bash
 cd lns_clean
-make          # builds liblns_clean.a under lns_clean/
-make clean    # removes the build/ directory and the static library
+make all
+make test
 ```
 
-The resulting `liblns_clean.a` can then be linked into higher-level executables together with
-any application that provides an entry point (e.g., experiment drivers) and the usual SAT
-solver dependencies already packaged in the archive.
+`make all` builds the archive, solver executable, and supported batch runner. `make test`
+runs the deterministic unit/integration suite, including incremental SAT protocol tests,
+obsolete-backend input rejection, and inspection of the supported build graph and archive.
+
+```bash
+make lns_verification_runner
+make asan
+make clean
+```
+
+The verification runner is used for bounded fixed-seed benchmark checks. `make asan`
+rebuilds with AddressSanitizer. `make clean` removes the local build directory, archive,
+solver executable, and batch runner.

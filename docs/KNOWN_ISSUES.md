@@ -33,40 +33,25 @@ bare MDD pointers. `LNS.cpp` samples paths using the stored ID and rejects incom
 construction, so a skipped agent can no longer relabel later paths. A deterministic
 regression covers successful IDs 0 and 2 with agent 1 deliberately omitted.
 
-### Waiting-time accounting needs an invariant-based audit
+### Waiting-time accounting (resolved on cleanup branch)
 
-Candidate segment-MDD construction can mutate the global `CurrentSolution` waiting-time
-budget. `CurrentSolutionTransaction` now guarantees that every unsuccessful exit restores
-paths and waiting budgets, including early validation returns, and a deterministic test
-covers rollback and commit. It is still difficult to prove that successful attempts
-consume slack exactly once.
+`CurrentSolutionTransaction` restores paths and waiting budgets on every unsuccessful
+exit, including early validation failures. Deterministic conservation tests cover a
+successful repair, formula UNSAT, multiple retries, rollback, and commit, including goal
+suffixes and unaffected paths.
 
-Additional tests should assert conservation of each agent's path length, goal suffix, and
-remaining waiting budget across real success, UNSAT, and multi-retry scenarios. Prefer
-computing candidate state without mutation where practical, then committing it only after
-a successful local solve.
+### Pseudo-agent refresh and reassembly (resolved on cleanup branch)
 
-### Pseudo-agent refresh and reassembly need focused tests
+`LocalZoneState` validation checks stable segment ownership, indices, ordering, time bounds,
+paths, MDD identities, and bidirectional pseudo-agent mappings. Deterministic tests cover
+one visit, re-entry, boundary starts/ends, goal-in-zone behavior, expansion refresh, and
+final reassembly without modifying unauthorized path portions.
 
-Zone expansion can change how many times a real path crosses the zone boundary. Stable
-pseudo IDs, segment order, entry/exit times, MDDs, and collision metadata must all be
-refreshed together. Tests are needed for an agent that:
+### Walkability rules (resolved on cleanup branch)
 
-- enters once;
-- leaves and re-enters;
-- begins or ends inside the zone;
-- reaches its global goal inside the zone; and
-- gains or loses a segment after spatial/time-window expansion.
-
-The final splice must prove that changes remain inside the authorized segments and that
-the reconstructed real-agent path is continuous.
-
-### Walkability rules are not centralized
-
-Different code paths infer walkability independently. For example, the full-map threshold
-in `Solve_Local_Zone.cpp` counts only `'.'`, while Moving AI map handling may admit other
-terrain symbols. This can produce inconsistent masks, thresholds, MDDs, and verification.
-Define one `is_walkable(cell)` rule and use it everywhere.
+`Grid.h` provides the shared walkability rule used by loading, MDD construction, zone
+construction, full-map fallback, and final verification. Boundary and supported terrain
+symbol behavior is covered by deterministic characterization tests.
 
 ## P1: algorithm behavior and reproducibility
 
@@ -76,25 +61,19 @@ Neighborhood growth now uses a typed policy, and the default is the public LNS-S
 sequence `1,2,3,4,...`. The three paper variants remain explicit selectable alternatives,
 and solver and batch logs record the selected public name.
 
-### Solver selection is misleading
+### Solver selection (resolved on cleanup branch)
 
-The CLI and batch runner advertise `minisat` and `probsat`, and any positional solver name
-other than `minisat` becomes a false boolean. The local implementation is not a cleanly
-swappable two-backend system. The intended release should:
+MiniSAT is now the only supported and implicit backend. Positional/configuration/batch
+solver selection is rejected, and lazy solving depends on the typed incremental
+`SatSolver` contract rather than MiniSAT or probSAT types. The supported build graph and
+static archive are checked for probSAT dependencies. Historical backend-only source files
+remain outside the supported artifact pending the source-tree cleanup milestone.
 
-1. validate CLI values strictly;
-2. support MiniSAT only;
-3. define a narrow backend interface; and
-4. make adding a different solver an isolated implementation task.
+### Search limits are configured; result manifests remain incomplete
 
-probSAT source, binaries, options, and build rules should not remain in the supported
-artifact merely because historical experiments used them.
-
-### Important limits and fallback thresholds are hardcoded
-
-The maximum makespan increase, initial radius, expansion policy, full-map threshold, and
-lazy-SAT iteration limits are embedded in implementation code or helper defaults. They
-need named configuration fields, validation, documented defaults, and result metadata.
+`SolverConfig` names and validates makespan increment/limit, lazy-SAT iteration limit,
+full-map fallback threshold, wall-clock limit, seed, variant, and log level. A stable
+machine-readable result manifest recording all resolved values is still missing.
 
 ### Initial path sampling is reproducible only with complete run metadata
 
@@ -140,11 +119,12 @@ has been verified.
 suggest several ad-hoc build paths. Establish one clean out-of-tree build, initially for
 Linux with a documented C++ standard and MiniSAT dependency.
 
-### Structured solver API (partially resolved on cleanup branch)
+### Structured solver API (mostly resolved on cleanup branch)
 
-`LNS(...)` now returns status, paths, makespan, runtime, seed, and a diagnostic message.
-The remaining API work is to separate progress logging from the algorithm and stabilize
-configuration types before presenting this as a reusable library interface.
+`LNS(...)` now accepts typed `SolveRequest`/`SolverConfig` values and returns status, paths,
+makespan, runtime, seed, and a diagnostic message. Lazy SAT uses a typed backend boundary.
+The remaining API work is to separate progress logging from the algorithm and present a
+stable reusable-library surface.
 
 ### Output and logging are entangled with the algorithm
 
