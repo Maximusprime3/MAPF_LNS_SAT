@@ -129,16 +129,23 @@ std::vector<std::tuple<int, int, std::pair<int,int>, std::pair<int,int>, int>> c
 
 // Helper: Create MDDs with shortest paths + waiting time at goal
 // This creates MDDs where agents go to their goal as fast as possible, then wait there
-std::vector<std::shared_ptr<MDD>> create_mdds_with_waiting_time(
+std::vector<AgentMDD> create_mdds_with_waiting_time(
     const std::vector<std::vector<char>>& grid,
     const std::vector<std::pair<int,int>>& starts,
     const std::vector<std::pair<int,int>>& goals,
-    int makespan,
     const std::vector<std::map<std::pair<int,int>, int>>& distance_matrices) {
     
     std::cout << "[SAT] Creating MDDs with shortest paths + waiting time..." << std::endl;
     
-    std::vector<std::shared_ptr<MDD>> mdds;
+    // All parallel inputs must describe the same ordered set of agents. Check
+    // this before indexing so malformed input fails without undefined behavior.
+    if (starts.size() != goals.size() || starts.size() != distance_matrices.size()) {
+        std::cerr << "[SAT] ERROR: Initial MDD inputs have inconsistent agent counts"
+                  << std::endl;
+        return {};
+    }
+
+    std::vector<AgentMDD> mdds;
     mdds.reserve(starts.size());
     
     for (size_t agent_id = 0; agent_id < starts.size(); ++agent_id) {
@@ -168,7 +175,9 @@ std::vector<std::shared_ptr<MDD>> create_mdds_with_waiting_time(
             continue;
         }
         
-        mdds.push_back(mdd);
+        // Preserve the source ID even if an earlier agent failed. Consumers
+        // must use this field rather than treating vector position as identity.
+        mdds.push_back({static_cast<int>(agent_id), std::move(mdd)});
     }
     
     std::cout << "[SAT] Created " << mdds.size() << " MDDs with waiting time structure" << std::endl;
@@ -224,6 +233,8 @@ LazySolveResult lazy_SAT_solve(
 
 
     bool solution_found = false;
+    SolveStatus final_status = SolveStatus::Exhausted;
+    std::string final_message = "Lazy SAT iteration limit reached";
     bool first_iteration = true;
     int iteration = 0;
     std::unordered_map<int, std::vector<std::pair<int,int>>> final_local_paths;
@@ -311,6 +322,13 @@ LazySolveResult lazy_SAT_solve(
             run_metrics.iterations.push_back(iteration_metrics);
             run_metrics.total_solver_wall_time_ms += solver_wall_ms;
             run_metrics.total_solver_reported_time_ms += solver_reported_ms;
+            if (!minisat_result.error_message.empty()) {
+                final_status = SolveStatus::InvalidState;
+                final_message = "MiniSAT failure: " + minisat_result.error_message;
+            } else {
+                final_status = SolveStatus::Exhausted;
+                final_message = "Local CNF is unsatisfiable";
+            }
             break;
         }
         //we found a solution
@@ -342,6 +360,8 @@ LazySolveResult lazy_SAT_solve(
         //if no collisions, we have a local solution
         if (new_collisions.empty() && new_edge_collisions.empty()) {
             solution_found = true;
+            final_status = SolveStatus::Solved;
+            final_message = "Collision-free local SAT solution";
             final_local_paths = std::move(local_paths);
             std::cout << "[SAT] Found collision-free local solution!" << std::endl;
         } else {
@@ -369,12 +389,14 @@ LazySolveResult lazy_SAT_solve(
     run_metrics.final_variable_count = local_cnf.count_variables();
     run_metrics.solved = solution_found;
     if (!solution_found) {
-        std::cout << "[SAT] Local problem appears to be unsatisfiable in current zone" << std::endl;
+        std::cout << "[SAT] Local solve ended with status "
+                  << solve_status_name(final_status) << ": " << final_message << std::endl;
     }
 
     
     LazySolveResult result;
-    result.solution_found = solution_found;
+    result.status = final_status;
+    result.message = std::move(final_message);
     result.local_paths = std::move(final_local_paths);
     result.local_entry_exit_time = local_entry_exit_time;
     result.discovered_vertex_collisions = set_to_vector_vertex(discovered_vertex_collisions_set);

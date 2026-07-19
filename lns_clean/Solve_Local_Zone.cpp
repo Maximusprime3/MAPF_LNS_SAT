@@ -6,23 +6,6 @@
 
 #include <algorithm>
 
-// Zone expansion: fixed growth adds the configured step each time, while dynamic
-// growth scales that configured step by the retry number (+step, +2*step, +3*step, ...).
-namespace {
-    int next_expansion_factor(
-        int current_expansion_factor,
-        int expansion_attempt_index,
-        int expansion_radius_step,
-        ZoneExpansionGrowth expansion_growth) {
-        if (expansion_growth == ZoneExpansionGrowth::DynamicStep) {
-            return current_expansion_factor + expansion_radius_step * (expansion_attempt_index + 1);
-        }
-    
-        return current_expansion_factor + expansion_radius_step;
-    }
-    }
-    
-
 // Helper function to find agents present in a zone within a time window
 std::set<int> get_agents_in_zone_within_time_window(
     const CurrentSolution& current_solution,
@@ -49,9 +32,7 @@ LocalZoneResult solve_local_zone(
     const std::vector<ConflictMeta>& conflict_meta,
     const std::vector<std::vector<std::vector<int>>>& conflict_map, 
     CurrentSolution& current_solution, 
-    int offset,
-    int expansion_radius_step,
-    ZoneExpansionGrowth expansion_growth,
+    const NeighborhoodPolicy& neighborhood_policy,
     int current_max_timesteps,
     std::mt19937& rng,
     const std::string& experiment_id,
@@ -62,7 +43,7 @@ LocalZoneResult solve_local_zone(
     auto& logger = ExperimentLogger::instance();
     int zone_attempt_index = 0;
     auto record_zone_attempt = [&](LocalZoneAttemptMetrics zone_metrics,
-                                   const LazySolveResult& waiting_result,
+                                   const WaitingSolveResult& waiting_result,
                                    int zone_index) {
         zone_metrics.waiting_attempts = static_cast<int>(waiting_result.waiting_attempts.size());
         for (const auto& attempt : waiting_result.waiting_attempts) {
@@ -80,7 +61,7 @@ LocalZoneResult solve_local_zone(
                 logger.log_lazy_iteration(experiment_id, makespan_attempt_index, zone_index, attempt.attempt_index, iteration_metric);
             }
         }
-        zone_metrics.solved = waiting_result.solution_found;
+        zone_metrics.solved = waiting_result.solved();
         logger.log_local_zone_attempt(experiment_id, makespan_attempt_index, zone_metrics);
         local_zone_result.attempt_metrics.push_back(zone_metrics);
         return zone_metrics;
@@ -100,6 +81,8 @@ LocalZoneResult solve_local_zone(
     }
     if (all_walkable_positions == 0) {
         std::cout << "[Solve_local_zone] ERROR: Map has no walkable positions" << std::endl;
+        local_zone_result.status = SolveStatus::InvalidInput;
+        local_zone_result.message = "Map has no walkable positions";
         return local_zone_result;
     }
     std::set<std::pair<int,int>> local_zone_positions = best_bucket.positions;
@@ -109,10 +92,10 @@ LocalZoneResult solve_local_zone(
     //const int bucket_time_window_start = std::max(best_bucket.earliest_t - offset, 0);
     //const int bucket_time_window_end = std::min(best_bucket.latest_t + offset, current_max_timesteps);
 
-    int expansion_factor = 0;
-    int expansion_attempt_index = 0;
+    int expansion_radius = neighborhood_policy.initial_radius;
+    int failed_attempt_count = 0;
     //loop until solution found or the local zone reached the size of the map and still no solution found
-    while (local_zone_result.solution_found == false && local_zone_positions.size() <= all_walkable_positions) {
+    while (!local_zone_result.solved() && local_zone_positions.size() <= all_walkable_positions) {
         
         if (local_zone_positions.size() > all_walkable_positions) {
             std::cout << "[Solve_local_zone] Local zone size reached all walkable positions" << std::endl;
@@ -153,15 +136,23 @@ LocalZoneResult solve_local_zone(
                 conflict_map,
                 full_time_window_start,
                 full_time_window_end,
-                offset + expansion_factor,
+                expansion_radius,
                 0,
                 rng);
             zone_metrics = record_zone_attempt(std::move(zone_metrics), full_waiting_result, zone_attempt_index);
             zone_attempt_index++;
 
-            if (full_waiting_result.solution_found) {
+            if (full_waiting_result.status == SolveStatus::InvalidInput ||
+                full_waiting_result.status == SolveStatus::InvalidState) {
+                local_zone_result.status = full_waiting_result.status;
+                local_zone_result.message = "Full-zone slack solve failed: " +
+                                            full_waiting_result.message;
+                break;
+            }
+            if (full_waiting_result.solved()) {
                 std::cout << "[Solve_local_zone] Successfully solved global zone" << std::endl;
-                local_zone_result.solution_found = true;
+                local_zone_result.status = SolveStatus::Solved;
+                local_zone_result.message = "Full-zone repair solved";
                 local_zone_result.local_paths = full_waiting_result.local_paths;
                 local_zone_result.local_entry_exit_time = full_waiting_result.local_entry_exit_time;
                 break;
@@ -178,7 +169,7 @@ LocalZoneResult solve_local_zone(
         //Step 1: create local problem
         auto local_masked_map = mask_map_outside_shape(map, local_zone_positions);//all positions outside the local zone are not walkable
         //set start and end time for the local zone
-        int expanded_offset = offset + expansion_factor;
+        int expanded_offset = expansion_radius;
         int start_t = std::max(0, earliest_conflict_t - expanded_offset);
         int end_t = std::min(current_max_timesteps, latest_conflict_t + expanded_offset);
         std::cout << "[Solve_local_zone] Local zone time window: [" << start_t << ", " << end_t << "]" << std::endl;
@@ -209,10 +200,17 @@ LocalZoneResult solve_local_zone(
         zone_attempt_index++;
         
         //if solution found, update the current solution
-        if (waiting_result.solution_found) {
+        if (waiting_result.status == SolveStatus::InvalidInput ||
+            waiting_result.status == SolveStatus::InvalidState) {
+            local_zone_result.status = waiting_result.status;
+            local_zone_result.message = "Local slack solve failed: " + waiting_result.message;
+            break;
+        }
+        if (waiting_result.solved()) {
             std::cout << "[Solve_local_zone] Successfully solved local zone" << std::endl;
             //integration of local zone result into current solution happens in waiting time solve
-            local_zone_result.solution_found = true;
+            local_zone_result.status = SolveStatus::Solved;
+            local_zone_result.message = "Local-zone repair solved";
             local_zone_result.local_paths = waiting_result.local_paths;
             local_zone_result.local_entry_exit_time = waiting_result.local_entry_exit_time;
             break;
@@ -221,18 +219,16 @@ LocalZoneResult solve_local_zone(
         //if no solution found
         //Step 3: Expand the local zone 
         // Expansion attempts: increase bucket offset and try again
-        std::cout << "[Solve_local_zone] Zone with expansion factor " << expansion_factor << "failed" << std::endl;
+        std::cout << "[Solve_local_zone] Zone with radius " << expansion_radius
+                  << " failed" << std::endl;
 
-        //expansion_factor++;
-        expansion_factor = next_expansion_factor(
-            expansion_factor,
-            expansion_attempt_index,
-            expansion_radius_step,
-            expansion_growth);
-        expansion_attempt_index++;
+        ++failed_attempt_count;
+        expansion_radius = next_neighborhood_radius(
+            neighborhood_policy, expansion_radius, failed_attempt_count);
 
-        expanded_offset = offset + expansion_factor;
-        std::cout << "[Solve_local_zone] Expanding zone with offset " << expanded_offset << " (original: " << offset << ")" << std::endl;
+        expanded_offset = expansion_radius;
+        std::cout << "[Solve_local_zone] Expanding zone to radius "
+                  << expanded_offset << std::endl;
         
         //update the time window for the bucket with the new expansion factor
         const int bucket_time_window_start = std::max(earliest_conflict_t - expanded_offset, 0);
@@ -276,6 +272,10 @@ LocalZoneResult solve_local_zone(
         std::cout << "[Solve_local_zone] New time window: [" << start_t << ", " << end_t << "]" << std::endl;
         
 
+    }
+    if (local_zone_result.status == SolveStatus::Exhausted &&
+        local_zone_result.message.empty()) {
+        local_zone_result.message = "Zone expansion exhausted at the current makespan";
     }
     std::cout << "[Solve_local_zone] Final local zone size: " << local_zone_positions.size() << " (" << (double)local_zone_positions.size() / all_walkable_positions * 100 << "% of all walkable positions)" << std::endl;
     return local_zone_result;

@@ -1,7 +1,9 @@
 #include "Waiting_time_Solve.h"
 
 #include "Create_Local_Problem.h"
+#include "CurrentSolutionTransaction.h"
 #include "Lazy_SAT_Solve.h"
+#include "SolutionVerifier.h"
 #include "VerificationHelpers.h"
 #include "../cnf/CNFConstructor.h"
 #include "../mdd/MDDConstructor.h"
@@ -38,6 +40,50 @@ struct RemovedCollisions {
 
     bool empty() const { return vertex.empty() && edge.empty(); }
 };
+
+// A local repair may leave unrelated conflicts elsewhere in the global
+// solution. Those conflict issues are expected; every structural issue is a
+// hard failure because it means the repair corrupted the path representation.
+bool verify_global_solution_structure(
+    const CurrentSolution& solution,
+    const std::vector<std::vector<char>>& map) {
+    const auto report = mapf::verify_solution(
+        solution.agent_paths, solution.starts, solution.goals, map);
+
+    bool structurally_valid = true;
+    for (const auto& issue : report.issues) {
+        if (issue.code == mapf::VerificationIssueCode::VertexConflict ||
+            issue.code == mapf::VerificationIssueCode::EdgeConflict) {
+            continue;
+        }
+        structurally_valid = false;
+        std::cout << "[Waiting_time_Solve] ERROR ["
+                  << mapf::verification_issue_code_name(issue.code) << "]: "
+                  << issue.message << std::endl;
+    }
+    return structurally_valid;
+}
+
+// Waiting time represents a suffix of goal positions. Validate indexes before
+// accessing that suffix so malformed candidate state is rejected safely.
+bool verify_goal_wait_suffix(
+    const CurrentSolution& solution,
+    int agent_id,
+    const std::vector<std::pair<int, int>>& path) {
+    if (agent_id < 0 || static_cast<std::size_t>(agent_id) >= solution.goals.size() ||
+        path.empty()) {
+        return false;
+    }
+
+    const int waiting_time = solution.get_waiting_time(agent_id);
+    if (waiting_time < 0 || static_cast<std::size_t>(waiting_time) >= path.size()) {
+        return false;
+    }
+
+    const auto& goal = solution.goals[agent_id];
+    return path.back() == goal &&
+           path[path.size() - static_cast<std::size_t>(waiting_time) - 1] == goal;
+}
 
 
 int count_goal_tail(const std::vector<std::pair<int,int>>& path,
@@ -787,7 +833,7 @@ std::pair<std::set<int>, bool> choose_agents_to_use_waiting_time(
 
 
 
-LazySolveResult lazy_solve_with_waiting_time(
+WaitingSolveResult lazy_solve_with_waiting_time(
     CurrentSolution& current_solution,
     const std::vector<std::vector<char>>& map,
     const std::vector<std::vector<char>>& masked_map,
@@ -804,14 +850,13 @@ LazySolveResult lazy_solve_with_waiting_time(
     (void)map;
     (void)local_zone_conflict_indices;
 
-    LazySolveResult result;
-    result.solution_found = false;
+    WaitingSolveResult result;
 
     std::vector<WaitingAttemptMetrics> attempt_metrics_log;
     
-    //assert waiting time and make a backup so we can restore it if waiting time solve fails
-    auto waiting_time_backup = current_solution.backup_waiting_times();
-    auto paths_backup = current_solution.backup_paths();
+    // Every unsuccessful return, including early validation failures, restores
+    // speculative path and waiting-time mutations automatically.
+    CurrentSolutionTransaction transaction(current_solution);
 
     //std::vector<ConflictMeta> current_conflicts;
     //for (int conflict_idx : local_zone_conflict_indices) {
@@ -951,7 +996,16 @@ LazySolveResult lazy_solve_with_waiting_time(
         attempt_metrics.cnf_clauses = local_cnf.count_clauses();
         attempt_metrics.cnf_variables = local_cnf.count_variables();
 
-        if (lazy_result.solution_found) {
+        if (lazy_result.status == SolveStatus::InvalidInput ||
+            lazy_result.status == SolveStatus::InvalidState) {
+            finalize_attempt(false);
+            result.status = lazy_result.status;
+            result.message = "SAT layer failed: " + lazy_result.message;
+            result.waiting_attempts = attempt_metrics_log;
+            return result;
+        }
+
+        if (lazy_result.solved()) {
             std::unordered_map<int, std::vector<std::pair<int,int>>> original_paths;
             std::unordered_map<int, std::pair<int,int>> new_entry_exit_time;
             std::cout << "[Waiting_time_Solve] Solution found, updating global solution" << std::endl;
@@ -960,31 +1014,48 @@ LazySolveResult lazy_solve_with_waiting_time(
                 auto it_path = lazy_result.local_paths.find(segment.segment_id);
                 if (it_path == lazy_result.local_paths.end()) {
                     std::cout << "[Waiting_time_Solve] ERROR: Missing path for segment " << segment.segment_id << std::endl;
-                    continue;
+                    finalize_attempt(false);
+                    result.status = SolveStatus::InvalidState;
+                    result.message = "SAT result omitted path for segment " +
+                                     std::to_string(segment.segment_id);
+                    result.waiting_attempts = attempt_metrics_log;
+                    return result;
                 }
-                segment.path = it_path->second;   
+                segment.path = it_path->second;
             }
 
-            //verify local solution for consistency
+            // Reject malformed segment paths before they can be integrated.
             for (const auto& segment : state.segments) {
                 if (!verify_path_consistency(segment.path, map)) {
                     std::cout << "[Waiting_time_Solve] ERROR: Local solution is not consistent after updating with local paths" << std::endl;
+                    finalize_attempt(false);
+                    result.status = SolveStatus::InvalidState;
+                    result.message = "SAT result contained an inconsistent segment path";
+                    result.waiting_attempts = attempt_metrics_log;
+                    return result;
                 }
             }
 
-            //verify current solution before updating
+            // The pre-update state must still satisfy path and waiting-suffix
+            // invariants. Conflicts are allowed at this stage.
             for (const auto& [agent_id, path] : current_solution.agent_paths) {
                 if (!verify_path_consistency(path, map)) {
                     std::cout << "[Waiting_time_Solve] ERROR: Current solution is not consistent before updating with local paths" << std::endl;
+                    finalize_attempt(false);
+                    result.status = SolveStatus::InvalidState;
+                    result.message = "Global path was inconsistent before local integration";
+                    result.waiting_attempts = attempt_metrics_log;
+                    return result;
                 }
-                int waiting_time = current_solution.get_waiting_time(agent_id);
-                if (path[path.size() - waiting_time - 1] != current_solution.goals[agent_id]) {
-                    std::cout << "[Waiting_time_Solve] ERROR: before updating, Agent " << agent_id << " does not end at the goal position with waiting time" << std::endl;
+                if (!verify_goal_wait_suffix(current_solution, agent_id, path)) {
+                    std::cout << "[Waiting_time_Solve] ERROR: Invalid goal-wait suffix before integration for agent "
+                              << agent_id << std::endl;
+                    finalize_attempt(false);
+                    result.status = SolveStatus::InvalidState;
+                    result.message = "Goal-wait suffix was invalid before local integration";
+                    result.waiting_attempts = attempt_metrics_log;
+                    return result;
                 }
-                if (path.back() != current_solution.goals[agent_id]) {
-                    std::cout << "[Waiting_time_Solve] ERROR: before updating, Agent " << agent_id << " does not end at the goal position" << std::endl;
-                }
-
             }
 
             //update global solution
@@ -996,39 +1067,36 @@ LazySolveResult lazy_solve_with_waiting_time(
 
             current_solution.update_with_local_paths_and_pseudo_agents(state, lazy_result.local_paths, map);
 
-            //verify every agent has their amount of waiting time as goal positions in the end of their path
+            // Validate the integrated global structure before committing the
+            // transaction. Other unresolved conflicts remain the outer loop's
+            // responsibility and are intentionally ignored here.
+            if (!verify_global_solution_structure(current_solution, map)) {
+                std::cout << "[Waiting_time_Solve] ERROR: Local integration produced an invalid global path structure" << std::endl;
+                finalize_attempt(false);
+                result.status = SolveStatus::InvalidState;
+                result.message = "Local integration produced an invalid global path structure";
+                result.waiting_attempts = attempt_metrics_log;
+                return result;
+            }
             for (const auto& [agent_id, path] : current_solution.agent_paths) {
-                if (path.back() != current_solution.goals[agent_id]) {
-                    std::cout << "[LNS] ERROR: Agent " << agent_id << " does not end at the goal position" << std::endl;
-                }
-                int waiting_time = current_solution.get_waiting_time(agent_id);
-                if (path[path.size() - waiting_time - 1] != current_solution.goals[agent_id]) {
-                    std::cout << "[Waiting_time_Solve] ERROR: SOLUTION FOUND BUT Agent " << agent_id << " does not end at the goal position with waiting time" << std::endl;
-                    //print waiting time
-                    std::cout << "[Waiting_time_Solve] Waiting time: " << waiting_time << std::endl;
-                    //print path
-                    std::cout << "[Waiting_time_Solve] Path (size: " << path.size() << "): ";
-                    for (const auto& pos : path) {
-                        std::cout << "(" << pos.first << ", " << pos.second << ") ";
-                    }
-                    std::cout << std::endl;
-                    //goal pos
-                    std::cout << "[Waiting_time_Solve] Goal position: " << current_solution.goals[agent_id].first << ", " << current_solution.goals[agent_id].second << std::endl;
-                    //actual wating time found
-                    for (int i = path.size() - 1; i >= 0    ; i--) {
-                        if (path[i] != current_solution.goals[agent_id]) {
-                            std::cout << "[Waiting_time_Solve] Actual waiting time: " << path.size() - i - 1 << std::endl;
-                            break;
-                        }
-                    }
+                if (!verify_goal_wait_suffix(current_solution, agent_id, path)) {
+                    std::cout << "[Waiting_time_Solve] ERROR: Invalid goal-wait suffix after integration for agent "
+                              << agent_id << std::endl;
+                    finalize_attempt(false);
+                    result.status = SolveStatus::InvalidState;
+                    result.message = "Goal-wait suffix was invalid after local integration";
+                    result.waiting_attempts = attempt_metrics_log;
+                    return result;
                 }
             }
 
             finalize_attempt(true);
-            result = std::move(lazy_result);
+            result.status = SolveStatus::Solved;
+            result.message = "Slack/SAT layer produced an integrated local solution";
+            result.local_paths = std::move(lazy_result.local_paths);
             result.local_entry_exit_time = std::move(new_entry_exit_time);
-            result.solution_found = true;
             result.waiting_attempts = attempt_metrics_log;
+            transaction.commit();
             return result;
         }
         //check lazy result solution for consistency
@@ -1039,6 +1107,8 @@ LazySolveResult lazy_solve_with_waiting_time(
                 int original_id = state.segments[state.segment_index_by_id.find(path.first)->second].original_id;
                 std::cout << "[Waiting_time_Solve] ERROR: Lazy result path is not consistent for agent " << original_id << std::endl;
                 finalize_attempt(false);
+                result.status = SolveStatus::InvalidState;
+                result.message = "Unsolved SAT result contained an inconsistent path";
                 result.waiting_attempts = attempt_metrics_log;
                 return result;
             }
@@ -1294,6 +1364,8 @@ LazySolveResult lazy_solve_with_waiting_time(
             if (!verify_path_consistency(segment.path, map)) {
                 std::cout << "[Waiting_time_Solve] ERROR: Path is not consistent for segment " << segment.segment_id << std::endl;
                 finalize_attempt(false);
+                result.status = SolveStatus::InvalidState;
+                result.message = "Slack mutation produced an inconsistent segment path";
                 result.waiting_attempts = attempt_metrics_log;
                 return result;
             }
@@ -1373,17 +1445,14 @@ LazySolveResult lazy_solve_with_waiting_time(
         finalize_attempt(false);
     }
 
-    if (!result.solution_found) {
-        std::cout << "[Waiting_time_Solve] No solution found" << std::endl;
-        //restore original paths and waiting times
-        std::cout << "[Waiting_time_Solve] Restoring original paths" << std::endl;
-        std::cout << "[Waiting_time_Solve] Restoring waiting times" << std::endl;
-        current_solution.restore_waiting_times(waiting_time_backup);
-        current_solution.restore_paths(paths_backup);
-    }
+    // The uncommitted transaction restores paths and waiting budgets when this
+    // function returns.
+    std::cout << "[Waiting_time_Solve] No solution found; rolling back speculative state" << std::endl;
     
 
     //state = baseline_state;
+    result.status = SolveStatus::Exhausted;
+    result.message = "Waiting-time budget exhausted without a local solution";
     result.waiting_attempts = std::move(attempt_metrics_log);
     return result;
 }

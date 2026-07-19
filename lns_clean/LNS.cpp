@@ -1,3 +1,4 @@
+#include "LNS.h"
 #include "Load_LNSProblem.h"
 #include "Current_Solution.h" //collect_conflicts_meta, create_conflict_map_2D
 #include "Local_Zone.h" //build_diamond_buckets, select_most_relevant_bucket
@@ -62,25 +63,33 @@
 //takes map path, scenario path, number of agents, scenario index, use minisat, seed
 //returns paths of agents
 
-std::unordered_map<int, std::vector<std::pair<int,int>>> LNS(
+LNSResult LNS(
     const std::string& map_path, 
     const std::string& scenario_path, 
     int num_agents, 
     int scenario_index, 
     bool use_minisat, //room to plug in different solvers
-    int seed) {
+    int seed,
+    NeighborhoodVariant variant) {
+    LNSResult solve_result;
+    solve_result.seed = seed;
     
     //Step 1: Load problem and print basic info
     auto problem_loaded = load_problem(map_path, scenario_path, num_agents, scenario_index);
     if (!problem_loaded.has_value()) {
         std::cerr << "[LNS] Failed to load problem" << std::endl;
-        return std::unordered_map<int, std::vector<std::pair<int,int>>>();
+        solve_result.status = SolveStatus::InvalidInput;
+        solve_result.message = "Failed to load map/scenario input";
+        return solve_result;
     }
     const auto& problem = problem_loaded.value();
+    const NeighborhoodPolicy variant_policy = neighborhood_policy(variant);
 
     std::cout << "[LNS] Loaded map " << problem.grid.size() << "x"
               << (problem.grid.empty() ? 0 : (int)problem.grid[0].size())
               << ", agents: " << problem.starts.size() << std::endl;
+    std::cout << "[LNS] Neighborhood variant: " << variant_policy.canonical_name
+              << " (initial radius=" << variant_policy.initial_radius << ")" << std::endl;
 
     auto& logger = ExperimentLogger::instance();
     std::string experiment_id = logger.start_experiment(map_path, scenario_path, num_agents, scenario_index, seed);
@@ -123,6 +132,9 @@ std::unordered_map<int, std::vector<std::pair<int,int>>> LNS(
     std::mt19937 rng(static_cast<unsigned int>(seed));
     std::optional<CurrentSolution> successfull_solution;
     int successful_max_timesteps = -1;
+    SolveStatus terminal_status = SolveStatus::Exhausted;
+    std::string terminal_message = "No solution found within the configured makespan limit";
+    bool fatal_failure = false;
     
     for (int inc = 0; inc <= max_timestep_increase; ++inc) {
         int current_max_timesteps = base_makespan + inc;
@@ -136,9 +148,18 @@ std::unordered_map<int, std::vector<std::pair<int,int>>> LNS(
         //Build MDDs with fastest way to the goal and sample for initial solution
         //this is just for the initial solution, can be improved in the future
         auto mdds = create_mdds_with_waiting_time(
-            problem.grid, problem.starts, problem.goals, current_max_timesteps, distance_matrices);
+            problem.grid, problem.starts, problem.goals, distance_matrices);
         std::cout << "[LNS] Built MDDs with waiting time structure for " << mdds.size()
                   << " agents at makespan " << current_max_timesteps << std::endl;
+        if (mdds.size() != problem.starts.size()) {
+            // A partial initial solution is unsafe: missing MDDs used to shift
+            // later vector positions onto the wrong agent IDs. Stop this solve
+            // attempt instead of constructing a mislabeled path map.
+            std::cout << "[LNS] ERROR: Initial MDD construction failed for one or more agents"
+                      << std::endl;
+            terminal_message = "At least one agent has no constructible initial path";
+            break;
+        }
         
         //Step 4: create current solution by sampling paths from MDDs
         CurrentSolution current_solution(
@@ -148,11 +169,10 @@ std::unordered_map<int, std::vector<std::pair<int,int>>> LNS(
             num_agents,
             problem.starts,
             problem.goals);
-        for (size_t agent_id = 0; agent_id < mdds.size(); ++agent_id) {
-            const auto& mdd = mdds[agent_id];
-            auto path_positions = mdd->sample_random_path(rng);
+        for (const AgentMDD& agent_mdd : mdds) {
+            auto path_positions = agent_mdd.mdd->sample_random_path(rng);
             std::vector<std::pair<int,int>> as_pairs(path_positions.begin(), path_positions.end());
-            current_solution.agent_paths[static_cast<int>(agent_id)] = std::move(as_pairs);
+            current_solution.agent_paths[agent_mdd.agent_id] = std::move(as_pairs);
         }
         //calculate waiting times for each agent
         current_solution.calculate_waiting_times(problem.goals, current_max_timesteps);
@@ -205,25 +225,20 @@ std::unordered_map<int, std::vector<std::pair<int,int>>> LNS(
             
 
             //Step 6: create conflict buckets for the earliest conflict(s)
-            const int offset = 1; // initial conflict zone radius
-            const int expansion_radius_step = 1; // use 3 for fixed +3 expansion runs
-            //ZoneExpansionGrowth::FixedStep always adds the same amount to the zone radiusafter failures
-            //ZoneExpansionGrowth::DynamicStep increases expansion radius per step +1, 2, 3, ... after failures
-            
-            // ZoneExpansionGrowth::FixedStep always adds expansion_radius_step after failures.
-            // ZoneExpansionGrowth::DynamicStep grows failed retries by +step, +2*step, +3*step, ...,
-            // yielding attempted radii 1, 3, 7, 13, 21, ... with offset=1 and step=2.
-            //const ZoneExpansionGrowth expansion_growth = ZoneExpansionGrowth::FixedStep;
-            const ZoneExpansionGrowth expansion_growth = ZoneExpansionGrowth::DynamicStep;
-
-
             std::cout << "[LNS] Creating conflict buckets..." << std::endl;
             auto diamond_buckets = build_diamond_buckets_for_earliest_conflicts(
-                conflict_meta, conflict_map, problem.grid, offset, current_max_timesteps);
+                conflict_meta,
+                conflict_map,
+                problem.grid,
+                variant_policy.initial_radius,
+                current_max_timesteps);
             //if multiple buckets, select the most relevant one
             DiamondBucket best_bucket = select_most_relevant_bucket(diamond_buckets);
             if (best_bucket.indices.empty()) {
                 std::cout << "[LNS] ERROR: No most relevant bucket found" << std::endl;
+                terminal_status = SolveStatus::InvalidState;
+                terminal_message = "Conflict selection returned no usable bucket";
+                fatal_failure = true;
                 break;
             }
             std::cout << "[LNS] Selected most relevant bucket " << best_bucket.indices[0] 
@@ -242,9 +257,7 @@ std::unordered_map<int, std::vector<std::pair<int,int>>> LNS(
                 conflict_meta,
                 conflict_map,
                 current_solution,
-                offset,
-                expansion_radius_step,
-                expansion_growth,
+                variant_policy,
                 current_max_timesteps,
                 rng,
                 experiment_id,
@@ -267,14 +280,21 @@ std::unordered_map<int, std::vector<std::pair<int,int>>> LNS(
             }
 
             //Step 8: Update the current solution with the local zone result if found
-            if (local_zone_result.solution_found) {
+            if (local_zone_result.status == SolveStatus::InvalidInput ||
+                local_zone_result.status == SolveStatus::InvalidState) {
+                terminal_status = local_zone_result.status;
+                terminal_message = local_zone_result.message;
+                fatal_failure = true;
+                break;
+            }
+            if (local_zone_result.solved()) {
                 std::cout << "[LNS] Successfully solved local zone" << std::endl;
                 //integrate local zone result into current solution
                 //solution is updated in the waiting time solve
                 //loop back to step 5
             }
             //if impossible to solve, increase makespan
-            if (local_zone_result.solution_found == false) {
+            if (!local_zone_result.solved()) {
                 std::cout << "[LNS] Impossible to solve local zone with current makespan: " << current_max_timesteps << std::endl;
                 conflicts_remain = true;
                 break;
@@ -296,6 +316,13 @@ std::unordered_map<int, std::vector<std::pair<int,int>>> LNS(
             summary.solved = true;
         }
 
+        if (fatal_failure) {
+            std::cout << "[LNS] Stopping after fatal status "
+                      << solve_status_name(terminal_status) << ": "
+                      << terminal_message << std::endl;
+            break;
+        }
+
         if (!conflicts_remain) {
             std::cout << "[LNS] All conflicts resolved" << std::endl;
             successfull_solution = std::move(current_solution);
@@ -305,27 +332,41 @@ std::unordered_map<int, std::vector<std::pair<int,int>>> LNS(
             std::cout << "[LNS] Increasing makespan..." << std::endl;
         }
     }
-    //Step 9: validate agents paths and return Solution if valid
+    // Step 9: validate the complete solution before reporting success. The
+    // verifier is the final trust boundary for all preceding repair logic.
     summary.total_runtime_ms = std::chrono::duration_cast<std::chrono::microseconds>(std::chrono::steady_clock::now() - experiment_start).count() / 1000.0;
-    logger.log_experiment_summary(summary);
-    
+    solve_result.runtime_ms = summary.total_runtime_ms;
+
     if (!successfull_solution.has_value()) {
+        summary.solved = false;
+        summary.makespan_success = -1;
+        logger.log_experiment_summary(summary);
         std::cout << "[LNS] ERROR: No successful solution found" << std::endl;
-        return {};
+        solve_result.status = terminal_status;
+        solve_result.message = terminal_message;
+        return solve_result;
     }
-    bool Valid_Solution = verify_solution_consistency(successfull_solution->agent_paths, problem.starts, problem.goals, problem.grid);
 
-    if (Valid_Solution) {
-        std::cout << "[LNS] Collision-free solution found at makespan " << successful_max_timesteps << std::endl;
-        std::cout << "[LNS] Final agent paths:" << std::endl;
-        //SATSolverManager::print_agent_paths(successfull_solution->agent_paths);
-    }else{
-        std::cout << "[LNS] ERROR:Solution is not valid" << std::endl;
+    const bool valid_solution = verify_solution_consistency(
+        successfull_solution->agent_paths, problem.starts, problem.goals, problem.grid);
+    if (!valid_solution) {
+        summary.solved = false;
+        summary.makespan_success = -1;
+        logger.log_experiment_summary(summary);
+        std::cout << "[LNS] ERROR: Final solution verification failed" << std::endl;
         SATSolverManager::print_agent_paths(successfull_solution->agent_paths);
-        std::cout << "[LNS] ERROR: Solution is not valid" << std::endl;
+        // Fail closed: callers must never receive a non-empty invalid path map.
+        solve_result.status = SolveStatus::InvalidState;
+        solve_result.message = "Final solution failed independent verification";
+        return solve_result;
     }
-    std::cout << "[LNS] Verified Final agent paths:" << std::endl;
 
-    std::cout << "[LNS] IT WORKED I THINK" << std::endl;
-    return successfull_solution->agent_paths;
+    logger.log_experiment_summary(summary);
+    std::cout << "[LNS] Collision-free verified solution found at makespan "
+              << successful_max_timesteps << std::endl;
+    solve_result.status = SolveStatus::Solved;
+    solve_result.paths = std::move(successfull_solution->agent_paths);
+    solve_result.makespan = successful_max_timesteps;
+    solve_result.message = "Verified collision-free solution";
+    return solve_result;
 }

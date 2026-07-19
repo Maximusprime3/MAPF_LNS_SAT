@@ -1,3 +1,5 @@
+#include "LNS.h"
+
 #include <algorithm>
 #include <cctype>
 #include <cstdlib>
@@ -9,15 +11,6 @@
 #include <utility>
 #include <vector>
 
-// Forward declaration from the clean LNS implementation.
-std::unordered_map<int, std::vector<std::pair<int, int>>> LNS(
-    const std::string& map_path,
-    const std::string& scenario_path,
-    int num_agents,
-    int scenario_index,
-    bool use_minisat,
-    int seed);
-
 namespace {
 
 struct Config {
@@ -27,6 +20,7 @@ struct Config {
     int scenario_index = 0;
     std::string solver = "minisat";
     int seed = 42;
+    std::string variant = "lns-sat";
     std::string log_path;
 };
 
@@ -99,6 +93,9 @@ bool load_config(const std::string& path, Config& config) {
     if (!get("seed").empty()) {
         config.seed = std::stoi(get("seed"));
     }
+    if (!get("variant").empty()) {
+        config.variant = get("variant");
+    }
     if (!get("log").empty()) {
         config.log_path = get("log");
     }
@@ -121,10 +118,10 @@ bool load_config(const std::string& path, Config& config) {
 
 void print_usage(const char* executable) {
     std::cerr << "Usage: " << executable
-              << " <map_path> <scenario_path> <num_agents> <scenario_index> <solver> [seed]" << std::endl
+              << " <map_path> <scenario_path> <num_agents> <scenario_index> <solver> [seed] [variant]" << std::endl
               << "   or: " << executable << " --config <config_file>" << std::endl
-              << "  solver: minisat | probsat" << std::endl
-              << "  example: ./main_clean_lns mapf-map/maze-32-32-2.map mapf-scen-even/scen-even/maze-32-32-2-even-1.scen 30 minisat 42" << std::endl;
+              << "  optional variant: lns-sat | initial-radius-2 | fixed-step-2 | increasing-step" << std::endl
+              << "  example: ./main_clean_lns mapf-map/maze-32-32-2.map mapf-scen-even/scen-even/maze-32-32-2-even-1.scen 30 0 minisat 42 lns-sat" << std::endl;
 }
 
 std::string to_lower(std::string value) {
@@ -143,6 +140,7 @@ int main(int argc, char** argv) {
     int scenario_index = 0;
     std::string solver = "minisat";
     int seed = 42;
+    std::string variant_name = "lns-sat";
     std::string log_path;
 
     if (argc >= 3 && std::string(argv[1]) == "--config") {
@@ -156,6 +154,7 @@ int main(int argc, char** argv) {
         scenario_index = config.scenario_index;
         solver = config.solver;
         seed = config.seed;
+        variant_name = config.variant;
         log_path = config.log_path;
     } else {
         if (argc < 6) {
@@ -168,6 +167,7 @@ int main(int argc, char** argv) {
         scenario_index = std::atoi(argv[4]);
         solver = argv[5];
         seed = (argc >= 7) ? std::atoi(argv[6]) : 42;
+        variant_name = (argc >= 8) ? argv[7] : "lns-sat";
     }
 
     if (num_agents <= 0) {
@@ -176,6 +176,12 @@ int main(int argc, char** argv) {
     }
 
     bool use_minisat = (to_lower(solver) == "minisat");
+    const auto variant = parse_neighborhood_variant(variant_name);
+    if (!variant.has_value()) {
+        std::cerr << "Unknown neighborhood variant: " << variant_name << std::endl;
+        print_usage(argv[0]);
+        return 2;
+    }
 
     std::unique_ptr<std::ofstream> log_stream;
     std::streambuf* original_cout_buf = nullptr;
@@ -189,14 +195,16 @@ int main(int argc, char** argv) {
         original_cout_buf = std::cout.rdbuf(log_stream->rdbuf());
     }
 
-    auto result = LNS(map_path, scenario_path, num_agents, scenario_index, use_minisat, seed);
-    if (result.empty()) {
-        std::cerr << "LNS did not return any agent paths." << std::endl;
+    auto result = LNS(
+        map_path, scenario_path, num_agents, scenario_index, use_minisat, seed, *variant);
+    if (!result.solved()) {
+        std::cerr << "LNS_RESULT status=" << solve_status_name(result.status)
+                  << " message=" << result.message << std::endl;
         if (original_cout_buf != nullptr) {
             std::cout.flush();
             std::cout.rdbuf(original_cout_buf);
         }
-        return 1;
+        return solve_status_exit_code(result.status);
     }
 
     if (original_cout_buf != nullptr) {

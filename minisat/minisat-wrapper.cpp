@@ -134,7 +134,11 @@ MiniSatSolution MiniSatWrapper::solve_with_clause_range(const std::vector<std::v
 
             int before_clauses = solver->nClauses();
             if (!add_clause_to_solver(norm)) {
-                result.error_message = "Failed to add clause to MiniSAT solver";
+                // MiniSAT's addClause API returns false when the accumulated
+                // formula becomes contradictory. That is a normal UNSAT
+                // result, not a wrapper/backend failure; leave error_message
+                // empty so higher solver layers classify it as exhaustion.
+                result.satisfiable = false;
                 return result;
             }
             int after_clauses = solver->nClauses();
@@ -289,4 +293,4 @@ std::vector<int> MiniSatWrapper::extract_assignment(int num_vars) {
     }
     
     return assignment;
-} 
+}

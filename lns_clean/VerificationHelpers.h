@@ -11,8 +11,9 @@ bool verify_path_consistency(
     const std::vector<std::pair<int, int>>& path,
     const std::vector<std::vector<char>>& map);
 
-// Verifies that each agent path starts and ends at the correct positions and
-// that all intermediate steps stay within map bounds and on walkable cells.
+// Compatibility wrapper around the complete verifier. In addition to path
+// geometry and start/goal checks, this requires all expected agents, equal path
+// lengths, and absence of vertex and edge-swap conflicts.
 bool verify_solution_consistency(
     const std::unordered_map<int, std::vector<std::pair<int, int>>>& agent_paths,
     const std::vector<std::pair<int, int>>& starts,

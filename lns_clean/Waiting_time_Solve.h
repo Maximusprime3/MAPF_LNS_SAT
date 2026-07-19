@@ -6,7 +6,24 @@
 
 #include <random>
 #include <set>
+#include <string>
+#include <unordered_map>
 #include <vector>
+
+// Result of the slack-search layer. It deliberately owns only the payload
+// needed by zone expansion; SAT-specific collision details remain in the
+// individual LazySolveResult recorded by each attempt's metrics.
+struct WaitingSolveResult {
+    SolveStatus status = SolveStatus::Exhausted;
+    std::string message;
+    std::unordered_map<int, std::vector<std::pair<int,int>>> local_paths;
+    std::unordered_map<int, std::pair<int,int>> local_entry_exit_time;
+    std::vector<WaitingAttemptMetrics> waiting_attempts;
+
+    bool solved() const {
+        return status == SolveStatus::Solved;
+    }
+};
 
 bool apply_waiting_time_delta(
     LocalZoneState& state,
@@ -18,7 +35,7 @@ bool apply_waiting_time_delta(
     CurrentSolution& current_solution,
     std::mt19937& rng);
 
-LazySolveResult lazy_solve_with_waiting_time(
+WaitingSolveResult lazy_solve_with_waiting_time(
     CurrentSolution& current_solution,
     const std::vector<std::vector<char>>& map,
     const std::vector<std::vector<char>>& masked_map,

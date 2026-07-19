@@ -39,6 +39,8 @@ struct Options {
     int experiments = 1;
     std::string solver = "minisat";
     int seed = 42;
+    // Reproduce the published LNS-SAT baseline unless a paper variant is requested.
+    std::string variant = "lns-sat";
     int start_run_id = 0;
     bool dry_run = false;
     bool verbose = false;
@@ -73,6 +75,8 @@ namespace {
               << "  --experiments N          Number of experiments to execute (default: 1)\n"
               << "  --solver NAME            minisat or probsat (default: minisat)\n"
               << "  --seed N                 Random seed forwarded to the solver (default: 42)\n"
+              << "  --variant NAME           Neighborhood policy: lns-sat, initial-radius-2,\n"
+              << "                           fixed-step-2, or increasing-step (default: lns-sat)\n"
               << "  --start-run-id N         Starting run identifier (default: 0)\n"
               << "  --time-limit SECONDS     Maximum wall-clock time per run (0 disables)\n"
               << "  --dry-run                Only report capacities without launching experiments\n"
@@ -149,6 +153,8 @@ Options parse_arguments(int argc, char** argv) {
             opts.experiments = *parsed;
         } else if (arg == "--solver") {
             opts.solver = require_value("--solver");
+        } else if (arg == "--variant") {
+            opts.variant = require_value("--variant");
         } else if (arg == "--seed") {
             std::string value = require_value("--seed");
             auto parsed = parse_int(value);
@@ -549,7 +555,8 @@ void append_log_header(std::ofstream& log, const Options& opts, const fs::path& 
     if (opts.time_limit_seconds && *opts.time_limit_seconds > 0) {
         log << " | total_time_limit=" << *opts.time_limit_seconds << "s";
     }
-    log << "\n";
+    // Persist the policy beside every batch so results remain reproducible.
+    log << " | variant=" << opts.variant << "\n";
     log.flush();
 }
 
@@ -563,6 +570,8 @@ std::vector<std::string> build_command(const fs::path& exe, const Options& opts,
     cmd.push_back(std::to_string(scenario_index));
     cmd.push_back(opts.solver);
     cmd.push_back(std::to_string(opts.seed));
+    // main_clean_lns accepts the neighborhood variant after the optional seed.
+    cmd.push_back(opts.variant);
     return cmd;
 }
 
@@ -859,6 +868,7 @@ Options apply_config_entry(const Options& base, const simple_json::JsonObject& e
         {"experiments", 0},
         {"solver", 0},
         {"seed", 0},
+        {"variant", 0},
         {"start_run_id", 0},
         {"dry_run", 0},
         {"verbose", 0},
@@ -917,6 +927,12 @@ Options apply_config_entry(const Options& base, const simple_json::JsonObject& e
                 throw std::runtime_error("Configuration field 'solver' must be a string");
             }
             result.solver = *str;
+        } else if (key == "variant") {
+            auto str = value_to_string(value);
+            if (!str) {
+                throw std::runtime_error("Configuration field 'variant' must be a string");
+            }
+            result.variant = *str;
         } else if (key == "seed") {
             auto parsed = value_to_int(value);
             if (!parsed) {

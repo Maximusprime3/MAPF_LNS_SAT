@@ -14,6 +14,22 @@ RUN_EXPERIMENTS_DIR := run_experiments
 RUN_EXPERIMENTS_SRC := $(RUN_EXPERIMENTS_DIR)/run_batch_experiments.cpp
 RUN_EXPERIMENTS_BIN := $(RUN_EXPERIMENTS_DIR)/run_batch_experiments
 
+TEST_DIR := tests
+VERIFIER_TEST_SRC := $(TEST_DIR)/test_solution_verifier.cpp
+VERIFIER_TEST_BIN := $(OBJ_DIR)/test_solution_verifier
+VARIANT_TEST_SRC := $(TEST_DIR)/test_neighborhood_variant.cpp
+VARIANT_TEST_BIN := $(OBJ_DIR)/test_neighborhood_variant
+TRANSACTION_TEST_SRC := $(TEST_DIR)/test_current_solution_transaction.cpp
+TRANSACTION_TEST_BIN := $(OBJ_DIR)/test_current_solution_transaction
+INITIAL_MDD_ID_TEST_SRC := $(TEST_DIR)/test_initial_mdd_agent_ids.cpp
+INITIAL_MDD_ID_TEST_BIN := $(OBJ_DIR)/test_initial_mdd_agent_ids
+SOLVE_RESULT_TEST_SRC := $(TEST_DIR)/test_solve_result.cpp
+SOLVE_RESULT_TEST_BIN := $(OBJ_DIR)/test_solve_result
+MINISAT_STATUS_TEST_SRC := $(TEST_DIR)/test_minisat_unsat_status.cpp
+MINISAT_STATUS_TEST_BIN := $(OBJ_DIR)/test_minisat_unsat_status
+LNS_VERIFICATION_SRC := $(TEST_DIR)/run_lns_verification.cpp
+LNS_VERIFICATION_BIN := $(OBJ_DIR)/run_lns_verification
+
 CXXFLAGS := -std=gnu++17 -O2 -Wall -Wextra -pedantic -pthread -fpermissive
 CFLAGS := -O2 -Wall -Wextra -pedantic
 
@@ -33,7 +49,9 @@ LOCAL_SOURCES := \
     Local_Zone.cpp \
     Local_Zone_Builder.cpp \
     LNS.cpp \
+    NeighborhoodVariant.cpp \
     Solve_Local_Zone.cpp \
+    SolutionVerifier.cpp \
     VerificationHelpers.cpp \
     Waiting_time_Solve.cpp
 
@@ -64,7 +82,7 @@ C_OBJS := $(foreach src,$(C_SOURCES),$(call make_obj,$(src)))
 OBJS := $(LOCAL_OBJS) $(SHARED_OBJS) $(C_OBJS)
 DEPS := $(OBJS:.o=.d)
 
-.PHONY: all clean asan run_experiments
+.PHONY: all clean asan run_experiments test test_solution_verifier test_neighborhood_variant test_current_solution_transaction test_initial_mdd_agent_ids test_solve_result test_minisat_unsat_status lns_verification_runner
 
 all: $(LIB) $(MAIN) $(RUN_EXPERIMENTS_BIN)
 
@@ -81,6 +99,51 @@ $(RUN_EXPERIMENTS_BIN): $(RUN_EXPERIMENTS_SRC) $(RUN_EXPERIMENTS_DIR)/simple_jso
 	$(CXX) $(CXXFLAGS) -I$(RUN_EXPERIMENTS_DIR) $< -o $@
 
 run_experiments: $(RUN_EXPERIMENTS_BIN)
+
+$(VERIFIER_TEST_BIN): $(VERIFIER_TEST_SRC) SolutionVerifier.cpp SolutionVerifier.h | $(OBJ_DIR)
+	$(CXX) $(CXXFLAGS) -I. $(VERIFIER_TEST_SRC) SolutionVerifier.cpp -o $@
+
+test_solution_verifier: $(VERIFIER_TEST_BIN)
+	$(VERIFIER_TEST_BIN)
+
+$(VARIANT_TEST_BIN): $(VARIANT_TEST_SRC) NeighborhoodVariant.cpp NeighborhoodVariant.h | $(OBJ_DIR)
+	$(CXX) $(CXXFLAGS) -I. $(VARIANT_TEST_SRC) NeighborhoodVariant.cpp -o $@
+
+test_neighborhood_variant: $(VARIANT_TEST_BIN)
+	$(VARIANT_TEST_BIN)
+
+$(TRANSACTION_TEST_BIN): $(TRANSACTION_TEST_SRC) $(LIB) CurrentSolutionTransaction.h | $(OBJ_DIR)
+	$(CXX) $(CXXFLAGS) $(CPPFLAGS) $(LDFLAGS) $(TRANSACTION_TEST_SRC) -L. -llns_clean -o $@
+
+test_current_solution_transaction: $(TRANSACTION_TEST_BIN)
+	$(TRANSACTION_TEST_BIN)
+
+$(INITIAL_MDD_ID_TEST_BIN): $(INITIAL_MDD_ID_TEST_SRC) $(LIB) Lazy_SAT_Solve.h | $(OBJ_DIR)
+	$(CXX) $(CXXFLAGS) $(CPPFLAGS) $(LDFLAGS) $(INITIAL_MDD_ID_TEST_SRC) -L. -llns_clean -o $@
+
+test_initial_mdd_agent_ids: $(INITIAL_MDD_ID_TEST_BIN)
+	$(INITIAL_MDD_ID_TEST_BIN)
+
+$(SOLVE_RESULT_TEST_BIN): $(SOLVE_RESULT_TEST_SRC) $(LIB) LNS.h SolveStatus.h | $(OBJ_DIR)
+	$(CXX) $(CXXFLAGS) $(CPPFLAGS) $(LDFLAGS) $(SOLVE_RESULT_TEST_SRC) -L. -llns_clean -o $@
+
+test_solve_result: $(SOLVE_RESULT_TEST_BIN)
+	$(SOLVE_RESULT_TEST_BIN)
+
+$(MINISAT_STATUS_TEST_BIN): $(MINISAT_STATUS_TEST_SRC) $(LIB) | $(OBJ_DIR)
+	$(CXX) $(CXXFLAGS) $(CPPFLAGS) $(LDFLAGS) $(MINISAT_STATUS_TEST_SRC) -L. -llns_clean -o $@
+
+test_minisat_unsat_status: $(MINISAT_STATUS_TEST_BIN)
+	$(MINISAT_STATUS_TEST_BIN)
+
+test: test_solution_verifier test_neighborhood_variant test_current_solution_transaction test_initial_mdd_agent_ids test_solve_result test_minisat_unsat_status
+
+# Integration runner used by bounded benchmark checks. It calls LNS and then
+# independently verifies the returned path map with SolutionVerifier.
+$(LNS_VERIFICATION_BIN): $(LNS_VERIFICATION_SRC) $(LIB) | $(OBJ_DIR)
+	$(CXX) $(CXXFLAGS) $(CPPFLAGS) $(LDFLAGS) $(LNS_VERIFICATION_SRC) -L. -llns_clean -o $@
+
+lns_verification_runner: $(LNS_VERIFICATION_BIN)
 
 define cpp_rule
 $(OBJ_DIR)/$(notdir $(basename $(1))).o: $(1) | $(OBJ_DIR)

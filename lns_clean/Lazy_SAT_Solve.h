@@ -3,6 +3,7 @@
 
 #include "../SATSolverManager.h"
 #include "Metrics.h"
+#include "SolveStatus.h"
 #include <unordered_map>
 #include <vector>
 #include <tuple>
@@ -19,12 +20,13 @@ class MDDConstructor;
 /**
  * @brief Result of lazy SAT solving for a local zone.
  *
- * Contains whether a solution was found, final local paths if so,
+ * Contains the bounded SAT outcome, final local paths if solved,
  * and sets of discovered vertex/edge collisions (both cumulative and latest
  * before UNSAT) expressed in global timesteps.
  */
 struct LazySolveResult {
-    bool solution_found;
+    SolveStatus status = SolveStatus::Exhausted;
+    std::string message;
     std::unordered_map<int, std::vector<std::pair<int,int>>> local_paths;
     std::unordered_map<int, std::pair<int,int>> local_entry_exit_time;
     std::vector<std::tuple<int, int, std::pair<int,int>, int>> discovered_vertex_collisions;
@@ -33,7 +35,10 @@ struct LazySolveResult {
     std::vector<std::tuple<int, int, std::pair<int,int>, int>> latest_discovered_vertex_collisions;
     std::vector<std::tuple<int, int, std::pair<int,int>, std::pair<int,int>, int>> latest_discovered_edge_collisions;
     LazySolveRunMetrics metrics;
-    std::vector<WaitingAttemptMetrics> waiting_attempts;
+
+    bool solved() const {
+        return status == SolveStatus::Solved;
+    }
 };
 
 /**
@@ -52,7 +57,7 @@ struct LazySolveResult {
  * @param max_iterations  Iteration limit for the lazy loop.
  * @param initial_vertex_collisions  Seed vertex collisions to enforce.
  * @param initial_edge_collisions  Seed edge collisions to enforce.
- * @return LazySolveResult with solution flag, paths, and collision sets.
+ * @return LazySolveResult with status, paths, diagnostics, and collision sets.
  */
 LazySolveResult lazy_SAT_solve(
     CNF& local_cnf,
@@ -95,17 +100,21 @@ std::vector<std::tuple<int, int, std::pair<int,int>, std::pair<int,int>, int>> c
  * @param grid  Map grid.
  * @param starts  Agent start positions.
  * @param goals  Agent goal positions.
- * @param makespan  Planning horizon (may be used by constructor logic).
  * @param distance_matrices  Per-agent distance maps.
- * @return Vector of shared MDDs (one per agent that succeeded).
+ * @return Ordered records containing both the original agent ID and its MDD.
+ *
+ * The ID is stored explicitly because failed construction must not cause later
+ * vector elements to be mistaken for a different agent.
  */
-std::vector<std::shared_ptr<MDD>> create_mdds_with_waiting_time(
+struct AgentMDD {
+    int agent_id;
+    std::shared_ptr<MDD> mdd;
+};
+
+std::vector<AgentMDD> create_mdds_with_waiting_time(
     const std::vector<std::vector<char>>& grid,
     const std::vector<std::pair<int,int>>& starts,
     const std::vector<std::pair<int,int>>& goals,
-    int makespan,
     const std::vector<std::map<std::pair<int,int>, int>>& distance_matrices);
 
 #endif // LNS_LAZY_SAT_SOLVE_H
-
-
