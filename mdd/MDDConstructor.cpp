@@ -42,6 +42,9 @@ std::vector<MDDNode::Position> MDDConstructor::get_neighbors(const MDDNode::Posi
     };
     std::vector<MDDNode::Position> neighbors;
     int x = pos.first, y = pos.second;
+    if (x < 0 || x >= rows || y < 0 || y >= cols) {
+        return neighbors;
+    }
     for (const auto& [dx, dy] : directions) {
         int nx = x + dx, ny = y + dy;
         // Check bounds and if cell is open or goal

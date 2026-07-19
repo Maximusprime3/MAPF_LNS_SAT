@@ -188,6 +188,9 @@ int main() {
         }
         tests.expect(rejected_start, "MDD should reject out-of-grid start positions");
         tests.expect(
+            boundary_mdd.get_neighbors(invalid).empty(),
+            "MDD neighbor lookup should reject out-of-grid origins");
+        tests.expect(
             create_shape_from_conflicts({invalid}, 1, boundary_grid).empty(),
             "zone builder should reject out-of-grid conflict positions");
         tests.expect(
