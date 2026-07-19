@@ -27,6 +27,8 @@ SOLVE_RESULT_TEST_SRC := $(TEST_DIR)/test_solve_result.cpp
 SOLVE_RESULT_TEST_BIN := $(OBJ_DIR)/test_solve_result
 MINISAT_STATUS_TEST_SRC := $(TEST_DIR)/test_minisat_unsat_status.cpp
 MINISAT_STATUS_TEST_BIN := $(OBJ_DIR)/test_minisat_unsat_status
+SAT_PROTOCOL_TEST_SRC := $(TEST_DIR)/test_sat_protocol_characterization.cpp
+SAT_PROTOCOL_TEST_BIN := $(OBJ_DIR)/test_sat_protocol_characterization
 PSEUDO_SEGMENT_TEST_SRC := $(TEST_DIR)/test_pseudo_agent_segmentation.cpp
 PSEUDO_SEGMENT_TEST_BIN := $(OBJ_DIR)/test_pseudo_agent_segmentation
 PSEUDO_REFRESH_TEST_SRC := $(TEST_DIR)/test_pseudo_agent_refresh_reassembly.cpp
@@ -97,7 +99,7 @@ C_OBJS := $(foreach src,$(C_SOURCES),$(call make_obj,$(src)))
 OBJS := $(LOCAL_OBJS) $(SHARED_OBJS) $(C_OBJS)
 DEPS := $(OBJS:.o=.d)
 
-.PHONY: all clean asan run_experiments test test_solution_verifier test_neighborhood_variant test_current_solution_transaction test_initial_mdd_agent_ids test_solve_result test_minisat_unsat_status test_pseudo_agent_segmentation test_pseudo_agent_refresh_reassembly test_local_zone_state_validation test_waiting_budget_conservation test_grid_walkability test_solver_configuration_characterization test_solver_configuration lns_verification_runner
+.PHONY: all clean asan run_experiments test test_solution_verifier test_neighborhood_variant test_current_solution_transaction test_initial_mdd_agent_ids test_solve_result test_minisat_unsat_status test_sat_protocol_characterization test_pseudo_agent_segmentation test_pseudo_agent_refresh_reassembly test_local_zone_state_validation test_waiting_budget_conservation test_grid_walkability test_solver_configuration_characterization test_solver_configuration lns_verification_runner
 
 all: $(LIB) $(MAIN) $(RUN_EXPERIMENTS_BIN)
 
@@ -151,6 +153,12 @@ $(MINISAT_STATUS_TEST_BIN): $(MINISAT_STATUS_TEST_SRC) $(LIB) | $(OBJ_DIR)
 test_minisat_unsat_status: $(MINISAT_STATUS_TEST_BIN)
 	$(MINISAT_STATUS_TEST_BIN)
 
+$(SAT_PROTOCOL_TEST_BIN): $(SAT_PROTOCOL_TEST_SRC) $(LIB) | $(OBJ_DIR)
+	$(CXX) $(CXXFLAGS) $(CPPFLAGS) $(LDFLAGS) $(SAT_PROTOCOL_TEST_SRC) -L. -llns_clean -o $@
+
+test_sat_protocol_characterization: $(SAT_PROTOCOL_TEST_BIN)
+	$(SAT_PROTOCOL_TEST_BIN)
+
 $(PSEUDO_SEGMENT_TEST_BIN): $(PSEUDO_SEGMENT_TEST_SRC) $(LIB) Create_Local_Problem.h | $(OBJ_DIR)
 	$(CXX) $(CXXFLAGS) $(CPPFLAGS) $(LDFLAGS) $(PSEUDO_SEGMENT_TEST_SRC) -L. -llns_clean -o $@
 
@@ -193,7 +201,7 @@ $(SOLVER_CONFIG_TEST_BIN): $(SOLVER_CONFIG_TEST_SRC) SolverConfiguration.cpp Sol
 test_solver_configuration: $(SOLVER_CONFIG_TEST_BIN)
 	$(SOLVER_CONFIG_TEST_BIN)
 
-test: test_solution_verifier test_neighborhood_variant test_current_solution_transaction test_initial_mdd_agent_ids test_solve_result test_minisat_unsat_status test_pseudo_agent_segmentation test_pseudo_agent_refresh_reassembly test_local_zone_state_validation test_waiting_budget_conservation test_grid_walkability test_solver_configuration_characterization test_solver_configuration
+test: test_solution_verifier test_neighborhood_variant test_current_solution_transaction test_initial_mdd_agent_ids test_solve_result test_minisat_unsat_status test_sat_protocol_characterization test_pseudo_agent_segmentation test_pseudo_agent_refresh_reassembly test_local_zone_state_validation test_waiting_budget_conservation test_grid_walkability test_solver_configuration_characterization test_solver_configuration
 
 # Integration runner used by bounded benchmark checks. It calls LNS and then
 # independently verifies the returned path map with SolutionVerifier.
