@@ -26,8 +26,6 @@ extern "C" {
     #include "probSAT-master/probSAT_inmem.h"
 }
 
-// Include MiniSAT wrapper (using real wrapper)
-#include "minisat/minisat-wrapper.h"
 
 // Forward declarations
 class MDD;
@@ -52,16 +50,6 @@ struct ProbSATSolution {
     bool satisfiable;                    // Whether the problem is satisfiable
     std::vector<int> assignment;        // Variable assignments (1-based indexing)
     int num_flips;                      // Number of flips performed
-    double solve_time;                  // Time taken to solve (seconds)
-    std::string error_message;          // Error message if solving failed
-};
-
-// Struct to hold MiniSAT solution results
-struct MiniSatSolution {
-    bool satisfiable;                    // Whether the problem is satisfiable
-    std::vector<int> assignment;        // Variable assignments (1-based indexing)
-    int num_decisions;                  // Number of decisions made
-    int num_propagations;               // Number of propagations performed
     double solve_time;                  // Time taken to solve (seconds)
     std::string error_message;          // Error message if solving failed
 };
@@ -249,38 +237,6 @@ public:
                                                  long long max_runs = 1,
                                                  long long max_flips = 10000,
                                                  const std::vector<int>* initial_assignment = nullptr);
-
-    /**
-     * Solves a CNF formula using MiniSAT.
-     * @param cnf The CNF formula to solve.
-     * @param initial_assignment Optional initial assignment (nullptr for none).
-     * @return MiniSatSolution containing the results.
-     */
-    static MiniSatSolution solve_cnf_with_minisat(const CNF& cnf,
-                                                 const std::vector<int>* initial_assignment = nullptr);
-
-    /**
-     * Solves a CNF formula using MiniSAT via CNFProbSATConstructor.
-     * @param cnf_constructor The CNFProbSATConstructor to use.
-     * @param initial_assignment Optional initial assignment (nullptr for none).
-     * @return MiniSatSolution containing the results.
-     */
-    static MiniSatSolution solve_cnf_with_minisat(const std::shared_ptr<class CNFProbSATConstructor>& cnf_constructor,
-                                                 const std::vector<int>* initial_assignment = nullptr);
-
-    /**
-     * Solves a CNF formula incrementally using MiniSAT. Only clauses that have
-     * not been seen by the provided MiniSatWrapper instance are added to the
-     * solver, allowing it to reuse learnt clauses and the internal search
-     * state.
-     */
-     static MiniSatSolution solve_cnf_with_minisat_incremental(
-        const CNF& cnf,
-        MiniSatWrapper& minisat_wrapper,
-        const std::vector<int>* initial_assignment = nullptr,
-        bool reset_solver = false,
-        bool use_assumptions = false);
-
 
     /**
      * Extracts agent paths from a ProbSAT solution using CNFConstructor.

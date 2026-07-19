@@ -355,13 +355,8 @@ std::vector<int> CNFConstructor::path_to_cnf_assignment(int agent_id, const std:
 std::unordered_map<int, std::vector<MDDNode::Position>> CNFConstructor::cnf_assignment_to_paths(const std::vector<int>& assignment) {
     std::unordered_map<int, std::vector<MDDNode::Position>> agent_paths;
     
-    std::cout << "\n=== DEBUG: cnf_assignment_to_paths ===" << std::endl;
-    std::cout << "Input assignment size: " << assignment.size() << std::endl;
-    //std::cout << "Input assignment: ";
-    //for (int v : assignment) std::cout << v << " ";
     std::cout << std::endl;
     
-    // Removed verbose listing of all variables in the variable map to declutter output
     
     // Group positive assignments by agent using O(1) reverse lookup
     std::unordered_map<int, std::vector<std::pair<int, MDDNode::Position>>> agent_positions;
@@ -400,7 +395,6 @@ std::unordered_map<int, std::vector<MDDNode::Position>> CNFConstructor::cnf_assi
         agent_paths[agent_id] = path;
     }
     
-    std::cout << "=== END DEBUG ===" << std::endl;
     
     return agent_paths;
 }

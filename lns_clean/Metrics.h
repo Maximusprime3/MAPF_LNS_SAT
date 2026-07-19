@@ -20,6 +20,7 @@ struct LazySatIterationMetrics {
     double iteration_wall_time_ms = 0.0;
     double solver_wall_time_ms = 0.0;
     double solver_reported_time_ms = 0.0;
+    int solver_calls = 0;
     bool used_assumptions = false;
     bool reset_solver = false;
     bool satisfiable = false;

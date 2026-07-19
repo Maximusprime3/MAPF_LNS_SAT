@@ -3,6 +3,7 @@
 
 #include "../SATSolverManager.h"
 #include "Metrics.h"
+#include "SatSolver.h"
 #include "SolveStatus.h"
 #include <unordered_map>
 #include <vector>
@@ -59,6 +60,37 @@ struct LazySolveResult {
  * @param initial_edge_collisions  Seed edge collisions to enforce.
  * @return LazySolveResult with status, paths, diagnostics, and collision sets.
  */
+struct SatIterationResult {
+    SatResultKind kind = SatResultKind::Error;
+    std::string diagnostic;
+    std::vector<int> model;
+    SatStatistics statistics;
+    double solver_wall_time_ms = 0.0;
+    int solver_calls = 0;
+    bool used_assumptions = false;
+    bool reset_solver = false;
+};
+
+SatIterationResult solve_sat_iteration(
+    SatSolver& solver,
+    const std::vector<SatClause>& accumulated_clauses,
+    std::size_t& loaded_clause_count,
+    const SatAssumptions* assumptions,
+    bool reset_before_solve);
+
+LazySolveResult lazy_SAT_solve(
+    SatSolver& solver,
+    CNF& local_cnf,
+    CNFConstructor& cnf_constructor,
+    const std::unordered_map<int, std::pair<int,int>>& local_entry_exit_time,
+    int start_t, int end_t,
+    int max_iterations = 1000,
+    const std::vector<std::tuple<int, int, std::pair<int,int>, int>>& initial_vertex_collisions = {},
+    const std::vector<std::tuple<int, int, std::pair<int,int>, std::pair<int,int>, int>>& initial_edge_collisions = {}
+);
+
+// Compatibility entry point for low-level callers. Production orchestration
+// creates a fresh solver explicitly and injects it through the overload above.
 LazySolveResult lazy_SAT_solve(
     CNF& local_cnf,
     CNFConstructor& cnf_constructor,

@@ -13,7 +13,7 @@ constexpr int kFloatPrecision = 6;
 constexpr const char* kLazyIterationsHeader =
     "experiment_id,makespan_attempt,zone_attempt,waiting_attempt,iteration,clauses_before,variables,clauses_added,total_clauses_after," \
     "new_vertex_collisions,new_edge_collisions,total_vertex_collisions,total_edge_collisions,iteration_wall_ms,solver_wall_ms,solver_reported_ms," \
-    "used_assumptions,reset_solver,satisfiable,num_decisions,num_propagations";
+    "solver_calls,used_assumptions,reset_solver,satisfiable,num_decisions,num_propagations";
 
 constexpr const char* kWaitingAttemptsHeader =
     "experiment_id,makespan_attempt,zone_attempt,waiting_attempt,waiting_budget,zone_positions,segment_count,agent_count,start_t,end_t," \
@@ -136,6 +136,7 @@ void ExperimentLogger::log_lazy_iteration(const std::string& experiment_id,
          << ',' << metrics.iteration_wall_time_ms
          << ',' << metrics.solver_wall_time_ms
          << ',' << metrics.solver_reported_time_ms
+         << ',' << metrics.solver_calls
          << ',' << (metrics.used_assumptions ? 1 : 0)
          << ',' << (metrics.reset_solver ? 1 : 0)
          << ',' << (metrics.satisfiable ? 1 : 0)

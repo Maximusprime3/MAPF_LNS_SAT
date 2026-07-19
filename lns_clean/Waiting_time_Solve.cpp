@@ -1003,8 +1003,18 @@ WaitingSolveResult lazy_solve_with_waiting_time(
             std::cout << std::endl;
         }
 
+        // Each waiting attempt owns an independent incremental SAT session.
+        SatDiagnosticSink sat_diagnostics;
+        if (config.log_level == LogLevel::Debug) {
+            sat_diagnostics = [](const std::string& message) {
+                std::cout << "[SAT] " << message << std::endl;
+            };
+        }
+        auto sat_solver = make_sat_solver(std::move(sat_diagnostics));
+
         //try lazy sat solve
         auto lazy_result = lazy_SAT_solve(
+            *sat_solver,
             local_cnf,
             cnf_constructor,
             entry_exit_map,

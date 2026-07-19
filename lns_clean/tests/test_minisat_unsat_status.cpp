@@ -1,42 +1,44 @@
-#include "../../SATSolverManager.h"
-#include "../../minisat/minisat-wrapper.h"
+#include "../SatSolver.h"
 
 #include <iostream>
-#include <vector>
 
 namespace {
 
-bool is_clean_unsat(const MiniSatSolution& result) {
-    return !result.satisfiable && result.error_message.empty();
+bool clean_unsat(const SatSolveResult& result) {
+    return result.kind == SatResultKind::Unsat &&
+           result.diagnostic.empty();
 }
 
 }  // namespace
 
 int main() {
-    // A direct contradictory formula is a normal UNSAT conclusion, not a
-    // backend failure.
-    MiniSatWrapper direct_wrapper;
-    const std::vector<std::vector<int>> contradictory = {{1}, {-1}};
-    const MiniSatSolution direct = direct_wrapper.solve_cnf(contradictory);
-    if (!is_clean_unsat(direct)) {
+    auto direct = make_sat_solver();
+    if (!direct->reset().ok ||
+        !direct->add_clauses({{1}, {-1}}).ok) {
+        std::cerr << "FAIL: could not prepare direct contradiction"
+                  << std::endl;
+        return 1;
+    }
+    if (!clean_unsat(direct->solve())) {
         std::cerr << "FAIL: direct contradiction was not reported as clean UNSAT"
                   << std::endl;
         return 1;
     }
 
-    // Reproduce the path used by lazy SAT: solve a satisfiable prefix, then add
-    // a clause that makes the incremental solver contradictory.
-    MiniSatWrapper incremental_wrapper;
-    const MiniSatSolution prefix =
-        incremental_wrapper.solve_cnf_incremental({{1}}, nullptr, false);
-    if (!prefix.satisfiable || !prefix.error_message.empty()) {
+    auto incremental = make_sat_solver();
+    if (!incremental->reset().ok ||
+        !incremental->add_clause({1}).ok) {
+        std::cerr << "FAIL: could not prepare satisfiable prefix"
+                  << std::endl;
+        return 1;
+    }
+    if (incremental->solve().kind != SatResultKind::Sat) {
         std::cerr << "FAIL: satisfiable incremental prefix did not solve cleanly"
                   << std::endl;
         return 1;
     }
-    const MiniSatSolution incremental =
-        incremental_wrapper.solve_cnf_incremental(contradictory, nullptr, false);
-    if (!is_clean_unsat(incremental)) {
+    if (!incremental->add_clause({-1}).ok ||
+        !clean_unsat(incremental->solve())) {
         std::cerr << "FAIL: incremental contradiction was not reported as clean UNSAT"
                   << std::endl;
         return 1;
