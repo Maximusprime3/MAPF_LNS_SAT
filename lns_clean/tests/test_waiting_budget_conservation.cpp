@@ -118,7 +118,7 @@ bool expect_valid_goal_wait_suffixes(const CurrentSolution& solution,
     return ok;
 }
 
-bool test_success_consumes_one_unit_once() {
+bool test_success_consumes_horizon_slack_once() {
     const Grid grid(3, std::vector<char>(3, '.'));
     const std::vector<Position> starts{{1, 0}, {0, 1}, {2, 2}};
     const std::vector<Position> goals{{1, 2}, {2, 1}, {2, 2}};
@@ -150,12 +150,12 @@ bool test_success_consumes_one_unit_once() {
         }));
     ok &= expect(applied_attempts == 1,
                  "successful repair: slack was not applied exactly once");
-    ok &= expect(total_waiting_budget(solution) == total_before - 1,
-                 "successful repair: total waiting budget did not decrease by one");
+    ok &= expect(total_waiting_budget(solution) == total_before - 2,
+                 "successful repair: absorbed horizon slack was not charged once");
     const int consumed_by_conflicting_agents =
         (budgets_before.at(0) - solution.get_waiting_time(0)) +
         (budgets_before.at(1) - solution.get_waiting_time(1));
-    ok &= expect(consumed_by_conflicting_agents == 1,
+    ok &= expect(consumed_by_conflicting_agents == 2,
                  "successful repair: conflicting agents consumed the wrong slack");
     ok &= expect(solution.get_waiting_time(2) == budgets_before.at(2),
                  "successful repair: unaffected agent budget changed");
@@ -229,13 +229,56 @@ bool test_early_validation_failure_rolls_back() {
     return ok;
 }
 
+bool test_multi_retry_success_conserves_horizon_budgets() {
+    const Grid grid(5, std::vector<char>(5, '.'));
+    const std::vector<Position> starts{
+        {2, 0}, {2, 4}, {0, 2}, {4, 2}};
+    const std::vector<Position> goals{
+        {2, 4}, {2, 0}, {4, 2}, {0, 2}};
+    const std::vector<Path> paths{
+        {{2, 0}, {2, 1}, {2, 2}, {2, 3}, {2, 4},
+         {2, 4}, {2, 4}, {2, 4}, {2, 4}},
+        {{2, 4}, {2, 3}, {2, 2}, {2, 1}, {2, 0},
+         {2, 0}, {2, 0}, {2, 0}, {2, 0}},
+        {{0, 2}, {1, 2}, {2, 2}, {3, 2}, {4, 2},
+         {4, 2}, {4, 2}, {4, 2}, {4, 2}},
+        {{4, 2}, {3, 2}, {2, 2}, {1, 2}, {0, 2},
+         {0, 2}, {0, 2}, {0, 2}, {0, 2}}};
+    CurrentSolution solution = make_solution(grid, starts, goals, paths);
+
+    std::set<Position> zone;
+    for (int index = 0; index < 5; ++index) {
+        zone.insert({2, index});
+        zone.insert({index, 2});
+    }
+    const WaitingSolveResult result =
+        solve_zone(solution, grid, zone, 4, 11);
+
+    bool ok = true;
+    ok &= expect(result.solved(),
+                 "multi-retry success: real orchestration did not solve");
+    ok &= expect(result.waiting_attempts.size() >= 2,
+                 "multi-retry success: retry path was not exercised");
+    for (const auto& [agent_id, path] : solution.agent_paths) {
+        (void)path;
+        ok &= expect(
+            solution.get_waiting_time(agent_id) == 1,
+            "multi-retry success: horizon slack was not conserved for agent " +
+                std::to_string(agent_id));
+    }
+    ok &= expect_fixed_horizon(solution, 8, "multi-retry success");
+    ok &= expect_valid_goal_wait_suffixes(solution, "multi-retry success");
+    return ok;
+}
+
 }  // namespace
 
 int main() {
     bool ok = true;
-    ok &= test_success_consumes_one_unit_once();
+    ok &= test_success_consumes_horizon_slack_once();
     ok &= test_unsat_retries_roll_back_all_state();
     ok &= test_early_validation_failure_rolls_back();
+    ok &= test_multi_retry_success_conserves_horizon_budgets();
 
     if (!ok) {
         return 1;
