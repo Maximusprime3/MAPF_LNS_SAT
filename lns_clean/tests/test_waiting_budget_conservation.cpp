@@ -229,6 +229,45 @@ bool test_early_validation_failure_rolls_back() {
     return ok;
 }
 
+bool test_non_goal_segment_charges_shifted_suffix_once() {
+    const Grid grid(5, std::vector<char>(5, '.'));
+    const std::vector<Position> starts{{2, 0}, {0, 2}, {4, 4}};
+    const std::vector<Position> goals{{2, 4}, {4, 2}, {4, 4}};
+    const std::vector<Path> paths{
+        {{2, 0}, {2, 1}, {2, 2}, {2, 3}, {2, 4},
+         {2, 4}, {2, 4}, {2, 4}, {2, 4}},
+        {{0, 2}, {1, 2}, {2, 2}, {3, 2}, {4, 2},
+         {4, 2}, {4, 2}, {4, 2}, {4, 2}},
+        {{4, 4}, {4, 4}, {4, 4}, {4, 4}, {4, 4},
+         {4, 4}, {4, 4}, {4, 4}, {4, 4}}};
+    CurrentSolution solution = make_solution(grid, starts, goals, paths);
+    const auto budgets_before = solution.agent_waiting_time;
+    const Path unaffected_before = solution.agent_paths.at(2);
+    const int total_before = total_waiting_budget(solution);
+
+    const WaitingSolveResult result = solve_zone(
+        solution,
+        grid,
+        {{2, 1}, {2, 2}, {2, 3}, {1, 2}, {3, 2}},
+        2,
+        19);
+
+    bool ok = true;
+    ok &= expect(result.solved(),
+                 "non-goal segment: real orchestration did not solve");
+    ok &= expect(result.waiting_attempts.size() == 2,
+                 "non-goal segment: expected one failed attempt and one retry");
+    ok &= expect(total_waiting_budget(solution) == total_before - 1,
+                 "non-goal segment: shifted suffix was not charged once");
+    ok &= expect(solution.get_waiting_time(2) == budgets_before.at(2),
+                 "non-goal segment: unaffected agent budget changed");
+    ok &= expect(solution.agent_paths.at(2) == unaffected_before,
+                 "non-goal segment: unaffected agent path changed");
+    ok &= expect_fixed_horizon(solution, 8, "non-goal segment");
+    ok &= expect_valid_goal_wait_suffixes(solution, "non-goal segment");
+    return ok;
+}
+
 bool test_multi_retry_success_conserves_horizon_budgets() {
     const Grid grid(5, std::vector<char>(5, '.'));
     const std::vector<Position> starts{
@@ -278,6 +317,7 @@ int main() {
     ok &= test_success_consumes_horizon_slack_once();
     ok &= test_unsat_retries_roll_back_all_state();
     ok &= test_early_validation_failure_rolls_back();
+    ok &= test_non_goal_segment_charges_shifted_suffix_once();
     ok &= test_multi_retry_success_conserves_horizon_budgets();
 
     if (!ok) {
