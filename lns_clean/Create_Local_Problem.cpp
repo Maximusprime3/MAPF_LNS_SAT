@@ -235,7 +235,7 @@ std::shared_ptr<MDD> build_segment_mdd_with_optional_wait_tail(
     int window_start_t,
     int window_end_t,
     int agent_id,
-    int forced_pre_tail_idx = -1) {
+    int forced_pre_tail_idx) {
 
     if (segment_path.empty()) {
         std::cout << "[Create_Local_Problem] ERROR: Empty segment path for agent " << agent_id << std::endl;
@@ -244,7 +244,7 @@ std::shared_ptr<MDD> build_segment_mdd_with_optional_wait_tail(
     const std::pair<int,int>& start_pos = segment_path.front();
     const std::pair<int,int>& goal_pos = segment_path.back();
 
-    const auto it = std::find(segment_path.begin(), segment_path.end(), global_goal_pos);
+    auto it = std::find(segment_path.begin(), segment_path.end(), global_goal_pos);
     if (forced_pre_tail_idx != -1) {
         it = segment_path.begin() + forced_pre_tail_idx; //this is used to extend mdd body before the tail begins. to use waiting time
     }
