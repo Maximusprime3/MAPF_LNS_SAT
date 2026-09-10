@@ -177,7 +177,17 @@ Six focused commits.
 **Milestone 5.2 completed:** the supported Make build no longer requires `-fpermissive`.
 The local MiniSAT default-argument compatibility patch is documented in
 [`lns_clean/BUILD.md`](../lns_clean/BUILD.md#local-minisat-compatibility-patch).
-CMake and source-tree changes remain deferred.
+
+**Milestone 5.3 completed:** a root out-of-tree CMake build now mirrors the supported
+Make sources, with separate bundled MiniSAT and project core targets, `lns-sat`, the
+supported `run_experiments` batch runner, and the independent verification runner.
+CTest covers the 14 existing C++ tests, both shell checks against CMake artifacts, and a
+30-second fixed-seed smoke test (empty-8-8-even-1, four agents, index 0, seed 42,
+verified makespan 8). Project warnings remain target-local and separate from bundled
+MiniSAT. The Make workflow remains supported. See
+[`lns_clean/BUILD.md`](../lns_clean/BUILD.md) for commands and target details.
+Source moves, duplicate-runner consolidation, tracked-artifact removal, and Milestone
+5.4 remain deferred.
 
 ### Goal
 
@@ -185,10 +195,12 @@ Provide one obvious clean build and one supported implementation.
 
 ### Work
 
-- Add a root CMake build before moving files.
+- Add a root CMake build before moving files. **Completed in 5.3.**
 - Define targets for the solver core, `lns-sat` executable, unit tests, and smoke test.
+  **Completed in 5.3**, including the batch and independent verification runners.
 - Build out of tree; removal of the `-fpermissive` requirement is completed in 5.2.
-- Keep third-party compiler warnings separate from project warnings.
+- Keep third-party compiler warnings separate from project warnings. **Completed for
+  CMake in 5.3.**
 - Consolidate the duplicate batch experiment runners.
 - Remove tracked libraries, executables, object files, caches, notebook checkpoints,
   and `Zone.Identifier` files.
@@ -202,7 +214,7 @@ Provide one obvious clean build and one supported implementation.
 
     cmake -S . -B build
     cmake --build build
-    ctest --test-dir build
+    ctest --test-dir build --output-on-failure
 
 ### Exit condition
 
