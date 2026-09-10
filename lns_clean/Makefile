@@ -47,7 +47,7 @@ SUPPORTED_BUILD_DEPENDENCY_TEST_SRC := $(TEST_DIR)/test_supported_build_dependen
 LNS_VERIFICATION_SRC := $(TEST_DIR)/run_lns_verification.cpp
 LNS_VERIFICATION_BIN := $(OBJ_DIR)/run_lns_verification
 
-CXXFLAGS := -std=gnu++17 -O2 -Wall -Wextra -pedantic -pthread -fpermissive
+CXXFLAGS := -std=gnu++17 -O2 -Wall -Wextra -pedantic -pthread
 
 # Optional instrumentation helpers used for debugging memory issues
 DEBUG_FLAGS := -O0 -g

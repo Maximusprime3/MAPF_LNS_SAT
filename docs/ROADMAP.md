@@ -41,7 +41,7 @@ These changes are preserved in commits `51911f6` and `5142ad6`.
 
 ## Current release blockers
 
-1. The supported Make build still relies on `-fpermissive` and checked-in build products.
+1. The supported Make build still has checked-in build products.
 2. The CLI cannot write a stable solution/result format and still redirects global output.
 3. Human-readable progress output remains entangled with the algorithm outside the
    SAT/CNF backend diagnostics.
@@ -174,6 +174,11 @@ Six focused commits.
 
 ## Milestone 5: establish the build and source tree
 
+**Milestone 5.2 completed:** the supported Make build no longer requires `-fpermissive`.
+The local MiniSAT default-argument compatibility patch is documented in
+[`lns_clean/BUILD.md`](../lns_clean/BUILD.md#local-minisat-compatibility-patch).
+CMake and source-tree changes remain deferred.
+
 ### Goal
 
 Provide one obvious clean build and one supported implementation.
@@ -182,7 +187,7 @@ Provide one obvious clean build and one supported implementation.
 
 - Add a root CMake build before moving files.
 - Define targets for the solver core, `lns-sat` executable, unit tests, and smoke test.
-- Build out of tree and remove the requirement for `-fpermissive`.
+- Build out of tree; removal of the `-fpermissive` requirement is completed in 5.2.
 - Keep third-party compiler warnings separate from project warnings.
 - Consolidate the duplicate batch experiment runners.
 - Remove tracked libraries, executables, object files, caches, notebook checkpoints,

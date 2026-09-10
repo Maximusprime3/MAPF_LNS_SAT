@@ -21,12 +21,18 @@ The Makefile currently uses:
 - `-O2`;
 - `-Wall -Wextra -pedantic`;
 - `-pthread`;
-- `-D__STDC_FORMAT_MACROS` for the bundled MiniSAT headers;
-- `-fpermissive`, retained temporarily for legacy project sources; and
+- `-D__STDC_FORMAT_MACROS` for the bundled MiniSAT headers; and
 - `-MMD -MP` dependency tracking.
 
-Removing `-fpermissive`, separating third-party warnings, and replacing checked-in build
-products belong to Milestone 5.
+The supported Make build no longer requires `-fpermissive` (Milestone 5.2). Separating
+third-party warnings and replacing checked-in build products remain Milestone 5 work.
+
+## Local MiniSAT compatibility patch
+
+In `minisat/minisat-master/minisat/core/SolverTypes.h`, the `mkLit` friend declaration
+has no default argument; `sign = false` appears on the namespace-level inline definition
+instead. This makes the declaration valid C++ without permissive compilation. The literal
+encoding is unchanged, as are `mkLit(v)`, `mkLit(v, false)`, and `mkLit(v, true)`.
 
 ## Usage
 
