@@ -28,7 +28,7 @@
 std::vector<std::vector<char>> mask_map_outside_shape(
     const std::vector<std::vector<char>>& map,
     const std::set<std::pair<int,int>>& shape_positions) {
-    if (map.empty() || map[0].empty()) return {};
+    if (!mapf::is_rectangular_grid(map)) return {};
     int rows = static_cast<int>(map.size());
     int cols = static_cast<int>(map[0].size());
 

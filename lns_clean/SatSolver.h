@@ -1,5 +1,6 @@
 #pragma once
 
+#include "Deadline.h"
 #include <functional>
 #include <memory>
 #include <string>
@@ -16,6 +17,7 @@ struct SatAssumptions {
 enum class SatResultKind {
     Sat,
     Unsat,
+    Interrupted,
     Error,
 };
 
@@ -44,6 +46,7 @@ class SatSolver {
 public:
     virtual ~SatSolver() = default;
 
+    virtual void set_deadline(SolverDeadline deadline) = 0;
     virtual SatOperationResult reset() = 0;
     virtual SatOperationResult add_clause(const SatClause& clause) = 0;
 

@@ -1,6 +1,7 @@
 #pragma once
 
 #include "Current_Solution.h"
+#include "Deadline.h"
 #include "../mdd/MDD.h"
 
 #include <memory>
@@ -33,6 +34,7 @@ struct LocalSegment {
 // Aggregate state for the local zone problem. Tracks all segments, their
 // ordering per original agent and helper indices for fast lookups.
 struct LocalZoneState {
+    SolverDeadline deadline;
     std::vector<LocalSegment> segments;
     std::unordered_map<int, std::vector<size_t>> original_to_segments; //original_id -> list of segment indices
     std::unordered_map<int, size_t> segment_index_by_id; //segment_id (pseudo_agent_id)-> segment index
@@ -80,7 +82,8 @@ std::shared_ptr<MDD> build_segment_mdd(
     const LocalSegment& segment,
     const std::vector<std::vector<char>>& masked_map,
     int window_start_t,
-    int window_end_t);
+    int window_end_t,
+    SolverDeadline deadline = {});
 
 LocalZoneState build_local_problem_for_zone(
     CurrentSolution& current_solution,
@@ -92,7 +95,8 @@ LocalZoneState build_local_problem_for_zone(
     int offset,
     int start_t,
     int end_t,
-    const std::unordered_map<int, std::vector<int>>& agent_to_pseudo_agent_id = {});
+    const std::unordered_map<int, std::vector<int>>& agent_to_pseudo_agent_id = {},
+    SolverDeadline deadline = {});
 
 std::unordered_map<int, std::shared_ptr<MDD>> build_segment_mdd_map(const LocalZoneState& state);
 std::unordered_map<int, std::pair<int,int>> build_segment_entry_exit_time_map(const LocalZoneState& state);

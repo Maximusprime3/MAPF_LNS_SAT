@@ -39,10 +39,10 @@ The target structure is:
 | `lns-sat` | Existing single-run CLI, named `lns-sat` |
 | `run_batch_experiments` | Only `lns_clean/run_experiments/run_batch_experiments.cpp` |
 | `lns_batch_solver` | Build-directory `main_clean_lns` compatibility copy of `lns-sat` for the unchanged batch driver's executable lookup |
-| `test_*` | The 14 existing C++ test executables |
+| `test_*` | The 17 C++ test executables |
 | `run_lns_verification` | Existing independent end-to-end verification runner |
 
-CTest registers **17 tests**: 14 C++ tests, the two existing shell checks, and one bounded
+CTest registers **20 tests**: 17 C++ tests, the two existing shell checks, and one bounded
 smoke solve. The dependency shell check inspects generated CMake target properties and
 both CMake archives. Each C++ test has an explicit build-directory working directory;
 the terrain fixtures retain their existing relative paths via build-directory copies.
@@ -126,3 +126,12 @@ make clean
 The verification runner is used for bounded fixed-seed benchmark checks. `make asan`
 rebuilds with AddressSanitizer. `make clean` removes the local build directory, archive,
 solver executable, and batch runner.
+
+## Local MiniSAT deadline hook
+
+`minisat/core/Solver.h` also provides a nullable termination callback at its
+existing `withinBudget()` checks. The adapter installs it only for a configured
+deadline and uses `solveLimited` to preserve `l_Undef` as `Interrupted`. The callback
+runs on the solver thread; it requires no timer thread or asynchronous shared flag.
+The default null callback preserves unbounded search behavior. See
+`docs/CORRECTNESS_CHECKPOINT.md` for the cooperative deadline contract and tests.

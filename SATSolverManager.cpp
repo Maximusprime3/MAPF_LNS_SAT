@@ -1,3 +1,5 @@
+#include <cmath>
+#include <limits>
 #include "SATSolverManager.h"
 #include <iostream>
 #include <filesystem>
@@ -30,20 +32,38 @@ std::vector<std::vector<char>> SATSolverManager::load_map(const std::string& map
     }
 
     std::string line;
-    // Skip the first 4 lines (header)
-    for (int i = 0; i < 4 && std::getline(infile, line); ++i) {}
-
+    auto read_line = [&]() {
+        if (!std::getline(infile, line)) return false;
+        if (!line.empty() && line.back() == '\r') line.pop_back();
+        return true;
+    };
+    auto read_dimension = [&](const char* expected, int& value) {
+        if (!read_line()) return false;
+        std::istringstream header(line);
+        std::string key, extra;
+        return (header >> key >> value) && key == expected && value > 0 && !(header >> extra);
+    };
+    int height = 0, width = 0;
+    if (!read_line() || line != "type octile" ||
+        !read_dimension("height", height) || !read_dimension("width", width) ||
+        !read_line() || line != "map") {
+        std::cerr << "Error: Invalid Moving AI map header: " << map_path << std::endl;
+        return {};
+    }
     bool has_swamp_or_water = false;
-    // Read the rest of the file as the map
-    while (std::getline(infile, line)) {
-        std::vector<char> row;
-        for (char c : line) {
-            if (c != '\r' && c != '\n') {
-                row.push_back(c);
-                if (c == 'S' || c == 'W') has_swamp_or_water = true;
-            }
+    while (read_line()) {
+        if (line.size() != static_cast<std::size_t>(width) || map.size() >= static_cast<std::size_t>(height)) {
+            std::cerr << "Error: Map rows do not match declared dimensions: " << map_path << std::endl;
+            return {};
         }
-        if (!row.empty()) map.push_back(row);
+        for (char c : line) {
+            if (c == 'S' || c == 'W') has_swamp_or_water = true;
+        }
+        map.emplace_back(line.begin(), line.end());
+    }
+    if (infile.bad() || map.size() != static_cast<std::size_t>(height)) {
+        std::cerr << "Error: Incomplete map data: " << map_path << std::endl;
+        return {};
     }
     if (has_swamp_or_water) {
         std::cerr << "Warning: Swamp (S) and Water (W) will be handled as unpassable terrain" << std::endl;
@@ -139,6 +159,7 @@ std::vector<ScenarioEntry> SATSolverManager::create_dataframe_from_file(const st
             }
             first_line = false;
         }
+        if (!line.empty() && line.back() == '\r') line.pop_back();
         if (line.empty()) continue;
         std::istringstream iss(line);
         std::vector<std::string> tokens;
@@ -150,27 +171,38 @@ std::vector<ScenarioEntry> SATSolverManager::create_dataframe_from_file(const st
         // Each line should have exactly 9 columns
         if (tokens.size() != 9) {
             std::cerr << "Warning: Malformed scenario line (expected 9 columns): " << line << std::endl;
-            continue;
+            return {}; // Never shift scenario slices by silently dropping a row.
         }
         ScenarioEntry entry;
         try {
+            auto strict_int = [](const std::string& text) {
+                std::size_t used = 0;
+                const int value = std::stoi(text, &used);
+                if (used != text.size()) throw std::invalid_argument("Trailing text in scenario integer");
+                return value;
+            };
             // Convert numeric fields from string to int, assign map_name as string
-            entry.bucket = std::stoi(tokens[0]);
+            entry.bucket = strict_int(tokens[0]);
             entry.map_name = tokens[1];
-            entry.map_width = std::stoi(tokens[2]);
-            entry.map_height = std::stoi(tokens[3]);
-            entry.start_x = std::stoi(tokens[5]);
-            entry.start_y = std::stoi(tokens[4]); //movingai is (y, x)
-            entry.goal_x = std::stoi(tokens[7]);
-            entry.goal_y = std::stoi(tokens[6]);
-            entry.optimal_length = std::stoi(tokens[8]);
+            entry.map_width = strict_int(tokens[2]);
+            entry.map_height = strict_int(tokens[3]);
+            entry.start_x = strict_int(tokens[5]);
+            entry.start_y = strict_int(tokens[4]); //movingai is (y, x)
+            entry.goal_x = strict_int(tokens[7]);
+            entry.goal_y = strict_int(tokens[6]);
+            std::size_t used = 0;
+            const double optimal_length = std::stod(tokens[8], &used);
+            if (used != tokens[8].size() || !std::isfinite(optimal_length) ||
+                optimal_length < 0 || optimal_length > std::numeric_limits<int>::max())
+                throw std::invalid_argument("Invalid optimal length in scenario");
+            entry.optimal_length = static_cast<int>(optimal_length);
             //print entry
             //std::cout << "Entry: " << entry.start_x << "," << entry.start_y << " -> " << entry.goal_x << "," << entry.goal_y << std::endl;
             //map width and height
             //std::cout << "Map width: " << entry.map_width << ", Map height: " << entry.map_height << std::endl;
         } catch (const std::exception& e) {
             std::cerr << "Warning: Failed to parse scenario line: " << line << "\n" << e.what() << std::endl;
-            continue;
+            return {};
         }
         entries.push_back(entry);
     }
@@ -214,14 +246,14 @@ std::pair<std::vector<std::map<std::pair<int, int>, int>>, int>
 SATSolverManager::compute_max_timesteps(
     const std::vector<std::vector<char>>& map,
     const std::vector<std::pair<int, int>>& starts,
-    const std::vector<std::pair<int, int>>& goals)
+    const std::vector<std::pair<int, int>>& goals, SolverDeadline deadline)
 {
     std::vector<std::map<std::pair<int, int>, int>> distance_matrices;
     std::vector<int> goal_distances;
 
     // For each agent, compute the distance matrix and the distance from start to goal
     for (size_t i = 0; i < starts.size(); ++i) {
-        MDDConstructor constructor(map, starts[i], goals[i]);
+        MDDConstructor constructor(map, starts[i], goals[i], -1, {}, deadline);
         // Compute all distances from every position to the goal
         auto distances = constructor.compute_all_distances();
         // Convert unordered_map to std::map for return type compatibility

@@ -100,6 +100,9 @@ if(BUILD_TESTING)
         lns_clean/SolverConfiguration.cpp lns_clean/NeighborhoodVariant.cpp)
 
     set(core_tests
+        test_audit_regressions
+        test_deadlines
+        test_tiny_mapf_oracle
         test_current_solution_transaction
         test_initial_mdd_agent_ids
         test_solve_result

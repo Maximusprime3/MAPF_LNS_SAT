@@ -14,6 +14,14 @@ Severity labels mean:
 
 ## P0: correctness and validation
 
+### Post-5.3 audit follow-up
+
+`CORRECTNESS_CHECKPOINT.md` records reproduced failures and regression evidence for
+exact agent counts, malformed scenario rows and map shapes, saturated disconnected
+zones, the final slack retry, deadline propagation, path assumptions, and combined
+pseudo-agent/slack/refresh/reassembly. These are addressed by the checkpoint;
+its bounded tests do not prove arbitrary-instance completeness.
+
 ### Final verification failure propagation (resolved on cleanup branch)
 
 `SolutionVerifier` now independently checks expected agent IDs, common path horizon, path

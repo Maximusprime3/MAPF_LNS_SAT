@@ -135,7 +135,7 @@ LNSResult LNS(const SolveRequest& request, const SolverConfig& config) {
 
     //Step 2: Compute base makespan and distance matrices for MDDs of all agents
     auto [distance_matrices, base_makespan] = SATSolverManager::compute_max_timesteps(
-        problem.grid, problem.starts, problem.goals);
+        problem.grid, problem.starts, problem.goals, deadline);
     if (base_makespan <= 0) base_makespan = 1;
 
     std::cout << "[LNS] Base makespan: " << base_makespan << std::endl;
@@ -168,9 +168,13 @@ LNSResult LNS(const SolveRequest& request, const SolverConfig& config) {
         //Build MDDs with fastest way to the goal and sample for initial solution
         //this is just for the initial solution, can be improved in the future
         auto mdds = create_mdds_with_waiting_time(
-            problem.grid, problem.starts, problem.goals, distance_matrices);
+            problem.grid, problem.starts, problem.goals, distance_matrices, deadline);
         std::cout << "[LNS] Built MDDs with waiting time structure for " << mdds.size()
                   << " agents at makespan " << current_max_timesteps << std::endl;
+        if (solver_deadline_reached(deadline)) {
+            terminal_message = "Wall-clock limit reached during initial MDD construction";
+            break;
+        }
         if (mdds.size() != problem.starts.size()) {
             // A partial initial solution is unsafe: missing MDDs used to shift
             // later vector positions onto the wrong agent IDs. Stop this solve
@@ -225,6 +229,10 @@ LNSResult LNS(const SolveRequest& request, const SolverConfig& config) {
 
         bool conflicts_remain = true;
         while(conflicts_remain){
+            if (solver_deadline_reached(deadline)) {
+                terminal_message = "Wall-clock limit reached during conflict repair";
+                break;
+            }
             //Step 5: analyze conflicts
             std::cout << "[LNS] Analyzing conflicts..." << std::endl;
             auto [vertex_collisions, edge_collisions] = SATSolverManager::find_all_collisions(current_solution.agent_paths);
@@ -382,6 +390,14 @@ LNSResult LNS(const SolveRequest& request, const SolverConfig& config) {
         return solve_result;
     }
 
+    if (solver_deadline_reached(deadline)) {
+        summary.solved = false;
+        summary.makespan_success = -1;
+        logger.log_experiment_summary(summary);
+        solve_result.status = SolveStatus::Exhausted;
+        solve_result.message = "Wall-clock limit reached before returning the verified solution";
+        return solve_result;
+    }
     logger.log_experiment_summary(summary);
     std::cout << "[LNS] Collision-free verified solution found at makespan "
               << successful_max_timesteps << std::endl;

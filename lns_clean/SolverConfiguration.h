@@ -1,6 +1,7 @@
 #pragma once
 
 #include "NeighborhoodVariant.h"
+#include "Deadline.h"
 
 #include <chrono>
 #include <optional>
@@ -66,7 +67,7 @@ struct ConfigurationResolution {
     }
 };
 
-using SolverDeadline = std::optional<std::chrono::steady_clock::time_point>;
+
 
 ConfigurationValidation validate_solver_configuration(
     const SolveRequest& request,
@@ -82,5 +83,3 @@ std::optional<LogLevel> parse_log_level(const std::string& value);
 const char* log_level_name(LogLevel level);
 
 SolverDeadline make_solver_deadline(const SolverConfig& config);
-
-bool solver_deadline_reached(const SolverDeadline& deadline);

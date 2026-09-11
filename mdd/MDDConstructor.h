@@ -8,6 +8,7 @@
 #include <queue>
 #include <limits>
 #include "MDDNode.h"
+#include "../lns_clean/Deadline.h"
 
 // Hash function for std::pair<int, int> to use in unordered_map
 struct pair_hash {
@@ -30,6 +31,7 @@ public:
     int rows, cols;
     // Maximum allowed timesteps for the MDD
     int max_timesteps;
+    SolverDeadline deadline;
     // The constructed MDD
     std::shared_ptr<MDD> mdd;
     // Map from position to minimum distance to goal
@@ -38,7 +40,7 @@ public:
     std::unordered_map<int, std::unordered_map<MDDNode::Position, std::shared_ptr<MDDNode>, pair_hash>> nodes;
 
     // Constructor: initializes with grid, start, goal, and optionally max_timesteps and distances
-    MDDConstructor(const std::vector<std::vector<char>>& grid_, MDDNode::Position start_, MDDNode::Position goal_, int max_timesteps = -1, const std::unordered_map<MDDNode::Position, int, pair_hash>& distances_ = {});
+    MDDConstructor(const std::vector<std::vector<char>>& grid_, MDDNode::Position start_, MDDNode::Position goal_, int max_timesteps = -1, const std::unordered_map<MDDNode::Position, int, pair_hash>& distances_ = {}, SolverDeadline deadline_ = {});
 
     // Returns valid neighbors (not obstacles) of a position
     std::vector<MDDNode::Position> get_neighbors(const MDDNode::Position& pos) const;

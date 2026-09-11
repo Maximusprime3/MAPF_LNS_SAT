@@ -102,7 +102,7 @@ public:
     // Extract variable ID for a specific (agent, position, timestep)
     int get_variable_id(int agent_id, const MDDNode::Position& position, int timestep) const;
 
-    // NEW: Create a partial assignment (assumptions) from a set of agent paths (skip agents with empty paths)
+    // Positive literal IDs, not a 0/1 assignment. Paths begin at their MDD entry time.
     std::vector<int> partial_assignment_from_paths(const std::unordered_map<int, std::vector<MDDNode::Position>>& agent_paths) const;
 
     // NEW: Create a full assignment from a set of agent paths, ensuring all variables have values

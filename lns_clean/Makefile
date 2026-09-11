@@ -231,3 +231,13 @@ asan:
 		LDFLAGS="$(LDFLAGS) $(SANITIZE_FLAGS)"
 
 -include $(DEPS)
+
+# Audit regressions use the same supported core as the existing test suite.
+REGRESSION_TESTS := test_audit_regressions test_deadlines test_tiny_mapf_oracle
+REGRESSION_BINS := $(addprefix $(OBJ_DIR)/,$(REGRESSION_TESTS))
+.PHONY: $(REGRESSION_TESTS)
+$(REGRESSION_BINS): $(OBJ_DIR)/%: $(TEST_DIR)/%.cpp $(LIB) | $(OBJ_DIR)
+	$(CXX) $(CXXFLAGS) $(CPPFLAGS) $(LDFLAGS) $< -L. -llns_clean -o $@
+$(REGRESSION_TESTS): %: $(OBJ_DIR)/%
+	$(OBJ_DIR)/$@
+test: $(REGRESSION_TESTS)

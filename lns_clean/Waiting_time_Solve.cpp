@@ -15,6 +15,7 @@
 #include <tuple>
 #include <unordered_map>
 #include <chrono>
+#include <cstdint>
 
 //[Current_Solution] ERROR: Segment 2 local path length (1) does not match expected length (9)
 // entry exit time not updated? ->rebuild mdds?
@@ -146,7 +147,7 @@ bool trim_segment_tail(LocalZoneState& state,
                                         segment,
                                         masked_map,
                                         state.zone_start_t,
-                                        state.zone_end_t);
+                                        state.zone_end_t, state.deadline);
 
     if (!segment.mdd) {
         std::cout << "[Waiting_time_Solve] ERROR: Failed to rebuild MDD for segment "
@@ -523,7 +524,7 @@ bool apply_waiting_time_delta(
                                             segment,
                                             masked_map,
                                             state.zone_start_t,
-                                            state.zone_end_t);
+                                            state.zone_end_t, state.deadline);
             need_to_apply_waiting_time_delta = false;
             amount_of_waiting_time = 0;
         } else {
@@ -536,7 +537,7 @@ bool apply_waiting_time_delta(
                                             segment,
                                             masked_map,
                                             state.zone_start_t,
-                                            state.zone_end_t);
+                                            state.zone_end_t, state.deadline);
             amount_of_waiting_time -= usable_waiting_time_in_segment;
         }
     }*/
@@ -560,7 +561,7 @@ bool apply_waiting_time_delta(
                                             segment,
                                             masked_map,
                                             state.zone_start_t,
-                                            state.zone_end_t);
+                                            state.zone_end_t, state.deadline);
             if (!segment.mdd) {
                 std::cout << "[Waiting_time_Solve] ERROR: Failed to build MDD for agent " << segment.original_id << std::endl;
                 return false;
@@ -877,8 +878,12 @@ WaitingSolveResult lazy_solve_with_waiting_time(
         conflict_meta,
         offset,
         start_t,
-        end_t);
+        end_t, {}, deadline);
 
+    if (solver_deadline_reached(deadline)) {
+        result.message = "Wall-clock limit reached during local MDD construction";
+        return result;
+    }
     const LocalZoneValidationResult construction_validation =
         validate_local_zone_state(state, current_solution);
     if (!construction_validation.valid) {
@@ -902,16 +907,17 @@ WaitingSolveResult lazy_solve_with_waiting_time(
     
     //const int max_iterations = 100;
     //total available waiting time
-    int total_available_waiting_time = 0;
+    std::int64_t total_available_waiting_time = 0;
 
     for (const auto& [agent_id, waiting_time] : current_solution.agent_waiting_time) {
         std::cout << "[Waiting_time_Solve] Agent " << agent_id << " has waiting time " << waiting_time << std::endl;
         total_available_waiting_time += waiting_time;
     }
     std::cout << "[Waiting_time_Solve] Total available waiting time: " << total_available_waiting_time << std::endl;
-    const int max_iterations = std::max(1, total_available_waiting_time);
+    // Count the initial attempt as well as retries after spending slack.
+    const std::int64_t max_iterations = 1 + std::max<std::int64_t>(0, total_available_waiting_time);
     std::cout << "[Waiting_time_Solve] Max iterations: " << max_iterations << std::endl;
-    for (int iter = 0; iter < max_iterations; iter++) {
+    for (std::int64_t iter = 0; iter < max_iterations; iter++) {
         if (solver_deadline_reached(deadline)) {
             result.status = SolveStatus::Exhausted;
             result.message = "Wall-clock limit reached before SAT invocation";
@@ -1022,8 +1028,13 @@ WaitingSolveResult lazy_solve_with_waiting_time(
             state.zone_end_t,
             config.lazy_iteration_limit,
             cached_vertex_collisions,
-            cached_edge_collisions);
+            cached_edge_collisions, deadline);
         
+        if (solver_deadline_reached(deadline)) {
+            result.status = SolveStatus::Exhausted;
+            result.message = "Wall-clock limit reached during local repair";
+            return result; // The transaction restores speculative paths and budgets.
+        }
         merge_collisions(state, lazy_result.discovered_vertex_collisions, lazy_result.discovered_edge_collisions);
         
         attempt_metrics.lazy_metrics = lazy_result.metrics;
@@ -1141,6 +1152,12 @@ WaitingSolveResult lazy_solve_with_waiting_time(
             result.local_paths = std::move(lazy_result.local_paths);
             result.local_entry_exit_time = std::move(new_entry_exit_time);
             result.waiting_attempts = attempt_metrics_log;
+            if (solver_deadline_reached(deadline)) {
+                result.status = SolveStatus::Exhausted;
+                result.message = "Wall-clock limit reached before local commit";
+                result.local_paths.clear();
+                return result;
+            }
             transaction.commit();
             return result;
         }
@@ -1415,6 +1432,11 @@ WaitingSolveResult lazy_solve_with_waiting_time(
             }
         }
         
+        if (solver_deadline_reached(deadline)) {
+            result.status = SolveStatus::Exhausted;
+            result.message = "Wall-clock limit reached during slack adjustment";
+            return result;
+        }
         //check local solution for consistency
         for (const auto& segment : state.segments) {
             if (!verify_path_consistency(segment.path, map)) {
@@ -1478,6 +1500,10 @@ WaitingSolveResult lazy_solve_with_waiting_time(
                 conflict_meta,
                 offset);
 
+            if (solver_deadline_reached(deadline)) {
+                result.message = "Wall-clock limit reached during local MDD refresh";
+                return result;
+            }
             const LocalZoneValidationResult refresh_validation =
                 validate_local_zone_state(state, current_solution);
             if (!refresh_validation.valid) {

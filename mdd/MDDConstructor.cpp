@@ -7,14 +7,14 @@
 #include <stdexcept>
 
 // Constructor: initializes the grid, start, goal, and optionally max_timesteps and distances
-MDDConstructor::MDDConstructor(const std::vector<std::vector<char>>& grid_, MDDNode::Position start_, MDDNode::Position goal_, int max_timesteps_, const std::unordered_map<MDDNode::Position, int, pair_hash>& distances_)
-    : grid(grid_), start(start_), goal(goal_), max_timesteps(max_timesteps_), distances(distances_) {
+MDDConstructor::MDDConstructor(const std::vector<std::vector<char>>& grid_, MDDNode::Position start_, MDDNode::Position goal_, int max_timesteps_, const std::unordered_map<MDDNode::Position, int, pair_hash>& distances_, SolverDeadline deadline_)
+    : grid(grid_), start(start_), goal(goal_), max_timesteps(max_timesteps_), deadline(deadline_), distances(distances_) {
     rows = grid.size();
     cols = grid.empty() ? 0 : grid[0].size();
     
     // Validate grid dimensions
-    if (rows == 0) {
-        throw std::invalid_argument("Grid cannot be empty");
+    if (!mapf::is_rectangular_grid(grid)) {
+        throw std::invalid_argument("Grid must be non-empty and rectangular");
     }
     
     // Validate start position
@@ -63,6 +63,7 @@ std::unordered_map<MDDNode::Position, int, pair_hash> MDDConstructor::compute_al
     std::priority_queue<std::pair<int, MDDNode::Position>, std::vector<std::pair<int, MDDNode::Position>>, std::greater<>> heap;
     heap.push({0, goal});
     while (!heap.empty()) {
+        if (solver_deadline_reached(deadline)) return {};
         auto [distance, position] = heap.top();
         heap.pop();
         if (dists.count(position)) continue; // Already visited
@@ -99,6 +100,7 @@ std::shared_ptr<MDD> MDDConstructor::construct_mdd() {
     queue.push({start, 0});
     // BFS to build the MDD
     while (!queue.empty()) {
+        if (solver_deadline_reached(deadline)) return nullptr;
         auto [position, current_time_step] = queue.front();
         queue.pop();
         if (visited.count({position, current_time_step})) continue;

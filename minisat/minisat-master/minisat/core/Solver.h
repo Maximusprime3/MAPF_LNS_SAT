@@ -108,6 +108,10 @@ public:
     void    setConfBudget(int64_t x);
     void    setPropBudget(int64_t x);
     void    budgetOff();
+    // Local integration hook: cooperative cancellation on the solver thread.
+    void setTerminationCallback(bool (*callback)(void*), void* context) {
+        termination_requested = callback; termination_context = context;
+    }
     void    interrupt();          // Trigger a (potentially asynchronous) interruption of the solver.
     void    clearInterrupt();     // Clear interrupt indicator flag.
 
@@ -235,6 +239,8 @@ protected:
     int64_t             conflict_budget;    // -1 means no budget.
     int64_t             propagation_budget; // -1 means no budget.
     bool                asynch_interrupt;
+    bool              (*termination_requested)(void*) = nullptr;
+    void*               termination_context = nullptr;
 
     // Main internal methods:
     //
@@ -373,6 +379,7 @@ inline void     Solver::clearInterrupt(){ asynch_interrupt = false; }
 inline void     Solver::budgetOff(){ conflict_budget = propagation_budget = -1; }
 inline bool     Solver::withinBudget() const {
     return !asynch_interrupt &&
+           (!termination_requested || !termination_requested(termination_context)) &&
            (conflict_budget    < 0 || conflicts < (uint64_t)conflict_budget) &&
            (propagation_budget < 0 || propagations < (uint64_t)propagation_budget); }
 

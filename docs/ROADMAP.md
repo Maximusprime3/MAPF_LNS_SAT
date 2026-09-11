@@ -41,6 +41,11 @@ These changes are preserved in commits `51911f6` and `5142ad6`.
 
 ## Current release blockers
 
+The post-5.3 audit fixes and their bounded regression evidence are documented in
+[`CORRECTNESS_CHECKPOINT.md`](CORRECTNESS_CHECKPOINT.md). These checks address
+instance selection, zone termination, final-unit slack, grid shape, deadlines,
+path assumptions, and the combined pseudo-agent repair path.
+
 1. The supported Make build still has checked-in build products.
 2. The CLI cannot write a stable solution/result format and still redirects global output.
 3. Human-readable progress output remains entangled with the algorithm outside the
@@ -108,6 +113,10 @@ Three to four focused commits.
 
 ## Milestone 3: create validated solver configuration
 
+**Status: configuration and cooperative deadlines implemented; replay manifest
+incomplete.** Milestone 6 owns the result-format/CLI work needed for the manifest
+requirement below. This milestone's full exit condition remains open.
+
 ### Goal
 
 Replace long parameter lists and hidden limits with one replayable configuration.
@@ -147,6 +156,8 @@ Support MiniSAT only while making a future backend replacement local and obvious
 - Added explicit `Sat`, `Unsat`, and `Error` results and preserved those distinctions
   through lazy, waiting, local-zone, and top-level solve outcomes.
 - Isolated MiniSAT types and ownership inside one adapter implementation.
+- The post-5.3 checkpoint adds `Interrupted` for deadlines, fixes literal-ID and
+  absolute-time assumptions, and tests the real producer/adapter path.
 - Injected the backend into lazy SAT solving and added a fake-backed protocol suite.
 - Removed public solver selection from positional/configuration/batch inputs.
 - Removed probSAT APIs from shared CNF/manager code and probSAT dependencies from the
@@ -313,16 +324,11 @@ citation/licensing information, and links to a complete reproducibility artifact
 
 ## Recommended next checkpoint
 
-Implement and push these changes before starting the SAT/build refactor:
-
-1. `test: cover pseudo-agent segmentation cases`
-2. `test: verify pseudo-agent refresh and reassembly`
-3. `refactor: validate local-zone segment state`
-4. `test: enforce waiting-budget conservation`
-5. `refactor: centralize grid walkability rules`
-
-This checkpoint should preserve public algorithm behavior. Any discovered behavioral fix
-should receive its own regression test and commit.
+The original pseudo-agent/slack/grid checkpoint and the post-5.3 audit fixes now
+have regression coverage; see `CORRECTNESS_CHECKPOINT.md` for before/after evidence
+and remaining limits. Continue Milestone 5's source/artifact organization and
+Milestone 6's CLI/result work, keeping correctness fixes separate from file moves.
+Run the new regressions, including the independent tiny oracle, after source moves.
 
 ## Deliberately deferred improvements
 

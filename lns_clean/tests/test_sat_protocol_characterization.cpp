@@ -27,6 +27,8 @@ public:
         : scripted_results_(std::move(scripted_results)),
           model_(std::move(model)) {}
 
+    void set_deadline(SolverDeadline) override {}
+
     SatOperationResult reset() override {
         ++reset_calls;
         return {};

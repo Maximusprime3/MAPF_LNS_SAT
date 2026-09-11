@@ -91,6 +91,7 @@ LocalZoneResult solve_local_zone(
 
     int expansion_radius = neighborhood_policy.initial_radius;
     int failed_attempt_count = 0;
+    bool force_full_map = false;
     //loop until solution found or the local zone reached the size of the map and still no solution found
     while (!local_zone_result.solved() && local_zone_positions.size() <= all_walkable_positions) {
         if (solver_deadline_reached(deadline)) {
@@ -105,9 +106,9 @@ LocalZoneResult solve_local_zone(
             std::cout << "[Solve_local_zone] Local zone size reached all walkable positions" << std::endl;
             break;
         }
-        if (all_walkable_positions > 0 &&
+        if (force_full_map || (all_walkable_positions > 0 &&
             static_cast<double>(local_zone_positions.size()) /
-                all_walkable_positions >= config.full_map_fallback_threshold) {
+                all_walkable_positions >= config.full_map_fallback_threshold)) {
             std::cout << "[Solve_local_zone] Local zone size reached "
                       << config.full_map_fallback_threshold * 100.0
                       << "% of all walkable positions" << std::endl;
@@ -260,6 +261,7 @@ LocalZoneResult solve_local_zone(
             bucket_time_window_start,
             bucket_time_window_end);
         
+        const bool spatially_saturated = expanded_zone_positions_set == local_zone_positions;
         local_zone_positions = expanded_zone_positions_set;
         local_zone_conflict_indices = expanded_conflict_indices; //todo: no more conflict indices? all conflict meta
         //find earliest and latest conflict times in the expanded zone
@@ -278,6 +280,10 @@ LocalZoneResult solve_local_zone(
 
         start_t = std::max(0, earliest_conflict_t - expanded_offset);
         end_t = std::min(current_max_timesteps, latest_conflict_t + expanded_offset);
+
+        // Disconnected components can saturate below the percentage threshold.
+        // Once the full time horizon is reached, make the final fallback attempt.
+        force_full_map = spatially_saturated && start_t == 0 && end_t == current_max_timesteps;
 
         std::cout << "[Solve_local_zone] Final expanded zone contains " << expanded_zone_positions_set.size() 
                   << " positions with " << expanded_conflict_indices.size() << " conflicts " << std::endl; 

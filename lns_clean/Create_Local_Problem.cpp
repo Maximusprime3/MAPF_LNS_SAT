@@ -1,3 +1,4 @@
+#include <cstdlib>
 #include "Create_Local_Problem.h"
 
 #include "../mdd/MDDConstructor.h"
@@ -284,7 +285,7 @@ std::shared_ptr<MDD> build_segment_mdd(
     const LocalSegment& segment,
     const std::vector<std::vector<char>>& masked_map,
     int window_start_t,
-    int window_end_t) {
+    int window_end_t, SolverDeadline deadline) {
     
     const std::vector<std::pair<int,int>>& segment_path = segment.path;
     const int segment_entry_t = segment.entry_t;
@@ -360,7 +361,7 @@ std::shared_ptr<MDD> build_segment_mdd(
 
     // normal MDD to local segment goal
     
-    MDDConstructor constructor(masked_map, segment_start_pos, segment_goal_pos, std::max(0, segment_length - 1));
+    MDDConstructor constructor(masked_map, segment_start_pos, segment_goal_pos, std::max(0, segment_length - 1), {}, deadline);
     auto mdd = constructor.construct_mdd();
     align_mdd_to_time_window(mdd, segment_entry_t, segment_exit_t, window_start_t, window_end_t);
     return mdd;
@@ -479,9 +480,10 @@ LocalZoneState build_local_problem_for_zone(
     int offset,
     int start_t,
     int end_t,
-    const std::unordered_map<int, std::vector<int>>& agent_to_pseudo_agent_id) {
+    const std::unordered_map<int, std::vector<int>>& agent_to_pseudo_agent_id, SolverDeadline deadline) {
 
     LocalZoneState state;
+    state.deadline = deadline;
     state.zone_start_t = start_t;
     state.zone_end_t = end_t;
     state.original_to_pseudo_ids = agent_to_pseudo_agent_id;
@@ -560,7 +562,7 @@ LocalZoneState build_local_problem_for_zone(
                     segment,
                     masked_map,
                     start_t,
-                    end_t);
+                    end_t, deadline);
                 
                 if (!segment.mdd) {
                     std::cout << "[Create_Local_Problem] ERROR: Failed to build MDD for agent " << agent_id << std::endl;
@@ -695,6 +697,41 @@ LocalZoneValidationResult validate_local_zone_state(
             !contains_position(segment.mdd->levels.rbegin()->second,
                                segment.path.back())) {
             return invalid("segment endpoints do not match its MDD endpoints");
+        }
+
+        if (segment.path.front() != global_path[segment.entry_t] ||
+            segment.path.back() != global_path[segment.exit_t]) {
+            return invalid("segment endpoints do not match the global path boundary");
+        }
+        if (segment.mdd->levels.begin()->second.size() != 1 ||
+            segment.mdd->levels.rbegin()->second.size() != 1) {
+            return invalid("segment MDD endpoints must be fixed");
+        }
+        // Nonempty levels alone do not prove that the MDD contains connected
+        // paths. Reject dead ends, disconnected nodes, and cross-level edges
+        // before CNF construction can turn them into unconstrained movement.
+        std::unordered_set<const MDDNode*> reachable;
+        reachable.insert(segment.mdd->levels.begin()->second.front().get());
+        for (auto level = segment.mdd->levels.begin(); level != segment.mdd->levels.end(); ++level) {
+            auto next = std::next(level);
+            std::unordered_set<const MDDNode*> next_nodes, next_reachable;
+            if (next != segment.mdd->levels.end()) {
+                for (const auto& node : next->second) next_nodes.insert(node.get());
+            }
+            for (const auto& node : level->second) {
+                if (reachable.count(node.get()) == 0) return invalid("segment MDD has an unreachable node");
+                if (next != segment.mdd->levels.end() && node->children.empty())
+                    return invalid("segment MDD has an internal dead end");
+                for (const auto& child : node->children) {
+                    if (!child || next_nodes.count(child.get()) == 0)
+                        return invalid("segment MDD edge does not connect adjacent levels");
+                    const auto dr = std::llabs(static_cast<long long>(node->position.first) - child->position.first);
+                    const auto dc = std::llabs(static_cast<long long>(node->position.second) - child->position.second);
+                    if (dr + dc > 1) return invalid("segment MDD edge is not a legal move");
+                    next_reachable.insert(child.get());
+                }
+            }
+            reachable = std::move(next_reachable);
         }
     }
 
@@ -1034,7 +1071,7 @@ void refresh_zone_after_extension(
                                                                 segment_to_continue,
                                                                 masked_map,
                                                                 state.zone_start_t,
-                                                                state.zone_end_t);
+                                                                state.zone_end_t, state.deadline);
                     if (!segment_to_continue.mdd) {
                         std::cout << "[Create_Local_Problem] ERROR: Failed to build MDD for agent " << agent_id << std::endl;
                         continue;
@@ -1081,7 +1118,7 @@ void refresh_zone_after_extension(
                                                     new_segment,
                                                     masked_map,
                                                     state.zone_start_t,
-                                                    state.zone_end_t);
+                                                    state.zone_end_t, state.deadline);
 
                 if (!new_segment.mdd) {
                     std::cout << "[Create_Local_Problem] ERROR: Failed to build MDD for agent " << agent_id << std::endl;
@@ -1119,7 +1156,7 @@ void refresh_zone_after_extension(
                                                 new_segment,
                                                 masked_map,
                                                 state.zone_start_t,
-                                                state.zone_end_t);
+                                                state.zone_end_t, state.deadline);
 
             if (!new_segment.mdd) {
                 std::cout << "[Create_Local_Problem] ERROR: Failed to build MDD for agent " << agent_id << std::endl;
@@ -1149,7 +1186,7 @@ void refresh_zone_after_extension(
                                                 new_segment,
                                                 masked_map,
                                                 state.zone_start_t,
-                                                state.zone_end_t);
+                                                state.zone_end_t, state.deadline);
 
             if (!new_segment.mdd) {
                 std::cout << "[Create_Local_Problem] ERROR: Failed to build MDD for agent " << new_segment.original_id << std::endl;

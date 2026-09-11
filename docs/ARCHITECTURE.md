@@ -146,7 +146,7 @@ the zone or time window is expanded.
 `SatSolver` is the backend-neutral contract used by lazy solving:
 
 ```text
-reset -> add appended clauses -> solve [with typed assumptions] -> Sat | Unsat | Error
+reset -> add appended clauses -> solve [with typed assumptions] -> Sat | Unsat | Interrupted | Error
                                                        -> model and per-call statistics
 ```
 
@@ -208,3 +208,12 @@ CLI/config
 
 Analysis notebooks and plotting scripts should consume stable result files, but should not
 be dependencies of the solver executable.
+
+## Post-5.3 correctness checkpoint
+
+See `CORRECTNESS_CHECKPOINT.md` for the added input/termination/slack/grid tests,
+absolute-time path assumptions, and combined pseudo-agent integration coverage.
+`SatSolver::set_deadline` supplies a monotonic cooperative deadline. `Interrupted`
+returns bounded exhaustion without an unrestricted retry. MDD construction polls
+the same deadline; local transactions roll back on interruption, and late solutions
+are rejected before commit or return.

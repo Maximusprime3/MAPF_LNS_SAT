@@ -27,9 +27,15 @@ public:
         }
     }
 
+    void set_deadline(SolverDeadline deadline) override {
+        deadline_ = deadline;
+        if (solver_) solver_->setTerminationCallback(deadline_ ? deadline_expired : nullptr, this);
+    }
+
     SatOperationResult reset() override {
         try {
             solver_ = std::make_unique<Minisat::Solver>();
+            solver_->setTerminationCallback(deadline_ ? deadline_expired : nullptr, this);
             formula_unsat_ = false;
             model_.clear();
             last_decisions_ = 0;
@@ -66,6 +72,8 @@ public:
             std::size_t simplified_literals = 0;
 
             for (const auto& raw_clause : clauses) {
+                if (solver_deadline_reached(deadline_))
+                    return SatOperationResult::error("Wall-clock limit reached during clause loading");
                 bool tautology = false;
                 std::set<int> literal_set;
                 for (int literal : raw_clause) {
@@ -171,6 +179,12 @@ private:
     SatSolveResult solve_internal(
         const SatAssumptions* assumptions) {
         SatSolveResult result;
+        model_.clear();
+        if (solver_deadline_reached(deadline_)) {
+            result.kind = SatResultKind::Interrupted;
+            result.diagnostic = "Wall-clock limit reached before SAT solving";
+            return result;
+        }
         if (!initialization_error_.empty()) {
             result.diagnostic = initialization_error_;
             return result;
@@ -206,13 +220,14 @@ private:
             }
 
             const auto start = std::chrono::high_resolution_clock::now();
-            const bool satisfiable =
-                assumptions == nullptr
-                    ? solver_->solve()
-                    : solver_->solve(assumption_literals);
+            // Unlike the bool API, solveLimited preserves the interrupted
+            // outcome as l_Undef instead of misclassifying it as UNSAT.
+            const auto outcome = solver_->solveLimited(assumption_literals);
+            const bool interrupted = outcome == Minisat::l_Undef || solver_deadline_reached(deadline_);
+            const bool satisfiable = !interrupted && outcome == Minisat::l_True;
             const auto end = std::chrono::high_resolution_clock::now();
 
-            result.kind = satisfiable
+            result.kind = interrupted ? SatResultKind::Interrupted : satisfiable
                               ? SatResultKind::Sat
                               : SatResultKind::Unsat;
             result.statistics.solve_time_seconds =
@@ -245,9 +260,18 @@ private:
                 std::string("MiniSAT solve failed: ") +
                 error.what();
         }
+        if (solver_deadline_reached(deadline_)) {
+            result.kind = SatResultKind::Interrupted;
+            result.diagnostic = "Wall-clock limit reached during SAT solving";
+            model_.clear();
+        }
         return result;
     }
 
+    static bool deadline_expired(void* context) {
+        return solver_deadline_reached(static_cast<MiniSatSolver*>(context)->deadline_);
+    }
+    SolverDeadline deadline_;
     std::unique_ptr<Minisat::Solver> solver_;
     bool formula_unsat_ = false;
     std::vector<int> model_;

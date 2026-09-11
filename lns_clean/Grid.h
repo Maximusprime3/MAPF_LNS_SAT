@@ -7,6 +7,14 @@
 
 namespace mapf {
 
+inline bool is_rectangular_grid(const std::vector<std::vector<char>>& grid) noexcept {
+    if (grid.empty() || grid.front().empty()) return false;
+    for (const auto& row : grid) {
+        if (row.size() != grid.front().size()) return false;
+    }
+    return true;
+}
+
 // Moving AI map rows are preserved verbatim by the loader. The solver treats
 // only normal ground and goal terrain as traversable; every other byte is
 // blocked, including @, O, T, S, W, and unknown terrain symbols.

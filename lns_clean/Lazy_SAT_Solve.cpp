@@ -132,7 +132,7 @@ std::vector<AgentMDD> create_mdds_with_waiting_time(
     const std::vector<std::vector<char>>& grid,
     const std::vector<std::pair<int,int>>& starts,
     const std::vector<std::pair<int,int>>& goals,
-    const std::vector<std::map<std::pair<int,int>, int>>& distance_matrices) {
+    const std::vector<std::map<std::pair<int,int>, int>>& distance_matrices, SolverDeadline deadline) {
     
     std::cout << "[SAT] Creating MDDs with shortest paths + waiting time..." << std::endl;
     
@@ -166,7 +166,7 @@ std::vector<AgentMDD> create_mdds_with_waiting_time(
         
         // Create MDD with shortest path length (inclusive depth)
         // Note: use shortest_path_length directly to ensure sampled paths can reach the goal
-        MDDConstructor constructor(grid, start, goal, shortest_path_length);
+        MDDConstructor constructor(grid, start, goal, shortest_path_length, {}, deadline);
         auto mdd = constructor.construct_mdd();
         
         if (!mdd) {
@@ -194,21 +194,6 @@ void accumulate_statistics(
     total.solve_time_seconds += current.solve_time_seconds;
 }
 
-SatAssumptions legacy_assignment_assumptions(
-    const std::vector<int>& assignment) {
-    SatAssumptions assumptions;
-    for (std::size_t index = 0; index < assignment.size(); ++index) {
-        if (assignment[index] == 1) {
-            assumptions.literals.push_back(
-                static_cast<int>(index) + 1);
-        } else if (assignment[index] == 0) {
-            assumptions.literals.push_back(
-                -(static_cast<int>(index) + 1));
-        }
-    }
-    return assumptions;
-}
-
 }  // namespace
 
 SatIterationResult solve_sat_iteration(
@@ -216,15 +201,26 @@ SatIterationResult solve_sat_iteration(
     const std::vector<SatClause>& accumulated_clauses,
     std::size_t& loaded_clause_count,
     const SatAssumptions* assumptions,
-    bool reset_before_solve) {
+    bool reset_before_solve,
+    const SolverDeadline& deadline) {
     SatIterationResult aggregate;
+    solver.set_deadline(deadline);
+    auto expired = [&]() {
+        if (!solver_deadline_reached(deadline)) return false;
+        aggregate.kind = SatResultKind::Interrupted;
+        aggregate.diagnostic = "Wall-clock limit reached during SAT iteration";
+        aggregate.model.clear();
+        return true;
+    };
 
     auto call = [&](bool reset,
                     const SatAssumptions* call_assumptions) {
         const auto start = std::chrono::steady_clock::now();
+        if (expired()) return;
         if (reset) {
             aggregate.reset_solver = true;
             const SatOperationResult reset_result = solver.reset();
+            if (expired()) return;
             if (!reset_result.ok) {
                 aggregate.kind = SatResultKind::Error;
                 aggregate.diagnostic = reset_result.diagnostic;
@@ -247,6 +243,7 @@ SatIterationResult solve_sat_iteration(
                 accumulated_clauses.end());
             const SatOperationResult add_result =
                 solver.add_clauses(appended);
+            if (expired()) return;
             if (!add_result.ok) {
                 aggregate.kind = SatResultKind::Error;
                 aggregate.diagnostic = add_result.diagnostic;
@@ -271,6 +268,7 @@ SatIterationResult solve_sat_iteration(
             1000.0;
         accumulate_statistics(
             aggregate.statistics, result.statistics);
+        if (expired()) return;
         aggregate.kind = result.kind;
         aggregate.diagnostic = result.diagnostic;
         if (result.kind == SatResultKind::Sat) {
@@ -280,7 +278,7 @@ SatIterationResult solve_sat_iteration(
 
     call(reset_before_solve, assumptions);
     if (assumptions != nullptr &&
-        aggregate.kind == SatResultKind::Unsat) {
+        aggregate.kind == SatResultKind::Unsat && !expired()) {
         call(true, nullptr);
     }
 
@@ -296,7 +294,8 @@ LazySolveResult lazy_SAT_solve(
     int start_t, int end_t,
     int max_iterations,
     const std::vector<std::tuple<int, int, std::pair<int,int>, int>>& initial_vertex_collisions,
-    const std::vector<std::tuple<int, int, std::pair<int,int>, std::pair<int,int>, int>>& initial_edge_collisions) {
+    const std::vector<std::tuple<int, int, std::pair<int,int>, std::pair<int,int>, int>>& initial_edge_collisions,
+    const SolverDeadline& deadline) {
 
     std::cout << "[SAT] Start solving CNF: " << local_cnf.get_clauses().size() << " clauses and "
               << (cnf_constructor.get_next_variable_id() - 1) << " variables" << std::endl;
@@ -335,7 +334,7 @@ LazySolveResult lazy_SAT_solve(
     int iteration = 0;
     std::size_t loaded_clause_count = 0;
     std::unordered_map<int, std::vector<std::pair<int,int>>> final_local_paths;
-    std::vector<int> initial_assignment;
+    SatAssumptions previous_path_assumptions;
 
     LazySolveRunMetrics run_metrics;
     auto run_start = std::chrono::steady_clock::now();
@@ -351,12 +350,9 @@ LazySolveResult lazy_SAT_solve(
         iteration_metrics.variable_count = local_cnf.count_variables();
         auto iteration_start = std::chrono::steady_clock::now();
 
-        SatAssumptions assumptions;
         const SatAssumptions* assumptions_ptr = nullptr;
-        if (!first_iteration && !initial_assignment.empty()) {
-            assumptions =
-                legacy_assignment_assumptions(initial_assignment);
-            assumptions_ptr = &assumptions;
+        if (!first_iteration && !previous_path_assumptions.literals.empty()) {
+            assumptions_ptr = &previous_path_assumptions;
         }
 
         const SatIterationResult sat_result = solve_sat_iteration(
@@ -364,7 +360,7 @@ LazySolveResult lazy_SAT_solve(
             local_cnf.get_clauses(),
             loaded_clause_count,
             assumptions_ptr,
-            first_iteration);
+            first_iteration, deadline);
         first_iteration = false;
 
         iteration_metrics.solver_wall_time_ms =
@@ -394,7 +390,10 @@ LazySolveResult lazy_SAT_solve(
             run_metrics.iterations.push_back(iteration_metrics);
             run_metrics.total_solver_wall_time_ms += sat_result.solver_wall_time_ms;
             run_metrics.total_solver_reported_time_ms += iteration_metrics.solver_reported_time_ms;
-            if (sat_result.kind == SatResultKind::Error) {
+            if (sat_result.kind == SatResultKind::Interrupted) {
+                final_status = SolveStatus::Exhausted;
+                final_message = "Wall-clock limit reached during lazy SAT solving";
+            } else if (sat_result.kind == SatResultKind::Error) {
                 final_status = SolveStatus::InvalidState;
                 final_message = "SAT backend failure: " +
                                 (sat_result.diagnostic.empty()
@@ -436,6 +435,10 @@ LazySolveResult lazy_SAT_solve(
         std::cout << "[SAT] Found " << new_collisions.size() << " vertex collisions and "
                   << new_edge_collisions.size() << " edge collisions" << std::endl;
 
+        if (solver_deadline_reached(deadline)) {
+            final_message = "Wall-clock limit reached after SAT model validation";
+            break;
+        }
         if (new_collisions.empty() && new_edge_collisions.empty()) {
             solution_found = true;
             final_status = SolveStatus::Solved;
@@ -445,7 +448,13 @@ LazySolveResult lazy_SAT_solve(
         } else {
             cnf_constructor.add_collision_clauses_to_cnf(local_cnf, new_collisions);
             cnf_constructor.add_edge_collision_clauses_to_cnf(local_cnf, new_edge_collisions);
-            initial_assignment = cnf_constructor.partial_assignment_from_paths(local_paths);
+            try {
+                previous_path_assumptions.literals = cnf_constructor.partial_assignment_from_paths(local_paths);
+            } catch (const std::exception& error) {
+                final_status = SolveStatus::InvalidState;
+                final_message = std::string("SAT path assumptions failed: ") + error.what();
+                break;
+            }
             std::cout << "[SAT] Adding collision clauses and solving again..." << std::endl;
         }
         iteration_metrics.total_clauses_after = static_cast<int>(local_cnf.get_clauses().size());
@@ -489,7 +498,8 @@ LazySolveResult lazy_SAT_solve(
     int start_t, int end_t,
     int max_iterations,
     const std::vector<std::tuple<int, int, std::pair<int,int>, int>>& initial_vertex_collisions,
-    const std::vector<std::tuple<int, int, std::pair<int,int>, std::pair<int,int>, int>>& initial_edge_collisions) {
+    const std::vector<std::tuple<int, int, std::pair<int,int>, std::pair<int,int>, int>>& initial_edge_collisions,
+    const SolverDeadline& deadline) {
     auto solver = make_sat_solver();
     return lazy_SAT_solve(
         *solver,
@@ -500,5 +510,5 @@ LazySolveResult lazy_SAT_solve(
         end_t,
         max_iterations,
         initial_vertex_collisions,
-        initial_edge_collisions);
+        initial_edge_collisions, deadline);
 }

@@ -300,8 +300,3 @@ SolverDeadline make_solver_deadline(const SolverConfig& config) {
     }
     return std::chrono::steady_clock::now() + *config.wall_clock_limit;
 }
-
-bool solver_deadline_reached(const SolverDeadline& deadline) {
-    return deadline.has_value() &&
-           std::chrono::steady_clock::now() >= *deadline;
-}

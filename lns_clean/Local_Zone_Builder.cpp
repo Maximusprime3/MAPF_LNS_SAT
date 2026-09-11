@@ -93,6 +93,7 @@ void ConflictZoneBuilder::extend_corridor_chain(std::set<std::pair<int,int>>& se
 std::set<std::pair<int,int>> ConflictZoneBuilder::build_reachable_zone(
     const std::vector<std::pair<int,int>>& conflict_points,
     int expansion_radius) const {
+    if (!mapf::is_rectangular_grid(map_)) return {};
     std::set<std::pair<int,int>> seeds;
 
     for (const auto& conflict_point : conflict_points) {

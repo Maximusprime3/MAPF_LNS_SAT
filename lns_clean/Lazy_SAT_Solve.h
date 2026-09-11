@@ -76,7 +76,8 @@ SatIterationResult solve_sat_iteration(
     const std::vector<SatClause>& accumulated_clauses,
     std::size_t& loaded_clause_count,
     const SatAssumptions* assumptions,
-    bool reset_before_solve);
+    bool reset_before_solve,
+    const SolverDeadline& deadline = {});
 
 LazySolveResult lazy_SAT_solve(
     SatSolver& solver,
@@ -86,7 +87,8 @@ LazySolveResult lazy_SAT_solve(
     int start_t, int end_t,
     int max_iterations = 1000,
     const std::vector<std::tuple<int, int, std::pair<int,int>, int>>& initial_vertex_collisions = {},
-    const std::vector<std::tuple<int, int, std::pair<int,int>, std::pair<int,int>, int>>& initial_edge_collisions = {}
+    const std::vector<std::tuple<int, int, std::pair<int,int>, std::pair<int,int>, int>>& initial_edge_collisions = {},
+    const SolverDeadline& deadline = {}
 );
 
 // Compatibility entry point for low-level callers. Production orchestration
@@ -98,7 +100,8 @@ LazySolveResult lazy_SAT_solve(
     int start_t, int end_t,
     int max_iterations = 1000,
     const std::vector<std::tuple<int, int, std::pair<int,int>, int>>& initial_vertex_collisions = {},
-    const std::vector<std::tuple<int, int, std::pair<int,int>, std::pair<int,int>, int>>& initial_edge_collisions = {}
+    const std::vector<std::tuple<int, int, std::pair<int,int>, std::pair<int,int>, int>>& initial_edge_collisions = {},
+    const SolverDeadline& deadline = {}
 );
 
 /**
@@ -147,6 +150,6 @@ std::vector<AgentMDD> create_mdds_with_waiting_time(
     const std::vector<std::vector<char>>& grid,
     const std::vector<std::pair<int,int>>& starts,
     const std::vector<std::pair<int,int>>& goals,
-    const std::vector<std::map<std::pair<int,int>, int>>& distance_matrices);
+    const std::vector<std::map<std::pair<int,int>, int>>& distance_matrices, SolverDeadline deadline = {});
 
 #endif // LNS_LAZY_SAT_SOLVE_H

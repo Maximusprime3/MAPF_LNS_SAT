@@ -1,6 +1,7 @@
 #include "CNFConstructor.h"
 #include <algorithm>
 #include <iterator>
+#include <stdexcept>
 
 CNFConstructor::CNFConstructor(const std::unordered_map<int, std::shared_ptr<MDD>>& mdds, 
                                bool lazy_encoding,
@@ -441,12 +442,16 @@ std::vector<int> CNFConstructor::partial_assignment_from_paths(const std::unorde
         const auto& path = agent_path_pair.second;
         // Skip agents with empty paths (e.g., those involved in collisions)
         if (path.empty()) continue;
-        // For each timestep, add the variable for (agent, position, timestep)
+        const auto mdd_it = mdds.find(agent_id);
+        if (mdd_it == mdds.end() || !mdd_it->second || mdd_it->second->levels.empty()) {
+            throw std::invalid_argument("Cannot create assumptions for an unknown segment");
+        }
+        const int entry_t = mdd_it->second->levels.begin()->first;
+        // Local path indices are relative; CNF variables use absolute time.
         for (size_t timestep = 0; timestep < path.size(); ++timestep) {
-            int var_id = get_variable_id(agent_id, path[timestep], timestep);
-            if (var_id > 0) {
-                assumptions.push_back(var_id); // Positive literal: set this variable to true
-            }
+            int var_id = get_variable_id(agent_id, path[timestep], entry_t + static_cast<int>(timestep));
+            if (var_id <= 0) throw std::invalid_argument("Path position has no CNF variable at its absolute timestep");
+            assumptions.push_back(var_id);
         }
     }
     return assumptions;

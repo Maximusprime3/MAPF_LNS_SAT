@@ -1,3 +1,4 @@
+#include "lns_clean/Deadline.h"
 #ifndef SAT_SOLVER_MANAGER_H
 #define SAT_SOLVER_MANAGER_H
 
@@ -122,7 +123,8 @@ public:
     static std::pair<std::vector<std::map<std::pair<int, int>, int>>, int>
     compute_max_timesteps(const std::vector<std::vector<char>>& map,
                          const std::vector<std::pair<int, int>>& starts,
-                         const std::vector<std::pair<int, int>>& goals);
+                         const std::vector<std::pair<int, int>>& goals,
+                          SolverDeadline deadline = {});
 
     /**
      * Creates MDDs for each agent using the map, starts, goals, max_timesteps, and distance matrices.
