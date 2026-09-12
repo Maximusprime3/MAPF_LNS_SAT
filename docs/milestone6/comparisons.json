@@ -1,0 +1,162 @@
+[
+  {
+    "map": "empty-8-8",
+    "agents": 8,
+    "index": 0,
+    "seed": 42,
+    "variant": "lns-sat",
+    "outcome": "CONTRACT solved 8 1",
+    "contract_sha256": "7b6d1ba5ca8a67dc7ab4338a20e03eaf2b2b6a4eee6e43e469c62b4d2e2ecf84",
+    "exact_match": true
+  },
+  {
+    "map": "empty-8-8",
+    "agents": 8,
+    "index": 0,
+    "seed": 7,
+    "variant": "lns-sat",
+    "outcome": "CONTRACT solved 8 1",
+    "contract_sha256": "e7e0696a6d524398e2a3ed217530c081b6b7a2466a5cf64da467ac4207dc446a",
+    "exact_match": true
+  },
+  {
+    "map": "random-32-32-10",
+    "agents": 8,
+    "index": 0,
+    "seed": 42,
+    "variant": "lns-sat",
+    "outcome": "CONTRACT solved 46 1",
+    "contract_sha256": "1b4903177dc7e56bdce193e4ac014dc2a3c08d1aea0dcccfe97e469be7c3aa48",
+    "exact_match": true
+  },
+  {
+    "map": "random-32-32-10",
+    "agents": 8,
+    "index": 0,
+    "seed": 7,
+    "variant": "lns-sat",
+    "outcome": "CONTRACT solved 46 1",
+    "contract_sha256": "0848742d6ae1fe704fdff64388269b7cf616a101c5804b77db879eaa4b7bfaa7",
+    "exact_match": true
+  },
+  {
+    "map": "maze-32-32-2",
+    "agents": 8,
+    "index": 0,
+    "seed": 42,
+    "variant": "lns-sat",
+    "outcome": "CONTRACT solved 69 1",
+    "contract_sha256": "31b5976a16da82d7ccd9148674a4e6eae9889d1771d27d752d1c2c7feb54cf4c",
+    "exact_match": true
+  },
+  {
+    "map": "maze-32-32-2",
+    "agents": 8,
+    "index": 0,
+    "seed": 7,
+    "variant": "lns-sat",
+    "outcome": "CONTRACT solved 69 1",
+    "contract_sha256": "01ae54a2e2003784e23d32c5a43f1685043739ba359822758a8bdf39dde580ae",
+    "exact_match": true
+  },
+  {
+    "map": "empty-8-8",
+    "agents": 8,
+    "index": 0,
+    "seed": 42,
+    "variant": "initial-radius-2",
+    "outcome": "CONTRACT solved 8 1",
+    "contract_sha256": "191b7d5ceef51bac27e376c00031679a3be2b18957a0e647088b7aafc0ce3419",
+    "exact_match": true
+  },
+  {
+    "map": "empty-8-8",
+    "agents": 8,
+    "index": 0,
+    "seed": 7,
+    "variant": "initial-radius-2",
+    "outcome": "CONTRACT solved 8 1",
+    "contract_sha256": "53b38606f1f2d430a688b047b9d42f8db5686f81f4b01e274c06ae318805091e",
+    "exact_match": true
+  },
+  {
+    "map": "empty-8-8",
+    "agents": 8,
+    "index": 0,
+    "seed": 42,
+    "variant": "fixed-step-2",
+    "outcome": "CONTRACT solved 8 1",
+    "contract_sha256": "26fdf20e5b8d8ec1b9769a04d9103506caa54166262a9920e6c2445deed4e887",
+    "exact_match": true
+  },
+  {
+    "map": "empty-8-8",
+    "agents": 8,
+    "index": 0,
+    "seed": 7,
+    "variant": "fixed-step-2",
+    "outcome": "CONTRACT solved 8 1",
+    "contract_sha256": "e7e0696a6d524398e2a3ed217530c081b6b7a2466a5cf64da467ac4207dc446a",
+    "exact_match": true
+  },
+  {
+    "map": "empty-8-8",
+    "agents": 8,
+    "index": 0,
+    "seed": 42,
+    "variant": "increasing-step",
+    "outcome": "CONTRACT solved 8 1",
+    "contract_sha256": "7b6d1ba5ca8a67dc7ab4338a20e03eaf2b2b6a4eee6e43e469c62b4d2e2ecf84",
+    "exact_match": true
+  },
+  {
+    "map": "empty-8-8",
+    "agents": 8,
+    "index": 0,
+    "seed": 7,
+    "variant": "increasing-step",
+    "outcome": "CONTRACT solved 8 1",
+    "contract_sha256": "e7e0696a6d524398e2a3ed217530c081b6b7a2466a5cf64da467ac4207dc446a",
+    "exact_match": true
+  },
+  {
+    "map": "empty-8-8",
+    "agents": 4,
+    "index": 1,
+    "seed": 42,
+    "variant": "lns-sat",
+    "outcome": "CONTRACT solved 8 1",
+    "contract_sha256": "12779700a337e330e35b303b1a1317ff59de3c7c280295a59608304f9a1097b4",
+    "exact_match": true
+  },
+  {
+    "map": "empty-8-8",
+    "agents": 4,
+    "index": 1,
+    "seed": 7,
+    "variant": "lns-sat",
+    "outcome": "CONTRACT solved 8 1",
+    "contract_sha256": "cb8d674a33fc99a7a45ae9bad3b423d1e65e862a12beedbdc058360fd4f8983e",
+    "exact_match": true
+  },
+  {
+    "map": "disconnected",
+    "agents": 1,
+    "index": 0,
+    "seed": 42,
+    "variant": "lns-sat",
+    "outcome": "CONTRACT exhausted -1 0",
+    "contract_sha256": "88a74763ce20506949b9c82a584ea08b6c16e275ce192a4f685a81a0d6ad5ca2",
+    "exact_match": true
+  },
+  {
+    "map": "empty-8-8",
+    "agents": 33,
+    "index": 0,
+    "seed": 42,
+    "variant": "lns-sat",
+    "outcome": "CONTRACT invalid_input -1 0",
+    "contract_sha256": "219f8f9291a0a63000de6aa55e783da8625ffbebad16539ffda7c29a6deb3b0d",
+    "exact_match": true
+  }
+]

@@ -3,23 +3,30 @@
 #include "lnssat/SATSolverManager.h"
 #include <iostream>
 #include <algorithm>
+#include <fstream>
 
 std::optional<LNSProblem> load_problem(const std::string& map_path,
                                        const std::string& scenario_path,
                                        int num_agents,
                                        int scenario_index) {
+    std::ifstream map(map_path, std::ios::binary), scenario(scenario_path, std::ios::binary);
+    return load_problem(map, scenario, num_agents, scenario_index);
+}
+
+std::optional<LNSProblem> load_problem(std::istream& map, std::istream& scenario, int num_agents, int scenario_index) {
+    const std::string map_path = "input stream", scenario_path = "input stream";
     LNSProblem problem;
     if (num_agents <= 0 || scenario_index < 0) return std::nullopt;
 
     // Load map
-    problem.grid = SATSolverManager::load_map(map_path);
+    problem.grid = SATSolverManager::load_map(map);
     if (problem.grid.empty()) {
         std::cerr << "[LNS] Failed to load map from: " << map_path << std::endl;
         return std::nullopt;
     }
 
     // Load scenario entries and build starts/goals sets
-    auto entries = SATSolverManager::create_dataframe_from_file(scenario_path);
+    auto entries = SATSolverManager::create_dataframe(scenario);
     if (entries.empty()) {
         std::cerr << "[LNS] No entries found in scenario: " << scenario_path << std::endl;
         return std::nullopt;

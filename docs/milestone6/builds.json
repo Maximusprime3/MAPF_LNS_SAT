@@ -1,0 +1,28 @@
+{
+  "debug": {
+    "revision": "91fd9e504c1f13d5cd1ac3bfa71eacbf2866684a",
+    "dirty": true,
+    "source_sha256": "cc1ee9c7c852dc3437b1ae7572cb9d14d1a4dfa304e590169c301a85d23ab655",
+    "minisat": {
+      "identity": "bundled MiniSAT with compatibility and cooperative-deadline patches",
+      "version": null,
+      "source_sha256": "156fcfa2470a9a9b94a3d77d239fa1089a7ab8301d9a629ceafa878b0e9a86e0"
+    },
+    "compiler": "GNU 13.3.0 (/usr/bin/c++)",
+    "platform": "Linux 6.8.0-139-generic x86_64",
+    "configuration": "CMake Debug; C++17 extensions=ON;  -g; project warnings=-Wall -Wextra -pedantic (GNU/Clang); __STDC_FORMAT_MACROS; linker= ; Threads::Threads; sysroot=; compiler_target=; launcher="
+  },
+  "source_archive_make": {
+    "revision": null,
+    "dirty": null,
+    "source_sha256": "cc1ee9c7c852dc3437b1ae7572cb9d14d1a4dfa304e590169c301a85d23ab655",
+    "minisat": {
+      "identity": "bundled MiniSAT with compatibility and cooperative-deadline patches",
+      "version": null,
+      "source_sha256": "156fcfa2470a9a9b94a3d77d239fa1089a7ab8301d9a629ceafa878b0e9a86e0"
+    },
+    "compiler": "GNU 13.3.0 (/usr/bin/c++)",
+    "platform": "Linux 6.8.0-139-generic x86_64",
+    "configuration": "CMake Release; C++17 extensions=ON;  -O2; project warnings=-Wall -Wextra -pedantic (GNU/Clang); __STDC_FORMAT_MACROS; linker= ; Threads::Threads; sysroot=; compiler_target=; launcher="
+  }
+}

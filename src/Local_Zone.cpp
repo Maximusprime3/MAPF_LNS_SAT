@@ -1,3 +1,4 @@
+#include "lnssat/Logging.h"
 #include "lnssat/Local_Zone.h"
 #include "lnssat/Current_Solution.h"
 #include "lnssat/Local_Zone_Builder.h"
@@ -87,7 +88,7 @@ std::set<std::pair<int,int>> create_shape_from_conflicts_meta( //only returns wa
         }        
     }
     if (conflict_points.empty()) {
-        std::cout << "[LOCAL ZONE] ERROR: No conflict points found to create shape" << std::endl;
+        std::cerr << "[LOCAL ZONE] ERROR: No conflict points found to create shape" << std::endl;
         return std::set<std::pair<int,int>>();
     }
     auto zone = create_shape_from_conflicts(conflict_points, expansion_radius, map);
@@ -96,7 +97,7 @@ std::set<std::pair<int,int>> create_shape_from_conflicts_meta( //only returns wa
     }
 
     // Diagnostics and fallback seeding when the expansion failed to return any cell.
-    std::cout << "[LOCAL ZONE] WARNING: create_shape_from_conflicts_meta produced an empty zone for "
+    std::cerr << "[LOCAL ZONE] WARNING: create_shape_from_conflicts_meta produced an empty zone for "
               << conflict_meta.size() << " conflicts. Falling back to seeding conflict coordinates." << std::endl;
 
     auto in_bounds = [&](int r, int c) {
@@ -109,18 +110,18 @@ std::set<std::pair<int,int>> create_shape_from_conflicts_meta( //only returns wa
         int r = pos.first;
         int c = pos.second;
         if (!in_bounds(r, c)) {
-            std::cout << "[LOCAL ZONE] WARNING: " << label << " position (" << r << "," << c
+            std::cerr << "[LOCAL ZONE] WARNING: " << label << " position (" << r << "," << c
                       << ") is outside the map bounds" << std::endl;
             return;
         }
         char cell = map[r][c];
         if (!is_walkable(r, c)) {
-            std::cout << "[LOCAL ZONE] WARNING: " << label << " position (" << r << "," << c
+            std::cerr << "[LOCAL ZONE] WARNING: " << label << " position (" << r << "," << c
                       << ") is not walkable (cell='" << cell << "')" << std::endl;
             return;
         }
         zone.insert(pos);
-        std::cout << "[LOCAL ZONE] Fallback inserted " << label << " position (" << r << "," << c
+        lnssat::debug_log() << "[LOCAL ZONE] Fallback inserted " << label << " position (" << r << "," << c
                   << ") with cell='" << cell << "'" << std::endl;
     };
 
@@ -220,7 +221,7 @@ std::vector<DiamondBucket> build_diamond_buckets(
         }
         if (diamond_used[conlfict_idx] || solved_conflict_indices.count(conlfict_idx)) continue; //skip if already used or solved
 
-        std::cout << "[LOCAL ZONE] Building diamond bucket for conflict " << conlfict_idx << std::endl;
+        lnssat::debug_log() << "[LOCAL ZONE] Building diamond bucket for conflict " << conlfict_idx << std::endl;
         std::vector<ConflictMeta> bucket_conflicts_meta;
         bucket_conflicts_meta.push_back(building_conflicts_meta[i]);
         // Collect conflict indices as we grow the bucket to ensure buckets always carry conflicts
@@ -299,7 +300,7 @@ std::vector<DiamondBucket> build_diamond_buckets(
         diamond_bucket.masked_map = mask_map_outside_shape(map, diamond_bucket.positions);
         diamond_buckets.push_back(std::move(diamond_bucket));
         const auto& created_bucket = diamond_buckets.back();
-        std::cout << "[LOCAL ZONE] Built diamond bucket for conflict " << conlfict_idx << " with "
+        lnssat::debug_log() << "[LOCAL ZONE] Built diamond bucket for conflict " << conlfict_idx << " with "
                   << created_bucket.positions.size() << " positions, " << created_bucket.indices.size() << " conflicts, "
                   << created_bucket.earliest_t << " - " << created_bucket.latest_t << " time window" << std::endl;
     }
@@ -348,7 +349,7 @@ std::vector<DiamondBucket> build_diamond_buckets_for_earliest_conflicts(
             std::set<int>(),
             max_timesteps);
     } else {
-        std::cout << "[LOCAL ZONE] ERROR: No earliest conflicts found" << std::endl;
+        std::cerr << "[LOCAL ZONE] ERROR: No earliest conflicts found" << std::endl;
         return {};
     }
 
@@ -418,7 +419,7 @@ std::pair<std::set<std::pair<int,int>>, std::vector<int>> expand_bucket_zone(
             if (expanded_bucket_conflict_indices_set.count(conflict_idx)) {
                 //this is ok if conflict was edge, but not ok if conflict was vertex
                 if (!conflict_meta[conflict_idx].is_edge) {
-                    std::cout << "[LOCAL ZONE] ERROR: VERTEX Conflict " << conflict_idx << " was already in the expanded bucket" << std::endl;     
+                    std::cerr << "[LOCAL ZONE] ERROR: VERTEX Conflict " << conflict_idx << " was already in the expanded bucket" << std::endl;
                 }
                 continue; 
             }
@@ -427,7 +428,7 @@ std::pair<std::set<std::pair<int,int>>, std::vector<int>> expand_bucket_zone(
                 continue;
             }
             newly_touched_conflicts.insert(conflict_idx);
-            std::cout << "[LOCAL ZONE] Found newly touched conflict " << conflict_idx << " at position (" << r << "," << c << ")" << std::endl;
+            lnssat::debug_log() << "[LOCAL ZONE] Found newly touched conflict " << conflict_idx << " at position (" << r << "," << c << ")" << std::endl;
         }
     }
 
@@ -456,7 +457,7 @@ std::pair<std::set<std::pair<int,int>>, std::vector<int>> expand_bucket_zone(
                     if (expanded_bucket_conflict_indices_set.count(conflict_idx)) {
                         //this is ok if conflict was edge, but not ok if conflict was vertex
                         if (!conflict_meta[conflict_idx].is_edge) {
-                            std::cout << "[LOCAL ZONE] ERROR: VERTEX Conflict " << conflict_idx << " was already in the expanded bucket" << std::endl;
+                            std::cerr << "[LOCAL ZONE] ERROR: VERTEX Conflict " << conflict_idx << " was already in the expanded bucket" << std::endl;
                         }
                         continue; 
                     }
@@ -468,7 +469,7 @@ std::pair<std::set<std::pair<int,int>>, std::vector<int>> expand_bucket_zone(
 
                     expanded_bucket_conflicts_meta.push_back(candidate_meta);
 
-                    std::cout << "[LOCAL ZONE] Found newly touched conflict " << conflict_idx << " at position (" << r << "," << c << ")" << std::endl;
+                    lnssat::debug_log() << "[LOCAL ZONE] Found newly touched conflict " << conflict_idx << " at position (" << r << "," << c << ")" << std::endl;
                     expanded_bucket_conflict_indices.push_back(conflict_idx);
                     expanded_bucket_conflict_indices_set.insert(conflict_idx);
                     newly_touched_conflicts.insert(conflict_idx);
@@ -517,18 +518,18 @@ CollisionExtractionResult extract_collisions_from_bucket(
         const auto& meta = conflict_meta[idx];
         
         // Print conflict info
-        std::cout << "[LOCAL ZONE] Conflict " << idx << " agents: " << meta.agent1 << " and " << meta.agent2 << std::endl;
-        std::cout << "[LOCAL ZONE] Conflict " << idx << " timestep: " << meta.timestep << std::endl;
-        std::cout << "[LOCAL ZONE] Conflict " << idx << " positions: " << meta.pos1.first << "," << meta.pos1.second;
+        lnssat::debug_log() << "[LOCAL ZONE] Conflict " << idx << " agents: " << meta.agent1 << " and " << meta.agent2 << std::endl;
+        lnssat::debug_log() << "[LOCAL ZONE] Conflict " << idx << " timestep: " << meta.timestep << std::endl;
+        lnssat::debug_log() << "[LOCAL ZONE] Conflict " << idx << " positions: " << meta.pos1.first << "," << meta.pos1.second;
         
         if (!meta.is_edge) {
             // Vertex collision
-            std::cout << std::endl;
+            lnssat::debug_log() << std::endl;
             result.vertex_collisions.emplace_back(meta.agent1, meta.agent2, meta.pos1, meta.timestep);
             result.vertex_count++;
         } else {
             // Edge collision
-            std::cout << "[LOCAL ZONE] and " << meta.pos2.first << "," << meta.pos2.second << std::endl;
+            lnssat::debug_log() << "[LOCAL ZONE] and " << meta.pos2.first << "," << meta.pos2.second << std::endl;
             
             // Check for duplicates
             auto edge_tuple = std::make_tuple(meta.agent1, meta.agent2, meta.pos1, meta.pos2, meta.timestep);
@@ -557,11 +558,11 @@ bool validate_buckets_cover_conflicts(
     for (const auto& bucket : diamond_buckets) {
         for (int idx : bucket.indices) {
             if (idx < 0 || idx >= (int)conflict_points.size()) {
-                std::cout << "[LNS] ERROR: Conflict index out of range: " << idx << std::endl;
+                std::cerr << "[LNS] ERROR: Conflict index out of range: " << idx << std::endl;
                 continue;
             }
             if (used[idx]) {
-                std::cout << "[LNS] ERROR: Conflict " << idx << " was assigned to multiple diamond buckets" << std::endl;
+                std::cerr << "[LNS] ERROR: Conflict " << idx << " was assigned to multiple diamond buckets" << std::endl;
                 return false;
             }
             used[idx] = 1;
@@ -569,7 +570,7 @@ bool validate_buckets_cover_conflicts(
         }
     }
     if (num_used != (int)conflict_points.size()) {
-        std::cout << "[LNS] ERROR: " << (int)conflict_points.size() - num_used
+        std::cerr << "[LNS] ERROR: " << (int)conflict_points.size() - num_used
                   << " conflicts were not assigned to any diamond bucket" << std::endl;
         return false;
     }

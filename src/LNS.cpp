@@ -1,3 +1,4 @@
+#include "lnssat/Logging.h"
 #include "lnssat/LNS.h"
 #include "lnssat/Load_LNSProblem.h"
 #include "lnssat/Current_Solution.h" //collect_conflicts_meta, create_conflict_map_2D
@@ -58,7 +59,8 @@
 //takes map path, scenario path, number of agents, scenario index, use minisat, seed
 //returns paths of agents
 
-LNSResult LNS(const SolveRequest& request, const SolverConfig& config) {
+static LNSResult solve_impl(const SolveRequest& request, const SolverConfig& config,
+                            const LNSProblem* snapshot, SolverDeadline deadline) {
     const std::string& map_path = request.map_path;
     const std::string& scenario_path = request.scenario_path;
     const int num_agents = request.num_agents;
@@ -78,10 +80,10 @@ LNSResult LNS(const SolveRequest& request, const SolverConfig& config) {
         return solve_result;
     }
     solve_result.search_started = true;
-    const SolverDeadline deadline = make_solver_deadline(config);
+
     
     //Step 1: Load problem and print basic info
-    auto problem_loaded = load_problem(map_path, scenario_path, num_agents, scenario_index);
+    auto problem_loaded = snapshot ? std::optional<LNSProblem>(*snapshot) : load_problem(map_path, scenario_path, num_agents, scenario_index);
     if (!problem_loaded.has_value()) {
         std::cerr << "[LNS] Failed to load problem" << std::endl;
         solve_result.status = SolveStatus::InvalidInput;
@@ -91,7 +93,7 @@ LNSResult LNS(const SolveRequest& request, const SolverConfig& config) {
     const auto& problem = problem_loaded.value();
     const NeighborhoodPolicy variant_policy = neighborhood_policy(variant);
 
-    std::cout << "[LNS] Loaded map " << problem.grid.size() << "x"
+    lnssat::info_log() << "[LNS] Loaded map " << problem.grid.size() << "x"
               << (problem.grid.empty() ? 0 : (int)problem.grid[0].size())
               << ", agents: " << problem.starts.size() << std::endl;
     if (solver_deadline_reached(deadline)) {
@@ -100,7 +102,7 @@ LNSResult LNS(const SolveRequest& request, const SolverConfig& config) {
         return solve_result;
     }
 
-    std::cout << "[LNS] Neighborhood variant: " << variant_policy.canonical_name
+    lnssat::info_log() << "[LNS] Neighborhood variant: " << variant_policy.canonical_name
               << " (initial radius=" << variant_policy.initial_radius << ")" << std::endl;
 
     auto& logger = ExperimentLogger::instance();
@@ -117,19 +119,19 @@ LNSResult LNS(const SolveRequest& request, const SolverConfig& config) {
 
     
     //print full map
-    std::cout << "[LNS] Map:" << std::endl;
+    lnssat::debug_log() << "[LNS] Map:" << std::endl;
     for (const auto& row : problem.grid) {
-        for (char c : row) std::cout << c;
-        std::cout << '\n';
+        for (char c : row) lnssat::debug_log() << c;
+        lnssat::debug_log() << '\n';
     }
 
     //print number of agents and their starts and goals
-    std::cout << "[LNS] Number of agents: " << problem.starts.size() << std::endl;
-    std::cout << "[LNS] Agents (start -> goal):" << std::endl;
+    lnssat::debug_log() << "[LNS] Number of agents: " << problem.starts.size() << std::endl;
+    lnssat::debug_log() << "[LNS] Agents (start -> goal):" << std::endl;
     for (size_t i = 0; i < problem.starts.size(); ++i) {
         const auto& s = problem.starts[i];
         const auto& g = problem.goals[i];
-        std::cout << "  Agent " << i << ": (" << s.first << "," << s.second << ") -> ("
+        lnssat::debug_log() << "  Agent " << i << ": (" << s.first << "," << s.second << ") -> ("
                   << g.first << "," << g.second << ")" << std::endl;
     }
 
@@ -138,7 +140,7 @@ LNSResult LNS(const SolveRequest& request, const SolverConfig& config) {
         problem.grid, problem.starts, problem.goals, deadline);
     if (base_makespan <= 0) base_makespan = 1;
 
-    std::cout << "[LNS] Base makespan: " << base_makespan << std::endl;
+    lnssat::debug_log() << "[LNS] Base makespan: " << base_makespan << std::endl;
 
     //Step 3: Outer loop: increase max timesteps if no solution is found
     std::mt19937 rng(static_cast<unsigned int>(seed));
@@ -149,7 +151,7 @@ LNSResult LNS(const SolveRequest& request, const SolverConfig& config) {
     bool fatal_failure = false;
     
     int makespan_attempt_index = 0;
-    for (int inc = 0;
+    for (long long inc = 0;
          inc <= config.makespan_increase_limit;
          inc += config.makespan_increment, ++makespan_attempt_index) {
         if (solver_deadline_reached(deadline)) {
@@ -157,8 +159,18 @@ LNSResult LNS(const SolveRequest& request, const SolverConfig& config) {
             break;
         }
 
-        int current_max_timesteps = base_makespan + inc;
-        std::cout << "\n[LNS] === Attempt with max_timesteps=" << current_max_timesteps << " ===" << std::endl;
+        const long long horizon = static_cast<long long>(base_makespan) + inc;
+        if (horizon >= INT_MAX) {
+            terminal_status = SolveStatus::InvalidInput;
+            terminal_message = "Makespan exceeds supported integer horizon";
+            break;
+        }
+        if (config.makespan_bound && horizon > *config.makespan_bound) {
+            terminal_message = "Absolute makespan bound reached";
+            break;
+        }
+        int current_max_timesteps = static_cast<int>(horizon);
+        lnssat::info_log() << "\n[LNS] === Attempt with max_timesteps=" << current_max_timesteps << " ===" << std::endl;
         
         MakespanAttemptMetrics makespan_metrics;
         makespan_metrics.attempt_index = makespan_attempt_index;
@@ -169,7 +181,7 @@ LNSResult LNS(const SolveRequest& request, const SolverConfig& config) {
         //this is just for the initial solution, can be improved in the future
         auto mdds = create_mdds_with_waiting_time(
             problem.grid, problem.starts, problem.goals, distance_matrices, deadline);
-        std::cout << "[LNS] Built MDDs with waiting time structure for " << mdds.size()
+        lnssat::debug_log() << "[LNS] Built MDDs with waiting time structure for " << mdds.size()
                   << " agents at makespan " << current_max_timesteps << std::endl;
         if (solver_deadline_reached(deadline)) {
             terminal_message = "Wall-clock limit reached during initial MDD construction";
@@ -179,7 +191,7 @@ LNSResult LNS(const SolveRequest& request, const SolverConfig& config) {
             // A partial initial solution is unsafe: missing MDDs used to shift
             // later vector positions onto the wrong agent IDs. Stop this solve
             // attempt instead of constructing a mislabeled path map.
-            std::cout << "[LNS] ERROR: Initial MDD construction failed for one or more agents"
+            std::cerr << "[LNS] ERROR: Initial MDD construction failed for one or more agents"
                       << std::endl;
             terminal_message = "At least one agent has no constructible initial path";
             break;
@@ -206,25 +218,25 @@ LNSResult LNS(const SolveRequest& request, const SolverConfig& config) {
         //verify every agent has their amount of waiting time as goal positions in the end of their path
         for (const auto& [agent_id, path] : current_solution.agent_paths) {
             if (path.back() != current_solution.goals[agent_id]) {
-                std::cout << "[LNS] ERROR: Agent " << agent_id << " does not end at the goal position" << std::endl;
+                std::cerr << "[LNS] ERROR: Agent " << agent_id << " does not end at the goal position" << std::endl;
             }
             int waiting_time = current_solution.get_waiting_time(agent_id);
             if (path[path.size() - waiting_time - 1] != current_solution.goals[agent_id]) {
-                std::cout << "[LNS] ERROR: Agent " << agent_id << " does not end at the goal position with waiting time" << std::endl;
+                std::cerr << "[LNS] ERROR: Agent " << agent_id << " does not end at the goal position with waiting time" << std::endl;
                 //print waiting time
-                std::cout << "[LNS] Waiting time: " << waiting_time << std::endl;
+                lnssat::debug_log() << "[LNS] Waiting time: " << waiting_time << std::endl;
                 //print path
-                std::cout << "[LNS] Path (size: " << path.size() << "): ";
+                lnssat::debug_log() << "[LNS] Path (size: " << path.size() << "): ";
                 for (const auto& pos : path) {
-                    std::cout << "(" << pos.first << ", " << pos.second << ") ";
+                    lnssat::debug_log() << "(" << pos.first << ", " << pos.second << ") ";
                 }
-                std::cout << std::endl;
+                lnssat::debug_log() << std::endl;
             }
         }
 
         //create path map for current solution
         current_solution.create_path_map();
-        std::cout << "[LNS] Created current solution with " << current_solution.agent_paths.size() 
+        lnssat::debug_log() << "[LNS] Created current solution with " << current_solution.agent_paths.size()
                   << " agent paths on a map of size " << problem.grid.size() << "x" << problem.grid[0].size() << std::endl;
 
         bool conflicts_remain = true;
@@ -234,15 +246,15 @@ LNSResult LNS(const SolveRequest& request, const SolverConfig& config) {
                 break;
             }
             //Step 5: analyze conflicts
-            std::cout << "[LNS] Analyzing conflicts..." << std::endl;
+            lnssat::debug_log() << "[LNS] Analyzing conflicts..." << std::endl;
             auto [vertex_collisions, edge_collisions] = SATSolverManager::find_all_collisions(current_solution.agent_paths);
-            std::cout << "[LNS] Current solution: vertex collisions=" << vertex_collisions.size()
+            lnssat::debug_log() << "[LNS] Current solution: vertex collisions=" << vertex_collisions.size()
                     << ", edge collisions=" << edge_collisions.size() << std::endl;
 
             //If no conflicts, we're done
             if (vertex_collisions.empty() && edge_collisions.empty()) {
-                std::cout << "[LNS] Collision-free solution found at makespan " << current_max_timesteps << std::endl;
-                std::cout << "[LNS] Final agent paths:" << std::endl;
+                lnssat::debug_log() << "[LNS] Collision-free solution found at makespan " << current_max_timesteps << std::endl;
+                lnssat::debug_log() << "[LNS] Final agent paths:" << std::endl;
                 SATSolverManager::print_agent_paths(current_solution.agent_paths);
                 conflicts_remain = false;
                 continue;
@@ -253,7 +265,7 @@ LNSResult LNS(const SolveRequest& request, const SolverConfig& config) {
             
 
             //Step 6: create conflict buckets for the earliest conflict(s)
-            std::cout << "[LNS] Creating conflict buckets..." << std::endl;
+            lnssat::debug_log() << "[LNS] Creating conflict buckets..." << std::endl;
             auto diamond_buckets = build_diamond_buckets_for_earliest_conflicts(
                 conflict_meta,
                 conflict_map,
@@ -263,19 +275,19 @@ LNSResult LNS(const SolveRequest& request, const SolverConfig& config) {
             //if multiple buckets, select the most relevant one
             DiamondBucket best_bucket = select_most_relevant_bucket(diamond_buckets);
             if (best_bucket.indices.empty()) {
-                std::cout << "[LNS] ERROR: No most relevant bucket found" << std::endl;
+                std::cerr << "[LNS] ERROR: No most relevant bucket found" << std::endl;
                 terminal_status = SolveStatus::InvalidState;
                 terminal_message = "Conflict selection returned no usable bucket";
                 fatal_failure = true;
                 break;
             }
-            std::cout << "[LNS] Selected most relevant bucket " << best_bucket.indices[0] 
+            lnssat::debug_log() << "[LNS] Selected most relevant bucket " << best_bucket.indices[0]
                     << " with time window: " << best_bucket.earliest_t << " - " << best_bucket.latest_t << ", " 
                     << best_bucket.indices.size() << " conflicts and " 
                     << best_bucket.positions.size() << " positions." << std::endl;
 
             //Step 7: Solve the best buckets Local Zone
-            std::cout << "[LNS] Solving the best bucket Local Zone..." << std::endl;
+            lnssat::debug_log() << "[LNS] Solving the best bucket Local Zone..." << std::endl;
             //solve the local zone
             LocalZoneResult local_zone_result = solve_local_zone(
                // problem.grid, best_bucket, conflict_meta, conflict_map, current_solution, offset, current_max_timesteps, rng, experiment_id, inc);
@@ -317,14 +329,14 @@ LNSResult LNS(const SolveRequest& request, const SolverConfig& config) {
                 break;
             }
             if (local_zone_result.solved()) {
-                std::cout << "[LNS] Successfully solved local zone" << std::endl;
+                lnssat::debug_log() << "[LNS] Successfully solved local zone" << std::endl;
                 //integrate local zone result into current solution
                 //solution is updated in the waiting time solve
                 //loop back to step 5
             }
             //if impossible to solve, increase makespan
             if (!local_zone_result.solved()) {
-                std::cout << "[LNS] Impossible to solve local zone with current makespan: " << current_max_timesteps << std::endl;
+                lnssat::debug_log() << "[LNS] Impossible to solve local zone with current makespan: " << current_max_timesteps << std::endl;
                 conflicts_remain = true;
                 break;
             }
@@ -346,19 +358,19 @@ LNSResult LNS(const SolveRequest& request, const SolverConfig& config) {
         }
 
         if (fatal_failure) {
-            std::cout << "[LNS] Stopping after fatal status "
+            lnssat::debug_log() << "[LNS] Stopping after fatal status "
                       << solve_status_name(terminal_status) << ": "
                       << terminal_message << std::endl;
             break;
         }
 
         if (!conflicts_remain) {
-            std::cout << "[LNS] All conflicts resolved" << std::endl;
+            lnssat::debug_log() << "[LNS] All conflicts resolved" << std::endl;
             successfull_solution = std::move(current_solution);
             successful_max_timesteps = current_max_timesteps;
             break;
         } else {
-            std::cout << "[LNS] Increasing makespan..." << std::endl;
+            lnssat::debug_log() << "[LNS] Increasing makespan..." << std::endl;
         }
     }
     // Step 9: validate the complete solution before reporting success. The
@@ -370,7 +382,7 @@ LNSResult LNS(const SolveRequest& request, const SolverConfig& config) {
         summary.solved = false;
         summary.makespan_success = -1;
         logger.log_experiment_summary(summary);
-        std::cout << "[LNS] ERROR: No successful solution found" << std::endl;
+        std::cerr << "[LNS] ERROR: No successful solution found" << std::endl;
         solve_result.status = terminal_status;
         solve_result.message = terminal_message;
         return solve_result;
@@ -378,11 +390,12 @@ LNSResult LNS(const SolveRequest& request, const SolverConfig& config) {
 
     const bool valid_solution = verify_solution_consistency(
         successfull_solution->agent_paths, problem.starts, problem.goals, problem.grid);
+    solve_result.verification = valid_solution ? "passed" : "failed";
     if (!valid_solution) {
         summary.solved = false;
         summary.makespan_success = -1;
         logger.log_experiment_summary(summary);
-        std::cout << "[LNS] ERROR: Final solution verification failed" << std::endl;
+        std::cerr << "[LNS] ERROR: Final solution verification failed" << std::endl;
         SATSolverManager::print_agent_paths(successfull_solution->agent_paths);
         // Fail closed: callers must never receive a non-empty invalid path map.
         solve_result.status = SolveStatus::InvalidState;
@@ -399,11 +412,35 @@ LNSResult LNS(const SolveRequest& request, const SolverConfig& config) {
         return solve_result;
     }
     logger.log_experiment_summary(summary);
-    std::cout << "[LNS] Collision-free verified solution found at makespan "
+    lnssat::info_log() << "[LNS] Collision-free verified solution found at makespan "
               << successful_max_timesteps << std::endl;
     solve_result.status = SolveStatus::Solved;
     solve_result.paths = std::move(successfull_solution->agent_paths);
     solve_result.makespan = successful_max_timesteps;
     solve_result.message = "Verified collision-free solution";
     return solve_result;
+}
+
+static LNSResult timed_solve(const SolveRequest& request, const SolverConfig& config,
+                             const LNSProblem* snapshot, SolverDeadline deadline) {
+    const auto start = std::chrono::steady_clock::now();
+    lnssat::LogScope logging(config.log_level);
+    LNSResult result = solve_impl(request, config, snapshot, deadline);
+    result.runtime_ms = std::chrono::duration<double, std::milli>(
+        std::chrono::steady_clock::now() - start).count();
+    if (result.solved()) result.termination_reason = "solved";
+    else if (result.status == SolveStatus::InvalidInput) result.termination_reason = "invalid_input";
+    else if (result.status == SolveStatus::InvalidState) result.termination_reason = "internal_failure";
+    else if (solver_deadline_reached(deadline)) result.termination_reason = "wall_clock_limit";
+    else if (result.message == "Absolute makespan bound reached") result.termination_reason = "makespan_bound";
+    return result;
+}
+
+LNSResult LNS(const SolveRequest& request, const SolverConfig& config) {
+    return timed_solve(request, config, nullptr, make_solver_deadline(config));
+}
+
+LNSResult LNS(const SolveRequest& request, const SolverConfig& config,
+              const LNSProblem& problem, SolverDeadline deadline) {
+    return timed_solve(request, config, &problem, deadline);
 }

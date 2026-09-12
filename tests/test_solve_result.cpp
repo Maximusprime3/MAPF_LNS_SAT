@@ -50,7 +50,7 @@ int main() {
     passed &= invalid_config_result.status == SolveStatus::InvalidInput;
     passed &= !invalid_config_result.search_started;
     passed &= invalid_config_result.paths.empty();
-    passed &= invalid_config_result.runtime_ms == 0.0;
+    passed &= invalid_config_result.runtime_ms > 0.0;
     passed &= invalid_config_result.seed == 73;
     passed &= invalid_config_result.neighborhood_variant ==
               NeighborhoodVariant::FixedStep2;

@@ -1,3 +1,4 @@
+#include "lnssat/Logging.h"
 #include "lnssat/Local_Zone.h" //expand_bucket_zone
 #include "lnssat/Current_Solution.h"
 #include "lnssat/Waiting_time_Solve.h"
@@ -77,7 +78,7 @@ LocalZoneResult solve_local_zone(
     const std::size_t all_walkable_positions =
         all_walkable_positions_set.size();
     if (all_walkable_positions == 0) {
-        std::cout << "[Solve_local_zone] ERROR: Map has no walkable positions" << std::endl;
+        std::cerr << "[Solve_local_zone] ERROR: Map has no walkable positions" << std::endl;
         local_zone_result.status = SolveStatus::InvalidInput;
         local_zone_result.message = "Map has no walkable positions";
         return local_zone_result;
@@ -103,16 +104,16 @@ LocalZoneResult solve_local_zone(
 
         
         if (local_zone_positions.size() > all_walkable_positions) {
-            std::cout << "[Solve_local_zone] Local zone size reached all walkable positions" << std::endl;
+            lnssat::debug_log() << "[Solve_local_zone] Local zone size reached all walkable positions" << std::endl;
             break;
         }
         if (force_full_map || (all_walkable_positions > 0 &&
             static_cast<double>(local_zone_positions.size()) /
                 all_walkable_positions >= config.full_map_fallback_threshold)) {
-            std::cout << "[Solve_local_zone] Local zone size reached "
+            lnssat::debug_log() << "[Solve_local_zone] Local zone size reached "
                       << config.full_map_fallback_threshold * 100.0
                       << "% of all walkable positions" << std::endl;
-            std::cout << "[Solve_local_zone] Will try to solve with full time window and all positions" << std::endl;
+            lnssat::debug_log() << "[Solve_local_zone] Will try to solve with full time window and all positions" << std::endl;
             
             local_zone_positions = all_walkable_positions_set;
             local_zone_conflict_indices.clear();
@@ -123,8 +124,8 @@ LocalZoneResult solve_local_zone(
             const int full_time_window_start = 0;
             const int full_time_window_end = current_max_timesteps;
             //makespan
-            std::cout << "[Solve_local_zone] Makespan: " << current_max_timesteps << std::endl;
-            std::cout << "[Solve_local_zone] Time window: [" << full_time_window_start << ", " << full_time_window_end << "]" << std::endl;
+            lnssat::debug_log() << "[Solve_local_zone] Makespan: " << current_max_timesteps << std::endl;
+            lnssat::debug_log() << "[Solve_local_zone] Time window: [" << full_time_window_start << ", " << full_time_window_end << "]" << std::endl;
             LocalZoneAttemptMetrics zone_metrics;
             zone_metrics.attempt_index = zone_attempt_index;
             zone_metrics.zone_positions = local_zone_positions.size();
@@ -161,7 +162,7 @@ LocalZoneResult solve_local_zone(
                 break;
             }
             if (full_waiting_result.solved()) {
-                std::cout << "[Solve_local_zone] Successfully solved global zone" << std::endl;
+                lnssat::debug_log() << "[Solve_local_zone] Successfully solved global zone" << std::endl;
                 local_zone_result.status = SolveStatus::Solved;
                 local_zone_result.message = "Full-zone repair solved";
                 local_zone_result.local_paths = full_waiting_result.local_paths;
@@ -169,12 +170,12 @@ LocalZoneResult solve_local_zone(
                 break;
             }
 
-            std::cout << "[Solve_local_zone] Failed to solve full map with current makespan" << std::endl;
+            lnssat::debug_log() << "[Solve_local_zone] Failed to solve full map with current makespan" << std::endl;
             // The caller will respond by increasing the makespan.
             break;
         }
         //current local zone size and % or all walkable positions
-        std::cout << "[Solve_local_zone] Current local zone size: " << local_zone_positions.size() << " (" 
+        lnssat::debug_log() << "[Solve_local_zone] Current local zone size: " << local_zone_positions.size() << " ("
         << (double)local_zone_positions.size() / all_walkable_positions * 100 << "% of all walkable positions)" << std::endl;
         
         //Step 1: create local problem
@@ -183,7 +184,7 @@ LocalZoneResult solve_local_zone(
         int expanded_offset = expansion_radius;
         int start_t = std::max(0, earliest_conflict_t - expanded_offset);
         int end_t = std::min(current_max_timesteps, latest_conflict_t + expanded_offset);
-        std::cout << "[Solve_local_zone] Local zone time window: [" << start_t << ", " << end_t << "]" << std::endl;
+        lnssat::debug_log() << "[Solve_local_zone] Local zone time window: [" << start_t << ", " << end_t << "]" << std::endl;
         
         //Step 2: solve the local problem
         auto waiting_result = lazy_solve_with_waiting_time(
@@ -220,7 +221,7 @@ LocalZoneResult solve_local_zone(
             break;
         }
         if (waiting_result.solved()) {
-            std::cout << "[Solve_local_zone] Successfully solved local zone" << std::endl;
+            lnssat::debug_log() << "[Solve_local_zone] Successfully solved local zone" << std::endl;
             //integration of local zone result into current solution happens in waiting time solve
             local_zone_result.status = SolveStatus::Solved;
             local_zone_result.message = "Local-zone repair solved";
@@ -232,7 +233,7 @@ LocalZoneResult solve_local_zone(
         //if no solution found
         //Step 3: Expand the local zone 
         // Expansion attempts: increase bucket offset and try again
-        std::cout << "[Solve_local_zone] Zone with radius " << expansion_radius
+        lnssat::debug_log() << "[Solve_local_zone] Zone with radius " << expansion_radius
                   << " failed" << std::endl;
 
         ++failed_attempt_count;
@@ -240,7 +241,7 @@ LocalZoneResult solve_local_zone(
             neighborhood_policy, expansion_radius, failed_attempt_count);
 
         expanded_offset = expansion_radius;
-        std::cout << "[Solve_local_zone] Expanding zone to radius "
+        lnssat::debug_log() << "[Solve_local_zone] Expanding zone to radius "
                   << expanded_offset << std::endl;
         
         //update the time window for the bucket with the new expansion factor
@@ -271,7 +272,7 @@ LocalZoneResult solve_local_zone(
                 if (t < earliest_conflict_t) earliest_conflict_t = t;
                 if (t > latest_conflict_t) latest_conflict_t = t;
             }else{
-                std::cout << "[Solve_local_zone] ERROR: Invalid conflict index " << conflict_idx << std::endl;
+                std::cerr << "[Solve_local_zone] ERROR: Invalid conflict index " << conflict_idx << std::endl;
             }
         }
 
@@ -285,9 +286,9 @@ LocalZoneResult solve_local_zone(
         // Once the full time horizon is reached, make the final fallback attempt.
         force_full_map = spatially_saturated && start_t == 0 && end_t == current_max_timesteps;
 
-        std::cout << "[Solve_local_zone] Final expanded zone contains " << expanded_zone_positions_set.size() 
+        lnssat::debug_log() << "[Solve_local_zone] Final expanded zone contains " << expanded_zone_positions_set.size()
                   << " positions with " << expanded_conflict_indices.size() << " conflicts " << std::endl; 
-        std::cout << "[Solve_local_zone] New time window: [" << start_t << ", " << end_t << "]" << std::endl;
+        lnssat::debug_log() << "[Solve_local_zone] New time window: [" << start_t << ", " << end_t << "]" << std::endl;
         
 
     }
@@ -295,7 +296,7 @@ LocalZoneResult solve_local_zone(
         local_zone_result.message.empty()) {
         local_zone_result.message = "Zone expansion exhausted at the current makespan";
     }
-    std::cout << "[Solve_local_zone] Final local zone size: " << local_zone_positions.size() << " (" << (double)local_zone_positions.size() / all_walkable_positions * 100 << "% of all walkable positions)" << std::endl;
+    lnssat::debug_log() << "[Solve_local_zone] Final local zone size: " << local_zone_positions.size() << " (" << (double)local_zone_positions.size() / all_walkable_positions * 100 << "% of all walkable positions)" << std::endl;
     return local_zone_result;
 }
 

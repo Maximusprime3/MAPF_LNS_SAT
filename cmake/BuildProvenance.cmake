@@ -1,0 +1,43 @@
+# Runs at every build, before compiling the CLI; never consult Git at runtime.
+set(revision "null")
+set(dirty "null")
+find_program(git git)
+if(git AND EXISTS "${ROOT}/.git")
+    execute_process(COMMAND "${git}" -C "${ROOT}" rev-parse HEAD
+        OUTPUT_VARIABLE rev OUTPUT_STRIP_TRAILING_WHITESPACE RESULT_VARIABLE rc)
+    execute_process(COMMAND "${git}" -C "${ROOT}" status --porcelain --untracked-files=normal
+        OUTPUT_VARIABLE status RESULT_VARIABLE sc)
+    if(rc EQUAL 0 AND sc EQUAL 0)
+        set(revision "\"${rev}\"")
+        if(status STREQUAL "")
+            set(dirty "false")
+        else()
+            set(dirty "true")
+        endif()
+    endif()
+endif()
+# Include supported implementation, headers, build rules, entrypoints and vendor.
+# This identifies dirty/archive code even when revision alone cannot replay it.
+file(GLOB_RECURSE inputs RELATIVE "${ROOT}" "${ROOT}/src/*" "${ROOT}/include/*"
+    "${ROOT}/app/*" "${ROOT}/cmake/*" "${ROOT}/third_party/minisat/*")
+list(APPEND inputs CMakeLists.txt Makefile)
+list(SORT inputs)
+set(manifest "")
+set(backend "")
+foreach(path IN LISTS inputs)
+    if(NOT IS_DIRECTORY "${ROOT}/${path}")
+        file(SHA256 "${ROOT}/${path}" hash)
+        string(APPEND manifest "${path}:${hash}\n")
+        if(path MATCHES "^third_party/minisat/")
+            string(APPEND backend "${path}:${hash}\n")
+        endif()
+    endif()
+endforeach()
+string(SHA256 source_hash "${manifest}")
+string(SHA256 backend_hash "${backend}")
+file(READ "${SETTINGS}" settings)
+set(contents "#pragma once\n#define LNS_BUILD_JSON R\"lns({\"revision\":${revision},\"dirty\":${dirty},\"source_sha256\":\"${source_hash}\",\"minisat\":{\"identity\":\"bundled MiniSAT with compatibility and cooperative-deadline patches\",\"version\":null,\"source_sha256\":\"${backend_hash}\"},${settings}})lns\"\n")
+# Only touch the header when metadata changed, preserving incremental builds.
+file(WRITE "${OUT}.tmp" "${contents}")
+execute_process(COMMAND "${CMAKE_COMMAND}" -E copy_if_different "${OUT}.tmp" "${OUT}" COMMAND_ERROR_IS_FATAL ANY)
+file(REMOVE "${OUT}.tmp")

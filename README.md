@@ -13,8 +13,32 @@ ctest --test-dir build --output-on-failure
 ```
 
 Requirements, Make targets, smoke and batch examples are in
-[docs/BUILD.md](docs/BUILD.md). The existing positional/configuration CLI remains in
-use; the public CLI and replay-result format are later roadmap work.
+[docs/BUILD.md](docs/BUILD.md). A C++17 compiler, CMake >=3.20 and POSIX tools are
+required; the test suite additionally uses Python 3.
+
+## Solve and independently verify a tiny instance
+
+Run these commands from the repository root after building:
+
+```sh
+./build/lns-sat solve --map tests/fixtures/empty-8-8.map \
+  --scenario tests/fixtures/empty-8-8-even-1.scen --agents 4 \
+  --seed 42 --output build/tiny-result.json
+./build/lns-sat verify --map tests/fixtures/empty-8-8.map \
+  --scenario tests/fixtures/empty-8-8-even-1.scen --solution build/tiny-result.json
+```
+
+Both commands return 0; the verifier prints `VERIFY_RESULT valid agents=4 makespan=8`
+to stderr. This expected result was observed in the milestone 6 validation.
+`--help` lists options; `--version` reports build-time provenance. `--log-level quiet`
+suppresses progress. Results are written only with `--output`; there are no implicit
+CSV files. Existing positional/INI callers, including the batch runner, remain supported.
+
+Solve exits: 0 verified success, 1 bounded exhaustion, 2 invalid input, 3 internal
+failure. Verify uses 4 for a well-formed invalid submission and 2 for malformed
+input. Output failures use 5. Exhaustion/timeout does not prove global infeasibility.
+See the [CLI contract](docs/CLI.md), [JSON schema](docs/RESULT_SCHEMA.md), and
+[requirement-to-test evidence](docs/MILESTONE6.md).
 
 ## Repository structure
 
@@ -34,7 +58,7 @@ use; the public CLI and replay-result format are later roadmap work.
 
 The root Makefile uses the CMake graph. `lns_clean/Makefile` is a compatibility
 entry point only. Generated binaries, libraries and caches are not source inputs.
-Run solver and batch commands from an output directory to keep their logs there.
+Solver artifacts require explicit destinations. Batch log paths retain their existing rules.
 Historical probSAT material is retained under `archive/` and is not a supported
 backend. See [archive/README.md](archive/README.md).
 
@@ -43,6 +67,7 @@ backend. See [archive/README.md](archive/README.md).
 - [Architecture](docs/ARCHITECTURE.md)
 - [Roadmap](docs/ROADMAP.md)
 - [Known issues and limitations](docs/KNOWN_ISSUES.md)
+- [Milestone 6 public CLI and result evidence](docs/MILESTONE6.md)
 - [Milestone 5 layout and validation](docs/MILESTONE5.md)
 - [Bounded correctness verification](docs/VERIFICATION_SIGNOFF.md)
 

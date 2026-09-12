@@ -33,6 +33,7 @@ struct SolverConfig {
     NeighborhoodVariant neighborhood_variant = NeighborhoodVariant::LnsSat;
     int makespan_increment = 1;
     int makespan_increase_limit = 10;
+    std::optional<int> makespan_bound;
     int lazy_iteration_limit = 10000000;
     double full_map_fallback_threshold = 0.95;
     std::optional<std::chrono::milliseconds> wall_clock_limit;
@@ -44,6 +45,7 @@ struct SolverConfig {
                neighborhood_variant == other.neighborhood_variant &&
                makespan_increment == other.makespan_increment &&
                makespan_increase_limit == other.makespan_increase_limit &&
+               makespan_bound == other.makespan_bound &&
                lazy_iteration_limit == other.lazy_iteration_limit &&
                full_map_fallback_threshold == other.full_map_fallback_threshold &&
                wall_clock_limit == other.wall_clock_limit &&
@@ -78,6 +80,8 @@ ConfigurationResolution resolve_positional_solve_arguments(
 
 ConfigurationResolution load_solve_configuration_file(
     const std::string& path);
+
+std::optional<std::string> apply_solver_configuration_value(const std::string& key, const std::string& value, SolveRequest& request, SolverConfig& config);
 
 std::optional<LogLevel> parse_log_level(const std::string& value);
 const char* log_level_name(LogLevel level);

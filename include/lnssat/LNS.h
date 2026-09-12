@@ -18,10 +18,13 @@ struct LNSResult {
     SolveStatus status = SolveStatus::Exhausted;
     AgentPaths paths;
     int makespan = -1;
+    // Complete LNS call, including loading/validation/final verification/cleanup.
     double runtime_ms = 0.0;
     int seed = 0;
     NeighborhoodVariant neighborhood_variant = NeighborhoodVariant::LnsSat;
     bool search_started = false;
+    std::string verification = "not_performed";
+    std::string termination_reason = "search_exhausted";
     std::string message;
 
     bool solved() const {
@@ -32,3 +35,8 @@ struct LNSResult {
 LNSResult LNS(
     const SolveRequest& request,
     const SolverConfig& config);
+
+struct LNSProblem;
+// Input snapshot overload for CLI: parsed once from the exact hashed bytes.
+LNSResult LNS(const SolveRequest& request, const SolverConfig& config,
+              const LNSProblem& problem, SolverDeadline deadline);

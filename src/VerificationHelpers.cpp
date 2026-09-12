@@ -1,3 +1,4 @@
+#include "lnssat/Logging.h"
 #include "lnssat/VerificationHelpers.h"
 #include "lnssat/SolutionVerifier.h"
 
@@ -8,7 +9,7 @@ bool verify_path_consistency(
     const std::vector<std::vector<char>>& map) {
     const auto report = mapf::verify_path_geometry(path, map);
     for (const auto& issue : report.issues) {
-        std::cout << "[VerificationHelpers] ERROR ["
+        std::cerr << "[VerificationHelpers] ERROR ["
                   << mapf::verification_issue_code_name(issue.code) << "]: "
                   << issue.message << std::endl;
     }
@@ -22,7 +23,7 @@ bool verify_solution_consistency(
     const std::vector<std::vector<char>>& map) {
     const auto report = mapf::verify_solution(agent_paths, starts, goals, map);
     for (const auto& issue : report.issues) {
-        std::cout << "[VerificationHelpers] ERROR ["
+        std::cerr << "[VerificationHelpers] ERROR ["
                   << mapf::verification_issue_code_name(issue.code) << "]: "
                   << issue.message << std::endl;
     }

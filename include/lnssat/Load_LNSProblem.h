@@ -3,6 +3,10 @@
 #include <vector>
 #include <string>
 #include <optional>
+#include <istream>
+
+struct LNSProblem;
+std::optional<LNSProblem> load_problem(std::istream& map, std::istream& scenario, int num_agents, int scenario_index);
 
 struct LNSProblem {
     std::vector<std::vector<char>> grid;

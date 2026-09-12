@@ -1,3 +1,4 @@
+#include "lnssat/Logging.h"
 #include "lnssat/SATSolverManager.h" //EdgeAgentMap
 #include "lnssat/Lazy_SAT_Solve.h"
 #include <unordered_map>
@@ -134,7 +135,7 @@ std::vector<AgentMDD> create_mdds_with_waiting_time(
     const std::vector<std::pair<int,int>>& goals,
     const std::vector<std::map<std::pair<int,int>, int>>& distance_matrices, SolverDeadline deadline) {
     
-    std::cout << "[SAT] Creating MDDs with shortest paths + waiting time..." << std::endl;
+    lnssat::debug_log() << "[SAT] Creating MDDs with shortest paths + waiting time..." << std::endl;
     
     // All parallel inputs must describe the same ordered set of agents. Check
     // this before indexing so malformed input fails without undefined behavior.
@@ -179,7 +180,7 @@ std::vector<AgentMDD> create_mdds_with_waiting_time(
         mdds.push_back({static_cast<int>(agent_id), std::move(mdd)});
     }
     
-    std::cout << "[SAT] Created " << mdds.size() << " MDDs with waiting time structure" << std::endl;
+    lnssat::debug_log() << "[SAT] Created " << mdds.size() << " MDDs with waiting time structure" << std::endl;
     return mdds;
 }
 
@@ -297,15 +298,15 @@ LazySolveResult lazy_SAT_solve(
     const std::vector<std::tuple<int, int, std::pair<int,int>, std::pair<int,int>, int>>& initial_edge_collisions,
     const SolverDeadline& deadline) {
 
-    std::cout << "[SAT] Start solving CNF: " << local_cnf.get_clauses().size() << " clauses and "
+    lnssat::debug_log() << "[SAT] Start solving CNF: " << local_cnf.get_clauses().size() << " clauses and "
               << (cnf_constructor.get_next_variable_id() - 1) << " variables" << std::endl;
 
     for (const auto& [agent_id, entry_exit_time] : local_entry_exit_time) {
-        std::cout << "[SAT] Agent " << agent_id << " entry time: " << entry_exit_time.first << " exit time: " << entry_exit_time.second << std::endl;
+        lnssat::debug_log() << "[SAT] Agent " << agent_id << " entry time: " << entry_exit_time.first << " exit time: " << entry_exit_time.second << std::endl;
     }
-    std::cout << std::endl;
-    std::cout << "[SAT] Start time: " << start_t << " End time: " << end_t << std::endl;
-    std::cout << std::endl;
+    lnssat::debug_log() << std::endl;
+    lnssat::debug_log() << "[SAT] Start time: " << start_t << " End time: " << end_t << std::endl;
+    lnssat::debug_log() << std::endl;
 
     auto set_to_vector_vertex = [](const std::set<std::tuple<int, int, std::pair<int,int>, int>>& s) {
         return std::vector<std::tuple<int, int, std::pair<int,int>, int>>(s.begin(), s.end());
@@ -341,8 +342,8 @@ LazySolveResult lazy_SAT_solve(
 
     while (!solution_found && iteration < max_iterations) {
         iteration++;
-        std::cout << "[SAT] Solving local zone with SAT iteration " << iteration << "..." << std::endl;
-        std::cout << "[SAT] Local CNF: " << local_cnf.get_clauses().size() << " clauses " << std::endl;
+        lnssat::debug_log() << "[SAT] Solving local zone with SAT iteration " << iteration << "..." << std::endl;
+        lnssat::debug_log() << "[SAT] Local CNF: " << local_cnf.get_clauses().size() << " clauses " << std::endl;
 
         LazySatIterationMetrics iteration_metrics;
         iteration_metrics.iteration = iteration;
@@ -432,7 +433,7 @@ LazySolveResult lazy_SAT_solve(
         iteration_metrics.total_vertex_collisions = static_cast<int>(discovered_vertex_collisions_set.size());
         iteration_metrics.total_edge_collisions = static_cast<int>(discovered_edge_collisions_set.size());
 
-        std::cout << "[SAT] Found " << new_collisions.size() << " vertex collisions and "
+        lnssat::debug_log() << "[SAT] Found " << new_collisions.size() << " vertex collisions and "
                   << new_edge_collisions.size() << " edge collisions" << std::endl;
 
         if (solver_deadline_reached(deadline)) {
@@ -444,7 +445,7 @@ LazySolveResult lazy_SAT_solve(
             final_status = SolveStatus::Solved;
             final_message = "Collision-free local SAT solution";
             final_local_paths = std::move(local_paths);
-            std::cout << "[SAT] Found collision-free local solution!" << std::endl;
+            lnssat::debug_log() << "[SAT] Found collision-free local solution!" << std::endl;
         } else {
             cnf_constructor.add_collision_clauses_to_cnf(local_cnf, new_collisions);
             cnf_constructor.add_edge_collision_clauses_to_cnf(local_cnf, new_edge_collisions);
@@ -455,7 +456,7 @@ LazySolveResult lazy_SAT_solve(
                 final_message = std::string("SAT path assumptions failed: ") + error.what();
                 break;
             }
-            std::cout << "[SAT] Adding collision clauses and solving again..." << std::endl;
+            lnssat::debug_log() << "[SAT] Adding collision clauses and solving again..." << std::endl;
         }
         iteration_metrics.total_clauses_after = static_cast<int>(local_cnf.get_clauses().size());
         iteration_metrics.clauses_added = iteration_metrics.total_clauses_after - iteration_metrics.clause_count_before;
@@ -474,7 +475,7 @@ LazySolveResult lazy_SAT_solve(
     run_metrics.final_variable_count = local_cnf.count_variables();
     run_metrics.solved = solution_found;
     if (!solution_found) {
-        std::cout << "[SAT] Local solve ended with status "
+        lnssat::debug_log() << "[SAT] Local solve ended with status "
                   << solve_status_name(final_status) << ": " << final_message << std::endl;
     }
 

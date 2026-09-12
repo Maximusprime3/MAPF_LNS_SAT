@@ -1,3 +1,4 @@
+#include "lnssat/Logging.h"
 #include <cstdlib>
 #include "lnssat/Create_Local_Problem.h"
 
@@ -119,13 +120,13 @@ namespace {
         if (!segment_info.contiguous_intervals.empty()) {
             
             if (segment_info.contiguous_intervals.size() > 1) {
-                std::cout << "[Create_Local_problem] Agent " << agent_id << " returned to the zone "
+                lnssat::debug_log() << "[Create_Local_problem] Agent " << agent_id << " returned to the zone "
                         << (segment_info.contiguous_intervals.size() - 1) << " times within time window" << std::endl;
             }
             //create seperate paths for the returning agent
             for (const auto& interval : segment_info.contiguous_intervals) {
                 if (interval.first < 0 || interval.second >= static_cast<int>(path.size())) {
-                    std::cout << "[Create_Local_problem] ERROR: Invalid interval for agent " << agent_id << ": [" << interval.first << ", " << interval.second << "]" << std::endl;
+                    std::cerr << "[Create_Local_problem] ERROR: Invalid interval for agent " << agent_id << ": [" << interval.first << ", " << interval.second << "]" << std::endl;
                     continue;
                 }
                 result.zone_paths.push_back(std::vector<std::pair<int,int>>(
@@ -138,7 +139,7 @@ namespace {
             
 
         }else{
-            std::cout << "[Create_Local_problem] ERROR: Agent " << agent_id << " has no path in the zone" << std::endl;
+            std::cerr << "[Create_Local_problem] ERROR: Agent " << agent_id << " has no path in the zone" << std::endl;
         }
         
         return result;
@@ -152,23 +153,23 @@ namespace {
         const std::pair<int,int>& goal_pos) {
         
         if (!mdd || mdd->levels.empty() || old_exit_t > new_exit_t) {
-            std::cout << "[Create_Local_Problem] ERROR: No MDD to extend" << std::endl;
+            std::cerr << "[Create_Local_Problem] ERROR: No MDD to extend" << std::endl;
             return false;
         }
         if (old_exit_t == new_exit_t) {
-            std::cout << "[Create_Local_Problem] Old exit time is equal to new exit time, no need to extend" << std::endl;
+            lnssat::debug_log() << "[Create_Local_Problem] Old exit time is equal to new exit time, no need to extend" << std::endl;
             return true;
         }
         
         auto parent_level_it = mdd->levels.find(old_exit_t);
         if (parent_level_it == mdd->levels.end()) {
-            std::cout << "[Create_Local_Problem] ERROR: No MDD level found at old exit time "
+            std::cerr << "[Create_Local_Problem] ERROR: No MDD level found at old exit time "
                       << old_exit_t << std::endl;
             return false;
         }
         auto& parent_level = parent_level_it->second;
         if (parent_level.empty()) {
-            std::cout << "[Create_Local_Problem] ERROR: Parent level is empty" << std::endl;
+            std::cerr << "[Create_Local_Problem] ERROR: Parent level is empty" << std::endl;
             return false;
         }
         
@@ -180,7 +181,7 @@ namespace {
             }
         }
         if (!has_goal_parent) {
-            std::cout << "[Create_Local_Problem] ERROR: No goal parent found" << std::endl;
+            std::cerr << "[Create_Local_Problem] ERROR: No goal parent found" << std::endl;
             return false;
         }
         
@@ -189,7 +190,7 @@ namespace {
 
             auto parent_level_it = mdd->levels.find(t-1);
             if (parent_level_it == mdd->levels.end() || parent_level_it->second.empty()) {
-                std::cout << "[Create_Local_Problem] ERROR: No MDD level found at time " << t-1 << std::endl;
+                std::cerr << "[Create_Local_Problem] ERROR: No MDD level found at time " << t-1 << std::endl;
                 return false;
             }
 
@@ -197,22 +198,22 @@ namespace {
             auto parent_node = parent_level.front();
             //there should be only one node at this level but safety check
             if (parent_level.size() != 1) {
-                std::cout << "[Create_Local_Problem] ERROR: More than one node at final mdd level " << t-1 << std::endl;
+                std::cerr << "[Create_Local_Problem] ERROR: More than one node at final mdd level " << t-1 << std::endl;
                 for (const auto& node : parent_level) {
-                    std::cout << "[Create_Local_Problem] Node: " << node->position.first << ", " << node->position.second << " at time " << node->time_step << std::endl;
+                    lnssat::debug_log() << "[Create_Local_Problem] Node: " << node->position.first << ", " << node->position.second << " at time " << node->time_step << std::endl;
                 }
                 return false;
             } else if (parent_node->position != goal_pos) { //parent node should be the goal position
-                std::cout << "[Create_Local_Problem] ERROR: Parent node is not the goal position" << std::endl;
-                std::cout << "[Create_Local_Problem] Parent node: " << parent_node->position.first << ", " << parent_node->position.second << " at time " << parent_node->time_step << std::endl;
+                std::cerr << "[Create_Local_Problem] ERROR: Parent node is not the goal position" << std::endl;
+                lnssat::debug_log() << "[Create_Local_Problem] Parent node: " << parent_node->position.first << ", " << parent_node->position.second << " at time " << parent_node->time_step << std::endl;
                 return false;
             }
             //current mdd level should be empty
             auto& current_level = mdd->levels[t];
             if (!current_level.empty()) {
-                std::cout << "[Create_Local_Problem] ERROR: MDD level " << t << " is not empty" << std::endl;
+                std::cerr << "[Create_Local_Problem] ERROR: MDD level " << t << " is not empty" << std::endl;
                 for (const auto& node : current_level) {
-                    std::cout << "[Create_Local_Problem] Node: " << node->position.first << ", " << node->position.second << " at time " << node->time_step << std::endl;
+                    lnssat::debug_log() << "[Create_Local_Problem] Node: " << node->position.first << ", " << node->position.second << " at time " << node->time_step << std::endl;
                 }
                 return false;
             }
@@ -239,7 +240,7 @@ std::shared_ptr<MDD> build_segment_mdd_with_optional_wait_tail(
     int forced_pre_tail_idx) {
 
     if (segment_path.empty()) {
-        std::cout << "[Create_Local_Problem] ERROR: Empty segment path for agent " << agent_id << std::endl;
+        std::cerr << "[Create_Local_Problem] ERROR: Empty segment path for agent " << agent_id << std::endl;
         return nullptr;
     }
     const std::pair<int,int>& start_pos = segment_path.front();
@@ -259,14 +260,14 @@ std::shared_ptr<MDD> build_segment_mdd_with_optional_wait_tail(
         // verify suffix waits at goal
         for (int i = idx + 1; i < static_cast<int>(segment_path.size()); ++i) {
             if (segment_path[i] != global_goal_pos) {
-                std::cout << "[Create_Local_Problem] ERROR: Agent " << agent_id << " deviates after reaching global goal" << std::endl;
+                std::cerr << "[Create_Local_Problem] ERROR: Agent " << agent_id << " deviates after reaching global goal" << std::endl;
                 break;
             }
         }
         
         bool ok = extend_waiting_suffix_in_mdd(mdd, start_of_waiting_suffix, segment_exit_t, global_goal_pos);
         if (!ok) {
-            std::cout << "[Create_Local_Problem] ERROR: Failed to extend waiting tail for agent " << agent_id << std::endl;
+            std::cerr << "[Create_Local_Problem] ERROR: Failed to extend waiting tail for agent " << agent_id << std::endl;
             return nullptr;
         }
         return mdd;
@@ -293,11 +294,11 @@ std::shared_ptr<MDD> build_segment_mdd(
     const int agent_id = segment.original_id;
 
     if (segment_path.empty()) {
-        std::cout << "[Create_Local_Problem] ERROR: Empty segment path for agent " << agent_id << std::endl;
+        std::cerr << "[Create_Local_Problem] ERROR: Empty segment path for agent " << agent_id << std::endl;
         return nullptr;
     }
     if (agent_id < 0 || agent_id >= static_cast<int>(current_solution.goals.size())) {
-        std::cout << "[Create_Local_Problem] ERROR: Invalid agent id " << agent_id
+        std::cerr << "[Create_Local_Problem] ERROR: Invalid agent id " << agent_id
                   << " when building segment MDD" << std::endl;
         return nullptr;
     }
@@ -327,12 +328,12 @@ std::shared_ptr<MDD> build_segment_mdd(
             const int goal_suffix_entry_t = segment_entry_t + goal_suffix_start_idx;
             auto full_path_it = current_solution.agent_paths.find(agent_id);
             if (full_path_it == current_solution.agent_paths.end()) {
-                std::cout << "[Create_Local_Problem] ERROR: Missing global path for agent "
+                std::cerr << "[Create_Local_Problem] ERROR: Missing global path for agent "
                           << agent_id << " when evaluating waiting time" << std::endl;
             } else {
                 const auto& full_path = full_path_it->second;
                 if (goal_suffix_entry_t < 0 || goal_suffix_entry_t >= static_cast<int>(full_path.size())) {
-                    std::cout << "[Create_Local_Problem] ERROR: Invalid goal timestep "
+                    std::cerr << "[Create_Local_Problem] ERROR: Invalid goal timestep "
                               << goal_suffix_entry_t << " for agent " << agent_id << std::endl;
                 } else {
                     const bool path_waits_at_goal_after_segment = std::all_of(
@@ -343,7 +344,7 @@ std::shared_ptr<MDD> build_segment_mdd(
                     if (path_waits_at_goal_after_segment) {
                         const int path_last_t = static_cast<int>(full_path.size()) - 1;
                         if (segment_exit_t > path_last_t) {
-                            std::cout << "[Create_Local_Problem] ERROR: Segment exit " << segment_exit_t
+                            std::cerr << "[Create_Local_Problem] ERROR: Segment exit " << segment_exit_t
                                         << " exceeds global path for agent " << agent_id << std::endl;
                         } else {
                             const int remaining_wait_after_segment = std::max(0, path_last_t - segment_exit_t);
@@ -375,24 +376,24 @@ void align_mdd_to_time_window(std::shared_ptr<MDD> mdd,
 
     //std::cout << "[Create_Local_Problem] Starting to align MDD to the time window: [" << start_t << ", " << end_t << "]" << std::endl;
     if (!mdd) { // do we have an mdd?
-        std::cout << "[Create_Local_Problem] ERROR: No MDD to align" << std::endl;
+        std::cerr << "[Create_Local_Problem] ERROR: No MDD to align" << std::endl;
         return;
     }
 
     //std::cout << "[Create_Local_Problem] MDD levels: " << mdd->levels.size() << std::endl;
     //is it empty?
     if (mdd->levels.empty()) {
-        std::cout << "[Create_Local_Problem] ERROR: MDD is empty" << std::endl;
+        std::cerr << "[Create_Local_Problem] ERROR: MDD is empty" << std::endl;
         return;
     }
 
     if (end_t < start_t) { // does start and end make sense?
-        std::cout << "[Create_Local_Problem] ERROR: Invalid time window for MDD alignment (end_t < start_t)." << std::endl;
+        std::cerr << "[Create_Local_Problem] ERROR: Invalid time window for MDD alignment (end_t < start_t)." << std::endl;
         mdd->levels.clear();
         return;
     }
     if (entry_t > exit_t) {
-        std::cout << "[Create_Local_Problem] ERROR: Invalid entry and exit times for MDD alignment (entry_t > exit_t)." << std::endl;
+        std::cerr << "[Create_Local_Problem] ERROR: Invalid entry and exit times for MDD alignment (entry_t > exit_t)." << std::endl;
         mdd->levels.clear();
         return;
     }
@@ -438,20 +439,20 @@ void align_mdd_to_time_window(std::shared_ptr<MDD> mdd,
     int offset = entry_t - first_level;
     int max_allowed_level = std::min(exit_t, start_t + zone_mdd_length - 1);
     if(exit_t > start_t + zone_mdd_length - 1) {
-        std::cout << "[Create_Local_Problem] ERROR: Exit time " << exit_t << " exceeds zone MDD length " << start_t + zone_mdd_length - 1 << std::endl;
+        std::cerr << "[Create_Local_Problem] ERROR: Exit time " << exit_t << " exceeds zone MDD length " << start_t + zone_mdd_length - 1 << std::endl;
     }
 
     for (const auto& [level, nodes] : original_levels) {
         int new_level = level + offset;
 
         if (new_level < start_t) {
-            std::cout << "[Create_Local_Problem] ERROR: MDD level " << new_level
+            std::cerr << "[Create_Local_Problem] ERROR: MDD level " << new_level
                       << " is less than start time " << start_t << "; truncating." << std::endl;
             continue;
         }
 
         if (new_level > max_allowed_level) {
-            std::cout << "[Create_Local_Problem] ERROR: MDD level " << new_level
+            std::cerr << "[Create_Local_Problem] ERROR: MDD level " << new_level
                       << " exceeds time window length " << max_allowed_level
                       << "; truncating." << std::endl;
             continue;
@@ -502,7 +503,7 @@ LocalZoneState build_local_problem_for_zone(
     for (const auto& [agent_id, pseudo_ids] : agent_to_pseudo_agent_id) {
         for (int pseudo_id : pseudo_ids) {
             if (pseudo_id <= max_real_agent_id) {
-                std::cout << "[Create_Local_Problem] ERROR: Pseudo agent ID " << pseudo_id
+                std::cerr << "[Create_Local_Problem] ERROR: Pseudo agent ID " << pseudo_id
                           << " overlaps with real agent range (max real ID " << max_real_agent_id
                           << ")" << std::endl;
             }
@@ -519,7 +520,7 @@ LocalZoneState build_local_problem_for_zone(
         const auto& path = current_solution.agent_paths.at(agent_id);
         auto agent_result = process_agent_in_zone(agent_id, path, zone_positions_set, conflict_map, conflict_meta, start_t, end_t, offset, grid);
         if (agent_result.zone_paths.empty()) {
-            std::cout << "[Create_Local_problem] ERROR: Agent " << agent_id << " has no paths in the zone" << std::endl;
+            std::cerr << "[Create_Local_problem] ERROR: Agent " << agent_id << " has no paths in the zone" << std::endl;
         }
 
         auto& pseudo_list = state.original_to_pseudo_ids[agent_id];
@@ -565,7 +566,7 @@ LocalZoneState build_local_problem_for_zone(
                     end_t, deadline);
                 
                 if (!segment.mdd) {
-                    std::cout << "[Create_Local_Problem] ERROR: Failed to build MDD for agent " << agent_id << std::endl;
+                    std::cerr << "[Create_Local_Problem] ERROR: Failed to build MDD for agent " << agent_id << std::endl;
                     continue;
                 }
             }
@@ -885,28 +886,28 @@ void refresh_zone_after_extension(
         //get that agents global path
         auto path_it = current_solution.agent_paths.find(agent_id);
         if (path_it == current_solution.agent_paths.end()) {
-            std::cout << "[Create_Local_Problem] ERROR: Missing global path for agent " << agent_id << std::endl;
+            std::cerr << "[Create_Local_Problem] ERROR: Missing global path for agent " << agent_id << std::endl;
             continue;
         }
         const auto& global_path = path_it->second;
         if (global_path.empty()) {
-            std::cout << "[Create_Local_Problem] ERROR: Empty global path for agent "
+            std::cerr << "[Create_Local_Problem] ERROR: Empty global path for agent "
                       << agent_id << std::endl;
             continue;
         }
         //verify waiting time
         int waiting_time = current_solution.get_waiting_time(agent_id);
         if (global_path.back() != current_solution.goals[agent_id]) {
-            std::cout << "[Create_Local_Problem] ERROR: Agent " << agent_id << " does not end at the goal position" << std::endl;
-            std::cout << "[Create_Local_Problem] Waiting time: " << waiting_time << std::endl;
-            std::cout << "[Create_Local_Problem] Path (size: " << global_path.size() << "): ";
+            std::cerr << "[Create_Local_Problem] ERROR: Agent " << agent_id << " does not end at the goal position" << std::endl;
+            lnssat::debug_log() << "[Create_Local_Problem] Waiting time: " << waiting_time << std::endl;
+            lnssat::debug_log() << "[Create_Local_Problem] Path (size: " << global_path.size() << "): ";
             for (const auto& pos : global_path) {
-                std::cout << "(" << pos.first << ", " << pos.second << ") ";
+                lnssat::debug_log() << "(" << pos.first << ", " << pos.second << ") ";
             }
-            std::cout << std::endl;
+            lnssat::debug_log() << std::endl;
         }
         if (global_path[global_path.size() - waiting_time - 1] != current_solution.goals[agent_id]) {
-            std::cout << "[Create_Local_Problem] ERROR: Agent " << agent_id << " does not end at the goal position with waiting time" << std::endl;
+            std::cerr << "[Create_Local_Problem] ERROR: Agent " << agent_id << " does not end at the goal position with waiting time" << std::endl;
 
         }
 
@@ -914,7 +915,7 @@ void refresh_zone_after_extension(
         int path_length = static_cast<int>(global_path.size()) - 1; //should be makespan
         //check if its makespan
         if (path_length > current_solution.max_timestep) {
-            std::cout << "[Create_Local_Problem] ERROR: Agent " << agent_id << " has path length " << path_length << " instead of makespan " << current_solution.max_timestep << std::endl;
+            std::cerr << "[Create_Local_Problem] ERROR: Agent " << agent_id << " has path length " << path_length << " instead of makespan " << current_solution.max_timestep << std::endl;
         } 
 
         //clamp the start and end of the scan, cannot be negative or greater than the path length
@@ -937,7 +938,7 @@ void refresh_zone_after_extension(
             map);
 
         if (segment_info.zone_paths.empty()) {
-            std::cout << "[Create_Local_Problem] WARNING: Agent " << agent_id
+            std::cerr << "[Create_Local_Problem] WARNING: Agent " << agent_id
                         << " has no path segment inside the extended window" << std::endl;
             continue;
         }
@@ -964,12 +965,12 @@ void refresh_zone_after_extension(
             if (was_in_the_zone_at_last_timestep) {
                 LocalSegment& segment_to_continue = last_segment;
                 if (segment_info.entry_t.empty() || segment_info.exit_t.empty()) {
-                    std::cout << "[Create_Local_Problem] ERROR: Missing entry/exit info for continuing agent "
+                    std::cerr << "[Create_Local_Problem] ERROR: Missing entry/exit info for continuing agent "
                               << agent_id << std::endl;
                     continue;
                 }
                 if (segment_info.entry_t.size() != segment_info.exit_t.size()) {
-                    std::cout << "[Create_Local_Problem] ERROR: Mismatched entry/exit counts for continuing agent "
+                    std::cerr << "[Create_Local_Problem] ERROR: Mismatched entry/exit counts for continuing agent "
                               << agent_id << std::endl;
                     continue;
                 }
@@ -994,30 +995,30 @@ void refresh_zone_after_extension(
                     continue;
                 }
                 if (segment_to_continue.exit_t > previous_zone_end_t) {
-                    std::cout << "[Create_Local_Problem] extending agent " << agent_id << " further. Old segment entry, exit: " << segment_to_continue.entry_t << ", " << segment_to_continue.exit_t << std::endl;
-                    std::cout << "[Create_Local_Problem] new segment entry, exit: " << segment_info.entry_t[0] << ", " << segment_info.exit_t[0] << std::endl;
+                    lnssat::debug_log() << "[Create_Local_Problem] extending agent " << agent_id << " further. Old segment entry, exit: " << segment_to_continue.entry_t << ", " << segment_to_continue.exit_t << std::endl;
+                    lnssat::debug_log() << "[Create_Local_Problem] new segment entry, exit: " << segment_info.entry_t[0] << ", " << segment_info.exit_t[0] << std::endl;
                 }
                 if (segment_to_continue.exit_t > state.zone_end_t) {
-                    std::cout << "[Create_Local_Problem] ERROR: Agent " << agent_id << "already extended to the end of the zone" << std::endl;
+                    std::cerr << "[Create_Local_Problem] ERROR: Agent " << agent_id << "already extended to the end of the zone" << std::endl;
                     continue;
                 } else {
                     //extend the segment to the end of the first segment in the new window
                     const int old_exit = segment_to_continue.exit_t;
                     const int new_exit = segment_info.exit_t[0];
                     if (new_exit < segment_info.entry_t[0]) {
-                        std::cout << "[Create_Local_Problem] ERROR: Segment exit " << new_exit
+                        std::cerr << "[Create_Local_Problem] ERROR: Segment exit " << new_exit
                                   << " is earlier than entry " << segment_info.entry_t[0]
                                   << " for agent " << agent_id << std::endl;
                         continue;
                     }
                     if (new_exit < old_exit) {
-                        std::cout << "[Create_Local_Problem] ERROR: New exit" << new_exit
+                        std::cerr << "[Create_Local_Problem] ERROR: New exit" << new_exit
                                   << " time is less than old exit time" << old_exit
                                   << "for agent " << agent_id << std::endl;
                         continue;
                     }
                     if (new_exit >= static_cast<int>(global_path.size())) {
-                        std::cout << "[Create_Local_Problem] ERROR: New exit" << new_exit 
+                        std::cerr << "[Create_Local_Problem] ERROR: New exit" << new_exit
                                   << " time is greater than the end of the path" << global_path.size() -1
                                   << "for agent " << agent_id << std::endl;
                         continue;
@@ -1025,7 +1026,7 @@ void refresh_zone_after_extension(
                     const size_t original_path_size = segment_to_continue.path.size();
                     const int required_path_size = new_exit - segment_to_continue.entry_t + 1;
                     if (required_path_size <= 0) {
-                        std::cout << "[Create_Local_Problem] ERROR: Required path size" << required_path_size 
+                        std::cerr << "[Create_Local_Problem] ERROR: Required path size" << required_path_size
                                   << " is less than or equal to 0 for agent " << agent_id << std::endl;
                         continue;
                     }
@@ -1038,7 +1039,7 @@ void refresh_zone_after_extension(
                     for (int i = old_exit + 1; i <= new_exit; ++i) {
                         const int local_index = i - segment_to_continue.entry_t;
                         if (local_index < 0 || local_index >= static_cast<int>(segment_to_continue.path.size())) {
-                            std::cout << "[Create_Local_Problem] ERROR: Segment path not resized correctly for agent " << agent_id << std::endl;
+                            std::cerr << "[Create_Local_Problem] ERROR: Segment path not resized correctly for agent " << agent_id << std::endl;
                             extension_valid = false;
                             continue;
                         }
@@ -1047,22 +1048,22 @@ void refresh_zone_after_extension(
                         const int relative_index = i - segment_info.entry_t[0];
                         if (relative_index >= 0 && relative_index < static_cast<int>(segment_info.zone_paths[0].size())
                             && global_path[i] != segment_info.zone_paths[0][relative_index]) {
-                            std::cout << "[Create_Local_Problem] ERROR: Global path and segment path do not match at time " << i << std::endl;
+                            std::cerr << "[Create_Local_Problem] ERROR: Global path and segment path do not match at time " << i << std::endl;
                             extension_valid = false;
                             continue;
                         }
                     }
                     if (!extension_valid) {
-                        std::cout << "[Create_Local_Problem] ERROR: Segment path extension is not valid for agent " << agent_id << std::endl;
+                        std::cerr << "[Create_Local_Problem] ERROR: Segment path extension is not valid for agent " << agent_id << std::endl;
                         if (segment_to_continue.path.size() > original_path_size) {
                             segment_to_continue.path.resize(original_path_size);
-                            std::cout << "[Create_Local_Problem] Restored segment path to original size for agent " << agent_id << std::endl;
+                            lnssat::debug_log() << "[Create_Local_Problem] Restored segment path to original size for agent " << agent_id << std::endl;
                         }
                         continue;
                     }
                     segment_to_continue.exit_t = new_exit;
                     if (state.zone_end_t < segment_to_continue.exit_t) {
-                        std::cout << "[Create_Local_Problem] ERROR: This should not happen. Segment exit time is greater than the end of the zone for agent " << agent_id << std::endl;
+                        std::cerr << "[Create_Local_Problem] ERROR: This should not happen. Segment exit time is greater than the end of the zone for agent " << agent_id << std::endl;
                         state.zone_end_t = segment_to_continue.exit_t;
                     }
                     //update the segment accordingly
@@ -1073,7 +1074,7 @@ void refresh_zone_after_extension(
                                                                 state.zone_start_t,
                                                                 state.zone_end_t, state.deadline);
                     if (!segment_to_continue.mdd) {
-                        std::cout << "[Create_Local_Problem] ERROR: Failed to build MDD for agent " << agent_id << std::endl;
+                        std::cerr << "[Create_Local_Problem] ERROR: Failed to build MDD for agent " << agent_id << std::endl;
                         continue;
                     }
                     //check if there are any new conflicts in the segment?
@@ -1104,7 +1105,7 @@ void refresh_zone_after_extension(
                 new_segment.segment_id = pseudo_agent_id;
                 new_segment.original_id = agent_id;
                 if (segment_info.entry_t.empty() || segment_info.exit_t.empty()) {
-                    std::cout << "[Create_Local_Problem] ERROR: Missing entry/exit info for returning agent "
+                    std::cerr << "[Create_Local_Problem] ERROR: Missing entry/exit info for returning agent "
                               << agent_id << std::endl;
                     continue;
                 }
@@ -1121,7 +1122,7 @@ void refresh_zone_after_extension(
                                                     state.zone_end_t, state.deadline);
 
                 if (!new_segment.mdd) {
-                    std::cout << "[Create_Local_Problem] ERROR: Failed to build MDD for agent " << agent_id << std::endl;
+                    std::cerr << "[Create_Local_Problem] ERROR: Failed to build MDD for agent " << agent_id << std::endl;
                     continue;
                 }
 
@@ -1136,13 +1137,13 @@ void refresh_zone_after_extension(
             }   
         } else {
             //new agent
-            std::cout << "[Create_Local_Problem] Agent " << agent_id << " is new in the zone" << std::endl;
+            lnssat::debug_log() << "[Create_Local_Problem] Agent " << agent_id << " is new in the zone" << std::endl;
             //create new segment
             LocalSegment new_segment;
             new_segment.segment_id = agent_id;
             new_segment.original_id = agent_id;
             if (segment_info.entry_t.empty() || segment_info.exit_t.empty()) {
-                std::cout << "[Create_Local_Problem] ERROR: Missing entry/exit info for new agent "
+                std::cerr << "[Create_Local_Problem] ERROR: Missing entry/exit info for new agent "
                           << agent_id << std::endl;
                 continue;
             }
@@ -1159,7 +1160,7 @@ void refresh_zone_after_extension(
                                                 state.zone_end_t, state.deadline);
 
             if (!new_segment.mdd) {
-                std::cout << "[Create_Local_Problem] ERROR: Failed to build MDD for agent " << agent_id << std::endl;
+                std::cerr << "[Create_Local_Problem] ERROR: Failed to build MDD for agent " << agent_id << std::endl;
                 continue;
             }
             state.original_to_segments[agent_id].push_back(state.segments.size());
@@ -1189,7 +1190,7 @@ void refresh_zone_after_extension(
                                                 state.zone_end_t, state.deadline);
 
             if (!new_segment.mdd) {
-                std::cout << "[Create_Local_Problem] ERROR: Failed to build MDD for agent " << new_segment.original_id << std::endl;
+                std::cerr << "[Create_Local_Problem] ERROR: Failed to build MDD for agent " << new_segment.original_id << std::endl;
                 continue;
             }
 

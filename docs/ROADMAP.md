@@ -46,11 +46,12 @@ The post-5.3 audit fixes and their bounded regression evidence are documented in
 instance selection, zone termination, final-unit slack, grid shape, deadlines,
 path assumptions, and the combined pseudo-agent repair path.
 
-1. The CLI cannot write a stable solution/result format and still redirects global output.
-2. Human-readable progress output remains entangled with the algorithm outside the
-   SAT/CNF backend diagnostics.
-3. Run manifests still lack revision, compiler/build mode, backend version, and input checksums.
-4. The root README, citation metadata, third-party notices, and CI are not release-ready.
+1. Milestone 7 still needs archived replay inputs/environment and paper experiment artifacts.
+2. Citation metadata, third-party notices and CI remain milestone 8 work.
+3. Nested experimental metric definitions need the separately planned audit.
+
+Milestone 6 closes the public CLI, logging separation and run-manifest blockers;
+see [MILESTONE6.md](MILESTONE6.md) for tested scope and limitations.
 
 ## Milestone 1: lock down pseudo-agent correctness
 
@@ -118,9 +119,11 @@ Three to four focused commits.
 
 ## Milestone 3: create validated solver configuration
 
-**Status: configuration and cooperative deadlines implemented; replay manifest
-incomplete.** Milestone 6 owns the result-format/CLI work needed for the manifest
-requirement below. This milestone's full exit condition remains open.
+**Status: completed with milestone 6's replay manifest.** The version 1 artifact
+records every current public request/configuration value, build-time revision/dirty
+state, compiler/configuration/platform, exact bundled backend identity and input
+checksums. Unavailable metadata is explicit. Matching source/input/environment
+retention and cross-platform replay remain separate concerns; see [MILESTONE6.md](MILESTONE6.md).
 
 ### Goal
 
@@ -243,6 +246,10 @@ Four to six focused commits.
 
 ## Milestone 6: build the public CLI and result formats
 
+**Status: completed.** The README quick start saves a result and independently
+verifies it at makespan 8. The 24-test suite, source-archive Make validation and
+fixed-seed path comparisons are recorded in [MILESTONE6.md](MILESTONE6.md).
+
 ### Goal
 
 Make the solver usable by a researcher who did not write it.
@@ -333,13 +340,13 @@ The bounded milestones 1–4 verification pass is complete at `cdc3b03`; see
 [VERIFICATION_SIGNOFF.md](VERIFICATION_SIGNOFF.md). Fresh CTest and leak-enabled
 sanitizer tests pass. Six small baseline comparisons agree on valid outcomes and
 makespans. Cooperative deadline return latency remains a documented limitation,
-and milestone 3 remains open for the replay manifest.
+and milestone 3's replay manifest is now supplied by milestone 6.
 
 The original pseudo-agent/slack/grid checkpoint and the post-5.3 audit fixes now
 have regression coverage; see `CORRECTNESS_CHECKPOINT.md` for before/after evidence
 and remaining limits. Milestone 5 source/artifact organization is complete and the regressions pass
-after relocation. Milestone 6 CLI/result work is next and has not been started
-in this change. Milestone 3 remains open for the replay manifest.
+after relocation. Milestone 6 now supplies the public CLI and replay result.
+Next: milestone 7 artifact packaging, then milestone 8 publication polish.
 
 ## Deliberately deferred improvements
 

@@ -64,6 +64,8 @@ using NodeMapping = std::unordered_map<const MDDNode*, std::shared_ptr<MDDNode>>
 
 class SATSolverManager {
 public:
+    static std::vector<std::vector<char>> load_map(std::istream& input);
+    static std::vector<ScenarioEntry> create_dataframe(std::istream& input);
 
     // Loads a map from a file, skipping the first 4 header lines, and returns a 2D grid of chars
     static std::vector<std::vector<char>> load_map(const std::string& map_path);

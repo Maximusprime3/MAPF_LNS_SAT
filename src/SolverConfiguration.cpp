@@ -9,6 +9,7 @@
 #include <fstream>
 #include <limits>
 #include <map>
+#include <regex>
 
 namespace {
 
@@ -50,6 +51,8 @@ std::optional<double> parse_double(const std::string& text) {
     if (text.empty()) {
         return std::nullopt;
     }
+    static const std::regex decimal(R"(-?(0|[1-9][0-9]*)(\.[0-9]+)?([eE][+-]?[0-9]+)?)");
+    if (!std::regex_match(text, decimal)) return std::nullopt;
     errno = 0;
     char* end = nullptr;
     const double value = std::strtod(text.c_str(), &end);
@@ -88,6 +91,7 @@ std::optional<std::string> apply_value(
         if (!parsed) return "Config field seed must be an integer";
         config.seed = *parsed;
     } else if (key == "variant") {
+        if (value != "lns-sat" && value != "initial-radius-2" && value != "fixed-step-2" && value != "increasing-step") return "Unknown canonical variant: " + value;
         const auto parsed = parse_neighborhood_variant(value);
         if (!parsed) return "Unknown neighborhood variant: " + value;
         config.neighborhood_variant = *parsed;
@@ -101,6 +105,10 @@ std::optional<std::string> apply_value(
             return "Config field makespan_increase_limit must be an integer";
         }
         config.makespan_increase_limit = *parsed;
+    } else if (key == "makespan_bound") {
+        const auto parsed = parse_int(value);
+        if (!parsed) return "Config field makespan_bound must be an integer";
+        config.makespan_bound = *parsed;
     } else if (key == "lazy_iteration_limit") {
         const auto parsed = parse_int(value);
         if (!parsed) return "Config field lazy_iteration_limit must be an integer";
@@ -128,6 +136,10 @@ std::optional<std::string> apply_value(
 }
 
 }  // namespace
+
+std::optional<std::string> apply_solver_configuration_value(const std::string& key, const std::string& value, SolveRequest& request, SolverConfig& config) {
+    return apply_value(key, value, request, config);
+}
 
 std::optional<LogLevel> parse_log_level(const std::string& value) {
     const std::string normalized = lower(trim(value));
@@ -171,6 +183,7 @@ ConfigurationValidation validate_solver_configuration(
     if (config.makespan_increase_limit < 0) {
         return invalid("Makespan increase limit must be non-negative");
     }
+    if (config.makespan_bound && *config.makespan_bound < 0) return invalid("Makespan bound must be nonnegative");
     if (config.lazy_iteration_limit <= 0) {
         return invalid("Lazy iteration limit must be positive");
     }
@@ -273,9 +286,11 @@ ConfigurationResolution load_solve_configuration_file(
                 return invalid_resolution(
                     "Empty config key on line " + std::to_string(line_number));
             }
-            values[key] = value;
+            if (!values.emplace(key, value).second) return invalid_resolution("Duplicate configuration key: " + key);
+            if (value.empty()) return invalid_resolution("Empty configuration value: " + key);
         }
 
+        if (input.bad()) return invalid_resolution("Failed reading config file");
         for (const auto& entry : values) {
             const auto error = apply_value(
                 entry.first, entry.second, result.request, result.config);

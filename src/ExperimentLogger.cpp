@@ -6,9 +6,16 @@
 #include <iomanip>
 #include <sstream>
 #include <system_error>
+#include <stdexcept>
 
 namespace {
 constexpr int kFloatPrecision = 6;
+void finish_file(std::ofstream& file, const std::filesystem::path& path) {
+    file.flush();
+    if (!file) throw std::runtime_error("Failed writing metrics: " + path.string());
+    file.close();
+    if (!file) throw std::runtime_error("Failed closing metrics: " + path.string());
+}
 
 constexpr const char* kLazyIterationsHeader =
     "experiment_id,makespan_attempt,zone_attempt,waiting_attempt,iteration,clauses_before,variables,clauses_added,total_clauses_after," \
@@ -38,7 +45,12 @@ ExperimentLogger& ExperimentLogger::instance() {
     return instance;
 }
 
-ExperimentLogger::ExperimentLogger() : base_dir_("logs") {}
+ExperimentLogger::ExperimentLogger() = default;
+
+void ExperimentLogger::set_output_directory(const std::filesystem::path& directory) {
+    base_dir_ = directory;
+    header_written_.clear();
+}
 
 void ExperimentLogger::set_log_level(LogLevel log_level) {
     log_level_ = log_level;
@@ -47,6 +59,7 @@ void ExperimentLogger::set_log_level(LogLevel log_level) {
 void ExperimentLogger::ensure_directory() const {
     std::error_code ec;
     std::filesystem::create_directories(base_dir_, ec);
+    if (ec) throw std::runtime_error("Cannot create metrics directory: " + ec.message());
 }
 
 std::filesystem::path ExperimentLogger::file_path(const std::string& filename) const {
@@ -81,9 +94,9 @@ void ExperimentLogger::ensure_header(const std::filesystem::path& path, const st
     }
     if (need_header) {
         std::ofstream file(path, std::ios::app);
-        if (file.is_open()) {
-            file << header << '\n';
-        }
+        if (!file) throw std::runtime_error("Cannot open metrics: " + path.string());
+        file << header << '\n';
+        finish_file(file, path);
     }
     header_written_[key] = true;
 }
@@ -93,7 +106,7 @@ std::string ExperimentLogger::start_experiment(const std::string& map_path,
                                                int num_agents,
                                                int scenario_index,
                                                int seed) {
-    if (log_level_ == LogLevel::Quiet) {
+    if (base_dir_.empty() || log_level_ == LogLevel::Quiet) {
         return "logging-disabled";
     }
     ensure_directory();
@@ -114,14 +127,12 @@ void ExperimentLogger::log_lazy_iteration(const std::string& experiment_id,
                                           int zone_attempt,
                                           int waiting_attempt,
                                           const LazySatIterationMetrics& metrics) {
-    if (log_level_ == LogLevel::Quiet) return;
+    if (base_dir_.empty() || log_level_ == LogLevel::Quiet) return;
     auto path = file_path("lazy_iterations.csv");
     ensure_header(path, kLazyIterationsHeader);
 
     std::ofstream file(path, std::ios::app);
-    if (!file.is_open()) {
-        return;
-    }
+    if (!file.is_open()) throw std::runtime_error("Cannot open metrics: " + path.string());
     file << std::fixed << std::setprecision(kFloatPrecision);
     file << experiment_id << ',' << makespan_attempt << ',' << zone_attempt << ',' << waiting_attempt
          << ',' << metrics.iteration
@@ -143,19 +154,18 @@ void ExperimentLogger::log_lazy_iteration(const std::string& experiment_id,
          << ',' << metrics.num_decisions
          << ',' << metrics.num_propagations
          << '\n';
+    finish_file(file, path);
 }
 
 void ExperimentLogger::log_waiting_attempt(const std::string& experiment_id,
                                            int makespan_attempt,
                                            int zone_attempt,
                                            const WaitingAttemptMetrics& metrics) {
-    if (log_level_ == LogLevel::Quiet) return;
+    if (base_dir_.empty() || log_level_ == LogLevel::Quiet) return;
     auto path = file_path("waiting_attempts.csv");
     ensure_header(path, kWaitingAttemptsHeader);
     std::ofstream file(path, std::ios::app);
-    if (!file.is_open()) {
-        return;
-    }
+    if (!file.is_open()) throw std::runtime_error("Cannot open metrics: " + path.string());
     const auto& lazy = metrics.lazy_metrics;
     file << std::fixed << std::setprecision(kFloatPrecision);
     file << experiment_id << ',' << makespan_attempt << ',' << zone_attempt << ',' << metrics.attempt_index
@@ -178,18 +188,17 @@ void ExperimentLogger::log_waiting_attempt(const std::string& experiment_id,
          << ',' << (metrics.extended_time_window ? 1 : 0)
          << ',' << (metrics.solved ? 1 : 0)
          << '\n';
+    finish_file(file, path);
 }
 
 void ExperimentLogger::log_local_zone_attempt(const std::string& experiment_id,
                                               int makespan_attempt,
                                               const LocalZoneAttemptMetrics& metrics) {
-    if (log_level_ == LogLevel::Quiet) return;
+    if (base_dir_.empty() || log_level_ == LogLevel::Quiet) return;
     auto path = file_path("local_zones.csv");
     ensure_header(path, kLocalZoneHeader);
     std::ofstream file(path, std::ios::app);
-    if (!file.is_open()) {
-        return;
-    }
+    if (!file.is_open()) throw std::runtime_error("Cannot open metrics: " + path.string());
     file << std::fixed << std::setprecision(kFloatPrecision);
     file << experiment_id << ',' << makespan_attempt << ',' << metrics.attempt_index
          << ',' << metrics.zone_positions
@@ -209,17 +218,16 @@ void ExperimentLogger::log_local_zone_attempt(const std::string& experiment_id,
          << ',' << metrics.total_lazy_solver_reported_time_ms
          << ',' << (metrics.solved ? 1 : 0)
          << '\n';
+    finish_file(file, path);
 }
 
 void ExperimentLogger::log_makespan_attempt(const std::string& experiment_id,
                                             const MakespanAttemptMetrics& metrics) {
-    if (log_level_ == LogLevel::Quiet) return;
+    if (base_dir_.empty() || log_level_ == LogLevel::Quiet) return;
     auto path = file_path("makespan_attempts.csv");
     ensure_header(path, kMakespanHeader);
     std::ofstream file(path, std::ios::app);
-    if (!file.is_open()) {
-        return;
-    }
+    if (!file.is_open()) throw std::runtime_error("Cannot open metrics: " + path.string());
     file << std::fixed << std::setprecision(kFloatPrecision);
     file << experiment_id << ',' << metrics.attempt_index
          << ',' << metrics.makespan
@@ -237,16 +245,15 @@ void ExperimentLogger::log_makespan_attempt(const std::string& experiment_id,
          << ',' << metrics.attempt_wall_time_ms
          << ',' << (metrics.solved ? 1 : 0)
          << '\n';
+    finish_file(file, path);
 }
 
 void ExperimentLogger::log_experiment_summary(const ExperimentSummaryMetrics& metrics) {
-    if (log_level_ == LogLevel::Quiet) return;
+    if (base_dir_.empty() || log_level_ == LogLevel::Quiet) return;
     auto path = file_path("experiments.csv");
     ensure_header(path, kExperimentHeader);
     std::ofstream file(path, std::ios::app);
-    if (!file.is_open()) {
-        return;
-    }
+    if (!file.is_open()) throw std::runtime_error("Cannot open metrics: " + path.string());
     file << std::fixed << std::setprecision(kFloatPrecision);
     file << metrics.experiment_id << ','
          << metrics.map_path << ','
@@ -265,4 +272,5 @@ void ExperimentLogger::log_experiment_summary(const ExperimentSummaryMetrics& me
          << metrics.total_lazy_solver_wall_time_ms << ','
          << metrics.total_lazy_solver_reported_ms
          << '\n';
+    finish_file(file, path);
 }

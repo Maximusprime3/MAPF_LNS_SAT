@@ -74,8 +74,8 @@ void validate_path_geometry(
         }
 
         const Position previous = path[t - 1];
-        const int distance = std::abs(position.first - previous.first) +
-                             std::abs(position.second - previous.second);
+        const long long distance = std::llabs(static_cast<long long>(position.first) - previous.first) +
+                                   std::llabs(static_cast<long long>(position.second) - previous.second);
         if (distance > 1) {
             std::ostringstream message;
             message << "agent " << agent_id << " makes an illegal move from ("

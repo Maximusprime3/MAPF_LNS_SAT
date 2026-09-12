@@ -1,3 +1,4 @@
+#include "lnssat/Logging.h"
 #include "lnssat/mdd/MDD.h"
 #include "lnssat/mdd/MDDNode.h"
 #include <algorithm>
@@ -100,30 +101,30 @@ void MDD::prune_unreachable_nodes(int max_timesteps) {
 
 // Prints each node and shows its children and parents
 void MDD::print_node_relationships() const {
-    std::cout << "\n=== Node Relationships ===" << std::endl;
+    lnssat::debug_log() << "\n=== Node Relationships ===" << std::endl;
     for (const auto& [level, nodes] : levels) {
-        std::cout << "Level " << level << ":" << std::endl;
+        lnssat::debug_log() << "Level " << level << ":" << std::endl;
         for (const auto& node : nodes) {
-            std::cout << "  Node (" << node->position.first << "," << node->position.second 
+            lnssat::debug_log() << "  Node (" << node->position.first << "," << node->position.second
                       << ") at time " << node->time_step << ":" << std::endl;
             
             // Print children
-            std::cout << "    Children: ";
+            lnssat::debug_log() << "    Children: ";
             if (node->children.empty()) {
-                std::cout << "none";
+                lnssat::debug_log() << "none";
             } else {
                 for (size_t i = 0; i < node->children.size(); ++i) {
                     const auto& child = node->children[i];
-                    std::cout << "(" << child->position.first << "," << child->position.second << ")";
-                    if (i + 1 < node->children.size()) std::cout << ", ";
+                    lnssat::debug_log() << "(" << child->position.first << "," << child->position.second << ")";
+                    if (i + 1 < node->children.size()) lnssat::debug_log() << ", ";
                 }
             }
-            std::cout << std::endl;
+            lnssat::debug_log() << std::endl;
             
             // Print parents
-            std::cout << "    Parents: ";
+            lnssat::debug_log() << "    Parents: ";
             if (level == 0) {
-                std::cout << "root (no parents)";
+                lnssat::debug_log() << "root (no parents)";
             } else {
                 std::vector<std::string> parent_strings;
                 if (levels.find(level - 1) != levels.end()) {
@@ -138,17 +139,17 @@ void MDD::print_node_relationships() const {
                     }
                 }
                 if (parent_strings.empty()) {
-                    std::cout << "none (unreachable!)";
+                    lnssat::debug_log() << "none (unreachable!)";
                 } else {
                     for (size_t i = 0; i < parent_strings.size(); ++i) {
-                        std::cout << parent_strings[i];
-                        if (i + 1 < parent_strings.size()) std::cout << ", ";
+                        lnssat::debug_log() << parent_strings[i];
+                        if (i + 1 < parent_strings.size()) lnssat::debug_log() << ", ";
                     }
                 }
             }
-            std::cout << std::endl;
+            lnssat::debug_log() << std::endl;
         }
-        std::cout << std::endl;
+        lnssat::debug_log() << std::endl;
     }
 }
 

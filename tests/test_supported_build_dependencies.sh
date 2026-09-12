@@ -7,9 +7,20 @@ task_dir=$(mktemp -d /tmp/lns-supported-build-test.XXXXXX)
 trap 'rm -rf "$task_dir"' EXIT HUP INT TERM
 if [ "${1:-}" = --cmake ]; then
     graph=${2:?usage: test_supported_build_dependencies.sh --cmake GRAPH ARCHIVE...}
-    shift 2
+    source_root=$3
+    build_root=$4
+    shift 4
     test -s "$graph"
-    cp "$graph" "$task_dir/graph"
+    # Match repository-relative legacy components, not case-insensitive parent
+    # directory names such as /home/user/LNS/current. Literal substitution only.
+    awk -v src="$source_root/" -v build="$build_root/" '
+        function strip(line, prefix, n) {
+            while ((n = index(line, prefix)) > 0)
+                line = substr(line, 1, n-1) "<root>/" substr(line, n+length(prefix))
+            return line
+        }
+        { print strip(strip($0, src), build) }
+    ' "$graph" >"$task_dir/graph"
 else
     make -s -pn all >"$task_dir/graph"
 fi

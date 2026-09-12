@@ -9,7 +9,7 @@ only supported backend. Analysis scripts and `archive/` are outside the build gr
 
 - A C++17 compiler, CMake 3.20 or newer, and a build tool such as GNU Make.
 - A POSIX environment with `sh`, `ar`, and `nm`; the batch runner uses POSIX processes.
-- GNU Make for the optional Make wrapper.
+- GNU Make for the optional Make wrapper; Python 3 for CLI/provenance tests.
 - No downloads or prebuilt source-tree libraries are needed. MiniSAT is bundled
   under `third_party/minisat/`, including its license.
 
@@ -32,12 +32,14 @@ fixtures, and CTest solver logs stay in the selected build directory.
 | --- | --- |
 | `lns_minisat` | Bundled `Solver.cc` and `System.cc`; `liblns_minisat.a` |
 | `lns_core` | Project solver, shared CNF/MDD/manager code and MiniSAT adapter; `liblns_core.a` |
-| `lns-sat` | Existing positional/configuration single-run CLI |
+| `lns-sat` | Public solve/verify CLI, with legacy positional/INI compatibility |
+| `lns_cli` | CLI and artifact lifecycle support |
 | `run_batch_experiments` | The consolidated supported batch driver |
 | `run_lns_verification` | Independent end-to-end verification driver |
-| `test_*` | 17 C++ regression executables |
+| `test_*` | 18 C++ regression executables plus shell/Python integration checks |
 
-CTest runs **21 tests**: all 20 prior tests plus one focused batch path regression.
+CTest runs **24 tests**: the 21 milestone 5 tests plus public JSON/SHA-256,
+CLI subprocess, and build-provenance suites.
 The tiny oracle retains **528 cases**. Deadline, backend rejection, dependency
 inspection, and independent smoke tests remain enabled. C++ tests have isolated
 build-directory working directories; terrain fixtures are copied there under the
@@ -65,17 +67,25 @@ for `empty-8-8-even-1`, **four agents, index 0, seed 42, variant lns-sat**. Expe
 output includes `status=valid agents=4 makespan=8`. CTest enforces a **30-second**
 external timeout; all other tests have 60-second limits.
 
-To invoke the existing single-run CLI and keep its generated logs under `build/`:
+The public quick start, from the repository root:
 
 ```sh
-cd build
-./lns-sat ../tests/fixtures/empty-8-8.map \
-  ../tests/fixtures/empty-8-8-even-1.scen 4 0 42 lns-sat
+./build/lns-sat solve --map tests/fixtures/empty-8-8.map \
+  --scenario tests/fixtures/empty-8-8-even-1.scen --agents 4 \
+  --seed 42 --output build/tiny-result.json
+./build/lns-sat verify --map tests/fixtures/empty-8-8.map \
+  --scenario tests/fixtures/empty-8-8-even-1.scen --solution build/tiny-result.json
+./build/lns-sat --version
 ```
 
-From the same directory, `./lns-sat ../examples/example_config.ini` runs the existing
-INI example. INI input paths retain their working-directory-relative semantics.
-The future `solve`/`verify` subcommands and replay manifest belong to Milestone 6.
+Observed: both commands return 0, independently verified makespan 8. The result
+contains paths, exact input hashes/selection, resolved configuration, measured
+milliseconds and metadata from the code actually built. See [CLI.md](CLI.md) and
+[RESULT_SCHEMA.md](RESULT_SCHEMA.md). No file appears unless explicitly requested.
+
+From `build/`, `./lns-sat --config ../examples/example_config.ini` exercises the
+retained complete INI configuration. Its paths remain working-directory-relative.
+The legacy `MAP SCEN N INDEX [SEED [VARIANT]]` syntax remains for the batch runner.
 
 ## Batch examples and path rules
 
@@ -96,8 +106,8 @@ The runner finds **`lns-sat` beside its own executable**, including when invoked
 through PATH or a symlink from an unrelated working directory. Keep the two built
 executables together. The previous build-directory `main_clean_lns` compatibility
 copy is no longer needed. CLI paths stay relative to the caller; JSON paths stay
-relative to the configuration file. Implicit solver logs remain relative to the
-working directory, so run experiments in an output directory.
+relative to the configuration file. Solver progress now uses stderr (which the runner already captures), and the
+solver creates no implicit CSV files. Explicit runner logs retain their existing paths.
 
 Existing JSON examples are in `examples/batch/`; their paths still target the
 unchanged benchmark collections. Scenario pattern expansion, natural ordering,
@@ -152,3 +162,18 @@ solver thread with no timer thread or asynchronous shared flag. The null callbac
 preserves unbounded behavior. All vendor files, including this hook, are moved
 byte for byte. See [CORRECTNESS_CHECKPOINT.md](CORRECTNESS_CHECKPOINT.md) for the
 cooperative deadline contract, which remains unchanged.
+
+## Build-time provenance
+
+Every build runs `cmake/BuildProvenance.cmake` before compiling `lns_cli`. It writes
+a generated header only when provenance changes; this refreshes revision/dirty
+metadata even on incremental builds. Source archives without their own `.git`
+record null revision/dirty metadata and a supported-source checksum. The executable
+never queries a checkout at runtime. Build flags are captured for the selected
+configuration, including custom configurations. Do not edit source while compiling.
+
+The supported Make defaults are still Release with `-O2` and assertions enabled;
+Debug CMake and source-archive Make were both validated in [MILESTONE6.md](MILESTONE6.md).
+The dependency inspection now strips literal source/build root prefixes before
+checking forbidden relative paths, avoiding the pre-existing false positive for a
+parent directory named `LNS` without weakening archive/symbol checks.

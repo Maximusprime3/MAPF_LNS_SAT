@@ -11,6 +11,8 @@ class ExperimentLogger {
 public:
     static ExperimentLogger& instance();
 
+    void set_output_directory(const std::filesystem::path& directory);
+
     void set_log_level(LogLevel log_level);
 
     std::string start_experiment(const std::string& map_path,

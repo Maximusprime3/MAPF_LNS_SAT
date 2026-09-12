@@ -87,17 +87,20 @@ solver selection is rejected, and lazy solving depends on the typed incremental
 static archive are checked for probSAT dependencies. Historical backend-only source files
 are retained under `archive/`, outside the supported artifact.
 
-### Search limits are configured; result manifests remain incomplete
+### Public run manifests (resolved in milestone 6)
 
-`SolverConfig` names and validates makespan increment/limit, lazy-SAT iteration limit,
-full-map fallback threshold, wall-clock limit, seed, variant, and log level. A stable
-machine-readable result manifest recording all resolved values is still missing.
+The version 1 result records every resolved request/configuration value, exact input
+hashes and scenario block, measured runtime, verified paths and build-time provenance.
+See [RESULT_SCHEMA.md](RESULT_SCHEMA.md). The additive makespan limit retains its
+legacy meaning; an optional absolute bound is separate.
 
 ### Initial path sampling is reproducible only with complete run metadata
 
-The seed is recorded, but exact replay also needs the code revision, variant, solver
-version, compiler/build mode, map and scenario checksums, selected scenario offset, number
-of agents, and all limits. A machine-readable run manifest should accompany results.
+All of these fields are now recorded in the public manifest, with explicit nulls for
+unavailable source-archive Git metadata and an unidentified upstream MiniSAT version
+(the exact bundled source is hashed). Retain matching inputs/source/toolchain: hashes
+cannot reconstruct a dirty source tree or an unavailable input. Cross-platform bitwise
+replay is not promised.
 
 ### Metrics may not describe the intended event
 
@@ -135,11 +138,23 @@ makespan, runtime, seed, and a diagnostic message. Lazy SAT uses a typed backend
 The remaining API work is to separate progress logging from the algorithm and present a
 stable reusable-library surface.
 
-### Output and logging are entangled with the algorithm
+### Public output and logging (resolved in milestone 6)
 
-The core prints the entire map, all agents, progress messages, and some final paths.
-Configuration can redirect `std::cout` wholesale to a file. Replace this with explicit
-verbosity levels and separate human-readable diagnostics from machine-readable results.
+Supported progress uses scoped verbosity and stderr sinks; there is no global stdout
+redirection. Maps, paths and backend details use debug level. Results and diagnostic
+files require explicit destinations; internal experimental CSV logging requires an
+explicit directory and remains outside the public schema. Nested experimental metrics
+still need the previously planned event-definition audit.
+
+### Artifact and resource limits
+
+Public input files are regular UTF-8-labeled paths with a 256 MiB per-file cap; JSON
+has a 128-level nesting limit. The parser is not a hardened adversarial-input service.
+Atomic publication detects ordinary write/flush/close failures, but does not provide
+power-loss durability or protection against malicious concurrent directory changes.
+Hard process termination can leave a private temporary file. Exit status is authoritative
+when an unwritable destination prevents removal of an old artifact. No hard real-time
+stopping guarantee is introduced; input hashing/loading and cleanup consume measured time.
 
 ### Analysis code is not a release blocker
 

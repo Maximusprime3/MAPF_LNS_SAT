@@ -34,8 +34,8 @@ int main() {
                  "missing inputs should fail as InvalidInput before search");
     ok &= expect(default_result.seed == 42,
                  "the established default seed should be preserved in LNSResult");
-    ok &= expect(default_result.paths.empty() && default_result.runtime_ms == 0.0,
-                 "invalid input should not produce paths or measured search time");
+    ok &= expect(default_result.paths.empty() && default_result.runtime_ms > 0.0,
+                 "invalid input should not produce paths; runtime measures the complete LNS call");
 
     SolverConfig overridden_config;
     overridden_config.seed = 73;

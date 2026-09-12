@@ -1,3 +1,4 @@
+#include "lnssat/Logging.h"
 #include "lnssat/mdd/MDDConstructor.h"
 #include "lnssat/mdd/MDD.h"
 #include "lnssat/Grid.h"
@@ -88,7 +89,7 @@ std::shared_ptr<MDD> MDDConstructor::construct_mdd() {
         auto it = distances.find(start);
         max_timesteps = (it != distances.end()) ? it->second : 0;
         // Print the value when it is set automatically
-        std::cout << "[MDDConstructor] max_timesteps set to shortest path length from start to goal: " << max_timesteps << std::endl;
+        lnssat::debug_log() << "[MDDConstructor] max_timesteps set to shortest path length from start to goal: " << max_timesteps << std::endl;
     }
     // Queue for BFS: (position, time_step)
     std::queue<std::pair<MDDNode::Position, int>> queue;

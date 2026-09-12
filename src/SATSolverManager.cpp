@@ -1,3 +1,4 @@
+#include "lnssat/Logging.h"
 #include <cmath>
 #include <limits>
 #include "lnssat/SATSolverManager.h"
@@ -25,6 +26,11 @@
 
 std::vector<std::vector<char>> SATSolverManager::load_map(const std::string& map_path) {
     std::ifstream infile(map_path);
+    return load_map(infile);
+}
+
+std::vector<std::vector<char>> SATSolverManager::load_map(std::istream& infile) {
+    const std::string map_path = "input stream";
     std::vector<std::vector<char>> map;
     if (!infile) {
         std::cerr << "Error: Could not open map file: " << map_path << std::endl;
@@ -142,6 +148,11 @@ std::vector<std::vector<char>> SATSolverManager::mask_map_outside_window(
 // Reads a scenario file and returns a vector of ScenarioEntry structs, one per line (excluding header)
 std::vector<ScenarioEntry> SATSolverManager::create_dataframe_from_file(const std::string& file_path) {
     std::ifstream infile(file_path);
+    return create_dataframe(infile);
+}
+
+std::vector<ScenarioEntry> SATSolverManager::create_dataframe(std::istream& infile) {
+    const std::string file_path = "input stream";
     std::vector<ScenarioEntry> entries;
     if (!infile) {
         std::cerr << "Error: Could not open scenario file: " << file_path << std::endl;
@@ -206,6 +217,7 @@ std::vector<ScenarioEntry> SATSolverManager::create_dataframe_from_file(const st
         }
         entries.push_back(entry);
     }
+    if (infile.bad()) return {};
     return entries;
 }
 
@@ -435,13 +447,13 @@ bool SATSolverManager::validate_agent_paths(CNFConstructor& cnf_constructor,
  * @param agent_paths Map from agent_id to path.
  */
 void SATSolverManager::print_agent_paths(const AgentPaths& agent_paths) {
-    std::cout << "\n=== Agent Paths ===" << std::endl;
+    lnssat::debug_log() << "\n=== Agent Paths ===" << std::endl;
     for (const auto& [agent_id, path] : agent_paths) {
-        std::cout << "Agent " << agent_id << " path:" << std::endl;
+        lnssat::debug_log() << "Agent " << agent_id << " path:" << std::endl;
         for (size_t t = 0; t < path.size(); ++t) {
-            std::cout << "  Time " << t << ": (" << path[t].first << ", " << path[t].second << ")" << std::endl;
+            lnssat::debug_log() << "  Time " << t << ": (" << path[t].first << ", " << path[t].second << ")" << std::endl;
         }
-        std::cout << std::endl;
+        lnssat::debug_log() << std::endl;
     }
 }
 
@@ -578,32 +590,32 @@ SATSolverManager::find_all_collisions(const AgentPaths& agent_paths) {
  */
 void SATSolverManager::print_collisions(const std::vector<std::tuple<int, int, std::pair<int, int>, int>>& vertex_collisions,
                                        const std::vector<std::tuple<int, int, std::pair<int, int>, std::pair<int, int>, int>>& edge_collisions) {
-    std::cout << "\n=== Collision Detection Results ===" << std::endl;
+    lnssat::debug_log() << "\n=== Collision Detection Results ===" << std::endl;
     
     if (vertex_collisions.empty() && edge_collisions.empty()) {
-        std::cout << "No collisions detected!" << std::endl;
+        lnssat::debug_log() << "No collisions detected!" << std::endl;
         return;
     }
     
     if (!vertex_collisions.empty()) {
-        std::cout << "Vertex Collisions (" << vertex_collisions.size() << "):" << std::endl;
+        lnssat::debug_log() << "Vertex Collisions (" << vertex_collisions.size() << "):" << std::endl;
         for (const auto& collision : vertex_collisions) {
             int agent1, agent2, timestep;
             std::pair<int, int> position;
             std::tie(agent1, agent2, position, timestep) = collision;
-            std::cout << "  Agents " << agent1 << " and " << agent2 
+            lnssat::debug_log() << "  Agents " << agent1 << " and " << agent2
                       << " at position (" << position.first << ", " << position.second 
                       << ") at timestep " << timestep << std::endl;
         }
     }
     
     if (!edge_collisions.empty()) {
-        std::cout << "Edge Collisions (" << edge_collisions.size() << "):" << std::endl;
+        lnssat::debug_log() << "Edge Collisions (" << edge_collisions.size() << "):" << std::endl;
         for (const auto& collision : edge_collisions) {
             int agent1, agent2, timestep;
             std::pair<int, int> pos1, pos2;
             std::tie(agent1, agent2, pos1, pos2, timestep) = collision;
-            std::cout << "  Agents " << agent1 << " and " << agent2 
+            lnssat::debug_log() << "  Agents " << agent1 << " and " << agent2
                       << " swapping positions (" << pos1.first << ", " << pos1.second 
                       << ") <-> (" << pos2.first << ", " << pos2.second 
                       << ") at timestep " << timestep << std::endl;
