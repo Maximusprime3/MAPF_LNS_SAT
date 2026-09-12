@@ -17,7 +17,7 @@ This checkpoint records the fixes and the scope of their regression evidence.
 
 Both supported builds include `test_audit_regressions`, `test_deadlines`, and
 `test_tiny_mapf_oracle`, in addition to the existing tests. Run the documented
-CMake/CTest commands or `make all` followed by `make test` inside `lns_clean/`.
+CMake/CTest commands or `make all` followed by `make test` at the repository root (the `lns_clean/` Make shim also works).
 
 The tiny oracle enumerates joint states without using production MDD, CNF, grid,
 or collision helpers. All 528 tested fixed-horizon cases cover two distinct agents

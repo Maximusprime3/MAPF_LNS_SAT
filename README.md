@@ -1,92 +1,55 @@
-# MDDConstructor Project
+# LNS-SAT research solver
 
-This project implements a Multi-value Decision Diagram (MDD) constructor in C++. It provides functionality to build MDDs for grid-based pathfinding problems, supporting features like obstacle handling, shortest path calculation, and flexible time-step management.
+LNS-SAT is a SAT-based large-neighborhood-search solver for multi-agent path finding.
+The supported implementation uses MiniSAT and independently verifies successful
+solutions. This repository also retains historical research code and analysis data.
 
-## Overview
+## Build and test
 
-This repository provides code and data for constructing and manipulating Multi-value Decision Diagrams (MDDs) for grid-based pathfinding, as used in research on multi-agent pathfinding and related problems. It is intended as a supplement to the associated research paper.
-
-## Repository Structure
-
-```
-MAPF_LNS_SAT/
-├── mdd/                  # C++ and Python source/header files for MDD construction
-│   ├── MDDConstructor.cpp
-│   ├── MDDConstructor.h
-│   ├── MDD.cpp
-│   ├── MDD.h
-│   ├── MDDNode.cpp
-│   ├── MDDNode.h
-│   └── MDD.py
-├── cnf/                  # CNF construction and related files
-├── minisat/              # MiniSAT integration (see minisat/README.md)
-├── probSAT-master/       # probSAT SAT solver (CLI and C/C++ API)
-├── mapf-map/             # Grid map files for experiments
-├── mapf-scen-even/       # Scenario files for experiments
-├── main.cpp              # Example usage and tests for the MDD classes
-├── SATSolverManager.h    # SAT solver management and integration
-├── SATSolverManager.cpp  # SAT solver management implementation
-├── .gitignore            # Standard ignore rules for C++ projects
-├── LICENSE               # MIT License
-└── README.md             # Project documentation and build instructions
+```sh
+cmake -S . -B build
+cmake --build build
+ctest --test-dir build --output-on-failure
 ```
 
-- **mdd/**: Core C++/Python code for MDD construction and manipulation.
-- **cnf/**: CNF construction and related utilities.
-- **minisat/**: MiniSAT integration with wrappers, tests, and documentation (see `minisat/README.md`).
-- **probSAT-master/**: Third-party SAT solver (see its README for details).
-- **mapf-map/**, **mapf-scen-even/**: Datasets (maps and scenarios) for experiments.
-- **SATSolverManager.h/cpp**: SAT solver management and integration for both ProbSAT and MiniSAT.
-- **main.cpp**: Example usage and tests for the MDD classes.
+Requirements, Make targets, smoke and batch examples are in
+[docs/BUILD.md](docs/BUILD.md). The existing positional/configuration CLI remains in
+use; the public CLI and replay-result format are later roadmap work.
 
-## Building the Project
+## Repository structure
 
-To build the main C++ components, use:
+| Directory | Purpose |
+| --- | --- |
+| `src/` | Supported solver, shared CNF/MDD/manager code and MiniSAT adapter |
+| `include/lnssat/` | Internal headers |
+| `app/` | Single-run, batch, and independent verification entry points |
+| `tests/`, `tests/fixtures/` | Regression tests and required small inputs |
+| `third_party/minisat/` | Bundled MiniSAT source and license |
+| `examples/` | INI and JSON batch configurations |
+| `archive/` | Unsupported older solver/backend code and scripts |
+| `Analysis/`, `Analysis2/` | Research scripts and notebooks, outside build dependencies |
+| `mapf-map/`, `mapf-scen-even/` | Existing benchmark collections |
+| `data/`, root CSV/SVG files | Retained historical research results |
+| `docs/` | Architecture, roadmap, build and verification records |
 
-```
-g++ -std=c++17 -O2 -o main mdd/MDDConstructor.cpp mdd/MDD.cpp mdd/MDDNode.cpp
-```
+The root Makefile uses the CMake graph. `lns_clean/Makefile` is a compatibility
+entry point only. Generated binaries, libraries and caches are not source inputs.
+Run solver and batch commands from an output directory to keep their logs there.
+Historical probSAT material is retained under `archive/` and is not a supported
+backend. See [archive/README.md](archive/README.md).
 
-Replace `main` with your desired output executable name, and ensure all required source files are listed. You may need to adjust the command if you use additional components.
+## Project documentation
 
-## Usage
-- The code is designed for research and educational purposes related to pathfinding and decision diagrams.
-- See the source files for more details on usage and implementation.
-- Example usage is provided in `main.cpp`.
+- [Architecture](docs/ARCHITECTURE.md)
+- [Roadmap](docs/ROADMAP.md)
+- [Known issues and limitations](docs/KNOWN_ISSUES.md)
+- [Milestone 5 layout and validation](docs/MILESTONE5.md)
+- [Bounded correctness verification](docs/VERIFICATION_SIGNOFF.md)
 
-## Datasets
-- **mapf-map/** contains grid maps used in experiments.
-- **mapf-scen-even/** contains scenario files for benchmarking.
-- You can add your own maps/scenarios following the same format.
+## License and publication metadata
 
-## Results and Logging
-- All experiment logs and results (CSV logs, intermediate files, etc.) are written to the `data/` directory in the repository.
-- This directory is included in the repository (not in .gitignore) to ensure reproducibility and easy sharing of results.
-- Log files include:
-  - `data/solver_log.csv` (overall run summaries)
-  - `data/solver_log_timesteps.csv` (per-timestep iteration logs)
-  - `data/solver_log_collisions.csv` (per-collision iteration logs)
-- You can analyze these logs with Python, R, Excel, or any data analysis tool.
-
-## License
-This project is licensed under the MIT License. See the LICENSE file for details.
-
-## How to Cite
-**TODO: Add BibTeX citation for the associated paper here.**
-
-## Author / Contact
-**TODO: Add author name(s) and contact information here.**
-
-## SAT Solvers
-
-This project supports multiple SAT solvers:
-
-- **ProbSAT**: Stochastic local search solver (in `probSAT-master/`)
-- **MiniSAT**: CDCL solver (in `minisat/`)
-
-See `minisat/README.md` for MiniSAT integration details and usage examples.
-
-## Acknowledgements
-- The probSAT SAT solver is included under its own license in `probSAT-master/`.
-- The MiniSAT solver is included under its own license in `minisat/minisat-master/`.
-- This project was developed for research purposes. If you use this code or data, please cite the associated paper (see above). 
+Project license: [LICENSE](LICENSE). MiniSAT license:
+[third_party/minisat/LICENSE](third_party/minisat/LICENSE). Retained historical
+probSAT has its own license in [archive/probSAT-master/LICENSE](archive/probSAT-master/LICENSE).
+Dataset attribution, citation/contact metadata and publication polish remain
+tracked in the roadmap.

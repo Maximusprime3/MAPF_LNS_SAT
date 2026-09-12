@@ -2,7 +2,7 @@
 
 ## Status and scope
 
-This document describes the implementation currently centered in `lns_clean/` on the
+This document describes the implementation in `src/`, `include/lnssat/`, and `app/` on the
 `cleanup/pseudo-agent` branch. It is a description of the code as it
 exists, not yet a claim that every component is release-ready.
 
@@ -10,8 +10,10 @@ The intended public project is **LNS-SAT**, a SAT-based large-neighborhood-searc
 for multi-agent path finding (MAPF). The current branch's main research feature is the
 pseudo-agent representation used when one real agent enters a local zone more than once.
 
-The older `lns/` implementation, experimental analysis scripts, generated logs, plots,
-and checked-in binaries are outside the core architecture documented here.
+The older implementation and backend experiments are retained under `archive/`,
+outside the supported build. Analysis scripts, notebooks, and retained research
+results are also outside the solver dependencies. Tracked build products and caches
+have been removed.
 
 ## Problem and solution model
 
@@ -34,14 +36,14 @@ The intended solution invariants are:
 
 ### Single run
 
-`lns_clean/main_clean_lns.cpp` is the current command-line entry point. It accepts either
+`app/main_clean_lns.cpp` is the current command-line entry point. It accepts either
 positional arguments or an INI-like configuration file and calls `LNS(...)` in
-`lns_clean/LNS.cpp`.
+`src/LNS.cpp`.
 
 Current positional form:
 
 ```text
-main_clean_lns <map_path> <scenario_path> <num_agents> <scenario_index> [seed] [variant]
+lns-sat <map_path> <scenario_path> <num_agents> <scenario_index> [seed] [variant]
 ```
 
 Current configuration keys are `map`, `scenario`, `num_agents`, `scenario_index`,
@@ -54,13 +56,15 @@ solver arguments and batch/configuration fields are rejected rather than silentl
 
 ### Batch experiments
 
-`lns_clean/run_experiments/run_batch_experiments.cpp` and the similarly named file at the
-top of `lns_clean/` are research experiment drivers. They are not yet part of the stable
-public CLI. Their behavior and duplication should be resolved during cleanup.
+`app/run_batch_experiments.cpp` is the single supported research batch driver.
+The former top-level duplicate was empty and has been removed. The runner finds
+`lns-sat` beside its own executable. CLI inputs remain working-directory relative;
+JSON inputs remain configuration-directory relative. See [BUILD.md](BUILD.md) for
+working examples. No new public CLI or result format is introduced here.
 
 ## End-to-end algorithm flow
 
-The current orchestration in `lns_clean/LNS.cpp` follows this sequence:
+The current orchestration in `src/LNS.cpp` follows this sequence:
 
 1. **Load the instance.** `Load_LNSProblem` parses the map and the requested scenario
    slice into a grid, starts, and goals.
@@ -115,10 +119,10 @@ The current orchestration in `lns_clean/LNS.cpp` follows this sequence:
 | `SolutionVerifier.*` | Independently enforce agent coverage, common horizon, path geometry, start/goal, vertex-conflict, and edge-conflict invariants |
 | `VerificationHelpers.*` | Compatibility wrappers used by existing solver call sites |
 | `ExperimentLogger.*`, `Metrics.h` | Record experiment, makespan, zone, waiting, and lazy-iteration measurements |
-| `mdd/` | Multi-value decision diagrams for time-expanded agent movement |
-| `cnf/` | Translate MDD path choices and collision constraints into CNF |
-| `minisat/minisat-wrapper.cpp` | The only supported `SatSolver` adapter; owns all MiniSAT-specific types |
-| `minisat/minisat-master/` | Bundled MiniSAT implementation |
+| `src/mdd/`, `include/lnssat/mdd/` | Multi-value decision diagrams for time-expanded agent movement |
+| `src/cnf/`, `include/lnssat/cnf/` | Translate MDD path choices and collision constraints into CNF |
+| `src/sat/minisat-wrapper.cpp` | The only supported `SatSolver` adapter; owns all MiniSAT-specific types |
+| `third_party/minisat/` | Bundled MiniSAT implementation |
 | `SATSolverManager.*` | Shared map, path, collision, and makespan utilities inherited from earlier code |
 
 ## Pseudo-agent representation
@@ -156,11 +160,12 @@ iteration. If an assumption solve is explicitly `Unsat`, it resets once, reloads
 formula, and retries without assumptions. Backend `Error` returns immediately and is never
 treated as `Unsat`. Statistics and elapsed time include both calls when that retry occurs.
 
-The MiniSAT adapter and factory are implemented in `minisat/minisat-wrapper.cpp`; MiniSAT
+The MiniSAT adapter and factory are implemented in `src/sat/minisat-wrapper.cpp`; MiniSAT
 types do not cross that file boundary. Clause diagnostics use an injected sink enabled by
 `LogLevel::Debug`. The supported Make target and archive have no probSAT include, source,
-object, or symbol dependency. Historical probSAT-only files remain outside the supported
-artifact until the source-tree milestone classifies legacy material.
+object, or symbol dependency. Historical probSAT-only files are retained under `archive/`, outside the supported
+artifact. The vendor sources and license moved unchanged, preserving both the
+`mkLit` compatibility patch and cooperative termination callback.
 
 ## Randomness and reproducibility
 
@@ -217,3 +222,19 @@ absolute-time path assumptions, and combined pseudo-agent integration coverage.
 returns bounded exhaustion without an unrestricted retry. MDD construction polls
 the same deadline; local transactions roll back on interruption, and late solutions
 are rejected before commit or return.
+
+## Completed source and build boundaries
+
+- `src/`: one solver implementation, including shared CNF, MDD, manager and adapter code.
+- `include/lnssat/`: internal qualified headers, with `cnf/`, `mdd/`, `sat/`, and
+  `batch/` subtrees. These are not a promised stable public C++ API.
+- `app/`: solver CLI, batch driver, and independent verification entry point.
+- `tests/` and `tests/fixtures/`: all prior regressions plus batch path coverage.
+- `third_party/minisat/`: vendored sources and license; no project-owned adapters.
+- `examples/`: existing INI/JSON inputs and a tiny batch example.
+- `archive/`: historical code, never linked by the supported build.
+
+Root CMake uses explicit source lists and separate project/vendor warnings. Root
+Make delegates to the same graph; `lns_clean/Makefile` is only a compatibility shim.
+Outputs are confined to selected build/run directories. See [BUILD.md](BUILD.md)
+and [MILESTONE5.md](MILESTONE5.md) for commands and clean-source validation evidence.

@@ -1,5 +1,9 @@
 # Milestones 1–4: bounded verification sign-off
 
+> Historical checkpoint/planning record. Milestone 5 source organization is now
+> complete; see [MILESTONE5.md](MILESTONE5.md) and [BUILD.md](BUILD.md). Paths and
+> next steps below describe the recorded earlier revision.
+
 Date: 2026-09-12. Evaluated revision: `cdc3b03e8d4b10f25695787434c2f260f777653d`
 on `Milestone_Cleanup`. Comparison revision: `1a052be8b326c7507c3782c5bdf96247c005aee7`
 (milestone 5.3, before the correctness fixes).

@@ -1,0 +1,491 @@
+#include "lnssat/Deadline.h"
+#ifndef SAT_SOLVER_MANAGER_H
+#define SAT_SOLVER_MANAGER_H
+
+#include <string>
+#include <vector>
+#include <map>
+#include <memory>
+#include <filesystem>
+#include <unordered_map>
+#include <tuple>
+#include <chrono>
+#include <iostream>
+#include <algorithm>
+#include <functional>
+
+// Include our MAPF components
+#include "lnssat/mdd/MDD.h"
+#include "lnssat/mdd/MDDNode.h"
+#include "lnssat/mdd/MDDConstructor.h"  // For pair_hash
+#include "lnssat/cnf/CNF.h"
+#include "lnssat/cnf/CNFConstructor.h"
+
+
+// Forward declarations
+class MDD;
+class CNF;
+class CNFConstructor;
+
+// Struct to hold a row of scenario data from a scenario file
+struct ScenarioEntry {
+    int bucket;              // Scenario bucket or group identifier
+    std::string map_name;    // Name of the map
+    int map_width;           // Width of the map
+    int map_height;          // Height of the map
+    int start_x;             // Agent's start x-coordinate
+    int start_y;             // Agent's start y-coordinate
+    int goal_x;              // Agent's goal x-coordinate
+    int goal_y;              // Agent's goal y-coordinate
+    int optimal_length;      // Optimal path length for this agent
+};
+
+
+// Helper hash function for edges (pairs of positions)
+struct edge_hash {
+    std::size_t operator()(const std::pair<std::pair<int, int>, std::pair<int, int>>& p) const {
+        auto h1 = std::hash<int>{}(p.first.first);
+        auto h2 = std::hash<int>{}(p.first.second);
+        auto h3 = std::hash<int>{}(p.second.first);
+        auto h4 = std::hash<int>{}(p.second.second);
+        return h1 ^ (h2 << 1) ^ (h3 << 2) ^ (h4 << 3);
+    }
+};
+
+// Type aliases for better readability and semantic meaning
+using AgentMDDMap = std::unordered_map<int, std::shared_ptr<MDD>>;  // Maps agent_id -> MDD
+using AgentPaths = std::unordered_map<int, std::vector<std::pair<int, int>>>;  // Maps agent_id -> path
+using AgentPathsWithPosition = std::unordered_map<int, std::vector<MDDNode::Position>>;  // Maps agent_id -> path with Position type
+using VariableMap = std::unordered_map<std::tuple<int, MDDNode::Position, int>, int>;  // Maps (agent_id, position, timestep) -> variable_id
+using PositionDistanceMap = std::unordered_map<MDDNode::Position, int, pair_hash>;  // Maps position -> distance from goal
+using PositionAgentMap = std::unordered_map<std::pair<int, int>, std::vector<int>, pair_hash>;  // Maps position -> list of agents
+using EdgeAgentMap = std::unordered_map<std::pair<std::pair<int, int>, std::pair<int, int>>, std::vector<int>, edge_hash>;  // Maps edge -> list of agents
+using NodeMapping = std::unordered_map<const MDDNode*, std::shared_ptr<MDDNode>>;  // Maps old node -> new node
+
+class SATSolverManager {
+public:
+
+    // Loads a map from a file, skipping the first 4 header lines, and returns a 2D grid of chars
+    static std::vector<std::vector<char>> load_map(const std::string& map_path);
+
+    /**
+     * Returns a cropped window of the given map around a center position with the provided offset.
+     * The window is clamped to map boundaries, so if the window would extend past an edge, it is
+     * truncated accordingly.
+     *
+     * Coordinates are interpreted as (row, col), i.e., map[row][col].
+     *
+     * @param map The full map grid.
+     * @param center The center position (row, col) of the window.
+     * @param offset Number of cells to extend in each direction from the center.
+     * @return A new 2D grid representing the cropped window.
+     */
+    static std::vector<std::vector<char>> crop_map_window(
+        const std::vector<std::vector<char>>& map,
+        const std::pair<int,int>& center,
+        int offset);
+
+    /**
+     * Returns a full-size copy of the map where all cells outside the clamped
+     * window centered at `center` with `offset` are set to unwalkable terrain.
+     * This preserves original coordinates while effectively masking the map
+     * to a window. Cells inside the window retain their original values.
+     *
+     * Coordinates are interpreted as (row, col), i.e., map[row][col].
+     *
+     * @param map The full map grid.
+     * @param center The center position (row, col) of the window.
+     * @param offset Number of cells to extend in each direction from the center.
+     * @return A new 2D grid of the same size as `map`, masked outside the window.
+     */
+    static std::vector<std::vector<char>> mask_map_outside_window(
+        const std::vector<std::vector<char>>& map,
+        const std::pair<int,int>& center,
+        int offset);
+
+    // Reads a scenario file and returns a vector of ScenarioEntry structs, one per line (excluding header)
+    static std::vector<ScenarioEntry> create_dataframe_from_file(const std::string& file_path);
+
+    // Groups scenario entries into sets of starts and goals for each agent
+    // Each set: pair of (vector of starts, vector of goals), where each is a vector of {x, y}
+    // The outer vector contains one entry per set (i.e., per group of num_agents)
+    static std::vector<std::pair<std::vector<std::pair<int, int>>, std::vector<std::pair<int, int>>>>
+    create_starts_and_goals(const std::vector<ScenarioEntry>& entries, int num_agents);
+
+    /**
+     * Computes the minimum number of timesteps (makespan) required for all agents to reach their goals.
+     * For each agent, computes the shortest path distance from start to goal using MDDConstructor.
+     * Returns a pair: (vector of distance matrices, max_timesteps).
+     * Each distance matrix is a map from position to distance for that agent.
+     * The max_timesteps is the maximum distance from any start to any goal.
+     * this is used as the makespan to create the MDDs for all agents.
+     */
+    static std::pair<std::vector<std::map<std::pair<int, int>, int>>, int>
+    compute_max_timesteps(const std::vector<std::vector<char>>& map,
+                         const std::vector<std::pair<int, int>>& starts,
+                         const std::vector<std::pair<int, int>>& goals,
+                          SolverDeadline deadline = {});
+
+    /**
+     * Creates MDDs for each agent using the map, starts, goals, max_timesteps, and distance matrices.
+     * Returns a vector of shared_ptr<MDD>, one for each agent.
+     */
+    static std::vector<std::shared_ptr<class MDD>>
+    create_mdds(const std::vector<std::vector<char>>& map,
+                const std::vector<std::pair<int, int>>& starts,
+                const std::vector<std::pair<int, int>>& goals,
+                int max_timesteps,
+                const std::vector<std::map<std::pair<int, int>, int>>& distance_matrices);
+
+    /**
+     * Creates a CNF from the MDDs using CNFConstructor. Optionally saves the CNF to a file.
+     * @param mdds Vector of shared_ptr<MDD> for each agent.
+     * @param save_to_file If true, saves the CNF to a file.
+     * @param filename If saving, the filename to use (if empty, auto-generate).
+     * @param lazy_encoding If true, use lazy encoding (exclude conflict clauses initially).
+     * @return Pair of (shared_ptr<CNF>, filename). Filename is empty if not saved.
+     */
+    static std::pair<std::shared_ptr<class CNF>, std::string>
+    create_and_save_cnf(const std::vector<std::shared_ptr<class MDD>>& mdds,
+                       bool save_to_file = false,
+                       const std::string& filename = "",
+                       bool lazy_encoding = false);
+
+
+    /**
+     * Creates a CNFConstructor for regular CNF operations.
+     * @param mdds Vector of shared_ptr<MDD> for each agent.
+     * @param lazy_encoding If true, use lazy encoding (exclude conflict clauses initially).
+     * @return CNFConstructor object.
+     */
+    static CNFConstructor
+    create_cnf_constructor(const std::vector<std::shared_ptr<class MDD>>& mdds,
+                          bool lazy_encoding = false);
+
+    /**
+     * Generates a unique filename by appending a number if the file already exists.
+     * @param base_filename The base filename to use.
+     * @return A unique filename that does not exist yet.
+     */
+    static std::string get_unique_filename(const std::string& base_filename);
+
+
+
+
+    /**
+     * Extracts agent paths from a SAT assignment using CNFConstructor.
+     * @param cnf_constructor The CNFConstructor used to create the CNF.
+     * @param assignment The SAT variable assignment.
+     * @return Map from agent_id to path (vector of positions).
+     */
+    static AgentPaths 
+    extract_agent_paths_from_solution(CNFConstructor& cnf_constructor,
+                                     const std::vector<int>& assignment);
+
+    /**
+     * Validates agent paths against their MDDs.
+     * @param cnf_constructor The CNFConstructor used to create the CNF.
+     * @param agent_paths Map from agent_id to path.
+     * @return True if all paths are valid, false otherwise.
+     */
+    static bool validate_agent_paths(CNFConstructor& cnf_constructor,
+                                   const AgentPaths& agent_paths);
+
+    /**
+     * Prints agent paths in a readable format.
+     * @param agent_paths Map from agent_id to path.
+     */
+    static void print_agent_paths(const AgentPaths& agent_paths);
+
+    /**
+     * Calculates max flips and tries based on CNF size (heuristic).
+     * @param cnf The CNF formula.
+     * @param base_max_flips Base number of max flips.
+     * @param base_max_tries Base number of max tries.
+     * @return Pair of (max_flips, max_tries).
+     */
+    static std::pair<long long, long long> calculate_max_flips_and_tries(const CNF& cnf,
+                                                                        long long base_max_flips = 1000,
+                                                                        long long base_max_tries = 100);
+
+    /**
+     * Detects vertex collisions (two agents at same position at same time).
+     * @param agent_paths Map from agent_id to path (vector of positions).
+     * @return Vector of collision tuples (agent1_id, agent2_id, position, timestep).
+     */
+    static std::vector<std::tuple<int, int, std::pair<int, int>, int>> 
+    find_vertex_collisions(const AgentPaths& agent_paths);
+
+    /**
+     * Detects edge collisions (agents swapping positions between consecutive timesteps).
+     * @param agent_paths Map from agent_id to path (vector of positions).
+     * @return Vector of edge collision tuples (agent1_id, agent2_id, pos1, pos2, timestep).
+     */
+    static std::vector<std::tuple<int, int, std::pair<int, int>, std::pair<int, int>, int>> 
+    find_edge_collisions(const AgentPaths& agent_paths);
+
+    /**
+     * Detects all collisions (both vertex and edge collisions).
+     * @param agent_paths Map from agent_id to path (vector of positions).
+     * @return Pair of (vertex_collisions, edge_collisions).
+     */
+    static std::pair<std::vector<std::tuple<int, int, std::pair<int, int>, int>>,
+                     std::vector<std::tuple<int, int, std::pair<int, int>, std::pair<int, int>, int>>> 
+    find_all_collisions(const AgentPaths& agent_paths);
+
+    /**
+     * Prints collision information in a readable format.
+     * @param vertex_collisions Vector of vertex collision tuples.
+     * @param edge_collisions Vector of edge collision tuples.
+     */
+    static void print_collisions(const std::vector<std::tuple<int, int, std::pair<int, int>, int>>& vertex_collisions,
+                                const std::vector<std::tuple<int, int, std::pair<int, int>, std::pair<int, int>, int>>& edge_collisions);
+
+
+    /**
+     * Logs a summary of the SAT solver run to a CSV file.
+     * Appends a row with all relevant statistics for later analysis.
+     *
+     * @param log_filename Path to the log file (CSV).
+     * @param map_name Name of the map used.
+     * @param num_agents Number of agents.
+     * @param solver_used Name of the SAT solver used.
+     * @param cnf_vars_start Number of CNF variables at start.
+     * @param cnf_clauses_start Number of CNF clauses at start.
+     * @param cnf_vars_end Number of CNF variables at end.
+     * @param cnf_clauses_end Number of CNF clauses at end.
+     * @param total_time_s Total wall-clock time for the run (seconds).
+     * @param cnf_build_time_s Time to build the CNF (seconds).
+     * @param total_solver_time_s Total time spent in the SAT solver (seconds).
+     * @param solver_times_per_iter Vector of solver times per iteration (seconds).
+     * @param flips_per_iter Vector of number of flips per iteration.
+     * @param tries_per_iter Vector of number of tries per iteration.
+     * @param collisions_per_iter Vector of number of collisions added per iteration.
+     * @param status SAT/UNSAT/ERROR status string.
+     * @param seed Random seed used.
+     * @param params Additional parameters (optional, as a string).
+     */
+    static void log_run_summary(
+        const std::string& log_filename,
+        const std::string& map_name,
+        int num_agents,
+        const std::string& solver_used,
+        int cnf_vars_start,
+        int cnf_clauses_start,
+        int cnf_vars_end,
+        int cnf_clauses_end,
+        double total_time_s,
+        double cnf_build_time_s,
+        double total_solver_time_s,
+        const std::vector<double>& solver_times_per_iter,
+        const std::vector<int>& flips_per_iter,
+        const std::vector<int>& tries_per_iter,
+        const std::vector<int>& collisions_per_iter,
+        const std::string& status,
+        long long seed,
+        const std::string& params = ""
+    );
+
+    /**
+     * Logs a run summary to a CSV file for MiniSAT.
+     * Each row represents one complete run with multiple timesteps.
+     * Tracks decisions and propagations instead of flips.
+     *
+     * @param log_filename Path to the log file (CSV).
+     * @param map_name Name of the map used.
+     * @param num_agents Number of agents.
+     * @param solver_used Name of the SAT solver used.
+     * @param cnf_vars_start Number of CNF variables at the start.
+     * @param cnf_clauses_start Number of CNF clauses at the start.
+     * @param cnf_vars_end Number of CNF variables at the end.
+     * @param cnf_clauses_end Number of CNF clauses at the end.
+     * @param total_time_s Total time for the entire run (seconds).
+     * @param cnf_build_time_s Total time spent building CNF (seconds).
+     * @param total_solver_time_s Total time spent in SAT solver (seconds).
+     * @param solver_times_per_iter Vector of solver times for each iteration.
+     * @param decisions_per_iter Vector of decisions for each iteration.
+     * @param propagations_per_iter Vector of propagations for each iteration.
+     * @param collisions_per_iter Vector of collisions added in each iteration.
+     * @param status Final status of the run (SAT/UNSAT/ERROR).
+     * @param seed Random seed used.
+     * @param params Additional parameters (optional, as a string).
+     */
+    static void log_run_summary_minisat(
+        const std::string& log_filename,
+        const std::string& map_name,
+        int num_agents,
+        const std::string& solver_used,
+        int cnf_vars_start,
+        int cnf_clauses_start,
+        int cnf_vars_end,
+        int cnf_clauses_end,
+        double total_time_s,
+        double cnf_build_time_s,
+        double total_solver_time_s,
+        const std::vector<double>& solver_times_per_iter,
+        const std::vector<int>& decisions_per_iter,
+        const std::vector<int>& propagations_per_iter,
+        const std::vector<int>& collisions_per_iter,
+        const std::string& status,
+        long long seed,
+        const std::string& params = ""
+    );
+
+
+    /**
+     * Logs a per-timestep (makespan) iteration to a CSV file.
+     * Each row represents one timestep attempt (outer loop).
+     *
+     * @param log_filename Path to the log file (CSV).
+     * @param map_name Name of the map used.
+     * @param num_agents Number of agents.
+     * @param solver_used Name of the SAT solver used.
+     * @param timestep The current makespan/timestep value.
+     * @param cnf_vars Number of CNF variables at this timestep.
+     * @param cnf_clauses Number of CNF clauses at this timestep.
+     * @param cnf_build_time_s Time to build the CNF (seconds).
+     * @param total_solver_time_s Total SAT solver time for this timestep (seconds).
+     * @param num_collision_iterations Number of collision iterations in this timestep.
+     * @param status SAT/UNSAT/ERROR status string for this timestep.
+     * @param seed Random seed used.
+     * @param params Additional parameters (optional, as a string).
+     */
+    static void log_timestep_iteration(
+        const std::string& log_filename,
+        const std::string& map_name,
+        int num_agents,
+        const std::string& solver_used,
+        int timestep,
+        int cnf_vars,
+        int cnf_clauses,
+        double cnf_build_time_s,
+        double total_solver_time_s,
+        int num_collision_iterations,
+        const std::string& status,
+        long long seed,
+        const std::string& params = ""
+    );
+
+    /**
+     * Logs a per-collision-iteration (inner loop) to a CSV file.
+     * Each row represents one collision resolution attempt within a timestep.
+     *
+     * @param log_filename Path to the log file (CSV).
+     * @param map_name Name of the map used.
+     * @param num_agents Number of agents.
+     * @param solver_used Name of the SAT solver used.
+     * @param timestep The current makespan/timestep value.
+     * @param collision_iter The collision iteration number within this timestep.
+     * @param cnf_vars Number of CNF variables at this iteration.
+     * @param cnf_clauses Number of CNF clauses at this iteration.
+     * @param solver_time_s SAT solver time for this collision iteration (seconds).
+     * @param flips Number of flips in this iteration (if available).
+     * @param tries Number of tries in this iteration (if available).
+     * @param collisions_added Number of new collision clauses added in this iteration.
+     * @param status SAT/UNSAT/ERROR status string for this iteration.
+     * @param seed Random seed used.
+     * @param params Additional parameters (optional, as a string).
+     */
+    static void log_collision_iteration(
+        const std::string& log_filename,
+        const std::string& map_name,
+        int num_agents,
+        const std::string& solver_used,
+        int timestep,
+        int collision_iter,
+        int cnf_vars,
+        int cnf_clauses,
+        double solver_time_s,
+        int flips,
+        int tries,
+        int collisions_added,
+        const std::string& status,
+        long long seed,
+        const std::string& params = ""
+    );
+
+    /**
+     * Logs a per-collision-iteration (inner loop) to a CSV file for MiniSAT.
+     * Each row represents one collision resolution attempt within a timestep.
+     * Tracks decisions and propagations instead of flips.
+     *
+     * @param log_filename Path to the log file (CSV).
+     * @param map_name Name of the map used.
+     * @param num_agents Number of agents.
+     * @param solver_used Name of the SAT solver used.
+     * @param timestep The current makespan/timestep value.
+     * @param collision_iter The collision iteration number within this timestep.
+     * @param cnf_vars Number of CNF variables at this iteration.
+     * @param cnf_clauses Number of CNF clauses at this iteration.
+     * @param solver_time_s SAT solver time for this collision iteration (seconds).
+     * @param decisions Number of decisions in this iteration.
+     * @param propagations Number of propagations in this iteration.
+     * @param collisions_added Number of new collision clauses added in this iteration.
+     * @param status SAT/UNSAT/ERROR status string for this iteration.
+     * @param seed Random seed used.
+     * @param params Additional parameters (optional, as a string).
+     */
+    static void log_collision_iteration_minisat(
+        const std::string& log_filename,
+        const std::string& map_name,
+        int num_agents,
+        const std::string& solver_used,
+        int timestep,
+        int collision_iter,
+        int cnf_vars,
+        int cnf_clauses,
+        double solver_time_s,
+        int decisions,
+        int propagations,
+        int collisions_added,
+        const std::string& status,
+        long long seed,
+        const std::string& params = ""
+    );
+
+
+    /**
+     * Logs a per-timestep-iteration (outer loop) to a CSV file for MiniSAT.
+     * Each row represents one timestep/makespan attempt.
+     * Tracks decisions and propagations instead of flips.
+     *
+     * @param log_filename Path to the log file (CSV).
+     * @param map_name Name of the map used.
+     * @param num_agents Number of agents.
+     * @param solver_used Name of the SAT solver used.
+     * @param timestep The current makespan/timestep value.
+     * @param cnf_vars Number of CNF variables at this timestep.
+     * @param cnf_clauses Number of CNF clauses at this timestep.
+     * @param cnf_build_time_s Time to build CNF (seconds).
+     * @param total_solver_time_s Total SAT solver time for this timestep (seconds).
+     * @param num_collision_iterations Number of collision iterations in this timestep.
+     * @param decisions Total number of decisions across all collision iterations.
+     * @param propagations Total number of propagations across all collision iterations.
+     * @param status SAT/UNSAT/ERROR status string for this timestep.
+     * @param seed Random seed used.
+     * @param params Additional parameters (optional, as a string).
+     */
+    static void log_timestep_iteration_minisat(
+        const std::string& log_filename,
+        const std::string& map_name,
+        int num_agents,
+        const std::string& solver_used,
+        int timestep,
+        int cnf_vars,
+        int cnf_clauses,
+        double cnf_build_time_s,
+        double total_solver_time_s,
+        int num_collision_iterations,
+        int decisions,
+        int propagations,
+        const std::string& status,
+        long long seed,
+        const std::string& params = ""
+    );
+
+
+    // ... (other public methods will be added later)
+
+};
+
+#endif // SAT_SOLVER_MANAGER_H

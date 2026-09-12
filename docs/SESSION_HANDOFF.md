@@ -1,5 +1,9 @@
 # Milestone_Cleanup session handoff — 2026-09-12
 
+> Historical checkpoint/planning record. Milestone 5 source organization is now
+> complete; see [MILESTONE5.md](MILESTONE5.md) and [BUILD.md](BUILD.md). Paths and
+> next steps below describe the recorded earlier revision.
+
 ## Resume here
 
 The bounded verification of milestones 1–4 after milestone 5.3 is complete.

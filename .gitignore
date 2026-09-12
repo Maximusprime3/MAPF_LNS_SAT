@@ -14,7 +14,9 @@ CMakeFiles/
 CMakeCache.txt
 cmake_install.cmake
 Makefile
+!/Makefile
 !lns_clean/Makefile
+!archive/**/Makefile*
 
 # OS files
 .DS_Store
@@ -31,3 +33,25 @@ Thumbs.db
 /completed_scenarios_over_time.*
 /lns_variant_completed_scenarios.*
 /lns_variant_map_timelines.*
+
+# Source-tree hygiene after Milestone 5. Research data/evidence stay tracked.
+*.a
+*.so
+*.so.*
+*.d
+*.pyc
+__pycache__/
+.ipynb_checkpoints/
+*:Zone.Identifier
+.git_backup*/
+build-*/
+/build-make*/
+Testing/
+compile_commands.json
+CTestTestfile.cmake
+DartConfiguration.tcl
+/main_clean_lns
+/lns-sat
+/run_batch_experiments
+/lns_clean/main_clean_lns
+/lns_clean/run_experiments/run_batch_experiments

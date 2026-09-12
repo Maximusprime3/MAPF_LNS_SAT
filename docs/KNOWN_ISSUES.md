@@ -2,7 +2,7 @@
 
 ## Purpose
 
-This is a working audit of the code currently centered in `lns_clean/`. It exists to keep
+This is a working audit of the supported code in `src/` and `include/lnssat/`. It exists to keep
 documentation honest and to prevent a formatting refactor from hiding behavioral changes.
 Items should move to tests or closed issues as they are resolved.
 
@@ -85,7 +85,7 @@ MiniSAT is now the only supported and implicit backend. Positional/configuration
 solver selection is rejected, and lazy solving depends on the typed incremental
 `SatSolver` contract rather than MiniSAT or probSAT types. The supported build graph and
 static archive are checked for probSAT dependencies. Historical backend-only source files
-remain outside the supported artifact pending the source-tree cleanup milestone.
+are retained under `archive/`, outside the supported artifact.
 
 ### Search limits are configured; result manifests remain incomplete
 
@@ -103,39 +103,30 @@ of agents, and all limits. A machine-readable run manifest should accompany resu
 
 Experiment logging was added while the algorithm was changing. Counters and timings need
 definitions and tests, especially around nested makespan, zone, waiting, and lazy-SAT
-attempts. Duplicate includes and duplicated experiment runners are signs that this path
-has not yet been consolidated.
+attempts. The batch runner has been consolidated; metric definitions and output
+separation remain later work.
 
 ## P2: repository and release engineering
 
-### The root README describes an older project
+### Publication documentation remains incomplete
 
-It presents the repository primarily as an MDD constructor, documents probSAT as a
-supported solver, and contains citation/contact TODOs. It should be replaced only after
-the build and minimal CLI are stable enough for its commands to be tested.
+The root README now points to the supported build and layout. Citation/contact
+metadata, release notices, and broader publication polish remain Milestone 8 work.
 
-### Generated and machine-local artifacts are committed
+### Historical research data still needs an archival plan
 
-The repository contains large logs, plots, CSV results, notebooks and checkpoints,
-compiled objects/libraries/executables, Python caches, and a backup of nested Git metadata.
-These make cloning expensive and obscure the source artifact. They should be classified
-before removal:
+Milestone 5 removes tracked executables, libraries, objects, bytecode caches,
+notebook checkpoints, Zone.Identifier files, and nested Git backup metadata.
+Primary notebooks, plots, CSV results, datasets, and intentional verification logs
+remain preserved. Their provenance and archival selection belong to Milestone 7;
+do not delete historical result data before verifying its backup/archive location.
 
-- source and small deterministic examples remain in Git;
-- reproducibility inputs receive provenance and licensing notes;
-- selected paper results move to a versioned archival release (for example Zenodo);
-- regenerated plots and bulk logs stay out of the source repository; and
-- binaries, object files, caches, and nested Git internals are removed from version
-  control and covered by `.gitignore`.
+### Source/build organization (resolved in Milestone 5)
 
-Do not delete historical result data until it has been backed up and its archival location
-has been verified.
-
-### Build products and source are mixed
-
-`lns_clean/BUILD.md` describes a static archive, while checked-in executables and objects
-suggest several ad-hoc build paths. Establish one clean out-of-tree build, initially for
-Linux with a documented C++ standard and MiniSAT dependency.
+`src/`, `include/lnssat/`, `app/`, `tests/`, and `third_party/minisat/` contain the
+supported implementation. The old solver/backend experiments are in `archive/`.
+Root CMake and the Make wrapper build from sources into selected output directories;
+no tracked libraries or executables are required. See [BUILD.md](BUILD.md).
 
 ### Structured solver API (mostly resolved on cleanup branch)
 

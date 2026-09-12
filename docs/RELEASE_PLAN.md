@@ -1,5 +1,9 @@
 # Release plan for LNS-SAT
 
+> Historical checkpoint/planning record. Milestone 5 source organization is now
+> complete; see [MILESTONE5.md](MILESTONE5.md) and [BUILD.md](BUILD.md). Paths and
+> next steps below describe the recorded earlier revision.
+
 ## Target
 
 The first public release should look and behave like a credible research software

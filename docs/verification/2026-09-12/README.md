@@ -23,9 +23,14 @@ results or the future solver replay-manifest implementation.
 
 Use the evaluated revision for the current build and `1a052be` in a separate
 checkout for the comparison. Both builds used the same GCC 13.3.0 Debug settings;
-the bundled local CMake executable was version 3.31.6. See `lns_clean/BUILD.md`.
+the bundled local CMake executable was version 3.31.6. Its build instructions were in `lns_clean/BUILD.md` (now `docs/BUILD.md`).
 
-From the current repository root (replace paths to suit the local checkouts):
+The commands below target the evaluated pre-relocation revision, preserving its
+recorded probe and source hashes. For the current layout, see `docs/BUILD.md`;
+compile this unchanged historical probe with `-I include/lnssat -I include` instead
+of `-I lns_clean`.
+
+From the evaluated repository root (replace paths to suit the local checkouts):
 
 ```sh
 cmake -S . -B /tmp/lns-current -DCMAKE_BUILD_TYPE=Debug

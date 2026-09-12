@@ -19,70 +19,56 @@ function(lns_project_target target)
     target_link_libraries(${target} PRIVATE Threads::Threads)
 endfunction()
 
-# Only the two bundled translation units used by lns_clean/Makefile.
+# Only the two bundled translation units used by Makefile.
 # Do not inherit the bundled CMakeLists.txt's extra solvers/global flags.
 add_library(lns_minisat STATIC
-    minisat/minisat-master/minisat/core/Solver.cc
-    minisat/minisat-master/minisat/utils/System.cc)
+    third_party/minisat/minisat/core/Solver.cc
+    third_party/minisat/minisat/utils/System.cc)
 set_target_properties(lns_minisat PROPERTIES
     CXX_STANDARD 17 CXX_STANDARD_REQUIRED YES CXX_EXTENSIONS YES)
 target_include_directories(lns_minisat SYSTEM PUBLIC
-    "${CMAKE_CURRENT_SOURCE_DIR}/minisat/minisat-master")
+    "${CMAKE_CURRENT_SOURCE_DIR}/third_party/minisat")
 target_compile_definitions(lns_minisat PUBLIC __STDC_FORMAT_MACROS)
 
 # Project-owned adapter, shared utilities, and supported local sources retain
 # project warnings. No globs, imported archives, probSAT, or legacy lns/ sources.
 add_library(lns_core STATIC
-    lns_clean/ExperimentLogger.cpp
-    lns_clean/Create_Local_Problem.cpp
-    lns_clean/Current_Solution.cpp
-    lns_clean/Lazy_SAT_Solve.cpp
-    lns_clean/Load_LNSProblem.cpp
-    lns_clean/Local_Zone.cpp
-    lns_clean/Local_Zone_Builder.cpp
-    lns_clean/LNS.cpp
-    lns_clean/NeighborhoodVariant.cpp
-    lns_clean/SolverConfiguration.cpp
-    lns_clean/Solve_Local_Zone.cpp
-    lns_clean/SolutionVerifier.cpp
-    lns_clean/VerificationHelpers.cpp
-    lns_clean/Waiting_time_Solve.cpp
-    SATSolverManager.cpp
-    cnf/CNF.cpp
-    cnf/CNFConstructor.cpp
-    mdd/MDD.cpp
-    mdd/MDDConstructor.cpp
-    mdd/MDDNode.cpp
-    minisat/minisat-wrapper.cpp)
+    src/ExperimentLogger.cpp
+    src/Create_Local_Problem.cpp
+    src/Current_Solution.cpp
+    src/Lazy_SAT_Solve.cpp
+    src/Load_LNSProblem.cpp
+    src/Local_Zone.cpp
+    src/Local_Zone_Builder.cpp
+    src/LNS.cpp
+    src/NeighborhoodVariant.cpp
+    src/SolverConfiguration.cpp
+    src/Solve_Local_Zone.cpp
+    src/SolutionVerifier.cpp
+    src/VerificationHelpers.cpp
+    src/Waiting_time_Solve.cpp
+    src/SATSolverManager.cpp
+    src/cnf/CNF.cpp
+    src/cnf/CNFConstructor.cpp
+    src/mdd/MDD.cpp
+    src/mdd/MDDConstructor.cpp
+    src/mdd/MDDNode.cpp
+    src/sat/minisat-wrapper.cpp)
 lns_project_target(lns_core)
-target_include_directories(lns_core PUBLIC
-    "${CMAKE_CURRENT_SOURCE_DIR}/lns_clean"
-    "${CMAKE_CURRENT_SOURCE_DIR}"
-    "${CMAKE_CURRENT_SOURCE_DIR}/cnf"
-    "${CMAKE_CURRENT_SOURCE_DIR}/mdd"
-    "${CMAKE_CURRENT_SOURCE_DIR}/minisat")
+target_include_directories(lns_core PUBLIC "${CMAKE_CURRENT_SOURCE_DIR}/include")
 target_link_libraries(lns_core PRIVATE lns_minisat PUBLIC Threads::Threads)
 
-add_executable(lns-sat lns_clean/main_clean_lns.cpp)
+add_executable(lns-sat app/main_clean_lns.cpp)
 lns_project_target(lns-sat)
 target_link_libraries(lns-sat PRIVATE lns_core)
 
-# The unchanged batch driver searches its working directory for main_clean_lns.
-# Keep that compatibility name entirely inside the CMake output directory.
-add_custom_command(OUTPUT "${CMAKE_CURRENT_BINARY_DIR}/$<CONFIG>/main_clean_lns"
-    COMMAND "${CMAKE_COMMAND}" -E copy_if_different
-        "$<TARGET_FILE:lns-sat>"
-        "${CMAKE_CURRENT_BINARY_DIR}/$<CONFIG>/main_clean_lns"
-    DEPENDS lns-sat
-    VERBATIM)
-add_custom_target(lns_batch_solver
-    DEPENDS "${CMAKE_CURRENT_BINARY_DIR}/$<CONFIG>/main_clean_lns")
 add_executable(run_batch_experiments
-    lns_clean/run_experiments/run_batch_experiments.cpp)
+    app/run_batch_experiments.cpp)
 lns_project_target(run_batch_experiments)
-add_dependencies(run_batch_experiments lns_batch_solver)
+target_include_directories(run_batch_experiments PRIVATE "${CMAKE_CURRENT_SOURCE_DIR}/include")
+add_dependencies(run_batch_experiments lns-sat)
 
-add_executable(run_lns_verification lns_clean/tests/run_lns_verification.cpp)
+add_executable(run_lns_verification app/run_lns_verification.cpp)
 lns_project_target(run_lns_verification)
 target_link_libraries(run_lns_verification PRIVATE lns_core)
 
@@ -92,12 +78,12 @@ if(BUILD_TESTING)
 
     # These three tests have the same small source sets as the Make build.
     add_executable(test_solution_verifier
-        lns_clean/tests/test_solution_verifier.cpp lns_clean/SolutionVerifier.cpp)
+        tests/test_solution_verifier.cpp src/SolutionVerifier.cpp)
     add_executable(test_neighborhood_variant
-        lns_clean/tests/test_neighborhood_variant.cpp lns_clean/NeighborhoodVariant.cpp)
+        tests/test_neighborhood_variant.cpp src/NeighborhoodVariant.cpp)
     add_executable(test_solver_configuration
-        lns_clean/tests/test_solver_configuration.cpp
-        lns_clean/SolverConfiguration.cpp lns_clean/NeighborhoodVariant.cpp)
+        tests/test_solver_configuration.cpp
+        src/SolverConfiguration.cpp src/NeighborhoodVariant.cpp)
 
     set(core_tests
         test_audit_regressions
@@ -115,7 +101,7 @@ if(BUILD_TESTING)
         test_grid_walkability
         test_solver_configuration_characterization)
     foreach(test IN LISTS core_tests)
-        add_executable(${test} "lns_clean/tests/${test}.cpp")
+        add_executable(${test} "tests/${test}.cpp")
         target_link_libraries(${test} PRIVATE lns_core)
     endforeach()
 
@@ -123,6 +109,7 @@ if(BUILD_TESTING)
         test_solver_configuration ${core_tests})
     foreach(test IN LISTS unit_tests)
         lns_project_target(${test})
+        target_include_directories(${test} PRIVATE "${CMAKE_CURRENT_SOURCE_DIR}/include")
         set(test_dir "${CMAKE_CURRENT_BINARY_DIR}/tests/${test}")
         file(MAKE_DIRECTORY "${test_dir}")
         add_test(NAME ${test} COMMAND ${test})
@@ -133,15 +120,21 @@ if(BUILD_TESTING)
     foreach(test test_grid_walkability test_solve_result)
         foreach(fixture all-terrain.map all-terrain-valid.scen
                 all-terrain-blocked.scen all-terrain-out-of-bounds.scen)
-            configure_file("lns_clean/tests/fixtures/${fixture}"
+            configure_file("tests/fixtures/${fixture}"
                 "tests/${test}/tests/fixtures/${fixture}" COPYONLY)
         endforeach()
     endforeach()
 
     add_test(NAME test_batch_backend_rejection
         COMMAND "${LNS_SH}"
-            "${CMAKE_CURRENT_SOURCE_DIR}/lns_clean/tests/test_batch_backend_rejection.sh"
+            "${CMAKE_CURRENT_SOURCE_DIR}/tests/test_batch_backend_rejection.sh"
             "$<TARGET_FILE:run_batch_experiments>")
+
+    add_test(NAME test_batch_paths
+        COMMAND "${LNS_SH}"
+            "${CMAKE_CURRENT_SOURCE_DIR}/tests/test_batch_paths.sh"
+            "$<TARGET_FILE:run_batch_experiments>"
+            "${CMAKE_CURRENT_SOURCE_DIR}/tests/fixtures")
 
     # Generate inspection data from actual targets, including resolved artifacts.
     set(graph "")
@@ -158,20 +151,20 @@ if(BUILD_TESTING)
     add_test(NAME test_supported_build_dependencies
         COMMAND "${CMAKE_COMMAND}" -E env "AR=${CMAKE_AR}" "NM=${CMAKE_NM}"
             "${LNS_SH}"
-            "${CMAKE_CURRENT_SOURCE_DIR}/lns_clean/tests/test_supported_build_dependencies.sh"
+            "${CMAKE_CURRENT_SOURCE_DIR}/tests/test_supported_build_dependencies.sh"
             --cmake "${CMAKE_CURRENT_BINARY_DIR}/supported-build-$<CONFIG>.txt"
             "$<TARGET_FILE:lns_core>" "$<TARGET_FILE:lns_minisat>")
-    set_tests_properties(test_batch_backend_rejection test_supported_build_dependencies
+    set_tests_properties(test_batch_backend_rejection test_batch_paths test_supported_build_dependencies
         PROPERTIES WORKING_DIRECTORY "${CMAKE_CURRENT_BINARY_DIR}" TIMEOUT 60)
 
     file(MAKE_DIRECTORY "${CMAKE_CURRENT_BINARY_DIR}/tests/smoke")
     add_test(NAME smoke_lns_verification
         COMMAND run_lns_verification
-            "${CMAKE_CURRENT_SOURCE_DIR}/mapf-map/empty-8-8.map"
-            "${CMAKE_CURRENT_SOURCE_DIR}/mapf-scen-even/scen-even/empty-8-8-even-1.scen"
+            "${CMAKE_CURRENT_SOURCE_DIR}/tests/fixtures/empty-8-8.map"
+            "${CMAKE_CURRENT_SOURCE_DIR}/tests/fixtures/empty-8-8-even-1.scen"
             4 0 42 lns-sat)
     set_tests_properties(smoke_lns_verification PROPERTIES
         WORKING_DIRECTORY "${CMAKE_CURRENT_BINARY_DIR}/tests/smoke"
         TIMEOUT 30 LABELS smoke
-        REQUIRED_FILES "${CMAKE_CURRENT_SOURCE_DIR}/mapf-map/empty-8-8.map;${CMAKE_CURRENT_SOURCE_DIR}/mapf-scen-even/scen-even/empty-8-8-even-1.scen")
+        REQUIRED_FILES "${CMAKE_CURRENT_SOURCE_DIR}/tests/fixtures/empty-8-8.map;${CMAKE_CURRENT_SOURCE_DIR}/tests/fixtures/empty-8-8-even-1.scen")
 endif()

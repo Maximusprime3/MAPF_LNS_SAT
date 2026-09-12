@@ -46,13 +46,11 @@ The post-5.3 audit fixes and their bounded regression evidence are documented in
 instance selection, zone termination, final-unit slack, grid shape, deadlines,
 path assumptions, and the combined pseudo-agent repair path.
 
-1. The supported Make build still has checked-in build products.
-2. The CLI cannot write a stable solution/result format and still redirects global output.
-3. Human-readable progress output remains entangled with the algorithm outside the
+1. The CLI cannot write a stable solution/result format and still redirects global output.
+2. Human-readable progress output remains entangled with the algorithm outside the
    SAT/CNF backend diagnostics.
-4. Source, legacy experiments, binaries, caches, and duplicate drivers remain mixed.
-5. Run manifests still lack revision, compiler/build mode, backend version, and input checksums.
-6. The root README, citation metadata, third-party notices, and CI are not release-ready.
+3. Run manifests still lack revision, compiler/build mode, backend version, and input checksums.
+4. The root README, citation metadata, third-party notices, and CI are not release-ready.
 
 ## Milestone 1: lock down pseudo-agent correctness
 
@@ -192,20 +190,17 @@ Six focused commits.
 
 ## Milestone 5: establish the build and source tree
 
-**Milestone 5.2 completed:** the supported Make build no longer requires `-fpermissive`.
-The local MiniSAT default-argument compatibility patch is documented in
-[`lns_clean/BUILD.md`](../lns_clean/BUILD.md#local-minisat-compatibility-patch).
+**Status: completed, including source/artifact organization.** The clean-source
+exit evidence is recorded in [MILESTONE5.md](MILESTONE5.md). All 20 existing tests
+remain, including the 528-case oracle and deadline regressions; the suite also
+adds focused batch executable/input path coverage. MiniSAT's compatibility patch
+and termination callback are preserved byte for byte.
 
-**Milestone 5.3 completed:** a root out-of-tree CMake build now mirrors the supported
-Make sources, with separate bundled MiniSAT and project core targets, `lns-sat`, the
-supported `run_experiments` batch runner, and the independent verification runner.
-CTest covers the 14 existing C++ tests, both shell checks against CMake artifacts, and a
-30-second fixed-seed smoke test (empty-8-8-even-1, four agents, index 0, seed 42,
-verified makespan 8). Project warnings remain target-local and separate from bundled
-MiniSAT. The Make workflow remains supported. See
-[`lns_clean/BUILD.md`](../lns_clean/BUILD.md) for commands and target details.
-Source moves, duplicate-runner consolidation, tracked-artifact removal, and Milestone
-5.4 remain deferred.
+Milestones 5.1–5.3 established valid compilation without `-fpermissive` and the
+out-of-tree CMake/CTest graph. The remaining work consolidates the batch runner,
+moves supported implementation/headers/entry points/tests into their final trees,
+separates the vendor and historical boundaries, removes classified generated
+artifacts, and retains Make through a thin wrapper. See [BUILD.md](BUILD.md).
 
 ### Goal
 
@@ -219,14 +214,15 @@ Provide one obvious clean build and one supported implementation.
 - Build out of tree; removal of the `-fpermissive` requirement is completed in 5.2.
 - Keep third-party compiler warnings separate from project warnings. **Completed for
   CMake in 5.3.**
-- Consolidate the duplicate batch experiment runners.
+- Consolidate the duplicate batch experiment runners. **Completed.**
 - Remove tracked libraries, executables, object files, caches, notebook checkpoints,
-  and `Zone.Identifier` files.
-- Move MiniSAT under an explicit `third_party/` boundary with its license.
+  and `Zone.Identifier` files. **Completed; retained evidence is inventoried.**
+- Move MiniSAT under an explicit `third_party/` boundary with its license. **Completed.**
 - Move the supported solver into `src/`, internal headers into an appropriate include
-  tree, the executable into `app/`, and fixtures into `tests/fixtures/`.
-- Archive or remove the older `lns/` implementation in a dedicated commit.
-- Keep analysis scripts outside all solver build dependencies.
+  tree, the executable into `app/`, and fixtures into `tests/fixtures/`. **Completed.**
+- Archive the older `lns/` implementation as a separate review group. **Completed in
+  `archive/lns/`; the follow-up verification is recorded in `MILESTONE5.md`.**
+- Keep analysis scripts outside all solver build dependencies. **Completed.**
 
 ### Target build
 
@@ -236,8 +232,10 @@ Provide one obvious clean build and one supported implementation.
 
 ### Exit condition
 
-A clean checkout builds and tests through the three documented commands without
-checked-in build products or legacy solver dependencies.
+Achieved: a fresh source-only snapshot builds and tests through the three documented
+commands without checked-in build products or legacy solver dependencies. The Make
+workflow, verified smoke, and tiny batch/path/rejection checks also pass; see the
+[validation record](MILESTONE5.md).
 
 ### Expected size
 
@@ -339,9 +337,9 @@ and milestone 3 remains open for the replay manifest.
 
 The original pseudo-agent/slack/grid checkpoint and the post-5.3 audit fixes now
 have regression coverage; see `CORRECTNESS_CHECKPOINT.md` for before/after evidence
-and remaining limits. Continue Milestone 5's source/artifact organization and
-Milestone 6's CLI/result work, keeping correctness fixes separate from file moves.
-Run the new regressions, including the independent tiny oracle, after source moves.
+and remaining limits. Milestone 5 source/artifact organization is complete and the regressions pass
+after relocation. Milestone 6 CLI/result work is next and has not been started
+in this change. Milestone 3 remains open for the replay manifest.
 
 ## Deliberately deferred improvements
 

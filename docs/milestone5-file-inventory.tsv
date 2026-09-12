@@ -1,0 +1,245 @@
+group	source	destination	classification
+legacy archive	Analysis/.ipynb_checkpoints/plot_solve_time_cdf-checkpoint.py	archive/analysis/plot_solve_time_cdf_snapshot.py	retained source/reference
+legacy archive	Makefile_lns_helpers	archive/Makefile_lns_helpers	retained source/reference
+legacy archive	Makefile_test_satsolvermanager	archive/Makefile_test_satsolvermanager	retained source/reference
+legacy archive	Makefile_test_satsolvermanager_minisat	archive/Makefile_test_satsolvermanager_minisat	retained source/reference
+mechanical relocation	SATSolverManager.cpp	src/SATSolverManager.cpp	retained source/reference
+mechanical relocation	SATSolverManager.h	include/lnssat/SATSolverManager.h	retained source/reference
+legacy archive	SATSolverManger2.py	archive/SATSolverManger2.py	retained source/reference
+legacy archive	SATSolverMangerEdges.py	archive/SATSolverMangerEdges.py	retained source/reference
+mechanical relocation	cnf/CNF.cpp	src/cnf/CNF.cpp	retained source/reference
+mechanical relocation	cnf/CNF.h	include/lnssat/cnf/CNF.h	retained source/reference
+mechanical relocation	cnf/CNFConstructor.cpp	src/cnf/CNFConstructor.cpp	retained source/reference
+mechanical relocation	cnf/CNFConstructor.h	include/lnssat/cnf/CNFConstructor.h	retained source/reference
+legacy archive	cnf/CNFProbSAT.cpp	archive/cnf/CNFProbSAT.cpp	retained source/reference
+legacy archive	cnf/CNFProbSAT.h	archive/cnf/CNFProbSAT.h	retained source/reference
+legacy archive	cnf/CNFProbSATConstructor.cpp	archive/cnf/CNFProbSATConstructor.cpp	retained source/reference
+legacy archive	cnf/CNFProbSATConstructor.h	archive/cnf/CNFProbSATConstructor.h	retained source/reference
+legacy archive	cnf/README.md	archive/cnf/README.md	retained source/reference
+legacy archive	cnf/cnf.py	archive/cnf/cnf.py	retained source/reference
+legacy archive	lns/LNSCore.h	archive/lns/LNSCore.h	retained source/reference
+legacy archive	lns/LNSGeometry.cpp	archive/lns/LNSGeometry.cpp	retained source/reference
+legacy archive	lns/LNSGeometry.h	archive/lns/LNSGeometry.h	retained source/reference
+legacy archive	lns/LNSHelpers.cpp	archive/lns/LNSHelpers.cpp	retained source/reference
+legacy archive	lns/LNSHelpers.h	archive/lns/LNSHelpers.h	retained source/reference
+legacy archive	lns/LNSProblemIO.cpp	archive/lns/LNSProblemIO.cpp	retained source/reference
+legacy archive	lns/LNSProblemIO.h	archive/lns/LNSProblemIO.h	retained source/reference
+legacy archive	lns/LNSSolver.cpp	archive/lns/LNSSolver.cpp	retained source/reference
+legacy archive	lns/LNSSolverRefactored.cpp	archive/lns/LNSSolverRefactored.cpp	retained source/reference
+legacy archive	lns/LNSSolver_more_helpers.cpp	archive/lns/LNSSolver_more_helpers.cpp	retained source/reference
+legacy archive	lns/REFACTORING_GUIDE.md	archive/lns/REFACTORING_GUIDE.md	retained source/reference
+legacy archive	lns/REFACTORING_SUMMARY.md	archive/lns/REFACTORING_SUMMARY.md	retained source/reference
+legacy archive	lns/example_usage.cpp	archive/lns/example_usage.cpp	retained source/reference
+legacy archive	lns/main_crude_lns.cpp	archive/lns/main_crude_lns.cpp	retained source/reference
+legacy archive	lns/run_config/default_config.txt	archive/lns/run_config/default_config.txt	retained source/reference
+legacy archive	lns/run_config/experiment_100_agents.txt	archive/lns/run_config/experiment_100_agents.txt	retained source/reference
+legacy archive	lns/run_config/experiment_200_agents.txt	archive/lns/run_config/experiment_200_agents.txt	retained source/reference
+legacy archive	lns/run_config/experiment_probSAT.txt	archive/lns/run_config/experiment_probSAT.txt	retained source/reference
+legacy archive	lns/run_config/run_config.sh	archive/lns/run_config/run_config.sh	retained source/reference
+mechanical relocation	lns_clean/BUILD.md	docs/BUILD.md	retained source/reference
+mechanical relocation	lns_clean/Create_Local_Problem.cpp	src/Create_Local_Problem.cpp	retained source/reference
+mechanical relocation	lns_clean/Create_Local_Problem.h	include/lnssat/Create_Local_Problem.h	retained source/reference
+mechanical relocation	lns_clean/CurrentSolutionTransaction.h	include/lnssat/CurrentSolutionTransaction.h	retained source/reference
+mechanical relocation	lns_clean/Current_Solution.cpp	src/Current_Solution.cpp	retained source/reference
+mechanical relocation	lns_clean/Current_Solution.h	include/lnssat/Current_Solution.h	retained source/reference
+mechanical relocation	lns_clean/Deadline.h	include/lnssat/Deadline.h	retained source/reference
+mechanical relocation	lns_clean/ExperimentLogger.cpp	src/ExperimentLogger.cpp	retained source/reference
+mechanical relocation	lns_clean/ExperimentLogger.h	include/lnssat/ExperimentLogger.h	retained source/reference
+mechanical relocation	lns_clean/Grid.h	include/lnssat/Grid.h	retained source/reference
+mechanical relocation	lns_clean/LNS.cpp	src/LNS.cpp	retained source/reference
+mechanical relocation	lns_clean/LNS.h	include/lnssat/LNS.h	retained source/reference
+mechanical relocation	lns_clean/Lazy_SAT_Solve.cpp	src/Lazy_SAT_Solve.cpp	retained source/reference
+mechanical relocation	lns_clean/Lazy_SAT_Solve.h	include/lnssat/Lazy_SAT_Solve.h	retained source/reference
+mechanical relocation	lns_clean/Load_LNSProblem.cpp	src/Load_LNSProblem.cpp	retained source/reference
+mechanical relocation	lns_clean/Load_LNSProblem.h	include/lnssat/Load_LNSProblem.h	retained source/reference
+mechanical relocation	lns_clean/Local_Zone.cpp	src/Local_Zone.cpp	retained source/reference
+mechanical relocation	lns_clean/Local_Zone.h	include/lnssat/Local_Zone.h	retained source/reference
+mechanical relocation	lns_clean/Local_Zone_Builder.cpp	src/Local_Zone_Builder.cpp	retained source/reference
+mechanical relocation	lns_clean/Local_Zone_Builder.h	include/lnssat/Local_Zone_Builder.h	retained source/reference
+mechanical relocation	lns_clean/Metrics.h	include/lnssat/Metrics.h	retained source/reference
+mechanical relocation	lns_clean/NeighborhoodVariant.cpp	src/NeighborhoodVariant.cpp	retained source/reference
+mechanical relocation	lns_clean/NeighborhoodVariant.h	include/lnssat/NeighborhoodVariant.h	retained source/reference
+mechanical relocation	lns_clean/SatSolver.h	include/lnssat/SatSolver.h	retained source/reference
+mechanical relocation	lns_clean/SolutionVerifier.cpp	src/SolutionVerifier.cpp	retained source/reference
+mechanical relocation	lns_clean/SolutionVerifier.h	include/lnssat/SolutionVerifier.h	retained source/reference
+mechanical relocation	lns_clean/SolveStatus.h	include/lnssat/SolveStatus.h	retained source/reference
+mechanical relocation	lns_clean/Solve_Local_Zone.cpp	src/Solve_Local_Zone.cpp	retained source/reference
+mechanical relocation	lns_clean/Solve_Local_Zone.h	include/lnssat/Solve_Local_Zone.h	retained source/reference
+mechanical relocation	lns_clean/SolverConfiguration.cpp	src/SolverConfiguration.cpp	retained source/reference
+mechanical relocation	lns_clean/SolverConfiguration.h	include/lnssat/SolverConfiguration.h	retained source/reference
+mechanical relocation	lns_clean/VerificationHelpers.cpp	src/VerificationHelpers.cpp	retained source/reference
+mechanical relocation	lns_clean/VerificationHelpers.h	include/lnssat/VerificationHelpers.h	retained source/reference
+mechanical relocation	lns_clean/Waiting_time_Solve.cpp	src/Waiting_time_Solve.cpp	retained source/reference
+mechanical relocation	lns_clean/Waiting_time_Solve.h	include/lnssat/Waiting_time_Solve.h	retained source/reference
+mechanical relocation	lns_clean/example_config.ini	examples/example_config.ini	retained source/reference
+mechanical relocation	lns_clean/main_clean_lns.cpp	app/main_clean_lns.cpp	retained source/reference
+mechanical relocation	lns_clean/run_experiments/Berlin_config.json	examples/batch/Berlin_config.json	retained source/reference
+mechanical relocation	lns_clean/run_experiments/experiment_config_example.json	examples/batch/experiment_config_example.json	retained source/reference
+mechanical relocation	lns_clean/run_experiments/run_batch_experiments.cpp	app/run_batch_experiments.cpp	retained source/reference
+mechanical relocation	lns_clean/run_experiments/simple_json.h	include/lnssat/batch/simple_json.h	retained source/reference
+mechanical relocation	lns_clean/tests/fixtures/all-terrain-blocked.scen	tests/fixtures/all-terrain-blocked.scen	retained source/reference
+mechanical relocation	lns_clean/tests/fixtures/all-terrain-out-of-bounds.scen	tests/fixtures/all-terrain-out-of-bounds.scen	retained source/reference
+mechanical relocation	lns_clean/tests/fixtures/all-terrain-valid.scen	tests/fixtures/all-terrain-valid.scen	retained source/reference
+mechanical relocation	lns_clean/tests/fixtures/all-terrain.map	tests/fixtures/all-terrain.map	retained source/reference
+mechanical relocation	lns_clean/tests/run_lns_verification.cpp	app/run_lns_verification.cpp	retained source/reference
+mechanical relocation	lns_clean/tests/test_audit_regressions.cpp	tests/test_audit_regressions.cpp	retained source/reference
+mechanical relocation	lns_clean/tests/test_batch_backend_rejection.sh	tests/test_batch_backend_rejection.sh	retained source/reference
+mechanical relocation	lns_clean/tests/test_current_solution_transaction.cpp	tests/test_current_solution_transaction.cpp	retained source/reference
+mechanical relocation	lns_clean/tests/test_deadlines.cpp	tests/test_deadlines.cpp	retained source/reference
+mechanical relocation	lns_clean/tests/test_grid_walkability.cpp	tests/test_grid_walkability.cpp	retained source/reference
+mechanical relocation	lns_clean/tests/test_initial_mdd_agent_ids.cpp	tests/test_initial_mdd_agent_ids.cpp	retained source/reference
+mechanical relocation	lns_clean/tests/test_local_zone_state_validation.cpp	tests/test_local_zone_state_validation.cpp	retained source/reference
+mechanical relocation	lns_clean/tests/test_minisat_unsat_status.cpp	tests/test_minisat_unsat_status.cpp	retained source/reference
+mechanical relocation	lns_clean/tests/test_neighborhood_variant.cpp	tests/test_neighborhood_variant.cpp	retained source/reference
+mechanical relocation	lns_clean/tests/test_pseudo_agent_refresh_reassembly.cpp	tests/test_pseudo_agent_refresh_reassembly.cpp	retained source/reference
+mechanical relocation	lns_clean/tests/test_pseudo_agent_segmentation.cpp	tests/test_pseudo_agent_segmentation.cpp	retained source/reference
+mechanical relocation	lns_clean/tests/test_sat_protocol_characterization.cpp	tests/test_sat_protocol_characterization.cpp	retained source/reference
+mechanical relocation	lns_clean/tests/test_solution_verifier.cpp	tests/test_solution_verifier.cpp	retained source/reference
+mechanical relocation	lns_clean/tests/test_solve_result.cpp	tests/test_solve_result.cpp	retained source/reference
+mechanical relocation	lns_clean/tests/test_solver_configuration.cpp	tests/test_solver_configuration.cpp	retained source/reference
+mechanical relocation	lns_clean/tests/test_solver_configuration_characterization.cpp	tests/test_solver_configuration_characterization.cpp	retained source/reference
+mechanical relocation	lns_clean/tests/test_supported_build_dependencies.sh	tests/test_supported_build_dependencies.sh	retained source/reference
+mechanical relocation	lns_clean/tests/test_tiny_mapf_oracle.cpp	tests/test_tiny_mapf_oracle.cpp	retained source/reference
+mechanical relocation	lns_clean/tests/test_waiting_budget_conservation.cpp	tests/test_waiting_budget_conservation.cpp	retained source/reference
+legacy archive	main.cpp	archive/main.cpp	retained source/reference
+mechanical relocation	mdd/MDD.cpp	src/mdd/MDD.cpp	retained source/reference
+mechanical relocation	mdd/MDD.h	include/lnssat/mdd/MDD.h	retained source/reference
+legacy archive	mdd/MDD.py	archive/mdd/MDD.py	retained source/reference
+mechanical relocation	mdd/MDDConstructor.cpp	src/mdd/MDDConstructor.cpp	retained source/reference
+mechanical relocation	mdd/MDDConstructor.h	include/lnssat/mdd/MDDConstructor.h	retained source/reference
+mechanical relocation	mdd/MDDNode.cpp	src/mdd/MDDNode.cpp	retained source/reference
+mechanical relocation	mdd/MDDNode.h	include/lnssat/mdd/MDDNode.h	retained source/reference
+legacy archive	minisat/MINISAT_INTEGRATION.md	archive/minisat/MINISAT_INTEGRATION.md	retained source/reference
+legacy archive	minisat/Makefile_test_minisat	archive/minisat/Makefile_test_minisat	retained source/reference
+legacy archive	minisat/README.md	archive/minisat/README.md	retained source/reference
+legacy archive	minisat/REORGANIZATION_SUMMARY.md	archive/minisat/REORGANIZATION_SUMMARY.md	retained source/reference
+legacy archive	minisat/example_minisat_lns_usage.cpp	archive/minisat/example_minisat_lns_usage.cpp	retained source/reference
+mechanical relocation	minisat/minisat-master/.gitignore	third_party/minisat/.gitignore	retained source/reference
+mechanical relocation	minisat/minisat-master/CMakeLists.txt	third_party/minisat/CMakeLists.txt	retained source/reference
+mechanical relocation	minisat/minisat-master/LICENSE	third_party/minisat/LICENSE	retained source/reference
+mechanical relocation	minisat/minisat-master/README	third_party/minisat/README	retained source/reference
+mechanical relocation	minisat/minisat-master/doc/ReleaseNotes-2.2.0.txt	third_party/minisat/doc/ReleaseNotes-2.2.0.txt	retained source/reference
+mechanical relocation	minisat/minisat-master/minisat/core/Dimacs.h	third_party/minisat/minisat/core/Dimacs.h	retained source/reference
+mechanical relocation	minisat/minisat-master/minisat/core/Main.cc	third_party/minisat/minisat/core/Main.cc	retained source/reference
+mechanical relocation	minisat/minisat-master/minisat/core/Solver.cc	third_party/minisat/minisat/core/Solver.cc	retained source/reference
+mechanical relocation	minisat/minisat-master/minisat/core/Solver.h	third_party/minisat/minisat/core/Solver.h	retained source/reference
+mechanical relocation	minisat/minisat-master/minisat/core/SolverTypes.h	third_party/minisat/minisat/core/SolverTypes.h	retained source/reference
+mechanical relocation	minisat/minisat-master/minisat/mtl/Alg.h	third_party/minisat/minisat/mtl/Alg.h	retained source/reference
+mechanical relocation	minisat/minisat-master/minisat/mtl/Alloc.h	third_party/minisat/minisat/mtl/Alloc.h	retained source/reference
+mechanical relocation	minisat/minisat-master/minisat/mtl/Heap.h	third_party/minisat/minisat/mtl/Heap.h	retained source/reference
+mechanical relocation	minisat/minisat-master/minisat/mtl/IntMap.h	third_party/minisat/minisat/mtl/IntMap.h	retained source/reference
+mechanical relocation	minisat/minisat-master/minisat/mtl/IntTypes.h	third_party/minisat/minisat/mtl/IntTypes.h	retained source/reference
+mechanical relocation	minisat/minisat-master/minisat/mtl/Map.h	third_party/minisat/minisat/mtl/Map.h	retained source/reference
+mechanical relocation	minisat/minisat-master/minisat/mtl/Queue.h	third_party/minisat/minisat/mtl/Queue.h	retained source/reference
+mechanical relocation	minisat/minisat-master/minisat/mtl/Rnd.h	third_party/minisat/minisat/mtl/Rnd.h	retained source/reference
+mechanical relocation	minisat/minisat-master/minisat/mtl/Sort.h	third_party/minisat/minisat/mtl/Sort.h	retained source/reference
+mechanical relocation	minisat/minisat-master/minisat/mtl/Vec.h	third_party/minisat/minisat/mtl/Vec.h	retained source/reference
+mechanical relocation	minisat/minisat-master/minisat/mtl/XAlloc.h	third_party/minisat/minisat/mtl/XAlloc.h	retained source/reference
+mechanical relocation	minisat/minisat-master/minisat/simp/Main.cc	third_party/minisat/minisat/simp/Main.cc	retained source/reference
+mechanical relocation	minisat/minisat-master/minisat/simp/SimpSolver.cc	third_party/minisat/minisat/simp/SimpSolver.cc	retained source/reference
+mechanical relocation	minisat/minisat-master/minisat/simp/SimpSolver.h	third_party/minisat/minisat/simp/SimpSolver.h	retained source/reference
+mechanical relocation	minisat/minisat-master/minisat/utils/Options.cc	third_party/minisat/minisat/utils/Options.cc	retained source/reference
+mechanical relocation	minisat/minisat-master/minisat/utils/Options.h	third_party/minisat/minisat/utils/Options.h	retained source/reference
+mechanical relocation	minisat/minisat-master/minisat/utils/ParseUtils.h	third_party/minisat/minisat/utils/ParseUtils.h	retained source/reference
+mechanical relocation	minisat/minisat-master/minisat/utils/System.cc	third_party/minisat/minisat/utils/System.cc	retained source/reference
+mechanical relocation	minisat/minisat-master/minisat/utils/System.h	third_party/minisat/minisat/utils/System.h	retained source/reference
+legacy archive	minisat/minisat-master/minisat_inmem.cc	archive/minisat/minisat-master/minisat_inmem.cc	retained source/reference
+legacy archive	minisat/minisat-master/minisat_inmem.h	archive/minisat/minisat-master/minisat_inmem.h	retained source/reference
+mechanical relocation	minisat/minisat-wrapper.cpp	src/sat/minisat-wrapper.cpp	retained source/reference
+mechanical relocation	minisat/minisat-wrapper.h	include/lnssat/sat/minisat-wrapper.h	retained source/reference
+legacy archive	minisat/simple-minisat-wrapper.h	archive/minisat/simple-minisat-wrapper.h	retained source/reference
+legacy archive	minisat/test_minisat_integration.cpp	archive/minisat/test_minisat_integration.cpp	retained source/reference
+legacy archive	probSAT-master/.gitignore	archive/probSAT-master/.gitignore	retained source/reference
+legacy archive	probSAT-master/LICENSE	archive/probSAT-master/LICENSE	retained source/reference
+legacy archive	probSAT-master/README.md	archive/probSAT-master/README.md	retained source/reference
+legacy archive	probSAT-master/makefile	archive/probSAT-master/makefile	retained source/reference
+legacy archive	probSAT-master/probSAT.c	archive/probSAT-master/probSAT.c	retained source/reference
+legacy archive	probSAT-master/probSAT_inmem.c	archive/probSAT-master/probSAT_inmem.c	retained source/reference
+legacy archive	probSAT-master/probSAT_inmem.h	archive/probSAT-master/probSAT_inmem.h	retained source/reference
+legacy archive	run_experiment.sh	archive/run_experiment.sh	retained source/reference
+legacy archive	run_sliced_scenarios.cpp	archive/run_sliced_scenarios.cpp	retained source/reference
+legacy archive	test_orchestration_probSAT.cpp	archive/test_orchestration_probSAT.cpp	retained source/reference
+legacy archive	test_satsolvermanager_minisat.cpp	archive/test_satsolvermanager_minisat.cpp	retained source/reference
+legacy archive	test_satsolvermanager_probsat.cpp	archive/test_satsolvermanager_probsat.cpp	retained source/reference
+artifact removal	.ipynb_checkpoints/Untitled-checkpoint.ipynb	-	notebook checkpoint (primary notebooks retained)
+artifact removal	Analysis/.ipynb_checkpoints/Untitled-checkpoint.ipynb	-	notebook checkpoint (primary notebooks retained)
+artifact removal	Analysis/.ipynb_checkpoints/analysis_fixed-checkpoint.ipynb	-	notebook checkpoint (primary notebooks retained)
+artifact removal	Analysis/.ipynb_checkpoints/lns_clean_visualizations-checkpoint.ipynb	-	notebook checkpoint (primary notebooks retained)
+artifact removal	Analysis/__pycache__/Data_analysis.cpython-38.pyc	-	Python bytecode cache
+artifact removal	Analysis/__pycache__/plot_map_agent_timelines.cpython-310.pyc	-	Python bytecode cache
+artifact removal	Analysis/__pycache__/plot_solve_time_cdf.cpython-310.pyc	-	Python bytecode cache
+artifact removal	Analysis/__pycache__/plot_solve_time_cdf.cpython-38.pyc	-	Python bytecode cache
+artifact removal	Analysis/__pycache__/plot_solver_aggregate_cdfs.cpython-310.pyc	-	Python bytecode cache
+artifact removal	Analysis2/.ipynb_checkpoints/CNFanalysis-checkpoint.ipynb	-	notebook checkpoint (primary notebooks retained)
+artifact removal	Analysis2/.ipynb_checkpoints/dataAnalyis-checkpoint.ipynb	-	notebook checkpoint (primary notebooks retained)
+artifact removal	Analysis2/__pycache__/load_experiment_data.cpython-310.pyc	-	Python bytecode cache
+artifact removal	Analysis2/__pycache__/load_experiment_data.cpython-38.pyc	-	Python bytecode cache
+artifact removal	debug_cnf	-	compiled executable/object/library
+artifact removal	debug_original_test	-	compiled executable/object/library
+artifact removal	lns_clean/liblns_clean.a	-	compiled executable/object/library
+artifact removal	lns_clean/main_clean_lns	-	compiled executable/object/library
+runner consolidation	lns_clean/run_batch_experiments.cpp	-	empty duplicate batch runner; supported implementation retained
+artifact removal	lns_clean/run_experiments/run_batch_experiments	-	compiled executable/object/library
+artifact removal	main_crude_lns	-	compiled executable/object/library
+artifact removal	main_crude_lns_helpers	-	compiled executable/object/library
+artifact removal	minisat/.git_backup_minisat_master/HEAD	-	nested Git backup metadata
+artifact removal	minisat/.git_backup_minisat_master/config	-	nested Git backup metadata
+artifact removal	minisat/.git_backup_minisat_master/description	-	nested Git backup metadata
+artifact removal	minisat/.git_backup_minisat_master/hooks/applypatch-msg.sample	-	nested Git backup metadata
+artifact removal	minisat/.git_backup_minisat_master/hooks/commit-msg.sample	-	nested Git backup metadata
+artifact removal	minisat/.git_backup_minisat_master/hooks/fsmonitor-watchman.sample	-	nested Git backup metadata
+artifact removal	minisat/.git_backup_minisat_master/hooks/post-update.sample	-	nested Git backup metadata
+artifact removal	minisat/.git_backup_minisat_master/hooks/pre-applypatch.sample	-	nested Git backup metadata
+artifact removal	minisat/.git_backup_minisat_master/hooks/pre-commit.sample	-	nested Git backup metadata
+artifact removal	minisat/.git_backup_minisat_master/hooks/pre-merge-commit.sample	-	nested Git backup metadata
+artifact removal	minisat/.git_backup_minisat_master/hooks/pre-push.sample	-	nested Git backup metadata
+artifact removal	minisat/.git_backup_minisat_master/hooks/pre-rebase.sample	-	nested Git backup metadata
+artifact removal	minisat/.git_backup_minisat_master/hooks/pre-receive.sample	-	nested Git backup metadata
+artifact removal	minisat/.git_backup_minisat_master/hooks/prepare-commit-msg.sample	-	nested Git backup metadata
+artifact removal	minisat/.git_backup_minisat_master/hooks/push-to-checkout.sample	-	nested Git backup metadata
+artifact removal	minisat/.git_backup_minisat_master/hooks/sendemail-validate.sample	-	nested Git backup metadata
+artifact removal	minisat/.git_backup_minisat_master/hooks/update.sample	-	nested Git backup metadata
+artifact removal	minisat/.git_backup_minisat_master/index	-	nested Git backup metadata
+artifact removal	minisat/.git_backup_minisat_master/info/exclude	-	nested Git backup metadata
+artifact removal	minisat/.git_backup_minisat_master/logs/HEAD	-	nested Git backup metadata
+artifact removal	minisat/.git_backup_minisat_master/logs/refs/heads/master	-	nested Git backup metadata
+artifact removal	minisat/.git_backup_minisat_master/logs/refs/remotes/origin/HEAD	-	nested Git backup metadata
+artifact removal	minisat/.git_backup_minisat_master/objects/pack/pack-822cb127b29d8a8272e28dec9a672496a7030a93.idx	-	nested Git backup metadata
+artifact removal	minisat/.git_backup_minisat_master/objects/pack/pack-822cb127b29d8a8272e28dec9a672496a7030a93.pack	-	nested Git backup metadata
+artifact removal	minisat/.git_backup_minisat_master/objects/pack/pack-822cb127b29d8a8272e28dec9a672496a7030a93.rev	-	nested Git backup metadata
+artifact removal	minisat/.git_backup_minisat_master/packed-refs	-	nested Git backup metadata
+artifact removal	minisat/.git_backup_minisat_master/refs/heads/master	-	nested Git backup metadata
+artifact removal	minisat/.git_backup_minisat_master/refs/remotes/origin/HEAD	-	nested Git backup metadata
+artifact removal	minisat/minisat-master/build/dynamic/lib/libminisat.so	-	vendor build output/dependency file
+artifact removal	minisat/minisat-master/build/dynamic/lib/libminisat.so.2	-	vendor build output/dependency file
+artifact removal	minisat/minisat-master/build/dynamic/lib/libminisat.so.2.1.0	-	compiled executable/object/library
+artifact removal	minisat/minisat-master/build/dynamic/minisat/core/Solver.d	-	vendor build output/dependency file
+artifact removal	minisat/minisat-master/build/dynamic/minisat/core/Solver.o	-	compiled executable/object/library
+artifact removal	minisat/minisat-master/build/dynamic/minisat/simp/SimpSolver.d	-	vendor build output/dependency file
+artifact removal	minisat/minisat-master/build/dynamic/minisat/simp/SimpSolver.o	-	compiled executable/object/library
+artifact removal	minisat/minisat-master/build/dynamic/minisat/utils/Options.d	-	vendor build output/dependency file
+artifact removal	minisat/minisat-master/build/dynamic/minisat/utils/Options.o	-	compiled executable/object/library
+artifact removal	minisat/minisat-master/build/dynamic/minisat/utils/System.d	-	vendor build output/dependency file
+artifact removal	minisat/minisat-master/build/dynamic/minisat/utils/System.o	-	compiled executable/object/library
+artifact removal	minisat/minisat-master/build/release/bin/minisat	-	compiled executable/object/library
+artifact removal	minisat/minisat-master/build/release/lib/libminisat.a	-	compiled executable/object/library
+artifact removal	minisat/minisat-master/build/release/minisat/core/Solver.d	-	vendor build output/dependency file
+artifact removal	minisat/minisat-master/build/release/minisat/core/Solver.o	-	compiled executable/object/library
+artifact removal	minisat/minisat-master/build/release/minisat/simp/Main.d	-	vendor build output/dependency file
+artifact removal	minisat/minisat-master/build/release/minisat/simp/Main.o	-	compiled executable/object/library
+artifact removal	minisat/minisat-master/build/release/minisat/simp/SimpSolver.d	-	vendor build output/dependency file
+artifact removal	minisat/minisat-master/build/release/minisat/simp/SimpSolver.o	-	compiled executable/object/library
+artifact removal	minisat/minisat-master/build/release/minisat/utils/Options.d	-	vendor build output/dependency file
+artifact removal	minisat/minisat-master/build/release/minisat/utils/Options.o	-	compiled executable/object/library
+artifact removal	minisat/minisat-master/build/release/minisat/utils/System.d	-	vendor build output/dependency file
+artifact removal	minisat/minisat-master/build/release/minisat/utils/System.o	-	compiled executable/object/library
+artifact removal	minisat/test_minisat_integration	-	compiled executable/object/library
+artifact removal	probSAT-master/.gitignore:Zone.Identifier	-	Windows download metadata
+artifact removal	probSAT-master/LICENSE:Zone.Identifier	-	Windows download metadata
+artifact removal	probSAT-master/README.md:Zone.Identifier	-	Windows download metadata
+artifact removal	probSAT-master/makefile:Zone.Identifier	-	Windows download metadata
+artifact removal	probSAT-master/probSAT	-	compiled executable/object/library
+artifact removal	run_sliced_scenarios	-	compiled executable/object/library
+artifact removal	test_orchestration_probSAT	-	compiled executable/object/library
+artifact removal	test_satsolvermanager_minisat	-	compiled executable/object/library
+artifact removal	test_satsolvermanager_probsat	-	compiled executable/object/library

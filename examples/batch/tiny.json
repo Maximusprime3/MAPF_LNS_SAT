@@ -1,0 +1,14 @@
+{
+  "runs": [{
+    "name": "empty-8-8-four-agents",
+    "map": "../../tests/fixtures/empty-8-8.map",
+    "scenario_dir": "../../tests/fixtures",
+    "scenario_pattern": "{map}-even-1.scen",
+    "num_agents": 4,
+    "experiments": 1,
+    "seed": 42,
+    "variant": "lns-sat",
+    "time_limit_seconds": 10,
+    "log_file": "../../build/batch-json-smoke.log"
+  }]
+}
