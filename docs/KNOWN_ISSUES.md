@@ -63,6 +63,16 @@ symbol behavior is covered by deterministic characterization tests.
 
 ## P1: algorithm behavior and reproducibility
 
+### Cooperative deadline return latency
+
+The shared deadline prevents accepting late solutions and distinguishes interruption
+from UNSAT. It does not guarantee return by the budget boundary. The 2026-09-12
+Debug comparison observed 274–298 ms returns for a 100 ms limit on a valid 32-agent
+case, always `Exhausted` with no paths. Use an external process timeout when needed;
+do not use the configured budget as the measured runtime in experimental results.
+See [VERIFICATION_SIGNOFF.md](VERIFICATION_SIGNOFF.md) for methods and measurements.
+Tighter cancellation granularity can be separately profiled if required for experiments.
+
 ### Public default variant (resolved on cleanup branch)
 
 Neighborhood growth now uses a typed policy, and the default is the public LNS-SAT radius

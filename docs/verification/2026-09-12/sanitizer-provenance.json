@@ -1,0 +1,6 @@
+{
+  "compiled_sources": 43,
+  "headers": 50,
+  "differences": [],
+  "method": "Byte comparison of every sanitizer compile_commands.json source and all source-copy .h headers against cdc3b03 checkout; reused sanitizer binaries from previous session."
+}

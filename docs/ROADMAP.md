@@ -56,6 +56,10 @@ path assumptions, and the combined pseudo-agent repair path.
 
 ## Milestone 1: lock down pseudo-agent correctness
 
+**Verification checkpoint completed 2026-09-12:** named requirements have passing
+regression evidence; see [VERIFICATION_SIGNOFF.md](VERIFICATION_SIGNOFF.md) for scope
+and limits. This does not claim exhaustive coverage of every transformation combination.
+
 ### Goal
 
 Protect the active research contribution before changing APIs or moving source files.
@@ -86,6 +90,9 @@ state is rejected as `InvalidState` before it reaches SAT solving or global inte
 Three to five focused commits.
 
 ## Milestone 2: finish waiting-slack and grid correctness
+
+**Verification checkpoint completed 2026-09-12:** conservation, rollback, terrain and
+grid-shape regressions pass; see [VERIFICATION_SIGNOFF.md](VERIFICATION_SIGNOFF.md).
 
 ### Goal
 
@@ -323,6 +330,12 @@ A tagged release builds from scratch, passes all tests and verification, provide
 citation/licensing information, and links to a complete reproducibility artifact.
 
 ## Recommended next checkpoint
+
+The bounded milestones 1–4 verification pass is complete at `cdc3b03`; see
+[VERIFICATION_SIGNOFF.md](VERIFICATION_SIGNOFF.md). Fresh CTest and leak-enabled
+sanitizer tests pass. Six small baseline comparisons agree on valid outcomes and
+makespans. Cooperative deadline return latency remains a documented limitation,
+and milestone 3 remains open for the replay manifest.
 
 The original pseudo-agent/slack/grid checkpoint and the post-5.3 audit fixes now
 have regression coverage; see `CORRECTNESS_CHECKPOINT.md` for before/after evidence

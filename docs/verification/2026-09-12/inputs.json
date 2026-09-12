@@ -1,0 +1,26 @@
+{
+  "empty-8-8-even-1.scen": {
+    "map": "mapf-map/empty-8-8.map",
+    "scenario": "mapf-scen-even/scen-even/empty-8-8-even-1.scen",
+    "map_sha256": "42776e4904ec90689dd034fbd84524d671dc554472cc4221432b0c523d51f152",
+    "scenario_sha256": "46bfd9f62314c390c6381226cce331ecee0567cdf2beb06a459dd620ebd03d6a"
+  },
+  "random-32-32-10-even-1.scen": {
+    "map": "mapf-map/random-32-32-10.map",
+    "scenario": "mapf-scen-even/scen-even/random-32-32-10-even-1.scen",
+    "map_sha256": "4240fddfa77d88b72ce779e02acf46a5ff056a3b04af5a4e35f7bc86cdfba3ec",
+    "scenario_sha256": "363a370224c35fa88aed5d49604fd9944d02e175eca3695c3c254ec3b2353434"
+  },
+  "maze-32-32-2-even-1.scen": {
+    "map": "mapf-map/maze-32-32-2.map",
+    "scenario": "mapf-scen-even/scen-even/maze-32-32-2-even-1.scen",
+    "map_sha256": "5c549328775ce530072cb05eda8f9010235a7e29294806d6aebb0ad667479cd3",
+    "scenario_sha256": "37bec27afb18e8f6e1395d348b5769399dac27c188d6faffffcb6343e326ce3e"
+  },
+  "dense-60.scen": {
+    "map": "mapf-map/empty-8-8.map",
+    "scenario": "docs/verification/2026-09-12/dense-60.scen",
+    "map_sha256": "42776e4904ec90689dd034fbd84524d671dc554472cc4221432b0c523d51f152",
+    "scenario_sha256": "2e81ba047839a62a7c518b2d81606dfe7ef3d7def8ed4d67d195cc34f8c1b508"
+  }
+}

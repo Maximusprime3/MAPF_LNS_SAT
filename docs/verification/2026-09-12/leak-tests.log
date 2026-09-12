@@ -1,0 +1,49 @@
+Internal ctest changing into directory: /home/max/.codex/.chatgpt-projects/g-p-68ef6b375c8c81919b0e53918a9e8787/work/lnssat-fixes/sanitizer-build
+Test project /home/max/.codex/.chatgpt-projects/g-p-68ef6b375c8c81919b0e53918a9e8787/work/lnssat-fixes/sanitizer-build
+      Start  1: test_solution_verifier
+ 1/20 Test  #1: test_solution_verifier .......................   Passed    0.05 sec
+      Start  2: test_neighborhood_variant
+ 2/20 Test  #2: test_neighborhood_variant ....................   Passed    0.02 sec
+      Start  3: test_solver_configuration
+ 3/20 Test  #3: test_solver_configuration ....................   Passed    0.04 sec
+      Start  4: test_audit_regressions
+ 4/20 Test  #4: test_audit_regressions .......................   Passed    0.19 sec
+      Start  5: test_deadlines
+ 5/20 Test  #5: test_deadlines ...............................   Passed    0.20 sec
+      Start  6: test_tiny_mapf_oracle
+ 6/20 Test  #6: test_tiny_mapf_oracle ........................   Passed    2.23 sec
+      Start  7: test_current_solution_transaction
+ 7/20 Test  #7: test_current_solution_transaction ............   Passed    0.02 sec
+      Start  8: test_initial_mdd_agent_ids
+ 8/20 Test  #8: test_initial_mdd_agent_ids ...................   Passed    0.05 sec
+      Start  9: test_solve_result
+ 9/20 Test  #9: test_solve_result ............................   Passed    0.06 sec
+      Start 10: test_minisat_unsat_status
+10/20 Test #10: test_minisat_unsat_status ....................   Passed    0.02 sec
+      Start 11: test_sat_protocol_characterization
+11/20 Test #11: test_sat_protocol_characterization ...........   Passed    0.04 sec
+      Start 12: test_pseudo_agent_segmentation
+12/20 Test #12: test_pseudo_agent_segmentation ...............   Passed    0.08 sec
+      Start 13: test_pseudo_agent_refresh_reassembly
+13/20 Test #13: test_pseudo_agent_refresh_reassembly .........   Passed    0.07 sec
+      Start 14: test_local_zone_state_validation
+14/20 Test #14: test_local_zone_state_validation .............   Passed    0.07 sec
+      Start 15: test_waiting_budget_conservation
+15/20 Test #15: test_waiting_budget_conservation .............   Passed    0.19 sec
+      Start 16: test_grid_walkability
+16/20 Test #16: test_grid_walkability ........................   Passed    0.07 sec
+      Start 17: test_solver_configuration_characterization
+17/20 Test #17: test_solver_configuration_characterization ...   Passed    0.06 sec
+      Start 18: test_batch_backend_rejection
+18/20 Test #18: test_batch_backend_rejection .................   Passed    0.06 sec
+      Start 19: test_supported_build_dependencies
+19/20 Test #19: test_supported_build_dependencies ............   Passed    0.21 sec
+      Start 20: smoke_lns_verification
+20/20 Test #20: smoke_lns_verification .......................   Passed    0.10 sec
+
+100% tests passed, 0 tests failed out of 20
+
+Label Time Summary:
+smoke    =   0.10 sec*proc (1 test)
+
+Total Test time (real) =   3.84 sec

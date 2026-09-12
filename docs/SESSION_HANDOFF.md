@@ -1,69 +1,67 @@
-# Milestone_Cleanup session handoff — 2026-09-11
+# Milestone_Cleanup session handoff — 2026-09-12
 
 ## Resume here
 
-This branch continues the roadmap audit of milestones 1–4 after milestone 5.3,
-starting from `1a052be` on `cleanup/pseudo-agent`. The user authorized fixes and
-asked to pause, commit, and push this checkpoint as `Milestone_Cleanup`.
-Read [CORRECTNESS_CHECKPOINT.md](CORRECTNESS_CHECKPOINT.md) for the seven issues,
-before/after behavior, and evidence, then [ROADMAP.md](ROADMAP.md) for release order.
+The bounded verification of milestones 1–4 after milestone 5.3 is complete.
+Solver revision: `cdc3b03` on `Milestone_Cleanup`. This follow-up changes only
+documentation and retains small verification evidence; no production code changed.
 
-## Completed
+Read [VERIFICATION_SIGNOFF.md](VERIFICATION_SIGNOFF.md) for the requirement matrix,
+measured outcomes, reproduction instructions and limitations. The seven original
+fixes and before/after behavior remain in
+[CORRECTNESS_CHECKPOINT.md](CORRECTNESS_CHECKPOINT.md).
 
-- Reject incomplete requested scenario groups, malformed scenario rows, dimension
-  mismatches, and malformed/ragged maps before solving.
-- Terminate spatially saturated disconnected-zone expansion with a final full-map
-  attempt; permit the retry after consuming the last waiting-slack unit.
-- Forward path assumptions as SAT literals at the correct absolute MDD times.
-- Propagate cooperative deadlines through construction, SAT, and orchestration;
-  distinguish interruption from UNSAT, reject late results, and roll back local work.
-- Strengthen pseudo-agent validation against global endpoints and disconnected or
-  illegal MDD edges; cover combined slack, re-entry, refresh, and reassembly.
-- Register three new test programs in both supported build workflows; correct the
-  roadmap's milestone 3 completion claim and document remaining work.
+## Completed evidence
 
-## Verification at this checkpoint
+- Fresh out-of-tree Debug build of the committed checkout: **20/20 CTest tests pass**.
+- Leak-enabled AddressSanitizer + UndefinedBehaviorSanitizer: **20/20 pass** outside
+  ptrace. Reused prior binaries after confirming all 43 compiled sources and 50
+  source-copy headers match the checkout. The prior leak-check gap is now closed
+  for these fixtures; this is not proof about every input.
+- Independent tiny oracle: **528 fixed-horizon two-agent cases agree**.
+- Six small, fixed-seed comparisons against `1a052be` on empty/random/maze maps:
+  all solutions independently valid, matching makespans. Three alternative
+  neighborhood schedules also pass small end-to-end checks.
+- Valid 32-agent and synthetic 60-agent deadline probes: current returns
+  `Exhausted` with no paths. The old revision can report solved after the budget.
+- Requirement-to-test review covers named segmentation/refresh/reassembly,
+  slack/rollback/grid, configuration and backend-boundary requirements.
+- Make tests passed at the previous checkpoint; not repeated in this follow-up.
 
-- Clean out-of-tree CMake Debug build: **20/20 CTest tests passed**.
-- Make workflow: **make -j2 test passed**, including all new regressions.
-- AddressSanitizer + UndefinedBehaviorSanitizer Debug build with library assertions:
-  **20/20 CTest tests passed** using `ASAN_OPTIONS=detect_leaks=0` and
-  `UBSAN_OPTIONS=halt_on_error=1`. LeakSanitizer was unavailable under the sandbox's
-  ptrace environment; leak checking is **not verified**.
-- Independent joint-state enumeration agrees with lazy SAT on **528** two-agent,
-  2x2-grid fixed-horizon cases. Every returned solution is independently verified.
-- A real MiniSAT pigeonhole test exercises interruption; fake late SAT/UNSAT results
-  check that neither late success nor an unrestricted fallback escapes the deadline.
+No benchmark or test job remains intentionally running. Raw verbose solver logs,
+builds and temporary drivers are local artifacts. Small measurements, hashes,
+probe source, synthetic fixture and test transcripts are under
+`docs/verification/2026-09-12/`.
 
-Tests ran against an isolated copy of the source tree. Only source, tests, build
-configuration, and documentation are included in the commit. Generated executables,
-archives, objects, downloaded CMake, and local logs are not release artifacts.
-No jobs remain intentionally running; no long benchmark campaign was started.
+## Important limits
 
-## Next steps, in order
+Milestone 3 is **not complete**: the full solver replay manifest is still missing.
+Its implementation belongs to milestone 6, coordinated with milestone 7 inputs.
+The manually retained audit records do not satisfy that product requirement.
 
-1. Rebuild from this branch in a fresh out-of-tree directory using `lns_clean/BUILD.md`
-   and run CTest. Read the new tests before changing deadline or pseudo-agent code.
-2. Run bounded representative benchmarks with fixed inputs/seeds against `1a052be`:
-   compare verified outcomes, makespan, runtime, and timeout behavior. Tiny exhaustive
-   tests establish bounded correctness evidence, not large-instance performance or
-   global LNS completeness. The proposed 60-agent CLI timing comparison was not run
-   in this resumed session; do not present an unmeasured timing improvement as fact.
-3. Continue the remaining milestone 5 organization work described in ROADMAP.md.
-   Re-run regression tests after each source move; preserve the MiniSAT termination
-   callback hook when relocating or updating the vendored solver.
-4. Implement milestone 6 CLI/result output and the complete replay manifest, aligned
-   with milestone 7 archival inputs. Milestone 3's full exit condition remains open
-   until requested/resolved settings and reproducible inputs are recorded together.
-5. Complete tracked logging/output separation and metric semantics. Some deadline
-   exits do not yet retain every partial attempt metric; do not infer full accounting
-   from the correctness tests.
-6. Consider selective path-assumption reuse only as a separately measured optimization.
-   The existing full-path reuse policy and explicit UNSAT fallback remain; pinning a
-   colliding full model may require fallback and should not be mistaken for a new bug.
-7. Run leak detection outside a ptrace environment and broaden pseudo-agent fixtures
-   and benchmarks before claiming release-wide robustness.
+Deadlines are cooperative. A 100 ms budget took 274–298 ms to return in the
+32-agent Debug probe; the result was rejected correctly. Do not claim precise
+stopping latency or use the requested time limit as measured runtime.
 
-Deadlines are cooperative, not hard process-kill boundaries. CNF construction,
-propagation, verification, allocation, I/O, or cleanup can finish between checks.
-Use the batch runner's external timeout where a hard process boundary is required.
+The bundled empty-8-8 scenario has only 32 entries. A request for 60 on that file
+is invalid and is now rejected. This session used a separately recorded genuine
+60-agent synthetic input for that cancellation check. Measurements use the solver
+API; they do not establish CLI launch-to-exit timing.
+
+These fixtures do not prove global LNS completeness, every pseudo-agent
+transformation combination, performance equivalence, or paper-result reproduction.
+
+## Next steps
+
+1. Continue milestone 5 source/artifact organization in focused changes; rerun the
+   regression suite after source moves and preserve MiniSAT's termination callback.
+2. Implement milestone 6 CLI/result formats and replay manifest, aligned with
+   milestone 7 archived inputs. Keep milestone 3 visibly open until that is done.
+3. Complete logging/output separation and metric definitions. Some deadline exits
+   still omit partial-attempt metrics; correctness tests do not establish full accounting.
+4. Prepare the broader experimental reproduction and release CI from milestones
+   7–8. Profile finer deadline cancellation only if experiment requirements need it.
+
+Selective path-assumption reuse remains a separate, measured optimization. The
+full-path policy and UNSAT fallback are intentional. No additional unrestricted
+milestones 1–4 audit is required before continuing the roadmap.

@@ -1,0 +1,10 @@
+{
+  "current_revision": "cdc3b03e8d4b10f25695787434c2f260f777653d",
+  "baseline_revision": "1a052be8b326c7507c3782c5bdf96247c005aee7",
+  "compiler": "g++ (Ubuntu 13.3.0-6ubuntu2~24.04.1) 13.3.0",
+  "platform": "Linux-6.8.0-139-generic-x86_64-with-glibc2.39",
+  "build_type": "Debug",
+  "external_timeout_s": 15,
+  "scenario_index": 0,
+  "probe_sha256": "7a10930334800a8956dc6951d7d68945334b31e91ed97e6ad66e89ab8c29d5ef"
+}
